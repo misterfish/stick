@@ -1,0 +1,238 @@
+const Id = (() => {
+    const proto = {
+        val: undefined,
+        map (f) {
+            return id (f (this.val))
+        },
+        // --- dunno how, needs xs
+        apply (f) {
+        },
+        drop () {
+            return this.val
+        },
+        chain (f) {
+            return f (this.val)
+        },
+    }
+
+    return {
+        of (val) {
+            return proto
+            | Object.create
+            | assocMut ('val') (val)
+        },
+    }
+}) ()
+
+const Just = (() => {
+    const proto = {
+        val: undefined,
+        map (f) {
+            return Just.of (f (this.val))
+        },
+        // --- dunno how, needs xs
+        apply (f) {
+        },
+        drop () {
+            return this.val
+        },
+        chain (f) {
+            return f (this.val)
+        },
+    }
+
+    return {
+        of (val) {
+            return proto
+            | Object.create
+            | assocMut ('val') (val)
+        },
+    }
+}) ()
+
+const Nothing = (() => {
+    const proto = {
+        map (f) {
+            return Nothing.of ()
+        },
+        // --- dunno how, needs xs
+        apply (f) {
+        },
+        drop () {
+        },
+        // doesn't call f. ??
+        chain (f) {
+        },
+    }
+
+    return {
+        of (val) {
+            return proto
+            | Object.create
+        },
+    }
+}) ()
+
+const just = (...args) => Just.of (...args)
+const nothing = (...args) => Nothing.of (...args)
+const id = (...args) => Id.of (...args)
+
+
+        // stretch the function out:
+        //
+        // (y) => id (x + y + 1)
+        //
+        // ->
+        //
+        // (x) => chain (recursive-stuff) (id (x + 1))
+        //
+        // and 'rewire it': before apply, prepend the accumulated vals to the args
+        //
+        // so
+        //
+        // (x, y) => x + y (given by user)
+        //
+        // needs to become
+        //
+        // (y) => x + y (needed by algorithm) (x is lexical)
+        //
+        // DWZ
+        //
+        // const f = head (fs)
+        // (...args) => chain (recursive-stuff) (f.apply (null, [...argsAcc, ...args]))
+        //
+        // seems like the accumulator is left in a strange state after this.
+        // try with 4!
+
+
+
+/*
+(struct id (val)
+    #:transparent
+    #:methods gen:functor
+    [(define (map f x)
+       (id (f (id-val x))))]
+    #:methods gen:applicative
+    [(define (pure _ x)
+       (id x))
+     (define (apply f xs)
+       (base:apply (id-val f) (base:map id-val xs)))]
+    #:methods gen:monad
+    [(define (chain f x)
+       (f (id-val x)))])
+
+; --- (id 3)
+(do
+  [x <- (id 1)]
+  [y <- (id 2)]
+  (pure (+ x y)))
+
+; --- equivalent to:
+
+(chain
+  (λ (x) (chain
+            (λ (y) (pure (+ x y)))
+            (id 2)))
+  (id 1))
+
+*/
+
+// --- 'single' doesn't make that much sense (it will be wrapped).
+
+// const singleMonadExpanded = id (1)
+// const singleMonad = doe ([
+//     () => id (1),
+// ])
+//
+// console.log ('singleMonad')
+// singleMonad | log
+// console.log ('singleMonadExpanded')
+// singleMonadExpanded | log
+
+// remember that functions have a single return in js and always will (no 'array' return for me
+// chump)
+
+const doubleMonadExpanded = chain (
+    (x) => x + 1
+) (id (1)) // --- 2
+
+doubleMonadExpanded | log
+
+const doubleMonad = doe ([
+    () => id (1),
+    (x) => x + 1,
+]) // --- 2.
+
+doubleMonad | log
+
+const tripleMonadExpanded = chain (
+    (x) => chain (
+        (y) => x + y // --- 35.
+    ) (id (x + 25))
+) (id (5))
+
+tripleMonadExpanded | log
+
+const tripleMonad = doe ([
+    () => id (5),
+    (x) => id (x + 25),
+    (x, y) => x + y, // --- 35.
+])
+
+tripleMonad | log
+
+// --- each step always takes one arg.
+
+const quadrupleMonadExpanded = chain (
+    (x) => chain (
+        (y) => chain (
+            (z) => x + y + z, // --- 55.
+        ) (id (x * y)) // --- z = 39.
+    ) (id (x + 10)) // --- y = 13.
+) (id (3)) // --- x = 3.
+
+quadrupleMonadExpanded | log
+
+const quadrupleMonad = doe ([
+    () => id (3),
+    (x) => id (x + 10),
+    (x, y) => id (x * y),
+
+    // --- last one doesn't have to be a monad.
+    // BUT you might want it to be, e.g. safeDivide, and then it's annoying to have to do another
+    // step.
+    // maybe doeStar or something like that?
+    (x, y, z) => x + y + z, // --- 55.
+])
+
+quadrupleMonad | log
+
+// isEmpty OR is nothing?
+const safeFirst = xs => isEmpty (xs)
+    ? nothing ()
+    : just (head (xs))
+
+const safeRest = xs => isEmpty (xs)
+    ? nothing () // or empty list ??
+    : just (tail (xs))
+
+const safeDivide = a => b => b === 0
+    ? nothing ()
+    : just (a / b)
+
+; [] | safeFirst | log
+; [1, 2, 3] | safeFirst | log
+; [1, 2, 3] | safeFirst | rProp ('val') | log
+
+const divideFirstTwoMonadic = xs => doe (
+    () => safeFirst (xs),
+    (a) => safeRest (xs),
+    (a, ys) => safeFirst (ys),
+    (a, ys, b) => safeDivide (a) (b),
+    (a, ys, b, x) => x,
+)
+
+divideFirstTwoMonadic ([1, 2, 3]) | log // --- 1.2
+divideFirstTwoMonadic ([1, 0, 3]) | log // --- nothing
+divideFirstTwoMonadic ([1]) | log // --- undefined (?)
+

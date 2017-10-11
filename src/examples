@@ -1,0 +1,711 @@
+If you absolutely hate Lisps, Haskell, or, well, JavaScript, then this
+probably isn't for you.
+
+So we're going the CoffeeScript way ...
+
+Well no. This is all Just JavaScript, with the exception of 3 overloaded
+binary operators. It began as an attempt to import into JavaScript several
+LiveScript idioms which I had begun not to be able to live without.
+Then the similarities to Lisps & Haskell were too obvious to miss.
+
+| is simply syntactical sugar. a | b is b (a). that's it. so what's the big
+deal? it's like flow from lodash or ramda. it provides an intuitive way to
+write quickly & correctly. i never liked the flow syntax, with the value at
+the bottom:
+
+flow (
+    filter (isOdd),
+    map (double),
+    sum,
+) ([1, 2, 3]) // => 8
+
+; [1, 2, 3]
+| filter (isOdd)
+| map (double)
+| sum // => 8
+
+I do use a space before the parentheses. It might look strange at first but
+you might find it more elegant and even beautiful.
+
+reducer for a piece of userdata
+
+const userdata = { name: 'mikhail', bored: true }
+const toggleBored = userdata => ({
+    ... userdata,
+    bored: !userdata.bored,
+})
+
+'userdata' is repeated a lot of times. We can do better with a function
+called update:
+
+const update = curry ((prop, f, obj) => obj | assoc (
+    prop,
+    obj [prop] | f,
+))
+
+const toggleBored = userdata => assoc (
+    'bored',
+    cur => !cur,
+)
+
+cur, not cur. let's go further. the second argument is a function, so:
+
+const toggle = x => !x
+const toggleBored = userdata => userdata | assoc (
+    'bored',
+    toggle,
+)
+
+now remember a property of curried functions:
+add (x, y, z)
+add (x, y) (z)
+add (x) (y, z)
+add (x) (y) (z)
+
+const toggleBored = userdata => userdata | update ('bored') (toggle)
+
+Remember that x => x | at the beginning of the body can be abstracted away:
+
+const toggleBored = update ('bored') (toggle)
+
+Now more:
+
+const entertain = update ('bored') (
+    cur => false,
+)
+
+const entertain = update ('bored') (
+    () => false,
+)
+
+const entertain = update ('bored') (F)
+const bore = update ('bored') (T)
+
+The first part is a function.
+
+const _updateBored = update ('bored')
+const toggleBored = _updateBored (toggle)
+const entertain = _updateBored (F)
+const bore = _updateBored (T)
+
+We can go an extra step, though how far you wish to take this is of course a
+matter of choice:
+
+const _updateBored  = 'bored' | update
+const toggleBored   = toggle | _updateBored
+const entertain     = F | _updateBored
+const bore          = T | _updateBored
+
+
+When you have a value 
+
+const someData = getData();
+
+if (someData) {
+    useValue(someData);
+}
+
+Of course, we need to discriminate between falsey values (empty string, 0
+etc) and someData being undefined or null. (For this example we assume
+someData has been declared, hence, no need for a 'typeof' check).
+
+if (someData !== undefined && someData !== null)
+
+A JavaScript hacker might write the following (to the consternation of her )
+
+In a few cases methods of the same name are defined as in Ramda. Of course
+you are free to import or not import them from whichever library works for
+you.
+
+
+reverse map. the mapping function is invokeWith (...)
+
+
+For point-freeing: need a function which takes a value and a number and invokes a
+function with that values as the arg, repeated n times.
+
+For me this provides a missing piece
+
+process.exit (1) 
+//  @dep ifFunction
+//  @dep bind
+
+// --- 'nieuw' ones fit really well into final part of laat, by the way.
+
+if (obj.speak) obj.speak()
+
+whenOk__ (
+    bindTry (obj, 'speak'),
+    invoke,
+)
+
+whenOk__ (
+    bindTry (obj, 'speak'),
+    x => x ()
+)
+
+bindTry (obj, 'speak') | whenOk (invoke)
+whenBind (obj, 'speak') | invoke
+invokeWhenBind (obj, 'speak')
+whenBindInvoke (obj, 'speak')
+invokeIfCan (obj, 'speak')
+whenCanInvoke (obj, 'speak') // no
+
+bindTry (obj, 'speak') | invokeIfOk
+
+if (this.parseFormData) formData = this.parseFormData(formData);
+// first make immutable:
+
+if (this.parseFormData)
+    newFormData = this.parseFormData(formData);
+
+// const newFormData = invokeIfCan (this, 'parseFormData', formData, ... else ??)
+
+const newFormData_1 = bindTry (this, 'parseFormData') | ifOk (
+    invoke,
+    () => formData,
+)
+
+const newFormData_2 = [this, 'parseFormData'] | whenBind (invoke1 (formData))
+
+// nooo
+// const newFormData = bindTry (this, 'parseFormData') | ifOk (
+//     invoke,
+//     < formData
+// )
+
+const newFormData_3 = bindTry (this, 'parseFormData') | invoke1IfOk (formData)
+
+if(this.model){
+  this.model.set(this.serializeForm());
+}
+
+bindTry (this, 'model') | whenOk (
+  it => it.set (this.serializeForm())
+)
+
+bindTry (this, 'model') | whenOk (
+  dot1 ('set', (this.serializeForm()))
+)
+
+/*
+if (this.startupCallback) {
+    this.startupCallback();
+}
+
+this.startupCallback
+| ifOk (callOn (this))
+
+this.startupCallback
+| ifOk (call (this))
+
+ifOk__ (
+    this.startupCallback,
+    f => f.call (this),
+)
+
+ifOk__ (
+    this.startupCallback,
+    callOn (this),
+)
+
+ifOk__ (
+    this.startupCallback,
+    call (this),
+)
+
+ifOk__ (
+    this.startupCallback,
+    bind (this) >> call,
+)
+
+this.startupCallback
+| ifOk (f => f.call (this))
+
+'startupCallback'
+| ifHasOn (this, call)
+
+'startupCallback'
+| ifBind (this, call)
+
+invokeIfHas (this, 'startupCallback')
+invoke1IfHas (this, 'startupCallback', 10)
+
+ifBind (this, 'startupCallback', call)
+
+*/
+
+
+/*
+ * invokeIfCanElse
+ * if (canBind
+function getSelection() {
+        let txt = (window.getSelection)
+        ? window.getSelection()
+        : document.selection.createRange().text;
+
+}
+
+function getSelection() {
+    const txt = 'getSelection' | window | ifBind (
+        invoke,
+        () => document.selection.createRange().text,
+    )
+
+    const gebonden = bind (window, 'getSelection')
+    const txt = gebonden | ifOk (
+        invoke,
+        () => document.selection.createRange().text,
+    )
+
+    const txt = gebonden | invokeIfOkElse (
+        () => document.selection.createRange().text,
+    )
+
+    const txt = [window, 'getSelection'] | ifBind (
+        invoke,
+        () => document.selection.createRange().text,
+    )
+
+    const txt =
+        bind (window, 'getSelection')
+        | ifOk (
+            invoke,
+            () => document.selection.createRange().text,
+        )
+
+// have to decide whether bind fails or returns undefined.
+// probably fails. (see bind hard test)
+//
+
+in racket, one-armed if is when.
+
+
+
+		isValidPgn:function(pgn) {
+		    var pattern = new RegExp(/^[\d]{8,9}$/g); // 8-9 digits
+
+		    if (!pattern.test(pgn)) {
+				return false;
+			}
+
+			var total = 0;
+			pgn.split('').forEach(function(elem, index, array) {
+		    	if (index === array.length - 1) {
+		    		total += -1 * parseInt(elem);
+		    	} else {
+		    		total += (array.length - index) * parseInt(elem);
+		    	}
+			});
+
+		    return total % 11 === 0; // 'elfproef'
+		},
+		serializeForm:function(){
+			var $disabledFields = $("*[disabled]",this.el);
+			$disabledFields.removeAttr("disabled");
+
+			var formData = $('form',this.$el).serializeObject();
+
+			$disabledFields.attr("disabled","disabled");
+
+			if(this.parseFormData){
+				formData = this.parseFormData(formData);
+			}
+			return formData;
+		},
+
+// --- flagsYes ('outSplit', 'sync')
+const flagsYes = (...args) => args
+    | map (x => [x, true])
+    | fromPairs
+
+// might need a form for cond with no target (see tests)
+
+*/
+
+// update would be good
+// cond like in cond-> clojure macro.
+
+const my = {
+    parseFormData: formData => 'parsed ' + formData,
+}
+
+// if (my.parseFormData) {
+//     formData = my.parseFormData(formData);
+// }
+
+; [my, 'parseFormData']
+| ifBind (
+    pass1 (formData),
+    () => formData,
+)
+| log
+
+; [my, 'parseFormData']
+| whenBind (
+    pass1 (formData),
+)
+| log
+
+; [my, 'arseFormData']
+| whenBind (
+    pass1 (formData),
+)
+| log
+
+ifBind__ (
+    [my, 'parseFomData'],
+    pass1 (formData),
+    () => 'allen',
+)
+| log
+
+// point-free of x => x.apply (null, xs)
+// is not called apply, but passX.
+
+// --- @todo
+//
+// xReplace should tell how many it replaced?
+// but ifReplace gets ths count, good enough?
+
+
+but shouldn't mixins be functional.
+mixin takes instance as input and modifies it.
+
+
+lenses should compose with >>.
+
+see gcanti.
+'new street name' | address.set (...) where address is a lens.
+
+check RA.
+functors, pointy functors
+check Reader from monet, examples given in RA.
+
+
+return lens.set(f(lens.get(s)), s)
+// not really better.
+s | lens.set (f (s | ('get' | bind (lens)))))
+// if we can guarantee that this is never used?
+s | lens.set (f (s | (lens.get))))
+
+
+
+
+flatten2 from test.
+from redux workshop.
+
+
+const shouldTrigger = ({ threshold, synapses }) => {
+    const sum = synapses.reduce(
+        (amplitude, { weight, value }) => amplitude + (weight * value), 0);
+    return sum >= threshold;
+}
+
+
+const takeTwo = ({ threshold, synapses }) => laat (
+    [
+        synapses | reduce (
+            ((amplitude, { weight, value }) => amplitude + (weight * value))
+            (0)
+        )
+    ],
+    sum => sum | gte (threshold),
+)
+
+
+
+// const composeLeft = (...fs) => compose (... (fs | reverse))
+const composeLeft = (...fs) => fs | reverse | applyN (compose)
+
+
+
+const join = curry ((joinStr, xs) => xs.reduce (
+    (acc, x) => acc | ifNotOk (
+        () => x,
+        acc => acc + joinStr + x,
+    ),
+    null,
+))
+
+
+
+
+elementAt n = last . take (n + 1)
+
+
+
+
+would be good to sugar this:
+
+const lockerState = x => x | cond ([
+    [equals ('taken'), () => LockerState.Taken],
+    [equals ('free'), () => LockerState.Free],
+    [equals ('broken'), () => LockerState.Broken],
+])
+
+const lockerState = cond ([
+    'taken' | condEquals (() => LockerState.Taken),
+    'free' | condEquals (() => LockerState.Free),
+    'broken' | condEquals (() => LockerState.Broken),
+])
+
+daggyX#cata takes care of this though.
+
+But it also opens the door to some pretty powerful idioms.
+
+if (isEven (x)) doThen (x); else doElse (x)
+
+x | ifEven (doThen, doElse)
+
+
+instead of 'b is not a function' i want the name of the function.
+
+increased expressive power
+
+
+
+jlongster.com
+
+
+
+yes it's 'hideous' with the parentheses touching:
+replace(/a/)('e')(str)
+
+but with some spaces between them you might actually start to find it kind of pretty.
+
+replace (/a/) ('e') (str)
+str | replace (/a/) ('e')
+str | ('e' | replace (/a/))
+str | replace (/a/, 'e')
+
+
+maybe laatStar and family could do away with the array.
+
+laatDat is a mess, buggy.
+args are functions, so it should resemble laatStar, but without recursive stuff, unless it's
+laatDatStar.
+
+0 | laatDat (
+    [
+        ifZero (_ => 10, _ => 20),
+        minus (1),
+    ],
+    (_, a, b) => {
+        console.log ('a', a)
+        console.log ('b', b)
+    },
+)
+
+
+found this:
+
+laat (
+    [
+        n | ifZero (...),
+        n | minus (1),
+    ],
+    (a, b) => [a, b],
+)
+
+the last part is just an array of the args, so actually you're just assembling an array.
+
+n | listDat (
+    ifZero (...),
+    minus (1),
+)
+
+    const f = n => map (pass1 (n))
+    const f = n => n | pass1 | map
+    // --- xxx, can't flip it after this.
+    const f = pass1 >> map
+
+const listDat3 = (() => {
+    const _ = n => n | pass1 | ramda.map
+    const __ = pass1 >> ramda.map
+    const ___ = curry (pass1 >> ramda.map)
+//     return __
+    return ___ | flipC
+//     return curry ((a, b) => ___ (b, a))
+}) ()
+
+
+after composing, have to curry again.
+
+
+
+
+docs
+ length as a reduce function.
+     const length = 0 | reduce (inc)
+
+
+
+prepositions.
+ companion methods with In for dealing with proto chain.
+mutable state.
+piping.
+expressiveness.
+non-destructive ('tap') method chaining.
+mapPairs for %foo = @foo.
+'vector operations' for functions.
+slightly more functional alternatives to defaultTo, times.
+alternative to template strings.
+doe, laat.
+apply, pass, call.
+anaphoric structures.
+guard conditions.
+xRegExp, xMatch etc.
+expression-based.
+let expressions, also recursive.
+prototypes, mixins, factory.
+dexterity
+section
+ factory
+ monads
+ daggy adt / monoid
+
+frustrations with case statement, e.g. livescript.
+ more expressive matching: separate predicate from value.
+
+
+several examples of reductions, derivations.
+
+sorry but to we switched ramda's gt(e) and lt(e).
+
+composing with the >> / << operators is curried by default.
+
+
+
+
+// const mappend = curry ((rhs, lhs) => lhs | cond ([
+//     LT | identical | guard (_ => LT),
+//     GT | identical | guard (_ => GT),
+//     EQ | identical | guard (_ => rhs),
+// ]))
+
+though of course, we have cata.
+
+
+
+
+
+
+
+vector operations.
+ cross product: [a, b, c] x [f1, f2, f3] = [
+     f1 (a) + f2 (a) + f3 (a),
+     f1 (b) + ...
+     ...
+ ]
+ and the combining operation '+' can be set.
+
+ derivation of listdat.
+
+
+ need doe sequential (birds).
+
+
+
+
+ LS -> JS
+
+x = if something? then do-something that * 2 else 'nothing'
+const x = ifOk (something, that => that * 2, () => 'nothing')
+const x = ifOk (something, double, _ => 'nothing')
+const x = ifOk (something, double, 'nothing' | f)
+
+x = something ? 'nothing'
+const x = something | defaultTo ('nothing' | f)
+
+
+people notice that ramda needs prop / path symmetry.
+so easy to make a case for in versions, and to and from.
+
+
+our spread:
+ampersand (reverse, toUpperCase) ('Stan') // ['natS', 'STAN']
+asterisk (reverse, toUpperCase) (['Stan', 'Lee']) // ['natS', 'LEE']
+
+const blush
+const either = Left >> (x => _ => x) >> ifOk (Right)
+
+// -- either :: String → Either
+// const either = msg => ifOk (Right, _ => msg | Left)
+// const either = msg => ifOk (Right, msg | Left | blush)
+// const either = msg => ifOk (Right) (_ => msg | Left)
+// const either = msg => (_ => msg | Left) | ifOk (Right)
+// const either = msg => msg | Left | (x => _ => x) | ifOk (Right)
+// const either = msg => msg | Left | (x => _ => x) | ifOk (Right)
+// const either = Left >> (x => _ => x) >> ifOk (Right)
+const either = Left >> blush >> ifOk (Right)
+
+
+
+
+
+
+const isOdd = x => x | cond ([
+    0 | eq | guard (F),
+    1 | eq | guard (T),
+    (dec >> isEven) | otherwise,
+])
+
+const isEven = x => x | cond ([
+    0 | eq | guard (T),
+    1 | eq | guard (F),
+    (dec >> isOdd) | otherwise,
+])
+
+
+; ramda.range (10, 20)
+| map (x => [x, x]
+    | applyScalar ([identity, isEven])
+    | applyScalar ([identity, ifTrue (_ => 'even' | cyan, _ => 'odd' | yellow)])
+    | sprintfN ('%s is %s')
+)
+| join ('\n')
+| log
+
+
+
+need assoc variants.
+e.g. ref => this.canvas = ref
+something like assocMutAs(?) ('canvas', this)
+
+
+don't need dot more than about 3 because we have dotN.
+tapDot needs an alias, is a a horrible namem.
+visit?
+
+
+
+const minus =  (our rules)
+
+
+
+haskell:
+isEven x = not $ isOdd x
+isEven = not . isOdd
+
+transformation of | to >> is like $ to . in haskell.
+
+
+laatStar nicer without array.
+laatStarDat needs to be curried, so yes array
+
+maybe laat(Star)Dat1, laat(Star)Dat2, laat(Star)Dat3, laat(Star)DatN
+
+
+i think i prefer 'list' to 'array'
+
+
+
+
+react
+  opacity: ${({ isDefaultVal }) => isDefaultVal ? 0.5 : 1.0} !important;
+
+
+need new kind of assoc for this:
+and also passBind
+    props.linkText | ifOk (x => this.setState ({ value: x }))

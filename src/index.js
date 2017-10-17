@@ -791,3 +791,8 @@ export const blush = x => _ => x
 const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | applyN (f)
 const headTail = f => splitAt (1) >> f
 
+
+export const arg0 = (a) => a
+export const arg1 = (_, a) => a
+export const arg2 = (_, _1, a) => a
+export const arg3 = (_, _1, _2, a) => a

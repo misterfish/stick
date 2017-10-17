@@ -709,3 +709,14 @@ react
 need new kind of assoc for this:
 and also passBind
     props.linkText | ifOk (x => this.setState ({ value: x }))
+
+
+const ifZero = 0 | equals | ifPredicate
+const odd = x => ifZero (F) (_ => even (x-1))
+const even = x => ifZero (T) (_ => odd (x-1))
+
+
+fst
+snd
+
+maybe tuple? tuple(1, 2, 3)

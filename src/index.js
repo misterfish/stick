@@ -574,8 +574,8 @@ export const rangeBy = curry ((from, to, by) => {
 export const compact = filter (Boolean)
 export const compactOk = reject (isNil)
 
-// --- turn positional args into an array with those values.
-export const array = (...args) => args
+// --- turn positional args into a list with those values.
+export const list = (...args) => args
 
 export const joinOk = curry ((j, xs) => xs
     | compactOk

@@ -644,7 +644,7 @@ const either = Left >> blush >> ifOk (Right)
 
 
 
-
+// --- wrong. (otherwise)
 const isOdd = x => x | cond ([
     0 | eq | guard (F),
     1 | eq | guard (T),
@@ -720,3 +720,29 @@ fst
 snd
 
 maybe tuple? tuple(1, 2, 3)
+
+
+
+
+//       onKeyPress={({ key, }) => key === 'Enter' && onBlur ()}
+      onKeyPress={ prop ('key') >> whenEquals ('Enter') (onBlur) }
+
+const sendStatus = curry ((code, msg) =>
+    status (code) >> send ({
+        msg: result.stmt.changes | sprintf1 ('ok, %s row(s) updated'),
+    } | JSON.stringify)
+)
+
+
+cond example with no target:
+
+null | cond ([
+  (_ => theDelete | isTrue) | guard (_ => [code, [], []]),
+  (_ => add | ok)           | guard (_ => [[], add, []]),
+  otherwise                 | guard (_ => [[], [], [code, update]]),
+])
+
+
+
+notEarlierThan.
+encouraged to think in terms of natural sentences with a preposition.

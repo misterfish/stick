@@ -417,6 +417,7 @@ export const mergeAllIn = xs => xs | reduce (
 
 // ------ map.
 
+// --- returns an object.
 // --- user function f is expected to return pairs: [k, v]
 //
 // if target is an obj, it maps on key/value pairs of object.
@@ -454,6 +455,11 @@ export const eachObjIn = curry ((f, obj) => {
 export const applyScalar = curry ((fs, xs) => xs
     | zip (fs)
     | map (([f, x]) => f (x))
+)
+
+export const applyScalarIfOk = curry ((fs, xs) => xs
+    | zip (fs)
+    | map (([f, x]) => x | whenOk (f))
 )
 
 export const passScalar = flip (applyScalar)
@@ -557,6 +563,8 @@ export const zipAll = (...xss) => {
 export const repeat = flip (rRepeat)
 export const times = flip (rTimes)
 
+// xxx timesVoid, to not make an array.
+
 // @todo
 // export const rangeBy = curry ((from, to, by, f) => {
 //     for (let i = from; i <= to; i += by) f (i)
@@ -614,6 +622,8 @@ export const xRegExpStr = (reStr, flags = '') => laat (
 )
 
 export const match = curry ((re, target) => re.exec (target))
+
+// xxx make xMatch incur only a compile-time cost.
 
 // --- input: regex.
 export const xMatch = curry ((re, target) =>
@@ -700,6 +710,7 @@ const mergeMixins = (mixinsPre, proto, mixinsPost) => {
 // --- multiple instanceExtensions can be given: will be merged right-to-left using R.mergeAll,
 // meaning prototypes will be discarded.
 
+// xxx would be good to add an extra arg, for initialising instance vals xxx.
 export const factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
     [
         mergeMixins (mixinsPre, proto, mixinsPost),
@@ -716,13 +727,13 @@ export const factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
 
 
 // --- wants upper case, e.g. output of toString.
-const isType = curry ((t, x) => x
+export const isType = curry ((t, x) => x
     | callUnder ({}.toString)
     | dot2 ('slice') (8, -1)
     | equals (t)
 )
-const isArray = isType ('Array')
-const isFunction = isType ('Function')
+export const isArray = isType ('Array')
+export const isFunction = isType ('Function')
 
 // --- map indexed: not sure about exporting these.
 const mapIndexed = addIndex (map)
@@ -797,3 +808,10 @@ export const blush = x => _ => x
 const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | applyN (f)
 const headTail = f => splitAt (1) >> f
 
+
+export const notOk = isNil
+
+
+// ditch brackets on cond.
+// a line can still be an array if you want the 'raw' predicate / exec.
+// make an extra one (condN ?) for if programmatic building is required.

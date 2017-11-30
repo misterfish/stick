@@ -155,6 +155,10 @@ export const ifHas = curry ((yes, no, [o, k]) => o | has (k) ? yes (o[k], o, k) 
 export const whenHas = curry ((yes, spec) => spec | ifHas (yes) (noop))
 export const ifHas__ = (spec, yes, no = noop) => spec | ifHas (yes) (no)
 
+// what about is versions?
+//export const isTrue = eq (true)
+//export const isFalse = eq (false)
+
 // @todo test
 export const ifHasIn = curry ((yes, no, [o, k]) => o | hasIn (k) ? yes (o[k], o, k) : no (o, k))
 export const whenHasIn = curry ((yes, spec) => spec | ifHasIn (yes) (noop))
@@ -181,6 +185,9 @@ export const ifBind__ = (spec, yes, no = noop) => spec | ifBind (yes) (no)
 //         if (result) return exec (target, result)
 //     }
 // })
+
+// @ todo
+export const xCond = (...args) => null | cond (...args)
 
 // need version with no target xx
 export const cond = curry ((blocks, target) => {
@@ -243,6 +250,7 @@ export const ifOne = curry ((yes, no, x) => x === 1 ? yes (x) : no (x))
 export const whenOne = curry ((yes, x) => x | ifOne (yes) (noop))
 export const ifOne__ = (x, yes, no = noop) => x | ifOne (yes) (no)
 
+// --- use ramda empty xxx
 export const ifEmpty = curry ((yes, no, xs) => xs.length === 0 ? yes (xs) : no (xs))
 export const whenEmpty = curry ((yes, xs) => xs | ifEmpty (yes) (noop))
 export const ifEmpty__ = (xs, yes, no = noop) => xs | ifEmpty (yes) (no)
@@ -715,6 +723,7 @@ export const factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
 
 
 
+// xxx getType
 // --- wants upper case, e.g. output of toString.
 const isType = curry ((t, x) => x
     | callUnder ({}.toString)
@@ -759,6 +768,8 @@ const listDat5 = flipC (n => n | pass1 | map)
 
 const _$ = {}
 
+// xx can lead to annoying bug if a symbol slips past the linter.
+// consider using _$
 export const condElse = appendTo ([void 8])
 
 export const condEquals = curry ((exec, testString) => [
@@ -785,7 +796,7 @@ export const lt = flip (rLt)
 export const lte = flip (rLte)
 
 // --- different from R.equals, which considers two different objects equal if their contents are
-//     the same.
+//     the same (equivalent).
 // --- different from R.identical, which has some different semantics involving e.g. 0 and -0.
 // --- literally just wraps ===.
 // rationale: must be able to confidently refactor working code which uses ===
@@ -797,3 +808,17 @@ export const blush = x => _ => x
 const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | applyN (f)
 const headTail = f => splitAt (1) >> f
 
+
+// --- biased towards not using method lookup, but free floating function names.
+// --- exceptions as expressions.
+// --- extended regex.
+//
+// curry2
+// curry3
+// condMultiple
+//
+//
+// destructuring, as a function:
+//
+// this | pluck ('beans', 'bones', 'binds', (beans, bones, binds) => ...)
+// could combine ramda props with apply.

@@ -720,3 +720,60 @@ fst
 snd
 
 maybe tuple? tuple(1, 2, 3)
+
+
+
+
+
+const makeSelectUsername = () => createSelector(
+  selectHome,
+  (homeState) => homeState.get('username')
+);
+
+
+use pipe to deconstruct
+
+action | (
+    ({ type, data, }) => ...
+)
+
+
+
+// --- precisly ramda's isEmpty, except that it dies. only instructional.
+export const isEmpty = x => x | getType | cond ([
+  'Array' | eq | guard (_ => x | isEmptyList),
+  'Object' | eq | guard (_ => x | isEmptyObject),
+  'String' | eq | guard (_ => x | isEmptyString),
+  otherwise | guard (_ => exception ('bad arg ' + x) | raise)
+])
+
+
+
+
+DateTime.prototype.toString = function () {
+    const { date, time: maybeTime, } = this
+    const time = maybeTime | fold (
+        identity,
+        'no time info',
+    )
+    return [date, time]
+    | sprintfN ("Date: %s, Time: %s")
+
+    this | pluck (
+        'date', 'time',
+        (date, maybeTime) => 
+    )
+
+    this | laatso (
+        pluck ('date'),
+        pluck ('time'),
+        (_, _, maybeTime) => maybeTime | fold (
+            identity,
+            'no time info',
+        ),
+        (_, date, _, time) => [date, time] | sprintfN ("Date: %s, Time: %s"),
+        // or
+        // args (1, 3) >> sprintfN (...)
+    )
+}
+

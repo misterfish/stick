@@ -793,3 +793,38 @@ DateTime.prototype.toString = function () {
 
 notEarlierThan.
 encouraged to think in terms of natural sentences with a preposition.
+
+
+
+const colon = curry ((x, xs) => [x, ...xs])
+
+/*
+ * sequence [] = pure []
+ * sequence (x:xs) = (:) <$> x <*> sequence xs
+ * sequence (x:xs) = liftA2 (:) x (sequence xs)
+ *
+ * x is a monad (e.g. x a), and sequence xs is a monad (e.g. y b)
+ * if x is right and y is right, sequence xs is right: right (a:b)
+ * if x is left and y is right, x
+ * if x is right and y is left, y
+ * if both left, x
+ */
+
+const liftA2 = 'liftA2' | bind (bilby)
+
+const sequence = (pure) => {
+    const _sequence = xs => xs.length === 0
+        ? ([] | pure)
+        : liftA2 (colon, xs | head, xs | tail | _sequence)
+    return _sequence
+}
+
+; [
+    [ 10 | right, 5 | right, 'bad' | left, 12 | right],
+    [ 10 | right, 5 | right, 12 | right],
+]
+| map (
+    sequence (right) >> fold (id, id)
+)
+| log
+

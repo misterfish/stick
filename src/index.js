@@ -658,6 +658,7 @@ export const xReplaceStrFlags = curry ((reStr, flags, repl, target) =>
     target.replace (xRegExpStr (reStr, flags), repl)
 )
 
+// xxx repl might be a function.
 export const ifReplace = curry ((yes, no, re, repl, target) => {
     let success = 0
     const out = target.replace (re, () => {
@@ -735,6 +736,10 @@ export const factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
 
 
 // xxx getType
+// export const getType = callUnder ({}.toString)
+//    >> dot2 ('slice') (8, -1) (
+//)
+
 // --- wants upper case, e.g. output of toString.
 export const isType = curry ((t, x) => x
     | callUnder ({}.toString)
@@ -840,3 +845,5 @@ export const notOk = isNil
 // ditch brackets on cond.
 // a line can still be an array if you want the 'raw' predicate / exec.
 // make an extra one (condN ?) for if programmatic building is required.
+// const toThe = curry ((exp, base) => Math.pow (base, exp))
+

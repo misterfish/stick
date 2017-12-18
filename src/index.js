@@ -428,7 +428,8 @@ export const mergeAllIn = xs => xs | reduce (
 // --- returns an object.
 // --- user function f is expected to return pairs: [k, v]
 //
-// if target is an obj, it maps on key/value pairs of object.
+// if target is an obj, it maps on key/value pairs of object -- this is different from ramda's map
+// in that it can change the keys.
 // if target is an array [key, value, key, value], it maps on pairs (think %foo= @foo in perl)
 //
 // ordering: k, v.

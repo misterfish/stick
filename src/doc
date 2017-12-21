@@ -54,6 +54,7 @@ const show = dot ('sow')
 but then the implementation could be changed, for example to the following, without the caller
 having to change anything at the call site.
 
+(this is not the best example -- 'completed' is also a param of the pattern match function)
 export const show = deconstruct ((downloadStatus, { completed, }) =>
     downloadStatus | cata ({
         DownloadInProgress: () => completed | ifOk (

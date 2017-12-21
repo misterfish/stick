@@ -788,10 +788,11 @@ const mapAccumIndexed = addIndex (mapAccum)
 
 
 // @test
-export const laatDat = curry ((fs, f, x) => laat (
+export const laatNO = curry ((fs, f, x) => laat (
     fs | map (pass1 (x)),
     (...args) => f | passN ([x, ...args]),
 ))
+export const laatO = laatNO
 
 // export const laatStarDat = curry ((fs, x) =>
 //     fs | map (

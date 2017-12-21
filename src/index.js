@@ -20,6 +20,7 @@ defineBinaryOperator ('<<', curry ((a, b) => compose (a, b)))
 
 import {
     splitAt,
+    always,
     isEmpty, tap, has, hasIn, flip, fromPairs, toPairs, toPairsIn, assoc, assocPath, head,
     last, tail, reduceRight, chain, identity, reduce, map, filter, reject, join,
     split, prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
@@ -891,6 +892,14 @@ export const notOk = isNil
 
 // const deconstruct = curry ((f, x) => f (x, x))
 // destructuring, as a function:
+// const show = deconstruct ((downloadStatus, { completed, }) =>
 //
+// you repeat 'downloadStatus' anyway
+// export const show = deconstruct ((downloadStatus, { completed, }) =>
+// downloadStatus | cata ({
+//
+// so why not:
+//
+// or like this, except that you lose the documentation aspect.
 // this | pluck ('beans', 'bones', 'binds', (dit, beans, bones, binds) => ...)
 // could combine ramda props with apply.

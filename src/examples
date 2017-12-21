@@ -746,3 +746,18 @@ null | cond ([
 
 notEarlierThan.
 encouraged to think in terms of natural sentences with a preposition.
+
+
+laatso. watch carefully!
+    | (rows => rows | laats (
+      _ => rows | length,
+      _ => rows | join ('\n'),
+      (numRows, csv) => ({ numRows, csv, })
+    ))
+
+This is a pattern we'll see over and over using stick.
+
+FAQ
+
+Should I use stick?
+Of course not.

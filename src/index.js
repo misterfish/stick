@@ -612,6 +612,13 @@ export const xRegExp = re => new RegExp (
     re.flags,
 )
 
+// @todo test
+// --- beware, overwrites any flags that the re already had.
+export const xRegExpFlags = (re, flags) => new RegExp (
+    re.source | removeSpaces,
+    flags,
+)
+
 // --- input: string, [string].
 export const xRegExpStr = (reStr, flags = '') => laat (
     [
@@ -624,6 +631,17 @@ export const xRegExpStr = (reStr, flags = '') => laat (
 export const match = curry ((re, target) => re.exec (target))
 
 // xxx make xMatch incur only a compile-time cost.
+
+// @todo test
+// @todo xMatchStrGlobal, maybe flags variations too
+export const xMatchGlobal = curry ((re, mapper, target) => {
+    let out = []
+    const reGlobal = xRegExpFlags (re, 'g')
+    let m
+    while (m = reGlobal.exec (target))
+        mapper (...m) | appendToMut (out)
+    return out
+})
 
 // --- input: regex.
 export const xMatch = curry ((re, target) =>
@@ -815,3 +833,15 @@ export const notOk = isNil
 // ditch brackets on cond.
 // a line can still be an array if you want the 'raw' predicate / exec.
 // make an extra one (condN ?) for if programmatic building is required.
+//
+// subtract, subtractFrom.
+// divide, divideBy.
+//
+//
+//
+// spread. e.g.: csv => [csv, length csv] because spread (identity, length)
+// or spread2 (length)
+// arrows.
+//
+// be careful with defaultToA ({}) if point-free. ?
+//

@@ -485,15 +485,14 @@ export const passScalar = flip (applyScalar)
 export const scalarApply = applyScalar
 export const scalarPass = passScalar
 
-// --------- given/laat
+// --------- laat
 
-export const given = (xs, f) => f.apply (null, xs)
-export const laat = given
+export const laat = (xs, f) => f.apply (null, xs)
 
 // note that f is optional: the last function in xs serves the same purpose, but it can be used for
 // symmetry with laat.
 
-export const givenStar = (...xs) => {
+export const laats = (...xs) => {
     const executeStep = prevVals => passN (prevVals)
 
     const ys = xs
@@ -506,7 +505,13 @@ export const givenStar = (...xs) => {
     return ys | last
 }
 
-export const laatStar = givenStar
+// @todo
+export const laatsNO = curry ((fs, o) => laats | passN ([
+    o | always,
+    ... fs,
+]))
+
+export const laatsO = laatsNO
 
 // --- 'call' always means pass a context.
 // --- 'apply' always means 'apply this function to some params'
@@ -788,13 +793,12 @@ export const laatDat = curry ((fs, f, x) => laat (
     (...args) => f | passN ([x, ...args]),
 ))
 
-// @test
-export const laatStarDat = curry ((fs, x) =>
-    fs | map (
-        f => (...args) => f | passN ([x, ...args]),
-    )
-    | applyN (laatStar),
-)
+// export const laatStarDat = curry ((fs, x) =>
+//     fs | map (
+//         f => (...args) => f | passN ([x, ...args]),
+//     )
+//     | applyN (laatStar),
+// )
 
 const listDat = curry ((fs, n) => fs | map (
     pass1 (n),
@@ -861,10 +865,6 @@ const headTail = f => splitAt (1) >> f
 // condMultiple
 //
 //
-// destructuring, as a function:
-//
-// this | pluck ('beans', 'bones', 'binds', (beans, bones, binds) => ...)
-// could combine ramda props with apply.
 
 export const notOk = isNil
 
@@ -888,3 +888,8 @@ export const notOk = isNil
 
 // const toThe = curry ((exp, base) => Math.pow (base, exp))
 
+// const deconstruct = curry ((f, x) => f (x, x))
+// destructuring, as a function:
+//
+// this | pluck ('beans', 'bones', 'binds', (dit, beans, bones, binds) => ...)
+// could combine ramda props with apply.

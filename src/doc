@@ -1,1 +1,157 @@
 pulling steps out of an existing pipe => point-free.
+
+
+
+
+using the dot less. of course there's nothing wrong with the dot, but in some cases you can make
+more abstract & powerful code by avoiding it.
+
+the first question people ask is: what's wrong with the way I've been doing it?
+
+; [ 1, 2, 3]
+.map (double)
+.join ('')
+
+the second group asks, isn't this just what i've been doing with lodash / underscore?
+
+_
+.chain ([1, 2, 3])
+.map (double)
+.join ('')
+.value ()
+
+the main difference is that in using the above forms you are limited to the methods which are
+available on the object (Array.prototype in the former case, the lodash/underscore object in the
+second case).
+
+by using free-standing functions you can mix and match any function in the namespace, which
+increasees the flexibility enormously.
+
+it also decouples the calling site from the implementation:
+
+downloadStatus | show
+
+could be defined as
+
+DownloadStatus.prototype.show = function () {
+    return this | cata ({
+        DownloadInProgress: () => this.completed | ifOk (
+            multiply (100) >> sprintf1 ('in progress: %.1f %%'),
+            'in progress: (unknown)' | always,
+        ) | brightRed,
+        DownloadPending: () => '🕑' | yellow,
+        DownloadCompleted: () => '✔' | green,
+        DownloadError: (err) => err | ifOk (
+            'error: ' | concatTo,
+            'error' | always,
+        ) | red,
+        DownloadAlreadyDone: () => '✔' | blue | sprintf1 ('%s (already downloaded)'),
+    })
+    | padTo (50)
+}
+const show = dot ('sow')
+
+but then the implementation could be changed, for example to the following, without the caller
+having to change anything at the call site.
+
+export const show = deconstruct ((downloadStatus, { completed, }) =>
+    downloadStatus | cata ({
+        DownloadInProgress: () => completed | ifOk (
+            multiply (100) >> sprintf1 ('in progress: %.1f %%'),
+            'in progress: (unknown)' | always,
+        ) | brightRed,
+        DownloadPending: () => '🕑' | yellow,
+        DownloadCompleted: () => '✔' | green,
+        DownloadError: (err) => err | ifOk (
+            'error: ' | concatTo,
+            'error' | always,
+        ) | red,
+        DownloadAlreadyDone: () => '✔' | blue | sprintf1 ('%s (already downloaded)'),
+    })
+    | padTo (50)
+)
+
+
+
+
+
+
+three | laatsO ([
+    double,
+    triple,
+], (three, six, nine) => three + six + nine)
+
+three | laatsO ([
+    double,
+    triple,
+    (three, six, nine) => three + six + nine,
+])
+
+// --- N to force you to remember []
+three | laatsNO ([
+    double,
+    triple,
+    (three, six, nine) => three + six + nine,
+])
+
+laats (
+    _ => three,
+    double,
+    triple,
+    (three, six, nine) => three + six + nine,
+)
+
+laats ([
+    _ => three,
+    double,
+    triple,
+    (three, six, nine) => three + six + nine,
+])
+
+three | O (_ => laats (
+    double,
+    triple,
+    (three, six, nine) => three + six + nine,
+))
+
+
+
+
+laats (
+    _ => getThree (),
+    (three) => three | double,
+    (three, six) => six | triple,
+    (three, six, eighteen) => three + six + eighteen,
+)
+| log
+
+laats (
+    getThree,
+    double,
+    arg1 >> triple,
+    list >> sum,
+)
+| log
+
+
+/*
+ * line 1 can be easily reduced.
+ * line 2 can be reduced using transformation X.
+ * if we wish to go further we can reduce line 3 using the `arg1` function.
+ *     arg1 (a, b, c, ...) returns b
+ * you can think of the argument list as a tuple and arg1 as a function which plucks index 1,
+ * somewhat like `snd` in haskell.
+ * line 4 can be reducedd using the `list` function, which converts its arguments into an array:
+ *     list (a, b, c, ...) = [a, b, c, ...]
+ * so
+ *     list (three, six, eighteen) // -> [three, six, eighteen]
+ * can be composed with ramda's sum function.
+ */
+
+
+If you can not remember whether to use `pass` or `apply`, think about it as an English sentence. The
+word to the right of the stick is the verb and its arguments are the object(s) of the verb.
+    f | passN ([arg1, arg2])
+means *pass* arg1 and arg2 to the function f
+    ; [arg1, arg1] | applyN (f)
+means *apply* the function f to arg1 and arg2.

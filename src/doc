@@ -156,3 +156,15 @@ word to the right of the stick is the verb and its arguments are the object(s) o
 means *pass* arg1 and arg2 to the function f
     ; [arg1, arg1] | applyN (f)
 means *apply* the function f to arg1 and arg2.
+
+
+
+
+Converting statements / statement blocks to expressions. Used properly this can help increase
+referential transparency & composability.
+
+
+Should be called passTo and applyTo.
+Then apply is an alias for applyTo
+and pass is an alias for passTo
+So backwards.

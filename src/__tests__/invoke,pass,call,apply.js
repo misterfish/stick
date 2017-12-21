@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, arrayLs, test, xtest, expectToEqual, expectToBe, zipAll, invoke, pass1, pass2, pass3, passN, apply1, apply2, apply3, applyN, call, call1, call2, call3, callN, callOn, callOn1, callOn2, callOn3, callOnN, callUnder, callUnder1, callUnder2;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, zipAll, invoke, pass1, pass2, pass3, passN, apply1, apply2, apply3, applyN, call, call1, call2, call3, callN, callOn, callOn1, callOn2, callOn3, callOnN, callUnder, callUnder1, callUnder2;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
-ref$ = require('./common'), arrayLs = ref$.arrayLs, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../lib/index'), zipAll = ref$.zipAll, invoke = ref$.invoke, pass1 = ref$.pass1, pass2 = ref$.pass2, pass3 = ref$.pass3, passN = ref$.passN, apply1 = ref$.apply1, apply2 = ref$.apply2, apply3 = ref$.apply3, applyN = ref$.applyN, call = ref$.call, call1 = ref$.call1, call2 = ref$.call2, call3 = ref$.call3, callN = ref$.callN, callOn = ref$.callOn, callOn1 = ref$.callOn1, callOn2 = ref$.callOn2, callOn3 = ref$.callOn3, callOnN = ref$.callOnN, callUnder = ref$.callUnder, callUnder1 = ref$.callUnder1, callUnder2 = ref$.callUnder2;
+ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
+ref$ = require('../index'), zipAll = ref$.zipAll, invoke = ref$.invoke, pass1 = ref$.pass1, pass2 = ref$.pass2, pass3 = ref$.pass3, passN = ref$.passN, apply1 = ref$.apply1, apply2 = ref$.apply2, apply3 = ref$.apply3, applyN = ref$.applyN, call = ref$.call, call1 = ref$.call1, call2 = ref$.call2, call3 = ref$.call3, callN = ref$.callN, callOn = ref$.callOn, callOn1 = ref$.callOn1, callOn2 = ref$.callOn2, callOn3 = ref$.callOn3, callOnN = ref$.callOnN, callUnder = ref$.callUnder, callUnder1 = ref$.callUnder1, callUnder2 = ref$.callUnder2;
 describe('invoke', function(){
   var func, sumAll;
   func = function(){
@@ -196,7 +196,7 @@ describe('call*', function(){
     speak1: function(word){
       return ("my " + word + " is ") + this.name;
     },
-    speakAll: compose$(arrayLs, join(':'))
+    speakAll: compose$(list, join(':'))
   };
   describe('aliases', function(){
     var normal, alias, names;
@@ -242,7 +242,7 @@ describe('call*', function(){
       callOn2([1, 2, 3], 4, 5)(
       [].concat));
     });
-    test('user-obj, discards', function(){
+    test('user-obj, caps (discards) second arg', function(){
       return expectToEqual('my friend is dog')(
       callOn2(obj, 'friend', 'send')(
       obj.speak1));

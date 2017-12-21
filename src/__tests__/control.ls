@@ -9,7 +9,7 @@
 } = require 'ramda'
 
 {
-    array-ls,
+    list,
     test, xtest,
     expect-to-equal, expect-to-be,
 } = require './common'
@@ -17,7 +17,7 @@
 {
     try-catch, try-catch__,
     exception, raise, die, decorate-exception,
-} = require '../lib/index'
+} = require '../index'
 
 describe 'try/catch__' ->
     fails = -> throw new Error

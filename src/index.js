@@ -100,9 +100,6 @@ export const tapDotNMut = tapDotN
 // --- not anaphoric unless param is baked into yes or no.
 // --- doesn't seem useful to pass anything into the yes and no functions.
 // --- for anaphoric, see cond.
-// export const ifCond = curry ((yes, no, cond) => cond ? yes () : no ())
-// export const whenCond = curry ((yes, cond) => cond | ifCond (yes) (noop))
-// export const ifCond__ = (cond, yes, no = noop) => cond | ifCond (yes) (no)
 
 // @todo need something like
 // when (isTTY, stdin => ...)
@@ -155,6 +152,10 @@ export const ifHas = curry ((yes, no, [o, k]) => o | has (k) ? yes (o[k], o, k) 
 export const whenHas = curry ((yes, spec) => spec | ifHas (yes) (noop))
 export const ifHas__ = (spec, yes, no = noop) => spec | ifHas (yes) (no)
 
+// what about is versions?
+//export const isTrue = eq (true)
+//export const isFalse = eq (false)
+
 // @todo test
 export const ifHasIn = curry ((yes, no, [o, k]) => o | hasIn (k) ? yes (o[k], o, k) : no (o, k))
 export const whenHasIn = curry ((yes, spec) => spec | ifHasIn (yes) (noop))
@@ -181,6 +182,9 @@ export const ifBind__ = (spec, yes, no = noop) => spec | ifBind (yes) (no)
 //         if (result) return exec (target, result)
 //     }
 // })
+
+// @ todo
+export const xCond = (...args) => null | cond (...args)
 
 // need version with no target xx
 export const cond = curry ((blocks, target) => {
@@ -243,11 +247,20 @@ export const ifOne = curry ((yes, no, x) => x === 1 ? yes (x) : no (x))
 export const whenOne = curry ((yes, x) => x | ifOne (yes) (noop))
 export const ifOne__ = (x, yes, no = noop) => x | ifOne (yes) (no)
 
+// --- use ramda empty xxx
 export const ifEmpty = curry ((yes, no, xs) => xs.length === 0 ? yes (xs) : no (xs))
 export const whenEmpty = curry ((yes, xs) => xs | ifEmpty (yes) (noop))
 export const ifEmpty__ = (xs, yes, no = noop) => xs | ifEmpty (yes) (no)
 
-// --- tests for exact truth. better truthy? @todo
+// --- tests for exact truth. Rationale: predicate can easily be made to test truthy by adding >>
+// truthy.
+//
+// --- we don't provide an ifNotPredicate function, because users are encouraged to compose their
+// own functions, and it would be confusing.
+//
+// (should ifNotPredicate match falsey or false? If falsey, it breaks symmetry with ifPredicate; if
+// false, it behaves differently than ifPredicate (pred >> not), which is also confusing.
+//
 export const ifPredicate = curry ((f, yes, no, x) => f (x) === true ? yes (x) : no (x))
 export const whenPredicate = curry ((f, yes, x) => x | ifPredicate (f) (yes) (noop))
 export const ifPredicate__ = (f, x, yes, no = noop) => x | ifPredicate (f) (yes) (no)
@@ -265,6 +278,9 @@ export const cascade = (val, ...fxs) =>
     fxs | reduce ((a, b) => b (a), val)
 
 // ------ bind
+
+// would be nice to bind with an arg, e.g. exit with a code.
+//const exit = 'exit' | bind (process)
 
 // --- dies if o[prop] is not a function.
 export const bind = curry ((o, prop) => o[prop].bind (o))
@@ -333,7 +349,7 @@ export const prependToMut = curry ((tgt, src) => {
 // @todo: alias precatFrom
 export const concatTo = rConcat
 
-// @todo: alias precatTo
+// @todo: alias precatTo/From
 export const concatFrom = flip (rConcat)
 
 // [] -> [] -> [], mut
@@ -420,7 +436,8 @@ export const mergeAllIn = xs => xs | reduce (
 // --- returns an object.
 // --- user function f is expected to return pairs: [k, v]
 //
-// if target is an obj, it maps on key/value pairs of object.
+// if target is an obj, it maps on key/value pairs of object -- this is different from ramda's map
+// in that it can change the keys.
 // if target is an array [key, value, key, value], it maps on pairs (think %foo= @foo in perl)
 //
 // ordering: k, v.
@@ -668,6 +685,7 @@ export const xReplaceStrFlags = curry ((reStr, flags, repl, target) =>
     target.replace (xRegExpStr (reStr, flags), repl)
 )
 
+// xxx repl might be a function.
 export const ifReplace = curry ((yes, no, re, repl, target) => {
     let success = 0
     const out = target.replace (re, () => {
@@ -744,6 +762,11 @@ export const factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
 
 
 
+// xxx getType
+// export const getType = callUnder ({}.toString)
+//    >> dot2 ('slice') (8, -1) (
+//)
+
 // --- wants upper case, e.g. output of toString.
 export const isType = curry ((t, x) => x
     | callUnder ({}.toString)
@@ -788,6 +811,8 @@ const listDat5 = flipC (n => n | pass1 | map)
 
 const _$ = {}
 
+// xx can lead to annoying bug if a symbol slips past the linter.
+// consider using _$
 export const condElse = appendTo ([void 8])
 
 export const condEquals = curry ((exec, testString) => [
@@ -814,7 +839,7 @@ export const lt = flip (rLt)
 export const lte = flip (rLte)
 
 // --- different from R.equals, which considers two different objects equal if their contents are
-//     the same.
+//     the same (equivalent).
 // --- different from R.identical, which has some different semantics involving e.g. 0 and -0.
 // --- literally just wraps ===.
 // rationale: must be able to confidently refactor working code which uses ===
@@ -827,12 +852,27 @@ const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | applyN (f)
 const headTail = f => splitAt (1) >> f
 
 
+// --- biased towards not using method lookup, but free floating function names.
+// --- exceptions as expressions.
+// --- extended regex.
+//
+// curry2
+// curry3
+// condMultiple
+//
+//
+// destructuring, as a function:
+//
+// this | pluck ('beans', 'bones', 'binds', (beans, bones, binds) => ...)
+// could combine ramda props with apply.
+
 export const notOk = isNil
 
 
 // ditch brackets on cond.
 // a line can still be an array if you want the 'raw' predicate / exec.
 // make an extra one (condN ?) for if programmatic building is required.
+
 //
 // subtract, subtractFrom.
 // divide, divideBy.
@@ -845,3 +885,6 @@ export const notOk = isNil
 //
 // be careful with defaultToA ({}) if point-free. ?
 //
+
+// const toThe = curry ((exp, base) => Math.pow (base, exp))
+

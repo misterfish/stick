@@ -4,8 +4,9 @@ set -e
 
 bindir=$(realpath "$(dirname "$0")")
 
+. "$bindir"/vars
 . "$bindir"/functions.bash
 
-USAGE="Usage: $0"
-
-cmd "$bindir"/_run_tests -w "$@"
+cmd "$lsccmd" -w -bck --no-header \
+    "$tstdir"/*.ls \
+    "$@"

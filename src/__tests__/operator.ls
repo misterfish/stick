@@ -16,7 +16,7 @@
 {
     bitwise-and, bitwise-or, bitwise-xor, bitwise-not,
     bitwise-left, bitwise-right, bitwise-right-zero-fill,
-} = require '../lib/index'
+} = require '../index'
 
 describe 'bitwise' ->
     describe 'bitwiseAnd' ->

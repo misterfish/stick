@@ -724,6 +724,26 @@ maybe tuple? tuple(1, 2, 3)
 
 
 
+const makeSelectUsername = () => createSelector(
+  selectHome,
+  (homeState) => homeState.get('username')
+);
+
+
+use pipe to deconstruct
+
+action | (
+    ({ type, data, }) => ...
+)
+
+
+
+// --- precisly ramda's isEmpty, except that it dies. only instructional.
+export const isEmpty = x => x | getType | cond ([
+  'Array' | eq | guard (_ => x | isEmptyList),
+  'Object' | eq | guard (_ => x | isEmptyObject),
+  'String' | eq | guard (_ => x | isEmptyString),
+  otherwise | guard (_ => exception ('bad arg ' + x) | raise)
 //       onKeyPress={({ key, }) => key === 'Enter' && onBlur ()}
       onKeyPress={ prop ('key') >> whenEquals ('Enter') (onBlur) }
 
@@ -744,6 +764,33 @@ null | cond ([
 
 
 
+DateTime.prototype.toString = function () {
+    const { date, time: maybeTime, } = this
+    const time = maybeTime | fold (
+        identity,
+        'no time info',
+    )
+    return [date, time]
+    | sprintfN ("Date: %s, Time: %s")
+
+    this | pluck (
+        'date', 'time',
+        (date, maybeTime) => 
+    )
+
+    this | laatso (
+        pluck ('date'),
+        pluck ('time'),
+        (_, _, maybeTime) => maybeTime | fold (
+            identity,
+            'no time info',
+        ),
+        (_, date, _, time) => [date, time] | sprintfN ("Date: %s, Time: %s"),
+        // or
+        // args (1, 3) >> sprintfN (...)
+    )
+}
+
 notEarlierThan.
 encouraged to think in terms of natural sentences with a preposition.
 
@@ -761,3 +808,36 @@ FAQ
 
 Should I use stick?
 Of course not.
+
+const colon = curry ((x, xs) => [x, ...xs])
+
+/*
+ * sequence [] = pure []
+ * sequence (x:xs) = (:) <$> x <*> sequence xs
+ * sequence (x:xs) = liftA2 (:) x (sequence xs)
+ *
+ * x is a monad (e.g. x a), and sequence xs is a monad (e.g. y b)
+ * if x is right and y is right, sequence xs is right: right (a:b)
+ * if x is left and y is right, x
+ * if x is right and y is left, y
+ * if both left, x
+ */
+
+const liftA2 = 'liftA2' | bind (bilby)
+
+const sequence = (pure) => {
+    const _sequence = xs => xs.length === 0
+        ? ([] | pure)
+        : liftA2 (colon, xs | head, xs | tail | _sequence)
+    return _sequence
+}
+
+; [
+    [ 10 | right, 5 | right, 'bad' | left, 12 | right],
+    [ 10 | right, 5 | right, 12 | right],
+]
+| map (
+    sequence (right) >> fold (id, id)
+)
+| log
+

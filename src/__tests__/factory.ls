@@ -10,14 +10,14 @@
 } = require 'ramda'
 
 {
-    array-ls,
+    list,
     test, xtest,
     expect-to-equal, expect-to-be,
 } = require './common'
 
 {
     factory,
-} = require '../lib/index'
+} = require '../index'
 
 num-keys = keys >> (.length)
 

@@ -9,7 +9,7 @@
 } = require 'ramda'
 
 {
-    array-ls,
+    list,
     test, xtest,
     expect-to-equal, expect-to-be,
 } = require './common'
@@ -33,7 +33,7 @@
     map-pairs, map-pairs-in, each-obj-in,
     apply-scalar, pass-scalar,
 
-} = require '../lib/index'
+} = require '../index'
 
 describe 'default to' ->
     test 1 ->
@@ -888,14 +888,14 @@ describe 'data transforms' ->
 
     describe 'mergeAllIn' ->
         test 'no prototypes' ->
-            merge-all-in array-ls do
+            merge-all-in list do
                 *   a: 1
                 *   b: 2
                 *   c: 3
             |> expect-to-equal do
                 a: 1 b: 2 c: 3
         test 'with prototypes' ->
-            merge-all-in array-ls do
+            merge-all-in list do
                 { a: 1 } |> Object.create
                 { b: 2 } |> Object.create
                 { c: 3 } |> Object.create

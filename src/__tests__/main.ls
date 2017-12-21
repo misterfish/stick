@@ -9,9 +9,10 @@
 } = require 'ramda'
 
 {
-    array-ls,
+    list,
     test, xtest,
     expect-to-equal, expect-to-be,
+    expect-to-throw,
 } = require './common'
 
 {
@@ -33,7 +34,7 @@
 
     if-replace, if-x-replace, if-x-replace-str, if-x-replace-str-flags,
 
-} = main = require '../lib/index'
+} = main = require '../index'
 
 describe 'cascade' ->
     test 1 ->
@@ -56,7 +57,7 @@ describe 'bind*' ->
         describe bind-func-name, ->
             test 'binds' ->
                 bad-speak = obj.speak
-                (expect bad-speak()).not.to-equal 'my name is dog'
+                bad-speak |> expect-to-throw
 
                 good-speak = bind-func obj, 'speak'
                 (expect good-speak()).to-equal 'my name is dog'
@@ -256,7 +257,7 @@ describe 'laatStar' ->
                 | m == 1 => 1
                 | otherwise => sum-last-two prev
             refs = r-repeat entry, n + 1
-            laat-star refs, array-ls
+            laat-star refs, list
 
         (expect fibonacci 0).to-equal [1]
         (expect fibonacci 1).to-equal [1 1]

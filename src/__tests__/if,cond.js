@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, arrayLs, test, xtest, expectToEqual, expectToBe, ifCond, whenCond, ifCond__, ifOk, whenOk, ifOk__, ifTrue, whenTrue, ifTrue__, ifFalse, whenFalse, ifFalse__, ifYes, whenYes, ifYes__, ifNo, whenNo, ifNo__, ifFunction, whenFunction, ifFunction__, ifLengthOne, whenLengthOne, ifLengthOne__, ifEmpty, whenEmpty, ifEmpty__, cond, doTests, doTestDoubleArm, doTestSingleArm;
-ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
-ref$ = require('./common'), arrayLs = ref$.arrayLs, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../lib/index'), ifCond = ref$.ifCond, whenCond = ref$.whenCond, ifCond__ = ref$.ifCond__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifOk__ = ref$.ifOk__, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifTrue__ = ref$.ifTrue__, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifFalse__ = ref$.ifFalse__, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifYes__ = ref$.ifYes__, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifNo__ = ref$.ifNo__, ifFunction = ref$.ifFunction, whenFunction = ref$.whenFunction, ifFunction__ = ref$.ifFunction__, ifLengthOne = ref$.ifLengthOne, whenLengthOne = ref$.whenLengthOne, ifLengthOne__ = ref$.ifLengthOne__, ifEmpty = ref$.ifEmpty, whenEmpty = ref$.whenEmpty, ifEmpty__ = ref$.ifEmpty__, cond = ref$.cond;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifOk__, ifTrue, whenTrue, ifTrue__, ifFalse, whenFalse, ifFalse__, ifYes, whenYes, ifYes__, ifNo, whenNo, ifNo__, ifFunction, whenFunction, ifFunction__, ifLengthOne, whenLengthOne, ifLengthOne__, ifEmpty, whenEmpty, ifEmpty__, cond, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
+ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, id = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
+ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
+ref$ = require('../index'), ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifOk__ = ref$.ifOk__, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifTrue__ = ref$.ifTrue__, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifFalse__ = ref$.ifFalse__, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifYes__ = ref$.ifYes__, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifNo__ = ref$.ifNo__, ifFunction = ref$.ifFunction, whenFunction = ref$.whenFunction, ifFunction__ = ref$.ifFunction__, ifLengthOne = ref$.ifLengthOne, whenLengthOne = ref$.whenLengthOne, ifLengthOne__ = ref$.ifLengthOne__, ifEmpty = ref$.ifEmpty, whenEmpty = ref$.whenEmpty, ifEmpty__ = ref$.ifEmpty__, cond = ref$.cond;
 doTests = curry$(function(describeSpec, tests){
   return each(function(testSpec){
     var numArms, ref$, ref1$, theTest;
@@ -67,36 +67,23 @@ doTestSingleArm = curry$(function(arg$, arg1$){
     }
   });
 });
-describe('whenCond', function(){
-  var describeSpec, tests;
+describe('whenPredicate', function(){
+  var describeSpec, tests, describeSpec2, tests2, this$ = this;
   describeSpec = {
-    fn: whenCond,
+    fn: whenPredicate((function(it){
+      return it > 3;
+    })),
     is__: false,
-    anaphoric: false
+    anaphoric: true
   };
-  tests = arrayLs({
-    desc: 'true',
-    inputVal: true,
+  tests = list({
+    desc: '4',
+    inputVal: 4,
     expectBranch: 'ja',
     numArms: 1
   }, {
     desc: '3',
     inputVal: 3,
-    expectBranch: 'ja',
-    numArms: 1
-  }, {
-    desc: 'false',
-    inputVal: false,
-    expectBranch: 'nee',
-    numArms: 1
-  }, {
-    desc: 'empty string',
-    inputVal: '',
-    expectBranch: 'nee',
-    numArms: 1
-  }, {
-    desc: 'undefined',
-    inputVal: void 8,
     expectBranch: 'nee',
     numArms: 1
   }, {
@@ -105,107 +92,100 @@ describe('whenCond', function(){
     expectBranch: 'nee',
     numArms: 1
   });
-  return doTests(describeSpec, tests);
-});
-describe('ifCond', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: ifCond,
+  doTests(describeSpec, tests);
+  describeSpec2 = {
+    fn: whenPredicate(id),
     is__: false,
-    anaphoric: false
+    anaphoric: true
   };
-  tests = arrayLs({
-    desc: 'true',
-    inputVal: true,
-    expectBranch: 'ja',
-    numArms: 2
-  }, {
-    desc: '3',
+  tests2 = list({
+    desc: 'exact truth, not truthy',
     inputVal: 3,
-    expectBranch: 'ja',
-    numArms: 2
-  }, {
-    desc: 'false',
-    inputVal: false,
     expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'empty string',
-    inputVal: '',
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'undefined',
-    inputVal: void 8,
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'null',
-    inputVal: null,
-    expectBranch: 'nee',
-    numArms: 2
+    numArms: 1
   });
-  return doTests(describeSpec, tests);
+  return doTests(describeSpec2, tests2);
 });
-describe('ifCond__', function(){
-  var describeSpec, tests;
+describe('ifPredicate', function(){
+  var describeSpec, tests, describeSpec2, tests2, this$ = this;
   describeSpec = {
-    fn: ifCond__,
-    is__: true,
-    anaphoric: false
+    fn: ifPredicate((function(it){
+      return it > 3;
+    })),
+    is__: false,
+    anaphoric: true
   };
-  tests = arrayLs({
-    desc: 'true',
-    inputVal: true,
+  tests = list({
+    desc: '4',
+    inputVal: 4,
     expectBranch: 'ja',
     numArms: 2
-  }, {
-    desc: 'true, no else',
-    inputVal: true,
-    expectBranch: 'ja',
-    numArms: 1
   }, {
     desc: '3',
     inputVal: 3,
-    expectBranch: 'ja',
-    numArms: 2
-  }, {
-    desc: '3, no else',
-    inputVal: 3,
-    expectBranch: 'ja',
-    numArms: 1
-  }, {
-    desc: 'false',
-    inputVal: false,
     expectBranch: 'nee',
     numArms: 2
-  }, {
-    desc: 'false, no else',
-    inputVal: false,
-    expectBranch: 'nee',
-    numArms: 1
-  }, {
-    desc: 'undefined',
-    inputVal: void 8,
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'undefined, no else',
-    inputVal: void 8,
-    expectBranch: 'nee',
-    numArms: 1
   }, {
     desc: 'null',
     inputVal: null,
     expectBranch: 'nee',
     numArms: 2
+  });
+  doTests(describeSpec, tests);
+  describeSpec2 = {
+    fn: ifPredicate(id),
+    is__: false,
+    anaphoric: true
+  };
+  tests2 = list({
+    desc: 'exact truth, not truthy',
+    inputVal: 3,
+    expectBranch: 'nee',
+    numArms: 2
+  });
+  return doTests(describeSpec2, tests2);
+});
+describe('ifPredicate__', function(){
+  var describeSpec, tests, describeSpec2, tests2;
+  describeSpec = {
+    fn: function(){
+      var this$ = this;
+      return ifPredicate__.apply(null, [(function(it){
+        return it > 3;
+      })].concat(slice$.call(arguments)));
+    },
+    is__: true
+  };
+  tests = list({
+    desc: '4',
+    inputVal: 4,
+    expectBranch: 'ja',
+    numArms: 2
   }, {
-    desc: 'null, no else',
+    desc: '3',
+    inputVal: 3,
+    expectBranch: 'nee',
+    numArms: 2
+  }, {
+    desc: 'null',
     inputVal: null,
     expectBranch: 'nee',
-    numArms: 1
+    numArms: 2
   });
-  return doTests(describeSpec, tests);
+  doTests(describeSpec, tests);
+  describeSpec2 = {
+    fn: function(){
+      return ifPredicate__.apply(null, [id].concat(slice$.call(arguments)));
+    },
+    is__: true
+  };
+  tests2 = list({
+    desc: 'exact truth, not truthy',
+    inputVal: 3,
+    expectBranch: 'nee',
+    numArms: 2
+  });
+  return doTests(describeSpec2, tests2);
 });
 describe('whenOk', function(){
   var describeSpec, tests;
@@ -213,7 +193,7 @@ describe('whenOk', function(){
     fn: whenOk,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'ja',
@@ -247,7 +227,7 @@ describe('ifOk', function(){
     fn: ifOk,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'ja',
@@ -281,7 +261,7 @@ describe('ifOk__', function(){
     fn: ifOk__,
     is__: true
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'ja',
@@ -330,7 +310,7 @@ describe('whenTrue', function(){
     fn: whenTrue,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'ja',
@@ -364,7 +344,7 @@ describe('ifTrue', function(){
     fn: ifTrue,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'ja',
@@ -393,7 +373,7 @@ describe('ifTrue__', function(){
     fn: ifTrue__,
     is__: true
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'ja',
@@ -432,7 +412,7 @@ describe('whenFalse', function(){
     fn: whenFalse,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'false',
     inputVal: false,
     expectBranch: 'ja',
@@ -461,7 +441,7 @@ describe('ifFalse', function(){
     fn: ifFalse,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'false',
     inputVal: false,
     expectBranch: 'ja',
@@ -485,7 +465,7 @@ describe('ifFalse__', function(){
     fn: ifFalse__,
     is__: true
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'false',
     inputVal: false,
     expectBranch: 'ja',
@@ -514,7 +494,7 @@ describe('whenYes', function(){
     fn: whenYes,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'ja',
@@ -548,7 +528,7 @@ describe('ifYes', function(){
     fn: ifYes,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'ja',
@@ -582,7 +562,7 @@ describe('ifYes__', function(){
     fn: ifYes__,
     is__: true
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'ja',
@@ -621,7 +601,7 @@ describe('whenNo', function(){
     fn: whenNo,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'nee',
@@ -655,7 +635,7 @@ describe('ifNo', function(){
     fn: ifNo,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'nee',
@@ -689,7 +669,7 @@ describe('ifNo__', function(){
     fn: ifNo__,
     is__: true
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'true',
     inputVal: true,
     expectBranch: 'nee',
@@ -728,7 +708,7 @@ describe('whenFunction', function(){
     fn: whenFunction,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'function',
     inputVal: function(){},
     expectBranch: 'ja',
@@ -762,7 +742,7 @@ describe('ifFunction', function(){
     fn: ifFunction,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'function',
     inputVal: function(){},
     expectBranch: 'ja',
@@ -791,7 +771,7 @@ describe('ifFunction__', function(){
     fn: ifFunction__,
     is__: true
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'function',
     inputVal: function(){},
     expectBranch: 'ja',
@@ -830,7 +810,7 @@ describe('whenLengthOne', function(){
     fn: whenLengthOne,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'array n = 1',
     inputVal: [9],
     expectBranch: 'ja',
@@ -849,7 +829,7 @@ describe('ifLengthOne', function(){
     fn: ifLengthOne,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'array n = 1',
     inputVal: [9],
     expectBranch: 'ja',
@@ -868,7 +848,7 @@ describe('ifLengthOne__', function(){
     fn: ifLengthOne__,
     is__: true
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'array n = 1',
     inputVal: [9],
     expectBranch: 'ja',
@@ -897,7 +877,7 @@ describe('whenEmpty', function(){
     fn: whenEmpty,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'array n = 1',
     inputVal: [9],
     expectBranch: 'nee',
@@ -916,7 +896,7 @@ describe('ifEmpty', function(){
     fn: ifEmpty,
     is__: false
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'array n = 1',
     inputVal: [9],
     expectBranch: 'nee',
@@ -935,7 +915,7 @@ describe('ifEmpty__', function(){
     fn: ifEmpty__,
     is__: true
   };
-  tests = arrayLs({
+  tests = list({
     desc: 'array n = 1',
     inputVal: [9],
     expectBranch: 'nee',

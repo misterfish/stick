@@ -9,7 +9,7 @@
 } = require 'ramda'
 
 {
-    array-ls,
+    list,
     test, xtest,
     expect-to-equal, expect-to-be,
 } = require './common'
@@ -25,7 +25,7 @@
     call-on, call-on1, call-on2, call-on3, call-on-n,
     call-under, call-under1, call-under2,
 
-} = require '../lib/index'
+} = require '../index'
 
 describe 'invoke' ->
     func = -> 'horse'
@@ -128,7 +128,7 @@ describe 'call*' ->
         name: 'dog'
         speak: -> 'my name is ' + @name
         speak1: (word) -> "my #word is " + @name
-        speak-all: array-ls >> join ':'
+        speak-all: list >> join ':'
     describe 'aliases' ->
         normal = [call-on, call-on1, call-on2, call-on3, call-on-n]
         alias = [call, call1, call2, call3, call-n]
@@ -161,7 +161,7 @@ describe 'call*' ->
             [].concat
             |> call-on2 [1 to 3] 4 5
             |> expect-to-equal [1 to 5]
-        test 'user-obj, discards' ->
+        test 'user-obj, caps (discards) second arg' ->
             obj.speak1
             |> call-on2 obj, 'friend' 'send'
             |> expect-to-equal 'my friend is dog'

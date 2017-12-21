@@ -9,18 +9,18 @@
 } = require 'ramda'
 
 {
-    array-ls,
+    list,
     test, xtest,
     expect-to-equal, expect-to-be,
 } = require './common'
 
 {
     array, repeat, times, compact, compact-ok, join-ok,
-} = require '../lib/index'
+} = require '../index'
 
 describe 'array' ->
     test 1 ->
-        array 3 4 5
+        [3 4 5]
         |> expect-to-equal [3 to 5]
 
 describe 'repeat' ->

@@ -21,7 +21,7 @@
     tap-dot, tap-dot1, tap-dot2, tap-dot3, tap-dot-n,
     tap-mut,
     tap-dot-mut, tap-dot1-mut, tap-dot2-mut, tap-dot3-mut, tap-dot-n-mut,
-} = require '../lib/index'
+} = require '../index'
 
 describe 'dot*' ->
     obj =

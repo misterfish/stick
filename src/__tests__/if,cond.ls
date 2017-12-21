@@ -1,5 +1,5 @@
 {
-    assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: each, complement, isNil,
+    assoc, assocPath, head, tail, reduceRight, chain, identity: id, reduce, map, filter, join, split, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: each, complement, isNil,
     repeat: rRepeat,
     times: r-times,
     reverse,
@@ -9,13 +9,13 @@
 } = require 'ramda'
 
 {
-    array-ls,
+    list,
     test, xtest,
     expect-to-equal, expect-to-be,
 } = require './common'
 
 {
-    if-cond, when-cond, if-cond__,
+    if-predicate, when-predicate, if-predicate__,
 
     if-ok, when-ok, if-ok__,
     if-true, when-true, if-true__,
@@ -29,7 +29,7 @@
 
     cond,
 
-} = require '../lib/index'
+} = require '../index'
 
 # --- @todo test anaphoric
 
@@ -42,12 +42,16 @@ do-tests = (describe-spec, tests) -->
         the-test = if num-arms == 2 then do-test-double-arm else do-test-single-arm
         the-test describe-spec, test-spec
 
+# --- mocks return unlikely vals based on input-val
+# --- for all tests, count the number of calls to ja/nee mock
+# --- for anaphoric ones, also check that ja/nee were passed input and
+# therefore return the expected value.
+
 do-test-double-arm = ({ fn, is__, anaphoric = true }, { desc, input-val, expect-branch, }) --> test desc, ->
-    # --- mocks return unlikely vals based on input-val
     ja = jest.fn()
-        ..mock-implementation (x) -> [x, x, x]
+        ..mock-implementation (x) -> [x] * 3
     nee = jest.fn()
-        ..mock-implementation (x) -> [x, x, x, x]
+        ..mock-implementation (x) -> [x] * 4
 
     ret =
         # --- also ensures that currying works.
@@ -64,9 +68,8 @@ do-test-double-arm = ({ fn, is__, anaphoric = true }, { desc, input-val, expect-
     if anaphoric then ret |> expect-to-equal expected-ret
 
 do-test-single-arm = ({ fn, is__, anaphoric = true }, { desc, input-val, expect-branch, }) --> test desc, ->
-    # --- mocks return unlikely vals based on input-val
     ja = jest.fn()
-        ..mock-implementation (x) -> [x, x, x]
+        ..mock-implementation (x) -> [x] * 3
 
     ret =
         if not is__ then input-val |> fn ja
@@ -80,31 +83,20 @@ do-test-single-arm = ({ fn, is__, anaphoric = true }, { desc, input-val, expect-
 
     if anaphoric then ret |> expect-to-equal expected-ret
 
-describe 'whenCond' ->
+# --- @todo: remove anaphoric (they are all anaphoric)
+describe 'whenPredicate' ->
     describe-spec =
-        fn: when-cond
+        fn: when-predicate (> 3)
         is__: false
-        anaphoric: false
+        anaphoric: true
 
-    tests = array-ls do
-        *   desc: 'true'
-            input-val: true
+    tests = list do
+        *   desc: '4'
+            input-val: 4
             expect-branch: 'ja'
             num-arms: 1
         *   desc: '3'
             input-val: 3
-            expect-branch: 'ja'
-            num-arms: 1
-        *   desc: 'false'
-            input-val: false
-            expect-branch: 'nee'
-            num-arms: 1
-        *   desc: 'empty string'
-            input-val: ''
-            expect-branch: 'nee'
-            num-arms: 1
-        *   desc: 'undefined'
-            input-val: void
             expect-branch: 'nee'
             num-arms: 1
         *   desc: 'null'
@@ -114,31 +106,32 @@ describe 'whenCond' ->
 
     do-tests describe-spec, tests
 
-describe 'ifCond' ->
-    describe-spec =
-        fn: if-cond
+    describe-spec2 =
+        fn: when-predicate id
         is__: false
-        anaphoric: false
+        anaphoric: true
 
-    tests = array-ls do
-        *   desc: 'true'
-            input-val: true
+    tests2 = list do
+        *   desc: 'exact truth, not truthy'
+            input-val: 3
+            expect-branch: 'nee'
+            num-arms: 1
+
+    do-tests describe-spec2, tests2
+
+describe 'ifPredicate' ->
+    describe-spec =
+        fn: if-predicate (> 3)
+        is__: false
+        anaphoric: true
+
+    tests = list do
+        *   desc: '4'
+            input-val: 4
             expect-branch: 'ja'
             num-arms: 2
         *   desc: '3'
             input-val: 3
-            expect-branch: 'ja'
-            num-arms: 2
-        *   desc: 'false'
-            input-val: false
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'empty string'
-            input-val: ''
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'undefined'
-            input-val: void
             expect-branch: 'nee'
             num-arms: 2
         *   desc: 'null'
@@ -148,63 +141,58 @@ describe 'ifCond' ->
 
     do-tests describe-spec, tests
 
-describe 'ifCond__' ->
+    describe-spec2 =
+        fn: if-predicate id
+        is__: false
+        anaphoric: true
+
+    tests2 = list do
+        *   desc: 'exact truth, not truthy'
+            input-val: 3
+            expect-branch: 'nee'
+            num-arms: 2
+
+    do-tests describe-spec2, tests2
+
+describe 'ifPredicate__' ->
     describe-spec =
-        fn: if-cond__
+        fn: -> if-predicate__ ...[(> 3), ...&]
         is__: true
-        anaphoric: false
 
-    tests = array-ls do
-        *   desc: 'true'
-            input-val: true
+    tests = list do
+        *   desc: '4'
+            input-val: 4
             expect-branch: 'ja'
             num-arms: 2
-        *   desc: 'true, no else'
-            input-val: true
-            expect-branch: 'ja'
-            num-arms: 1
         *   desc: '3'
             input-val: 3
-            expect-branch: 'ja'
-            num-arms: 2
-        *   desc: '3, no else'
-            input-val: 3
-            expect-branch: 'ja'
-            num-arms: 1
-        *   desc: 'false'
-            input-val: false
             expect-branch: 'nee'
             num-arms: 2
-        *   desc: 'false, no else'
-            input-val: false
-            expect-branch: 'nee'
-            num-arms: 1
-        *   desc: 'undefined'
-            input-val: void
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'undefined, no else'
-            input-val: void
-            expect-branch: 'nee'
-            num-arms: 1
         *   desc: 'null'
             input-val: null
             expect-branch: 'nee'
             num-arms: 2
-        *   desc: 'null, no else'
-            input-val: null
-            expect-branch: 'nee'
-            num-arms: 1
 
     do-tests describe-spec, tests
 
+    describe-spec2 =
+        fn: -> if-predicate__ ...[id, ...&]
+        is__: true
+
+    tests2 = list do
+        *   desc: 'exact truth, not truthy'
+            input-val: 3
+            expect-branch: 'nee'
+            num-arms: 2
+
+    do-tests describe-spec2, tests2
 
 describe 'whenOk' ->
     describe-spec =
         fn: when-ok
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'ja'
@@ -233,7 +221,7 @@ describe 'ifOk' ->
         fn: if-ok
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'ja'
@@ -262,7 +250,7 @@ describe 'ifOk__' ->
         fn: if-ok__
         is__: true
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'ja'
@@ -303,7 +291,7 @@ describe 'whenTrue' ->
         fn: when-true
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'ja'
@@ -332,7 +320,7 @@ describe 'ifTrue' ->
         fn: if-true
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'ja'
@@ -357,7 +345,7 @@ describe 'ifTrue__' ->
         fn: if-true__
         is__: true
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'ja'
@@ -390,7 +378,7 @@ describe 'whenFalse' ->
         fn: when-false
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'false'
             input-val: false
             expect-branch: 'ja'
@@ -415,7 +403,7 @@ describe 'ifFalse' ->
         fn: if-false
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'false'
             input-val: false
             expect-branch: 'ja'
@@ -436,7 +424,7 @@ describe 'ifFalse__' ->
         fn: if-false__
         is__: true
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'false'
             input-val: false
             expect-branch: 'ja'
@@ -461,7 +449,7 @@ describe 'whenYes' ->
         fn: when-yes
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'ja'
@@ -490,7 +478,7 @@ describe 'ifYes' ->
         fn: if-yes
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'ja'
@@ -519,7 +507,7 @@ describe 'ifYes__' ->
         fn: if-yes__
         is__: true
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'ja'
@@ -552,7 +540,7 @@ describe 'whenNo' ->
         fn: when-no
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'nee'
@@ -581,7 +569,7 @@ describe 'ifNo' ->
         fn: if-no
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'nee'
@@ -610,7 +598,7 @@ describe 'ifNo__' ->
         fn: if-no__
         is__: true
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'true'
             input-val: true
             expect-branch: 'nee'
@@ -645,7 +633,7 @@ describe 'whenFunction' ->
         fn: when-function
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'function'
             input-val: ->
             expect-branch: 'ja'
@@ -674,7 +662,7 @@ describe 'ifFunction' ->
         fn: if-function
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'function'
             input-val: ->
             expect-branch: 'ja'
@@ -699,7 +687,7 @@ describe 'ifFunction__' ->
         fn: if-function__
         is__: true
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'function'
             input-val: ->
             expect-branch: 'ja'
@@ -732,7 +720,7 @@ describe 'whenLengthOne' ->
         fn: when-length-one
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'array n = 1'
             input-val: [9]
             expect-branch: 'ja'
@@ -749,7 +737,7 @@ describe 'ifLengthOne' ->
         fn: if-length-one
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'array n = 1'
             input-val: [9]
             expect-branch: 'ja'
@@ -766,7 +754,7 @@ describe 'ifLengthOne__' ->
         fn: if-length-one__
         is__: true
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'array n = 1'
             input-val: [9]
             expect-branch: 'ja'
@@ -791,7 +779,7 @@ describe 'whenEmpty' ->
         fn: when-empty
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'array n = 1'
             input-val: [9]
             expect-branch: 'nee'
@@ -808,7 +796,7 @@ describe 'ifEmpty' ->
         fn: if-empty
         is__: false
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'array n = 1'
             input-val: [9]
             expect-branch: 'nee'
@@ -825,7 +813,7 @@ describe 'ifEmpty__' ->
         fn: if-empty__
         is__: true
 
-    tests = array-ls do
+    tests = list do
         *   desc: 'array n = 1'
             input-val: [9]
             expect-branch: 'nee'

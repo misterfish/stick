@@ -100,9 +100,6 @@ export const tapDotNMut = tapDotN
 // --- not anaphoric unless param is baked into yes or no.
 // --- doesn't seem useful to pass anything into the yes and no functions.
 // --- for anaphoric, see cond.
-// export const ifCond = curry ((yes, no, cond) => cond ? yes () : no ())
-// export const whenCond = curry ((yes, cond) => cond | ifCond (yes) (noop))
-// export const ifCond__ = (cond, yes, no = noop) => cond | ifCond (yes) (no)
 
 // @todo need something like
 // when (isTTY, stdin => ...)
@@ -255,7 +252,15 @@ export const ifEmpty = curry ((yes, no, xs) => xs.length === 0 ? yes (xs) : no (
 export const whenEmpty = curry ((yes, xs) => xs | ifEmpty (yes) (noop))
 export const ifEmpty__ = (xs, yes, no = noop) => xs | ifEmpty (yes) (no)
 
-// --- tests for exact truth. better truthy? @todo
+// --- tests for exact truth. Rationale: predicate can easily be made to test truthy by adding >>
+// truthy.
+//
+// --- we don't provide an ifNotPredicate function, because users are encouraged to compose their
+// own functions, and it would be confusing.
+//
+// (should ifNotPredicate match falsey or false? If falsey, it breaks symmetry with ifPredicate; if
+// false, it behaves differently than ifPredicate (pred >> not), which is also confusing.
+//
 export const ifPredicate = curry ((f, yes, no, x) => f (x) === true ? yes (x) : no (x))
 export const whenPredicate = curry ((f, yes, x) => x | ifPredicate (f) (yes) (noop))
 export const ifPredicate__ = (f, x, yes, no = noop) => x | ifPredicate (f) (yes) (no)
@@ -273,6 +278,9 @@ export const cascade = (val, ...fxs) =>
     fxs | reduce ((a, b) => b (a), val)
 
 // ------ bind
+
+// would be nice to bind with an arg, e.g. exit with a code.
+//const exit = 'exit' | bind (process)
 
 // --- dies if o[prop] is not a function.
 export const bind = curry ((o, prop) => o[prop].bind (o))
@@ -341,7 +349,7 @@ export const prependToMut = curry ((tgt, src) => {
 // @todo: alias precatFrom
 export const concatTo = rConcat
 
-// @todo: alias precatTo
+// @todo: alias precatTo/From
 export const concatFrom = flip (rConcat)
 
 // [] -> [] -> [], mut

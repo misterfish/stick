@@ -8,4 +8,4 @@ bindir=$(realpath "$(dirname "$0")")
 
 USAGE="Usage: $0"
 
-cmd "$bindir"/_run_tests -w "$@"
+cmd "$bindir"/_run_tests "$@"

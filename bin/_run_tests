@@ -32,6 +32,4 @@ if [ "$watch" ]; then push argslist --watch; fi
 
 args=$(join argslist)
 
-chd "$srcdir"
-
-cmd "$nodemodulesdir"/.bin/jest --testRegex src/.+/__tests__ $args "$@"
+cmd "$nodemodulesdir"/.bin/jest --testRegex src/__tests__/.+ $args "$@"

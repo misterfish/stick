@@ -18,8 +18,11 @@
     zip-all,
 
     invoke,
-    pass1, pass2, pass3, pass-n,
+
+    apply-to1, apply-to2, apply-to3, apply-to-n,
+    pass-to1, pass-to2, pass-to3, pass-to-n,
     apply1, apply2, apply3, apply-n,
+    pass1, pass2, pass3, pass-n,
 
     call, call1, call2, call3, call-n,
     call-on, call-on1, call-on2, call-on3, call-on-n,
@@ -27,9 +30,10 @@
 
 } = require '../index'
 
+sum-all = (...args) -> args |> reduce ((a, b) -> a + b), 0
+
 describe 'invoke' ->
     func = -> 'horse'
-    sum-all = (...args) -> args |> reduce ((a, b) -> a + b), 0
     test 1 ->
         func
         |> invoke
@@ -38,90 +42,109 @@ describe 'invoke' ->
         sum-all
         |> invoke
         |> expect-to-equal 0
+    test 'iffy' ->
+        (invoke -> (+ 1)) 41
+        |> expect-to-equal 42
 
 describe 'pass*' ->
     func = -> 'horse'
-    sum-all = (...args) -> args |> reduce ((a, b) -> a + b), 0
-    describe 'pass1' ->
+    describe 'applyTo1' ->
         test 1 ->
             sum-all
-            |> pass1 12
+            |> apply-to1 12
             |> expect-to-equal 12
         test 2 ->
             (+ 4)
-            |> pass1 12
+            |> apply-to1 12
             |> expect-to-equal 16
         test 'discards extra args 1' ->
             func
-            |> pass1 'abc'
+            |> apply-to1 'abc'
             |> expect-to-equal 'horse'
-    describe 'pass2' ->
+    describe 'applyTo2' ->
         test 1 ->
             sum-all
-            |> pass2 12 13
+            |> apply-to2 12 13
             |> expect-to-equal 25
         test 2 ->
             (+)
-            |> pass2 20 30
+            |> apply-to2 20 30
             |> expect-to-equal 50
-    describe 'pass3' ->
+    describe 'applyTo3' ->
         test 1 ->
             sum-all
-            |> pass3 12 13 14
+            |> apply-to3 12 13 14
             |> expect-to-equal 39
         test 'discards' ->
             (+)
-            |> pass3 20 30 40
+            |> apply-to3 20 30 40
             |> expect-to-equal 50
-    describe 'passN' ->
+    describe 'applyToN' ->
         test 1 ->
             sum-all
-            |> pass-n [12 to 15]
+            |> apply-to-n [12 to 15]
             |> expect-to-equal 54
         test 2 ->
             (+)
-            |> pass-n [20 30]
+            |> apply-to-n [20 30]
             |> expect-to-equal 50
+    describe 'aliases' ->
+        test 1 ->
+            apply1 |> expect-to-equal apply-to1
+        test 2 ->
+            apply2 |> expect-to-equal apply-to2
+        test 3 ->
+            apply3 |> expect-to-equal apply-to3
+        test 'n' ->
+            apply-n |> expect-to-equal apply-to-n
 
-describe 'apply*' ->
+describe 'passTo*' ->
     func = -> 'horse'
-    sum-all = (...args) -> args |> reduce ((a, b) -> a + b), 0
-    describe 'apply1' ->
+    describe 'passTo1' ->
         test 1 ->
             12
-            |> apply1 sum-all
+            |> pass-to1 sum-all
             |> expect-to-equal 12
         test 2 ->
             12
-            |> apply1 (+ 4)
+            |> pass-to1 (+ 4)
             |> expect-to-equal 16
         test 'discards extra args 1' ->
             'abc'
-            |> apply1 func
+            |> pass-to1 func
             |> expect-to-equal 'horse'
-    describe 'apply2' ->
+    describe 'passTo2' ->
         test 1 ->
-            (apply2 sum-all) 12 13
+            (pass-to2 sum-all) 12 13
             |> expect-to-equal 25
         test 2 ->
-            (apply2 (+)) 20 30
+            (pass-to2 (+)) 20 30
             |> expect-to-equal 50
-    describe 'apply3' ->
+    describe 'passTo3' ->
         test 1 ->
-            (apply3 sum-all) 12 13 14
+            (pass-to3 sum-all) 12 13 14
             |> expect-to-equal 39
         test 'discards' ->
-            (apply3 (+)) 20 30 40
+            (pass-to3 (+)) 20 30 40
             |> expect-to-equal 50
-    describe 'applyN' ->
+    describe 'passToN' ->
         test 1 ->
             [12 to 15]
-            |> apply-n sum-all
+            |> pass-to-n sum-all
             |> expect-to-equal 54
         test 2 ->
             [20 30]
-            |> apply-n (+)
+            |> pass-to-n (+)
             |> expect-to-equal 50
+    describe 'aliases' ->
+        test 1 ->
+            pass1 |> expect-to-equal pass-to1
+        test 2 ->
+            pass2 |> expect-to-equal pass-to2
+        test 3 ->
+            pass3 |> expect-to-equal pass-to3
+        test 'n' ->
+            pass-n |> expect-to-equal pass-to-n
 
 describe 'call*' ->
     obj =

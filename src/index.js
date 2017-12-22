@@ -107,10 +107,10 @@ export const tapDotNMut = tapDotN
 // stdin | whenPredicate (isTTY, stdin => ...)
 //
 // doesn't work
-// stdin.setRawMode | whenFunction (pass1 (bool))
-// stdin.bindTry ('setRawMode') | whenFunction (pass1 (bool))
+// stdin.setRawMode | whenFunction (applyTo1 (bool))
+// stdin.bindTry ('setRawMode') | whenFunction (applyTo1 (bool))
 // --- this is horrible.
-// bool => tap (stdin => 'setRawMode' | bindTry (stdin) | whenFunction (pass1 (bool))),
+// bool => tap (stdin => 'setRawMode' | bindTry (stdin) | whenFunction (applyTo1 (bool))),
 // @todo whenBind? whenCan?
 
 //@todo export const ifNotOk = curry ((f, x) => ok (x) ? void 8 : f (x))
@@ -494,7 +494,7 @@ export const laat = (xs, f) => f.apply (null, xs)
 // symmetry with laat.
 
 export const laats = (...xs) => {
-    const executeStep = prevVals => passN (prevVals)
+    const executeStep = prevVals => applyToN (prevVals)
 
     const ys = xs
         // --- acc contains running output array, up to the previous item.
@@ -507,7 +507,7 @@ export const laats = (...xs) => {
 }
 
 // @todo
-export const laatsNO = curry ((fs, o) => laats | passN ([
+export const laatsNO = curry ((fs, o) => laats | applyToN ([
     o | always,
     ... fs,
 ]))
@@ -537,15 +537,28 @@ export const callUnder2 = curry ((f, val1, val2, o) => f.call (o, val1, val2))
 
 export const invoke = f => f ()
 
-export const pass1 = curry ((val, f) => f (val))
-export const pass2 = curry ((val1, val2, f) => f (val1, val2))
-export const pass3 = curry ((val1, val2, val3, f) => f (val1, val2, val3))
-export const passN = curry ((vs, f) => f.apply (null, vs))
+// ------ ; sum | applyToN ([1, 2, 3])
+export const applyTo1 = curry ((val, f) => f (val))
+export const applyTo2 = curry ((val1, val2, f) => f (val1, val2))
+export const applyTo3 = curry ((val1, val2, val3, f) => f (val1, val2, val3))
+export const applyToN = curry ((vs, f) => f.apply (null, vs))
 
-export const apply1 = curry ((f, val) => f (val))
-export const apply2 = curry ((f, val1, val2) => f (val1, val2))
-export const apply3 = curry ((f, val1, val2, val3) => f (val1, val2, val3))
-export const applyN = curry ((f, vs) => f.apply (null, vs))
+export const apply1 = applyTo1
+export const apply2 = applyTo2
+export const apply3 = applyTo3
+export const applyN = applyToN
+
+// ------ ; [1, 2, 3] | passToN (sum)
+
+export const passTo1 = curry ((f, val) => f (val))
+export const passTo2 = curry ((f, val1, val2) => f (val1, val2))
+export const passTo3 = curry ((f, val1, val2, val3) => f (val1, val2, val3))
+export const passToN = curry ((f, vs) => f.apply (null, vs))
+
+export const pass1 = passTo1
+export const pass2 = passTo2
+export const pass3 = passTo3
+export const passN = passToN
 
 // --- flip first and second args of a curried function, even for functions with more than 2 args.
 // --- also works for functions curried with the a => b => ... notation (unlike R.flip).
@@ -790,30 +803,30 @@ const mapAccumIndexed = addIndex (mapAccum)
 
 // @test
 export const laatNO = curry ((fs, f, x) => laat (
-    fs | map (pass1 (x)),
-    (...args) => f | passN ([x, ...args]),
+    fs | map (applyTo1 (x)),
+    (...args) => f | applyToN ([x, ...args]),
 ))
 export const laatO = laatNO
 
 // export const laatStarDat = curry ((fs, x) =>
 //     fs | map (
-//         f => (...args) => f | passN ([x, ...args]),
+//         f => (...args) => f | applyToN ([x, ...args]),
 //     )
-//     | applyN (laatStar),
+//     | passToN (laatStar),
 // )
 
 const listDat = curry ((fs, n) => fs | map (
-    pass1 (n),
+    applyTo1 (n),
 ))
 
 // --- or:
-const listDat2 = (n => map (pass1 (n)) | flipC)
-const listDat3 = flipC (n => map (pass1 (n)))
+const listDat2 = (n => map (applyTo1 (n)) | flipC)
+const listDat3 = flipC (n => map (applyTo1 (n)))
 // --- >> is higher.
-const listDat4 = pass1 >> map | curry | flipC
-const listDat6 = pass1 >> map | flipC
+const listDat4 = applyTo1 >> map | curry | flipC
+const listDat6 = applyTo1 >> map | flipC
 
-const listDat5 = flipC (n => n | pass1 | map)
+const listDat5 = flipC (n => n | applyTo1 | map)
 
 const _$ = {}
 
@@ -854,7 +867,7 @@ export const ne = curry ((x, y) => x !== y)
 
 export const blush = x => _ => x
 
-const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | applyN (f)
+const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | passToN (f)
 const headTail = f => splitAt (1) >> f
 
 

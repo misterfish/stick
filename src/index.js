@@ -519,6 +519,8 @@ export const laatsO = laatsNO
 // --- 'pass' means 'pass these params to a function'
 // --- 'invoke' means just call this function, no context or params.
 
+// ------ ; {}.toString | callOn ([])
+
 export const callOn = curry ((o, f) => f.call (o))
 export const callOn1 = curry ((o, val, f) => f.call (o, val))
 export const callOn2 = curry ((o, val1, val2, f) => f.call (o, val1, val2))
@@ -531,13 +533,16 @@ export const call2 = callOn2
 export const call3 = callOn3
 export const callN = callOnN
 
+// ------ ; [] | callUnder ({}.toString)
+
 export const callUnder = curry ((f, o) => f.call (o))
 export const callUnder1 = curry ((f, val, o) => f.call (o, val))
 export const callUnder2 = curry ((f, val1, val2, o) => f.call (o, val1, val2))
 
 export const invoke = f => f ()
 
-// ------ ; sum | applyToN ([1, 2, 3])
+// ------ sum | applyToN ([1, 2, 3])
+
 export const applyTo1 = curry ((val, f) => f (val))
 export const applyTo2 = curry ((val1, val2, f) => f (val1, val2))
 export const applyTo3 = curry ((val1, val2, val3, f) => f (val1, val2, val3))

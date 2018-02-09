@@ -168,3 +168,164 @@ Should be called passTo and applyTo.
 Then apply is an alias for applyTo
 and pass is an alias for passTo
 So backwards.
+
+
+
+You're not limited to piping 'values' through functions. You might want to pipe arrays, objects or
+even other functions through
+some pipeline. We offer the power to be extremely flexible
+about what is getting passed around and how, without having to remember an exponentially increasing
+number of function names or consult the documentation each time.
+
+We accomplish this using simple conventions and English grammar.
+
+
+
+
+
+|, >>, and lodash flow
+
+Choosing between | and >> can get tricky, especially in more advanced situations.
+
+It's best to keep the standard cases in mind, such as:
+
+const gop = data => data
+| f1
+| f2
+
+The value at the top is your data. In the most usual cases it's a string, number, array, something
+like that.
+
+If you want to abstract away the data, you remove the first pipe and change the rest of the | to >>:
+
+const gop =
+   f1
+>> f2
+
+Haskell people should see the link with Haskell's dot operator, which is precisely our >> operator.
+
+In many cases it can help to think of an expression like a | b | c as a faucet which is switched on
+with water actively flowing through it, while a >> b >> c is just the empty pipes, waiting for
+something to flow through it.
+
+In more advanced cases, this is not the whole story.
+
+Consider a function like ramda's `equals`.
+
+    equals (3, 3) // true
+    equals (3, 4) // false
+
+This should make sense by now:
+
+    const equalsThree = equals (3)
+    equalsThree (3) // true
+    equalsThree (4) // false
+
+But in some idioms you will see this:
+
+    const equalsThree = 3 | equals
+    equalsThree (3) // true
+    equalsThree (4) // false
+
+`3 | equals` is a function and thus violates the tentative rule we stated above about pipe
+expressions involving data which is already flowing.
+
+
+
+
+
+
+module Main where
+
+import Data.List (intercalate)
+import Data.Char (toUpper)
+
+main :: IO ()
+main = print $ thing "allen"
+
+thing :: String -> String
+-- thing x = intercalate "." $ map toString $ map toUpper x where
+thing = intercalate "." . map toString . map toUpper where
+    toString = (: [])
+
+const go = _ =>
+    'allen'
+    | thing
+    | log
+
+const { log, } = console
+const thing = x => x
+    | map (toUpper)
+    | join ('.')
+// const toUpper = x => x.toUpperCase ()
+const toUpper = dot ('toUpperCase')
+
+yes, we can map on a string, thanks to ramda.
+
+// const toUpper = x => x.toUpperCase ()
+const toUpper = dot ('toUpperCase')
+const { log, } = console
+const thing = map (toUpper)
+           >> join ('.')
+go ()
+
+const processString = thing >> log
+'allen' >> processString
+
+// const toUpper = x => x.toUpperCase ()
+const toUpper = dot ('toUpperCase')
+const { log, } = console
+const thing = map (toUpper)
+           >> join ('.')
+
+const processString = thing >> log
+
+; 'allen' | processString
+
+
+
+
+
+
+
+?- rectangle(6).
+******
+**  **
+*    *
+*    *
+**  **
+******
+true.
+
+?- rectangle(8).
+********
+***  ***
+**    **
+*      *
+*      *
+**    **
+***  ***
+********
+true.
+
+?- rectangle(10).
+**********
+****  ****
+***    ***
+**      **
+*        *
+*        *
+**      **
+***    ***
+****  ****
+**********
+
+
+
+ampersand (reverse, toUpperCase) ('Stan') // => ['natS', 'STAN']
+asterisk (reverse, toUpperCase) (['Stan', 'Lee']) // => ['natS', 'LEE']
+
+
+
+Prelude CM CA DL System.Process System.Posix> [1, 3 .. 11]
+

@@ -49,6 +49,7 @@ import {
 export {
     bitwiseAnd, bitwiseOr, bitwiseXor, bitwiseNot,
     bitwiseLeft, bitwiseRight, bitwiseRightZeroFill,
+    bitwiseLeftBy, bitwiseRightBy, bitwiseRightZeroFillBy,
     doe,
 }
 

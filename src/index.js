@@ -807,8 +807,8 @@ export const isFunction = isType ('Function')
 const mapIndexed = addIndex (map)
 const mapAccumIndexed = addIndex (mapAccum)
 
-export const subtractFrom = flip (subtract)
-export const minus = subtractFrom
+export const subtractFrom = subtract
+export const minus = flip (subtractFrom)
 
 export const plus = add
 

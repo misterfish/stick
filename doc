@@ -329,3 +329,9 @@ asterisk (reverse, toUpperCase) (['Stan', 'Lee']) // => ['natS', 'LEE']
 
 Prelude CM CA DL System.Process System.Posix> [1, 3 .. 11]
 
+
+
+
+You generally want to not put an object to the left of the stick.
+e.g. to merge an object literal with an object which has a name, put the
+named one to the left and rearrange To/From as necessary.

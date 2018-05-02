@@ -31,6 +31,7 @@ import {
     merge as rMerge, mergeAll as rMergeAll,
     zip,
     gt as rGt, gte as rGte, lt as rLt, lte as rLte,
+    subtract, add, divide,
 } from 'ramda'
 
 import sprintf from 'sprintf'
@@ -38,6 +39,7 @@ import sprintf from 'sprintf'
 import {
     bitwiseAnd, bitwiseOr, bitwiseXor, bitwiseNot,
     bitwiseLeft, bitwiseRight, bitwiseRightZeroFill,
+    bitwiseLeftBy, bitwiseRightBy, bitwiseRightZeroFillBy,
 } from './operator'
 
 import {
@@ -804,7 +806,10 @@ export const isFunction = isType ('Function')
 const mapIndexed = addIndex (map)
 const mapAccumIndexed = addIndex (mapAccum)
 
+export const subtractFrom = flip (subtract)
+export const minus = subtractFrom
 
+export const plus = add
 
 // @test
 export const laatNO = curry ((fs, f, x) => laat (
@@ -888,6 +893,8 @@ const headTail = f => splitAt (1) >> f
 
 export const notOk = isNil
 
+
+export const divideBy = flip (divide)
 
 // ditch brackets on cond.
 // a line can still be an array if you want the 'raw' predicate / exec.

@@ -446,6 +446,9 @@ export const mergeAllIn = xs => xs | reduce (
 //
 // ordering: k, v.
 // everywhere else: v, k.
+//
+// @todo optimise
+// @todo aren't array pairs better than spaced ones?
 
 export const mapPairs = curry ((f, obj) =>
     obj | ifArray (
@@ -773,21 +776,45 @@ const mergeMixins = (mixinsPre, proto, mixinsPost) => {
 // --- multiple instanceExtensions can be given: will be merged right-to-left using R.mergeAll,
 // meaning prototypes will be discarded.
 
-// xxx would be good to add an extra arg, for initialising instance vals xxx.
-export const factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
-    [
-        mergeMixins (mixinsPre, proto, mixinsPost),
-    ],
+// note: you are free to put properties in the prototype, though this is probably not a great idea.
+// at the very least, you should ensure that they are never mutated.
 
-    (protoExtended) => ({
-        proto: protoExtended,
-        create: (...instanceExtension) => protoExtended
+const _factory = (proto, mixinsPre = [], mixinsPost = []) => laats (
+    _ => mergeMixins (mixinsPre, proto, mixinsPost),
+    (protoMixed) => ({
+        proto: protoMixed,
+        create: (...instanceExtension) => protoMixed
             | Object.create
-            | mergeFromInMut (instanceExtension | rMergeAll),
+            | mergeFromMut (instanceExtension | rMergeAll),
     })
 )
 
+// --- convenience.
+// note that this will *alter* the prototype.
+export const factoryMixins = curry ((mixinsPre, mixinsPost, proto) =>
+    _factory (proto, mixinsPre, mixinsPost)
+)
 
+// --- usage:
+// const dogProps = { name: 'defaultname', age: undefined, ... }
+// const Dog = dogProto | factory | factoryInit (dogProps)
+// or
+// const dogFactory = factory >> factoryInit (dogProps)
+// const Dog = dogProto | dogFactory
+//
+// const dog = Dog.create ({ age: 10 )
+export const factoryInit = curry ((props, factory) => {
+    const orig = (...args) => factory.create (...args)
+    return {
+        ... factory,
+        create (...args) {
+            // return orig (...args) | mergeFromMut (props)
+            return orig (... [props, ...args])
+        },
+    }
+})
+
+export const factory = curry ((proto) => _factory (proto, [], []))
 
 // xxx getType
 // export const getType = callUnder ({}.toString)

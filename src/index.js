@@ -814,6 +814,10 @@ export const factoryInit = curry ((props, factory) => {
 
 export const factory = curry ((proto) => _factory (proto, [], []))
 
+// --- e.g.:
+// const theFactory = proto | factory | factoryStatics (statics) | factoryInit (init)
+export const factoryStatics = mergeFromM
+
 // xxx getType
 // export const getType = callUnder ({}.toString)
 //    >> dot2 ('slice') (8, -1) (

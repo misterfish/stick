@@ -187,26 +187,28 @@ export const ifBind__ = (spec, yes, no = noop) => spec | ifBind (yes) (no)
 //     }
 // })
 
-// @ todo
-export const xCond = (...args) => null | cond (...args)
-
-// need version with no target xx
-export const cond = curry ((blocks, target) => {
+// --- can't funnel through ramda's cond, because they miss the 'otherwise' behavior.
+const _cond = (withTarget, blocks, target) => {
     let result
     for (const [a, b] of blocks) {
         const [test, exec] = b | ifOk (
             () => [a, b],
             () => [null, a],
         )
-        if (!ok (test)) return exec (target)
 
-        const result = test (target)
-		// @todo test.
-        // this order for symmetry with null case.
-        if (result) return exec (target, result)
+        // --- null or undefined test ('otherwise') matches immediately
+        if (test | notOk) return withTarget ? exec (target) : exec ()
+
+        const result = withTarget ? test (target) : test ()
+        // @todo test.
+        if (result) return withTarget ? exec (target, result) : exec (result)
     }
-})
+}
 
+export const condo = blocks => _cond (false, blocks)
+
+export const condO = curry ((blocks, target) => _cond (true, blocks, target))
+export const cond = condO
 
 // ------ exceptions.
 
@@ -512,14 +514,6 @@ export const laats = (...xs) => {
     return ys | last
 }
 
-// @todo
-export const laatsNO = curry ((fs, o) => laats | applyToN ([
-    o | always,
-    ... fs,
-]))
-
-export const laatsO = laatsNO
-
 // --- 'call' always means pass a context.
 // --- 'apply' always means 'apply this function to some params'
 // --- 'pass' means 'pass these params to a function'
@@ -677,6 +671,8 @@ export const xRegExpStr = (reStr, flags = '') => laat (
 
 export const match = curry ((re, target) => re.exec (target))
 
+// xxx there should be a 'replace' version of all these functions as well.
+
 // xxx make xMatch incur only a compile-time cost.
 
 // @todo test
@@ -751,10 +747,17 @@ export const flattenPrototype = (o) => {
 // const arg0 = (...args) => args [0]
 // const arg1 = (...args) => args [1]
 
-export const arg0 = (a) => a
-export const arg1 = (_, a) => a
-export const arg2 = (_, _1, a) => a
-export const arg3 = (_, _1, _2, a) => a
+export const arg0  = (a) => a
+export const arg1  = (_, a) => a
+export const arg2  = (_, _1, a) => a
+export const arg3  = (_, _1, _2, a) => a
+export const arg4  = (_, _1, _2, _3, a) => a
+export const arg5  = (_, _1, _2, _3, _4, a) => a
+export const arg6  = (_, _1, _2, _3, _4, _5, a) => a
+export const arg7  = (_, _1, _2, _3, _4, _5, _6, a) => a
+export const arg8  = (_, _1, _2, _3, _4, _5, _6, _7, a) => a
+export const arg9  = (_, _1, _2, _3, _4, _5, _6, _7, _8, a) => a
+export const arg10 = (_, _1, _2, _3, _4, _5, _6, _7, _8, _9, a) => a
 
 const mergeMixins = (mixinsPre, proto, mixinsPost) => {
     const reduceMixins = reduce ((a, b) => b | mergeTo (a)) ({})
@@ -830,28 +833,28 @@ export const isType = curry ((t, x) => x
 export const isArray = isType ('Array')
 export const isFunction = isType ('Function')
 
+// @test
+// --- assumed to be a Number.
+export const isInteger = x => x === Math.floor (x)
+
 // --- map indexed: not sure about exporting these.
-const mapIndexed = addIndex (map)
-const mapAccumIndexed = addIndex (mapAccum)
+export const mapX = addIndex (map)
+export const mapAccumX = addIndex (mapAccum)
 
 export const subtractFrom = subtract
 export const minus = flip (subtractFrom)
-
 export const plus = add
 
 // @test
-export const laatNO = curry ((fs, f, x) => laat (
+export const laatO = curry ((fs, f, x) => laat (
     fs | map (applyTo1 (x)),
     (...args) => f | applyToN ([x, ...args]),
 ))
-export const laatO = laatNO
 
-// export const laatStarDat = curry ((fs, x) =>
-//     fs | map (
-//         f => (...args) => f | applyToN ([x, ...args]),
-//     )
-//     | passToN (laatStar),
-// )
+export const laatsO = curry ((specAry, tgt) => laats (
+  _ => tgt,
+  ... specAry,
+))
 
 const listDat = curry ((fs, n) => fs | map (
     applyTo1 (n),

@@ -335,3 +335,34 @@ Prelude CM CA DL System.Process System.Posix> [1, 3 .. 11]
 You generally want to not put an object to the left of the stick.
 e.g. to merge an object literal with an object which has a name, put the
 named one to the left and rearrange To/From as necessary.
+
+
+
+
+// --- example simple time. note that this is too big.
+// explain refactor, also arg2 >> ampm
+    return laats (
+      _ => this.minutes - this.getTimezoneOffset (),
+      (mm) => mm % 720,
+      (_, mm) => mm | divMod (60),
+      (_1, _2, [hh, mm]) => hh | cond ([
+        0  | eq | guardA ([12, 'pm']),
+        12 | lt | guardA ([hh, 'am']),
+        otherwise | guardA ([hh, 'pm']),
+      ]),
+      (_1, _2, [_3, mm], [hh, ampm]) => [hh, mm, ampm] | sprintfN ('%d:%02d %s'),
+    )
+  }
+
+
+
+
+
+const dateToMinutesX = (geth, getm) => laatsO ([
+  dot (geth),
+  dot (getm),
+  (_, h, m) => h * 60 + m,
+])
+
+const dateToMinutesTZ   = dateToMinutesX ('getHours', 'getMinutes')
+const dateToMinutesUTC  = dateToMinutesX ('getUTCHours', 'getUTCMinutes')

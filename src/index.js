@@ -205,6 +205,8 @@ const _cond = (withTarget, blocks, target) => {
     }
 }
 
+// --- no target, but predicate functions should still be functions and not expressions, to keep it
+// lazy.
 export const condo = blocks => _cond (false, blocks)
 
 export const condO = curry ((blocks, target) => _cond (true, blocks, target))
@@ -886,7 +888,11 @@ export const condPredicate = curry ((exec, pred) => [
     exec,
 ])
 
+// --- synonym for always. check impl of always. xxx
+export const blush = x => _ => x
+
 export const guard = condPredicate
+export const guardA = blush >> guard
 export const otherwise = condElse
 
 export const ifEquals = curry ((test, yes, no, x) => x === test ? yes (x) : no (x))
@@ -905,8 +911,6 @@ export const lte = flip (rLte)
 // rationale: must be able to confidently refactor working code which uses ===
 export const eq = curry ((x, y) => x === y)
 export const ne = curry ((x, y) => x !== y)
-
-export const blush = x => _ => x
 
 const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | passToN (f)
 const headTail = f => splitAt (1) >> f

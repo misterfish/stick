@@ -61,39 +61,32 @@ export const dot2 = curry ((prop, val1, val2, o) => o[prop] (val1, val2))
 export const dot3 = curry ((prop, val1, val2, val3, o) => o[prop] (val1, val2, val3))
 export const dotN = curry ((prop, vs, o) => o[prop] (...vs))
 
-export const tapDot  = (prop) => tap (dot (prop))
-export const tapDot1 = curry (
+export const side  = (prop) => tap (dot (prop))
+export const side1 = curry (
     (prop, val) => tap (dot1 (prop) (val))
 )
-export const tapDot2 = curry (
+export const side2 = curry (
     (prop, val1, val2) => tap (dot2 (prop) (val1) (val2))
 )
-export const tapDot3 = curry (
+export const side3 = curry (
     (prop, val1, val2, val3) => tap (dot3 (prop) (val1) (val2) (val3))
 )
-export const tapDotN = curry (
+export const sideN = curry (
     (prop, vs) => tap (dotN (prop) (vs))
 )
 
 // --- signal intentions
-export const dotMut = dot
-export const dot1Mut = dot1
-export const dot2Mut = dot2
-export const dot3Mut = dot3
-export const dotNMut = dotN
+export const dotM = dot
+export const dot1M = dot1
+export const dot2M = dot2
+export const dot3M = dot3
+export const dotNM = dotN
 
 // @todo
 export const dot4 = curry ((prop, val1, val2, val3, val4, o) => o[prop] (val1, val2, val3, val4))
 export const dot5 = curry ((prop, val1, val2, val3, val4, val5, o) => o[prop] (val1, val2, val3, val4, val5))
 export const dot6 = curry ((prop, val1, val2, val3, val4, val5, val6, o) => o[prop] (val1, val2, val3, val4, val5, val6))
-export const dot4Mut = dot3
-
-export const tapMut = tap
-export const tapDotMut = tapDot
-export const tapDot1Mut = tapDot1
-export const tapDot2Mut = tapDot2
-export const tapDot3Mut = tapDot3
-export const tapDotNMut = tapDotN
+export const dot4M = dot3
 
 // __ = not data-last, not curried
 
@@ -239,7 +232,7 @@ export const exception = (...args) => new Error (
 export const raise = (e) => { throw e }
 export const die = (...args) => exception (...args) | raise
 export const decorateException = curry ((prefix, e) =>
-    e | assocMut ('message', joinOk (' ') ([prefix, e.message]))
+    e | assocM ('message', joinOk (' ') ([prefix, e.message]))
 )
 
 
@@ -311,7 +304,7 @@ export const defaultTo__ = (x, f) => x | defaultTo (f)
 
 // ------ assoc.
 
-export const assocMut = curry ((prop, val, o) => (o[prop] = val, o))
+export const assocM = curry ((prop, val, o) => (o[prop] = val, o))
 
 // ------ append.
 
@@ -321,15 +314,15 @@ export const appendFrom = curry ((elem, ary) =>
 export const appendTo = flip (appendFrom)
 
 // [] -> a -> [], mut
-export const appendToMut = curry ((tgt, src) => {
+export const appendToM = curry ((tgt, src) => {
     tgt.push (src)
     return tgt
 })
 
-const pushTo = appendToMut
+const pushTo = appendToM
 
 // [] -> a -> [], mut
-export const appendFromMut = flip (appendToMut)
+export const appendFromM = flip (appendToM)
 
 // ------ prepend.
 
@@ -339,12 +332,12 @@ export const prependTo = curry ((ary, elem) =>
 
 export const prependFrom = flip (prependTo)
 
-export const prependFromMut = curry ((src, tgt) => {
+export const prependFromM = curry ((src, tgt) => {
     tgt.unshift (src)
     return tgt
 })
 
-export const prependToMut = curry ((tgt, src) => {
+export const prependToM = curry ((tgt, src) => {
     tgt.unshift (src)
     return tgt
 })
@@ -361,14 +354,14 @@ export const concatTo = rConcat
 export const concatFrom = flip (rConcat)
 
 // [] -> [] -> [], mut
-export const concatToMut = curry (
+export const concatToM = curry (
     (tgt, src) => {
         tgt.push (...src)
         return tgt
     }
 )
 
-export const concatFromMut = flip (concatToMut)
+export const concatFromM = flip (concatToM)
 
 export const mergeTo = rMerge
 export const mergeFrom = flip (rMerge)
@@ -377,13 +370,13 @@ export const mergeFrom = flip (rMerge)
 
 // --- discards non-own on src.
 // --- does not discard non-own on tgt, b/c mut.
-export const mergeToMut = curry ((tgt, src) => {
+export const mergeToM = curry ((tgt, src) => {
     const ret = tgt
     for (let i in src) [src, i] | whenHas ((v, o, k) => ret[k] = v)
     return ret
 })
 
-export const mergeFromMut = flip (mergeToMut)
+export const mergeFromM = flip (mergeToM)
 
 // --- discards non-own on src.
 // --- does not discard non-own on tgt, b/c mut.
@@ -393,7 +386,7 @@ export const mergeFromMut = flip (mergeToMut)
 // --- if a collision occurs in the target's prototype chain, the value will surface, regardless of
 // whether src or tgt version is chosen.
 
-export const mergeToWithMut = curry ((collision, tgt, src) => {
+export const mergeToWithM = curry ((collision, tgt, src) => {
     const ret = tgt
     for (let i in src)
         [src, i] | whenHas ((v, o, k) => {
@@ -405,12 +398,12 @@ export const mergeToWithMut = curry ((collision, tgt, src) => {
     return ret
 })
 
-export const mergeFromWithMut = curry ((collision, src, tgt) =>
-    mergeToWithMut (collision, tgt, src)
+export const mergeFromWithM = curry ((collision, src, tgt) =>
+    mergeToWithM (collision, tgt, src)
 )
 
-export const injectToMut = mergeToMut
-export const injectFromMut = mergeFromMut
+export const injectToM = mergeToM
+export const injectFromM = mergeFromM
 
 // --- both will float.
 export const mergeToIn = curry ((tgt, src) => {
@@ -423,19 +416,19 @@ export const mergeToIn = curry ((tgt, src) => {
 // --- both will float.
 export const mergeFromIn = flip (mergeToIn)
 
-export const mergeToInMut = curry ((tgt, src) => {
+export const mergeToInM = curry ((tgt, src) => {
     const ret = tgt
     for (let i in src)
         ret[i] = src[i]
     return ret
 })
 
-export const mergeFromInMut = flip (mergeToInMut)
+export const mergeFromInM = flip (mergeToInM)
 
 // --- like R.mergeAll but also use prototype vals.
 // --- to and from not applicable, also not curried or meant to be used piped.
 export const mergeAllIn = xs => xs | reduce (
-    (target, source) => source | mergeToInMut (target),
+    (target, source) => source | mergeToInM (target),
     {},
 )
 
@@ -591,7 +584,7 @@ export const sprintfN = curry ((str, xs) => sprintf.apply (null, [str, ...xs]))
 export const noop = () => {}
 
 // --- r's zip only takes two.
-// @dep appendToMut
+// @dep appendToM
 export const zipAll = (...xss) => {
     const ret = []
     const l = xss[0].length
@@ -684,7 +677,7 @@ export const xMatchGlobal = curry ((re, mapper, target) => {
     const reGlobal = xRegExpFlags (re, 'g')
     let m
     while (m = reGlobal.exec (target))
-        mapper (...m) | appendToMut (out)
+        mapper (...m) | appendToM (out)
     return out
 })
 
@@ -767,8 +760,8 @@ const mergeMixins = (mixinsPre, proto, mixinsPost) => {
     const post = mixinsPost | reduceMixins
     const chooseTarget = arg0
 
-    pre | mergeToWithMut (chooseTarget) (proto)
-    post | mergeToMut (proto)
+    pre | mergeToWithM (chooseTarget) (proto)
+    post | mergeToM (proto)
 
     return proto
 }
@@ -790,7 +783,7 @@ const _factory = (proto, mixinsPre = [], mixinsPost = []) => laats (
         proto: protoMixed,
         create: (...instanceExtension) => protoMixed
             | Object.create
-            | mergeFromMut (instanceExtension | rMergeAll),
+            | mergeFromM (instanceExtension | rMergeAll),
     })
 )
 
@@ -813,7 +806,7 @@ export const factoryInit = curry ((props, factory) => {
     return {
         ... factory,
         create (...args) {
-            // return orig (...args) | mergeFromMut (props)
+            // return orig (...args) | mergeFromM (props)
             return orig (... [props, ...args])
         },
     }

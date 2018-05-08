@@ -59,6 +59,9 @@ export const dot  = curry ((prop, o) => o[prop] ())
 export const dot1 = curry ((prop, val, o) => o[prop] (val))
 export const dot2 = curry ((prop, val1, val2, o) => o[prop] (val1, val2))
 export const dot3 = curry ((prop, val1, val2, val3, o) => o[prop] (val1, val2, val3))
+export const dot4 = curry ((prop, val1, val2, val3, val4, o) => o[prop] (val1, val2, val3, val4))
+export const dot5 = curry ((prop, val1, val2, val3, val4, val5, o) => o[prop] (val1, val2, val3, val4, val5))
+export const dot6 = curry ((prop, val1, val2, val3, val4, val5, val6, o) => o[prop] (val1, val2, val3, val4, val5, val6))
 export const dotN = curry ((prop, vs, o) => o[prop] (...vs))
 
 export const side  = (prop) => tap (dot (prop))
@@ -71,22 +74,23 @@ export const side2 = curry (
 export const side3 = curry (
     (prop, val1, val2, val3) => tap (dot3 (prop) (val1) (val2) (val3))
 )
+export const side4 = curry (
+    (prop, val1, val2, val3, val4) => tap (dot4 (prop) (val1) (val2) (val3) (val4))
+)
+export const side5 = curry (
+    (prop, val1, val2, val3, val4,val5) => tap (dot5 (prop) (val1) (val2) (val3) (val4) (val5))
+)
 export const sideN = curry (
     (prop, vs) => tap (dotN (prop) (vs))
 )
 
-// --- signal intentions
-export const dotM = dot
-export const dot1M = dot1
-export const dot2M = dot2
-export const dot3M = dot3
-export const dotNM = dotN
-
-// @todo
-export const dot4 = curry ((prop, val1, val2, val3, val4, o) => o[prop] (val1, val2, val3, val4))
-export const dot5 = curry ((prop, val1, val2, val3, val4, val5, o) => o[prop] (val1, val2, val3, val4, val5))
-export const dot6 = curry ((prop, val1, val2, val3, val4, val5, val6, o) => o[prop] (val1, val2, val3, val4, val5, val6))
-export const dot4M = dot3
+// deprecated
+// export const dotM = dot
+// export const dot1M = dot1
+// export const dot2M = dot2
+// export const dot3M = dot3
+// export const dotNM = dotN
+// export const dot4M = dot3
 
 // __ = not data-last, not curried
 
@@ -128,10 +132,13 @@ export const ifFalse = curry ((yes, no, x) => x === false ? yes (x) : no (x))
 export const whenFalse = curry ((yes, x) => x | ifFalse (yes) (noop))
 export const ifFalse__ = (x, yes, no = noop) => x | ifFalse (yes) (no)
 
+// --- xxx alias as ifTruthy / falsey
 export const ifYes = curry ((yes, no, x) => x ? yes (x) : no (x))
 export const whenYes = curry ((yes, x) => x | ifYes (yes) (noop))
 export const ifYes__ = (x, yes, no = noop) => x | ifYes (yes) (no)
 
+// --- single-letter lower case flag instead of __? xxx
+// --- xxx is it possible to compose the __ versions, like with ifPredicate?
 export const ifNo = curry ((yes, no, x) => (! x) ? yes (x) : no (x))
 export const whenNo = curry ((yes, x) => x | ifNo (yes) (noop))
 export const ifNo__ = (x, yes, no = noop) => x | ifNo (yes) (no)
@@ -139,10 +146,6 @@ export const ifNo__ = (x, yes, no = noop) => x | ifNo (yes) (no)
 export const ifFunction = curry ((yes, no, x) => isFunction (x) ? yes (x) : no (x))
 export const whenFunction = curry ((yes, x) => x | ifFunction (yes) (noop))
 export const ifFunction__ = (x, yes, no = noop) => x | ifFunction (yes) (no)
-
-export const ifLengthOne = curry ((yes, no, xs) => xs.length === 1 ? yes (xs) : no (xs))
-export const whenLengthOne = curry ((yes, xs) => xs | ifLengthOne (yes) (noop))
-export const ifLengthOne__ = (xs, yes, no = noop) => xs | ifLengthOne (yes) (no)
 
 // @todo test
 export const ifHas = curry ((yes, no, [o, k]) => o | has (k) ? yes (o[k], o, k) : no (o, k))
@@ -200,6 +203,7 @@ const _cond = (withTarget, blocks, target) => {
 
 // --- no target, but predicate functions should still be functions and not expressions, to keep it
 // lazy.
+// xxx ditch brackets!
 export const condo = blocks => _cond (false, blocks)
 
 export const condO = curry ((blocks, target) => _cond (true, blocks, target))
@@ -230,6 +234,8 @@ export const exception = (...args) => new Error (
     args | join (' ')
 )
 export const raise = (e) => { throw e }
+// --- i don't love the name die, because it can be caught.
+// still, it's descriptive, and everyone knows this is js anyway.
 export const die = (...args) => exception (...args) | raise
 export const decorateException = curry ((prefix, e) =>
     e | assocM ('message', joinOk (' ') ([prefix, e.message]))
@@ -282,6 +288,14 @@ export const cascade = (val, ...fxs) =>
 
 // would be nice to bind with an arg, e.g. exit with a code.
 //const exit = 'exit' | bind (process)
+
+// xxx bind and invoke
+// bind >> invoke
+// xxx bind the other way around
+// o | bind ('funcname')
+
+// xxx cursor | bind ('theta')
+// xxx 'theta' | bindOn (cursor)
 
 // --- dies if o[prop] is not a function.
 export const bind = curry ((o, prop) => o[prop].bind (o))
@@ -376,6 +390,7 @@ export const mergeToM = curry ((tgt, src) => {
     return ret
 })
 
+// --- Object.assign is enumerable own properties. same dus? if so, doc xxx
 export const mergeFromM = flip (mergeToM)
 
 // --- discards non-own on src.
@@ -780,12 +795,21 @@ const mergeMixins = (mixinsPre, proto, mixinsPost) => {
 const _factory = (proto, mixinsPre = [], mixinsPost = []) => laats (
     _ => mergeMixins (mixinsPre, proto, mixinsPost),
     (protoMixed) => ({
+        // --- consider dropping this: Object.getPrototypeOf xxx
         proto: protoMixed,
         create: (...instanceExtension) => protoMixed
             | Object.create
             | mergeFromM (instanceExtension | rMergeAll),
     })
 )
+
+// --- xxx maybe a factoryMixinsM and non-m version?
+// would be nice to not have it fuck with the prototype.
+// the non-m version will make a clone, possibly only with owns?
+// or another flag for owns and not-owns? I?
+// --- xxx change all In to I?
+//
+// --- xxx think about which maps return lists and which return the same kind of thing being mapped.
 
 // --- convenience.
 // note that this will *alter* the prototype.
@@ -801,6 +825,11 @@ export const factoryMixins = curry ((mixinsPre, mixinsPost, proto) =>
 // const Dog = dogProto | dogFactory
 //
 // const dog = Dog.create ({ age: 10 )
+//
+// This is where you can put your instance properties initialisation. Totally optional -- also
+// without this, you will get an instance!
+// This is a good place to document the properties: put them in the instance{} even if they're
+// undefined.
 export const factoryInit = curry ((props, factory) => {
     const orig = (...args) => factory.create (...args)
     return {
@@ -816,7 +845,45 @@ export const factory = curry ((proto) => _factory (proto, [], []))
 
 // --- e.g.:
 // const theFactory = proto | factory | factoryStatics (statics) | factoryInit (init)
+// for if you reeally want to have other functions in the factory (parallel to .create())
+//
+// in many cases, a simple function exported by the module will probably get you what you want.
+// you can of course always put the static functions in the prototype as well. it will mean
+// infinitesimally more memory use -- and that you need at least one instance.
+
 export const factoryStatics = mergeFromM
+
+// --- don't really like this.
+// proto gets altered.
+// order difficult.
+export const factoryMixinPre = curry ((mixin, proto) => factoryMixinPre ([mixin], [], proto))
+export const factoryMixinPost = curry ((mixin, proto) => factoryMixinPre ([], [mixin], proto))
+
+// --- note, there is no magic here and nothing spectacular.
+// if you find that you need more flexibility than that this provides (e.g. the second argument of Object.create to assign properties etc.), just
+// reimplement this in your app code.
+// unwieldy name, yes, but calling it 'extend' would probably just add to JS confusion.
+// hopefully this name makes it clear to js programmers what's going on.
+// note, Object.setPrototypeOf would not work here (alters the extension object).
+//
+const oCreateExtendWith = curry ((extend, proto) => proto | Object.create | mergeFromM (extend))
+const oCreateBase = curry ((proto, extend) => oCreateExtendWith (extend, proto))
+
+const Cat = (() => {
+    const proto = {
+        // recommendation: do use arrow functions, despite what they tell you.
+        // it makes it clear that this is a pure function, not dependent on `this`.
+        speak: _ => 'meow' | log,
+    }
+    return proto | oCreateBase (Animal.proto) | factory
+    // --- or
+    // return Animal.proto | oCreateExtendWith (proto) | factory
+    // --- or
+    // return proto | factoryMixinPre (Animal.proto)
+    return proto | factoryMixins ([Animal.proto], [])
+}) ()
+
+
 
 // xxx getType
 // export const getType = callUnder ({}.toString)

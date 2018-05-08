@@ -859,6 +859,7 @@ export const factoryStatics = mergeFromM
 export const factoryMixinPre = curry ((mixin, proto) => factoryMixinPre ([mixin], [], proto))
 export const factoryMixinPost = curry ((mixin, proto) => factoryMixinPre ([], [mixin], proto))
 
+    /*
 // --- note, there is no magic here and nothing spectacular.
 // if you find that you need more flexibility than that this provides (e.g. the second argument of Object.create to assign properties etc.), just
 // reimplement this in your app code.
@@ -882,7 +883,7 @@ const Cat = (() => {
     // return proto | factoryMixinPre (Animal.proto)
     return proto | factoryMixins ([Animal.proto], [])
 }) ()
-
+*/
 
 
 // xxx getType

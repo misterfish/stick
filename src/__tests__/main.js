@@ -267,22 +267,20 @@ describe('laat', function(){
     return expect(given).toBe(laat);
   });
   return test(1, function(){
-    return laat([10, 12, 19], function(ten, twelve, nineteen){
-      return expect(ten + twelve + nineteen).toEqual(41);
-    });
+    return expectToEqual(41)(
+    laat([10, 12, 19], sumAll));
   });
 });
 describe('laats', function(){
   test('superset of laat', function(){
-    return laats(function(){
+    return expectToEqual(41)(
+    laats(function(){
       return 10;
     }, function(){
       return 12;
     }, function(){
       return 19;
-    }, function(ten, twelve, nineteen){
-      return expect(ten + twelve + nineteen).toEqual(41);
-    });
+    }, sumAll));
   });
   describe('specific versions', function(){
     test('laats2', function(){
@@ -361,11 +359,10 @@ describe('laats', function(){
     });
   });
   test('single function', function(){
-    return laats(function(){
+    return expectToEqual(11)(
+    laats(function(){
       return 11;
-    }, function(eleven){
-      return expect(eleven).toEqual(11);
-    });
+    }));
   });
   test('mixed references', function(){});
   return test('fibonacci', function(){

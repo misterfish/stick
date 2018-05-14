@@ -199,14 +199,14 @@ describe 'laat' ->
     test 'alias given' ->
         (expect given).to-be laat
     test 1 ->
-        laat [10 12 19] (ten, twelve, nineteen) ->
-            (expect ten + twelve + nineteen).to-equal 41
+        laat [10 12 19], sum-all
+        |> expect-to-equal 41
 
 describe 'laats' ->
     test 'superset of laat' ->
         laats do
-            -> 10, -> 12, -> 19, (ten, twelve, nineteen) ->
-                (expect ten + twelve + nineteen).to-equal 41
+            -> 10, -> 12, -> 19, sum-all
+        |> expect-to-equal 41
     describe 'specific versions' ->
         test 'laats2' ->
             laats2 do
@@ -267,8 +267,7 @@ describe 'laats' ->
     test 'single function' ->
         laats do
             -> 11
-            (eleven) ->
-                (expect eleven).to-equal 11
+        |> expect-to-equal 11
     test 'mixed references' ->
     test 'fibonacci' ->
         fibonacci = (n) ->

@@ -73,7 +73,7 @@ describe('data transforms', function(){
       return expect(res).not.toBe(tgt);
     }
   };
-  describe('assocMut', function(){
+  describe('assocM', function(){
     return test(1, function(){
       var orig, nieuw;
       orig = {
@@ -135,7 +135,7 @@ describe('data transforms', function(){
       return expect(res).toEqual([4, 3]);
     });
   });
-  describe('appendToMut', function(){
+  describe('appendToM', function(){
     var fn, dir, mut;
     fn = appendToM;
     dir = 'to';
@@ -227,7 +227,7 @@ describe('data transforms', function(){
       return expect(res).toEqual([3, 4]);
     });
   });
-  describe('appendFromMut', function(){
+  describe('appendFromM', function(){
     var fn, dir, mut;
     fn = appendFromM;
     dir = 'from';
@@ -365,7 +365,7 @@ describe('data transforms', function(){
       return expect(res).toEqual([3, 4]);
     });
   });
-  describe('prependFromMut', function(){
+  describe('prependFromM', function(){
     var fn, dir, mut;
     fn = prependFromM;
     dir = 'from';
@@ -411,7 +411,7 @@ describe('data transforms', function(){
       return expect(res).toEqual([4, 3]);
     });
   });
-  describe('prependToMut', function(){
+  describe('prependToM', function(){
     var fn, dir, mut;
     fn = prependToM;
     dir = 'to';
@@ -506,7 +506,7 @@ describe('data transforms', function(){
       }).toThrow();
     });
   });
-  describe('concatToMut', function(){
+  describe('concatToM', function(){
     var fn, dir, mut;
     fn = concatToM;
     dir = 'to';
@@ -570,7 +570,7 @@ describe('data transforms', function(){
       }).toThrow();
     });
   });
-  describe('concatFromMut', function(){
+  describe('concatFromM', function(){
     var fn, dir, mut;
     fn = concatFromM;
     dir = 'from';
@@ -831,7 +831,7 @@ describe('data transforms', function(){
       return expect(res.hidden).toEqual(void 8);
     });
   });
-  describe('mergeToMut', function(){
+  describe('mergeToM', function(){
     var fn, dir, mut;
     fn = mergeToM;
     dir = 'to';
@@ -953,7 +953,7 @@ describe('data transforms', function(){
       injectToM);
     });
   });
-  describe('mergeFromMut', function(){
+  describe('mergeFromM', function(){
     var fn, dir, mut;
     fn = mergeFromM;
     dir = 'from';
@@ -1075,7 +1075,7 @@ describe('data transforms', function(){
       injectFromM);
     });
   });
-  describe('mergeToWithMut', function(){
+  describe('mergeToWithM', function(){
     var tgt, src, noop, chooseLeft, chooseRight;
     noop = function(){};
     chooseLeft = function(a, b){
@@ -1085,7 +1085,7 @@ describe('data transforms', function(){
       return b;
     };
     describe('main', function(){
-      return test('when no collisions, acts like mergeToMut', function(){
+      return test('when no collisions, acts like mergeToM', function(){
         var x$, tgt, y$, src;
         x$ = tgt = Object.create({
           hidden1: 42
@@ -1097,7 +1097,8 @@ describe('data transforms', function(){
         });
         y$.c = 3;
         y$.d = 4;
-        return expectToEqual(mergeToM(tgt, src))(
+        return expectToEqual(mergeToM(tgt)(
+        src))(
         mergeToWithM(noop, tgt)(
         src));
       });
@@ -1178,7 +1179,7 @@ describe('data transforms', function(){
       });
     });
   });
-  describe('mergeFromWithMut', function(){
+  describe('mergeFromWithM', function(){
     var tgt, src, noop, chooseLeft, chooseRight;
     noop = function(){};
     chooseLeft = function(a, b){
@@ -1188,7 +1189,7 @@ describe('data transforms', function(){
       return b;
     };
     describe('main', function(){
-      return test('when no collisions, acts like mergeFromMut', function(){
+      return test('when no collisions, acts like mergeFromM', function(){
         var x$, tgt, y$, src;
         x$ = tgt = Object.create({
           hidden1: 42
@@ -1200,7 +1201,8 @@ describe('data transforms', function(){
         });
         y$.c = 3;
         y$.d = 4;
-        return expectToEqual(mergeFromM(src, tgt))(
+        return expectToEqual(mergeFromM(src)(
+        tgt))(
         mergeFromWithM(noop, src)(
         tgt));
       });
@@ -1465,7 +1467,7 @@ describe('data transforms', function(){
       });
     });
   });
-  describe('mergeToInMut', function(){
+  describe('mergeToInM', function(){
     var fn, dir, mut;
     fn = mergeToInM;
     dir = 'to';
@@ -1557,7 +1559,7 @@ describe('data transforms', function(){
       });
     });
   });
-  describe('mergeFromInMut', function(){
+  describe('mergeFromInM', function(){
     var fn, dir, mut;
     fn = mergeFromInM;
     dir = 'from';

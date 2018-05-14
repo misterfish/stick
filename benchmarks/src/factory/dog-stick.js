@@ -40,6 +40,8 @@ import {
 //     mergeToM, mergeFromM,
     // factory, factoryInit,
     whenHas,
+    mergeFromM,
+    mergeToM,
 } from 'stick'
 
 // --- factory with a cycle is sometimes faster than new with a cycle.
@@ -68,23 +70,6 @@ const _factoryWithMixins = (proto, mixinsPre = [], mixinsPost = []) => {
             | mergeFromM (instanceExtension | rMergeAll),
     })
 }
-
-// --- literally Object.assign, but Object.assign is 2x slower for some reason.
-// --- *does* merge in non ok values (think ramda `has`)
-export const mergeFromMManual = (src) => (tgt) => {
-    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
-        tgt[i] = src[i]
-    return tgt
-}
-
-export const mergeToMManual = (tgt) => (src) => {
-    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
-        tgt[i] = src[i]
-    return tgt
-}
-
-export const mergeFromM = mergeFromMManual
-export const mergeToM = mergeToMManual
 
 const proto = {
     speak () { return 'woof' },

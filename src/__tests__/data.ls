@@ -76,7 +76,7 @@ describe 'data transforms' ->
         if mut then (expect res).to-be tgt
         else        (expect res).not.to-be tgt
 
-    describe 'assocMut' ->
+    describe 'assocM' ->
         test 1 ->
             orig = a: 1 b:2
             nieuw = orig
@@ -109,7 +109,7 @@ describe 'data transforms' ->
             |> append-to [4]
             (expect res).to-equal [4 3]
 
-    describe 'appendToMut' ->
+    describe 'appendToM' ->
         fn = append-to-m
         dir = 'to'
         mut = true
@@ -159,7 +159,7 @@ describe 'data transforms' ->
             |> append-from 4
             (expect res).to-equal [3 4]
 
-    describe 'appendFromMut' ->
+    describe 'appendFromM' ->
         fn = append-from-m
         dir = 'from'
         mut = true
@@ -234,7 +234,7 @@ describe 'data transforms' ->
             |> prepend-from 3
             (expect res).to-equal [3 4]
 
-    describe 'prependFromMut' ->
+    describe 'prependFromM' ->
         fn = prepend-from-m
         dir = 'from'
         mut = true
@@ -259,7 +259,7 @@ describe 'data transforms' ->
             |> prepend-from-m 4
             (expect res).to-equal [4 3]
 
-    describe 'prependToMut' ->
+    describe 'prependToM' ->
         fn = prepend-to-m
         dir = 'to'
         mut = true
@@ -309,7 +309,7 @@ describe 'data transforms' ->
             src = 4
             (expect -> src |> concat-to tgt).to-throw()
 
-    describe 'concatToMut' ->
+    describe 'concatToM' ->
         fn = concat-to-m
         dir = 'to'
         mut = true
@@ -343,7 +343,7 @@ describe 'data transforms' ->
             src = 4
             expect(-> src |> concat-from tgt).to-throw()
 
-    describe 'concatFromMut' ->
+    describe 'concatFromM' ->
         fn = concat-from-m
         dir = 'from'
         mut = true
@@ -466,7 +466,7 @@ describe 'data transforms' ->
             (expect res).to-equal a: 1 b: 3 c: 4
             (expect res.hidden).to-equal void
 
-    describe 'mergeToMut' ->
+    describe 'mergeToM' ->
         fn = merge-to-m
         dir = 'to'
         mut = true
@@ -520,7 +520,7 @@ describe 'data transforms' ->
             inject-to-m
             |> expect-to-equal merge-to-m
 
-    describe 'mergeFromMut' ->
+    describe 'mergeFromM' ->
         fn = merge-from-m
         dir = 'from'
         mut = true
@@ -574,13 +574,13 @@ describe 'data transforms' ->
             inject-from-m
             |> expect-to-equal merge-from-m
 
-    describe 'mergeToWithMut' ->
+    describe 'mergeToWithM' ->
         var tgt, src
         noop = ->
         choose-left = (a, b) -> a
         choose-right = (a, b) -> b
         describe 'main' ->
-            test 'when no collisions, acts like mergeToMut' ->
+            test 'when no collisions, acts like mergeToM' ->
                 tgt = Object.create hidden1: 42
                     ..a = 1
                     ..b = 2
@@ -589,7 +589,7 @@ describe 'data transforms' ->
                     ..d = 4
                 src
                 |> merge-to-with-m noop, tgt
-                |> expect-to-equal merge-to-m tgt, src
+                |> expect-to-equal (src |> merge-to-m tgt)
 
         describe 'collide with own of target' ->
             var tgt, src
@@ -641,13 +641,13 @@ describe 'data transforms' ->
                     c: 'source c'
                     hidden: 'source hidden'
 
-    describe 'mergeFromWithMut' ->
+    describe 'mergeFromWithM' ->
         var tgt, src
         noop = ->
         choose-left = (a, b) -> a
         choose-right = (a, b) -> b
         describe 'main' ->
-            test 'when no collisions, acts like mergeFromMut' ->
+            test 'when no collisions, acts like mergeFromM' ->
                 tgt = Object.create hidden1: 42
                     ..a = 1
                     ..b = 2
@@ -656,7 +656,7 @@ describe 'data transforms' ->
                     ..d = 4
                 tgt
                 |> merge-from-with-m noop, src
-                |> expect-to-equal merge-from-m src, tgt
+                |> expect-to-equal (tgt |> merge-from-m src)
 
         describe 'collide with own of target' ->
             var tgt, src
@@ -796,7 +796,7 @@ describe 'data transforms' ->
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
 
-    describe 'mergeToInMut' ->
+    describe 'mergeToInM' ->
         fn = merge-to-in-m
         dir = 'to'
         mut = true
@@ -841,7 +841,7 @@ describe 'data transforms' ->
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
 
-    describe 'mergeFromInMut' ->
+    describe 'mergeFromInM' ->
         fn = merge-from-in-m
         dir = 'from'
         mut = true

@@ -381,18 +381,36 @@ export const concatFromM = flip (concatToM)
 export const mergeTo = rMerge
 export const mergeFrom = flip (rMerge)
 
-// --- mut always refers to target.
+// --- own properties, including null/undefined.
+// --- 2x faster than Object.assign.
+// --- @test: enumerable own?
+// --- @todo: why is it so much faster?
 
-// --- discards non-own on src.
-// --- does not discard non-own on tgt, b/c mut.
+/** @ref
 export const mergeToM = curry ((tgt, src) => {
     const ret = tgt
     for (let i in src) [src, i] | whenHas ((v, o, k) => ret[k] = v)
     return ret
 })
+ */
 
-// --- Object.assign is enumerable own properties. same dus? if so, doc xxx
+const oPro = Object.prototype
+
+export const mergeToM = (tgt) => (src) => {
+    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
+        tgt[i] = src[i]
+    return tgt
+}
+
+/** @ref
 export const mergeFromM = flip (mergeToM)
+ */
+
+export const mergeFromM = (src) => (tgt) => {
+    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
+        tgt[i] = src[i]
+    return tgt
+}
 
 // --- discards non-own on src.
 // --- does not discard non-own on tgt, b/c mut.

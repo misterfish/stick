@@ -17,16 +17,16 @@
 {
     default-to, default-to__,
 
-    assoc-mut,
-    append-to, append-to-mut, append-from, append-from-mut,
-    prepend-from, prepend-from-mut, prepend-to, prepend-to-mut,
-    concat-to, concat-to-mut, concat-from, concat-from-mut,
+    assoc-m,
+    append-to, append-to-m, append-from, append-from-m,
+    prepend-from, prepend-from-m, prepend-to, prepend-to-m,
+    concat-to, concat-to-m, concat-from, concat-from-m,
 
-    merge-to, merge-from, merge-to-mut, merge-from-mut,
-    merge-to-with-mut, merge-from-with-mut,
-    merge-to-in, merge-from-in, merge-to-in-mut, merge-from-in-mut,
+    merge-to, merge-from, merge-to-m, merge-from-m,
+    merge-to-with-m, merge-from-with-m,
+    merge-to-in, merge-from-in, merge-to-in-m, merge-from-in-m,
     merge-all-in,
-    inject-to-mut, inject-from-mut,
+    inject-to-m, inject-from-m,
 
     discard-prototype, flatten-prototype,
 
@@ -71,7 +71,7 @@ describe 'data transforms' ->
         if dir == 'to' then src |> fn tgt
         else                tgt |> fn src
 
-    test-mut = (args) ->
+    test-m = (args) ->
         { res, mut, tgt, } = args
         if mut then (expect res).to-be tgt
         else        (expect res).not.to-be tgt
@@ -80,7 +80,7 @@ describe 'data transforms' ->
         test 1 ->
             orig = a: 1 b:2
             nieuw = orig
-                |> assoc-mut 'b' 3
+                |> assoc-m 'b' 3
             (expect nieuw).to-be orig
             (expect nieuw).to-equal a: 1 b: 3
 
@@ -93,7 +93,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 2 3 [4 5 6]]
         test 2 ->
@@ -101,7 +101,7 @@ describe 'data transforms' ->
             src = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 to 4]
         test 'eg' ->
@@ -110,7 +110,7 @@ describe 'data transforms' ->
             (expect res).to-equal [4 3]
 
     describe 'appendToMut' ->
-        fn = append-to-mut
+        fn = append-to-m
         dir = 'to'
         mut = true
         test 'array to array' ->
@@ -118,7 +118,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 2 3 [4 5 6]]
         test 'elem to array' ->
@@ -126,12 +126,12 @@ describe 'data transforms' ->
             src = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 to 4]
         test 'eg' ->
             res = 3
-            |> append-to-mut [4]
+            |> append-to-m [4]
             (expect res).to-equal [4 3]
 
     describe 'appendFrom' ->
@@ -143,7 +143,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 2 3 [4 5 6]]
         test 2 ->
@@ -151,7 +151,7 @@ describe 'data transforms' ->
             src = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 to 4]
         test 'eg' ->
@@ -160,7 +160,7 @@ describe 'data transforms' ->
             (expect res).to-equal [3 4]
 
     describe 'appendFromMut' ->
-        fn = append-from-mut
+        fn = append-from-m
         dir = 'from'
         mut = true
         test 'array -> array' ->
@@ -168,7 +168,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 2 3 [4 5 6]]
         test 'elem -> array' ->
@@ -176,12 +176,12 @@ describe 'data transforms' ->
             src = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 to 4]
         test 'eg' ->
             res = [4]
-            |> append-from-mut 3
+            |> append-from-m 3
             (expect res).to-equal [4 3]
 
     describe 'prependTo' ->
@@ -193,7 +193,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [[4 5 6] 1 2 3]
         test 'number -> array' ->
@@ -201,7 +201,7 @@ describe 'data transforms' ->
             src = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [4 1 2 3]
         test 'eg' ->
@@ -218,7 +218,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [[4 5 6] 1 2 3]
         test 'element -> array' ->
@@ -226,7 +226,7 @@ describe 'data transforms' ->
             src = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [4 1 2 3]
         test 'eg' ->
@@ -235,7 +235,7 @@ describe 'data transforms' ->
             (expect res).to-equal [3 4]
 
     describe 'prependFromMut' ->
-        fn = prepend-from-mut
+        fn = prepend-from-m
         dir = 'from'
         mut = true
         test 'array to array' ->
@@ -243,7 +243,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [[4 5 6] 1 2 3]
         test 'elem to array' ->
@@ -251,16 +251,16 @@ describe 'data transforms' ->
             src = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [4 1 2 3]
         test 'eg' ->
             res = [3]
-            |> prepend-from-mut 4
+            |> prepend-from-m 4
             (expect res).to-equal [4 3]
 
     describe 'prependToMut' ->
-        fn = prepend-to-mut
+        fn = prepend-to-m
         dir = 'to'
         mut = true
         test 'array to array' ->
@@ -268,7 +268,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [[4 5 6] 1 2 3]
         test 'elem to array' ->
@@ -276,12 +276,12 @@ describe 'data transforms' ->
             src = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [4 1 2 3]
         test 'eg' ->
             res = 4
-            |> prepend-to-mut [3]
+            |> prepend-to-m [3]
             (expect res).to-equal [4 3]
 
     describe 'concatTo' ->
@@ -293,7 +293,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 to 6]
         test 'string -> string' ->
@@ -301,7 +301,7 @@ describe 'data transforms' ->
             src = 'jibber jabber'
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal tgt + src
         test 'unequal types => throw' ->
@@ -310,7 +310,7 @@ describe 'data transforms' ->
             (expect -> src |> concat-to tgt).to-throw()
 
     describe 'concatToMut' ->
-        fn = concat-to-mut
+        fn = concat-to-m
         dir = 'to'
         mut = true
         test 1 ->
@@ -318,13 +318,13 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 to 6]
         test 'strings -> throw' ->
             tgt = "don't give me no "
             src = 'jibber jabber'
-            (expect -> src |> concat-to-mut tgt).to-throw()
+            (expect -> src |> concat-to-m tgt).to-throw()
 
     describe 'concatFrom' ->
         fn = concat-from
@@ -335,7 +335,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 to 6]
         test 'elem -> array' ->
@@ -344,7 +344,7 @@ describe 'data transforms' ->
             expect(-> src |> concat-from tgt).to-throw()
 
     describe 'concatFromMut' ->
-        fn = concat-from-mut
+        fn = concat-from-m
         dir = 'from'
         mut = true
         test 1 ->
@@ -352,7 +352,7 @@ describe 'data transforms' ->
             src = [4 5 6]
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal [1 to 6]
 
@@ -365,7 +365,7 @@ describe 'data transforms' ->
             src =      b: 3 c: 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
         test 'discards non-own vals 1' ->
@@ -377,7 +377,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4
@@ -391,7 +391,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4
@@ -405,7 +405,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4
@@ -420,7 +420,7 @@ describe 'data transforms' ->
             src =      b: 3 c: 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
         test 'discards non-own vals 1' ->
@@ -432,7 +432,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4
@@ -446,7 +446,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4
@@ -460,14 +460,14 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4
             (expect res.hidden).to-equal void
 
     describe 'mergeToMut' ->
-        fn = merge-to-mut
+        fn = merge-to-m
         dir = 'to'
         mut = true
         test 1 ->
@@ -475,7 +475,7 @@ describe 'data transforms' ->
             src =      b: 3 c: 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
         test 'discards non-own on src' ->
@@ -487,7 +487,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
             (expect res.hidden).to-equal void
@@ -500,7 +500,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
             (expect res.hidden).to-equal 42
@@ -513,15 +513,15 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
-        test 'alias inject-to-mut' ->
-            inject-to-mut
-            |> expect-to-equal merge-to-mut
+        test 'alias inject-to-m' ->
+            inject-to-m
+            |> expect-to-equal merge-to-m
 
     describe 'mergeFromMut' ->
-        fn = merge-from-mut
+        fn = merge-from-m
         dir = 'from'
         mut = true
         test 1 ->
@@ -529,7 +529,7 @@ describe 'data transforms' ->
             src =      b: 3 c: 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
         test 'discards non-own on src' ->
@@ -541,7 +541,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
             (expect res.hidden).to-equal void
@@ -554,7 +554,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
             (expect res.hidden).to-equal 42
@@ -567,12 +567,12 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
-        test 'alias inject-from-mut' ->
-            inject-from-mut
-            |> expect-to-equal merge-from-mut
+        test 'alias inject-from-m' ->
+            inject-from-m
+            |> expect-to-equal merge-from-m
 
     describe 'mergeToWithMut' ->
         var tgt, src
@@ -588,8 +588,8 @@ describe 'data transforms' ->
                     ..c = 3
                     ..d = 4
                 src
-                |> merge-to-with-mut noop, tgt
-                |> expect-to-equal merge-to-mut tgt, src
+                |> merge-to-with-m noop, tgt
+                |> expect-to-equal merge-to-m tgt, src
 
         describe 'collide with own of target' ->
             var tgt, src
@@ -602,13 +602,13 @@ describe 'data transforms' ->
                     b: 'source b'
                     c: 'source c'
             test 'choose target' ->
-                src |> merge-to-with-mut choose-left, tgt
+                src |> merge-to-with-m choose-left, tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
                     c: 'source c'
             test 'choose source' ->
-                src |> merge-to-with-mut choose-right, tgt
+                src |> merge-to-with-m choose-right, tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
@@ -626,7 +626,7 @@ describe 'data transforms' ->
                     c: 'source c'
                     hidden: 'source hidden'
             test 'choose target, hidden val floats' ->
-                src |> merge-to-with-mut choose-left, tgt
+                src |> merge-to-with-m choose-left, tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
@@ -634,7 +634,7 @@ describe 'data transforms' ->
                     hidden: 'target hidden'
                 tgt.hidden |> expect-to-equal 'target hidden'
             test 'choose source, hidden val floats' ->
-                src |> merge-to-with-mut choose-right, tgt
+                src |> merge-to-with-m choose-right, tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
@@ -655,8 +655,8 @@ describe 'data transforms' ->
                     ..c = 3
                     ..d = 4
                 tgt
-                |> merge-from-with-mut noop, src
-                |> expect-to-equal merge-from-mut src, tgt
+                |> merge-from-with-m noop, src
+                |> expect-to-equal merge-from-m src, tgt
 
         describe 'collide with own of target' ->
             var tgt, src
@@ -669,13 +669,13 @@ describe 'data transforms' ->
                     b: 'source b'
                     c: 'source c'
             test 'choose target' ->
-                tgt |> merge-from-with-mut choose-left, src
+                tgt |> merge-from-with-m choose-left, src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
                     c: 'source c'
             test 'choose source' ->
-                tgt |> merge-from-with-mut choose-right, src
+                tgt |> merge-from-with-m choose-right, src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
@@ -693,7 +693,7 @@ describe 'data transforms' ->
                     c: 'source c'
                     hidden: 'source hidden'
             test 'choose target, hidden val floats' ->
-                tgt |> merge-from-with-mut choose-left, src
+                tgt |> merge-from-with-m choose-left, src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
@@ -701,7 +701,7 @@ describe 'data transforms' ->
                     hidden: 'target hidden'
                 tgt.hidden |> expect-to-equal 'target hidden'
             test 'choose source, hidden val floats' ->
-                tgt |> merge-from-with-mut choose-right, src
+                tgt |> merge-from-with-m choose-right, src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
@@ -721,7 +721,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 42
@@ -734,7 +734,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
@@ -747,7 +747,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
@@ -765,7 +765,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 42
@@ -778,7 +778,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
@@ -791,13 +791,13 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
 
     describe 'mergeToInMut' ->
-        fn = merge-to-in-mut
+        fn = merge-to-in-m
         dir = 'to'
         mut = true
         test 1 ->
@@ -809,7 +809,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4
@@ -823,7 +823,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
@@ -836,13 +836,13 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
 
     describe 'mergeFromInMut' ->
-        fn = merge-from-in-mut
+        fn = merge-from-in-m
         dir = 'from'
         mut = true
         test 1 ->
@@ -854,7 +854,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4
@@ -868,7 +868,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
@@ -881,7 +881,7 @@ describe 'data transforms' ->
                 ..c = 4
             res = run do
                 { fn, src, tgt, dir, }
-            test-mut do
+            test-m do
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43

@@ -23,8 +23,8 @@
     if-yes, when-yes, if-yes__,
     if-no, when-no, if-no__,
 
+    # --- @todo, test composing
     if-function, when-function, if-function__,
-    if-length-one, when-length-one, if-length-one__,
     if-empty, when-empty, if-empty__,
 
     cond,
@@ -709,65 +709,6 @@ describe 'ifFunction__' ->
             expect-branch: 'nee'
             num-arms: 2
         *   desc: 'array, no else'
-            input-val: []
-            expect-branch: 'nee'
-            num-arms: 1
-
-    do-tests describe-spec, tests
-
-describe 'whenLengthOne' ->
-    describe-spec =
-        fn: when-length-one
-        is__: false
-
-    tests = list do
-        *   desc: 'array n = 1'
-            input-val: [9]
-            expect-branch: 'ja'
-            num-arms: 1
-        *   desc: 'array n = 0'
-            input-val: []
-            expect-branch: 'nee'
-            num-arms: 1
-
-    do-tests describe-spec, tests
-
-describe 'ifLengthOne' ->
-    describe-spec =
-        fn: if-length-one
-        is__: false
-
-    tests = list do
-        *   desc: 'array n = 1'
-            input-val: [9]
-            expect-branch: 'ja'
-            num-arms: 2
-        *   desc: 'array n = 0'
-            input-val: []
-            expect-branch: 'nee'
-            num-arms: 2
-
-    do-tests describe-spec, tests
-
-describe 'ifLengthOne__' ->
-    describe-spec =
-        fn: if-length-one__
-        is__: true
-
-    tests = list do
-        *   desc: 'array n = 1'
-            input-val: [9]
-            expect-branch: 'ja'
-            num-arms: 2
-        *   desc: 'array n = 1, no else'
-            input-val: [9]
-            expect-branch: 'ja'
-            num-arms: 1
-        *   desc: 'array n = 0'
-            input-val: []
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'array n = 0, no else'
             input-val: []
             expect-branch: 'nee'
             num-arms: 1

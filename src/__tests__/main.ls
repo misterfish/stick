@@ -24,7 +24,7 @@
     cascade, flip-c,
     sprintf1, sprintf-n,
 
-    given, laat, given-star, laat-star,
+    given, laat, lets, laats,
 
     nieuw, nieuw1, nieuw2, nieuw3, nieuw-n,
 
@@ -199,15 +199,13 @@ describe 'laat' ->
             (expect ten + twelve + nineteen).to-equal 41
 
 describe 'laatStar' ->
-    test 'alias givenStar' ->
-        (expect given-star).to-be laat-star
     test 'superset of laat' ->
-        laat-star do
+        laats do
             -> 10, -> 12, -> 19, (ten, twelve, nineteen) ->
                 (expect ten + twelve + nineteen).to-equal 41
     return
     test 'recursive references' ->
-        laat-star do
+        laats do
             [
                 10
                 (ten) -> ten + 2
@@ -218,7 +216,7 @@ describe 'laatStar' ->
                 ten + twelve + nineteen + two
                 |> expect-to-equal 43
     test 'recursive references, second arg optional' ->
-        laat-star do
+        laats do
             [
                 10
                 (ten) -> ten + 2
@@ -229,14 +227,14 @@ describe 'laatStar' ->
                     |> expect-to-equal 43
             ]
     test 'single function' ->
-        laat-star do
+        laats do
             [
                 -> 11
             ]
             (eleven) ->
                 (expect eleven).to-equal 11
     test 'mixed references' ->
-        laat-star do
+        laats do
             [
                 10
                 (ten) -> ten + 2
@@ -257,7 +255,7 @@ describe 'laatStar' ->
                 | m == 1 => 1
                 | otherwise => sum-last-two prev
             refs = r-repeat entry, n + 1
-            laat-star refs, list
+            laats refs, list
 
         (expect fibonacci 0).to-equal [1]
         (expect fibonacci 1).to-equal [1 1]

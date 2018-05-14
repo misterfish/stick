@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifOk__, ifTrue, whenTrue, ifTrue__, ifFalse, whenFalse, ifFalse__, ifYes, whenYes, ifYes__, ifNo, whenNo, ifNo__, ifFunction, whenFunction, ifFunction__, ifLengthOne, whenLengthOne, ifLengthOne__, ifEmpty, whenEmpty, ifEmpty__, cond, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifOk__, ifTrue, whenTrue, ifTrue__, ifFalse, whenFalse, ifFalse__, ifYes, whenYes, ifYes__, ifNo, whenNo, ifNo__, ifFunction, whenFunction, ifFunction__, ifEmpty, whenEmpty, ifEmpty__, cond, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, id = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifOk__ = ref$.ifOk__, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifTrue__ = ref$.ifTrue__, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifFalse__ = ref$.ifFalse__, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifYes__ = ref$.ifYes__, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifNo__ = ref$.ifNo__, ifFunction = ref$.ifFunction, whenFunction = ref$.whenFunction, ifFunction__ = ref$.ifFunction__, ifLengthOne = ref$.ifLengthOne, whenLengthOne = ref$.whenLengthOne, ifLengthOne__ = ref$.ifLengthOne__, ifEmpty = ref$.ifEmpty, whenEmpty = ref$.whenEmpty, ifEmpty__ = ref$.ifEmpty__, cond = ref$.cond;
+ref$ = require('../index'), ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifOk__ = ref$.ifOk__, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifTrue__ = ref$.ifTrue__, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifFalse__ = ref$.ifFalse__, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifYes__ = ref$.ifYes__, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifNo__ = ref$.ifNo__, ifFunction = ref$.ifFunction, whenFunction = ref$.whenFunction, ifFunction__ = ref$.ifFunction__, ifEmpty = ref$.ifEmpty, whenEmpty = ref$.whenEmpty, ifEmpty__ = ref$.ifEmpty__, cond = ref$.cond;
 doTests = curry$(function(describeSpec, tests){
   return each(function(testSpec){
     var numArms, ref$, ref1$, theTest;
@@ -798,73 +798,6 @@ describe('ifFunction__', function(){
     numArms: 2
   }, {
     desc: 'array, no else',
-    inputVal: [],
-    expectBranch: 'nee',
-    numArms: 1
-  });
-  return doTests(describeSpec, tests);
-});
-describe('whenLengthOne', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: whenLengthOne,
-    is__: false
-  };
-  tests = list({
-    desc: 'array n = 1',
-    inputVal: [9],
-    expectBranch: 'ja',
-    numArms: 1
-  }, {
-    desc: 'array n = 0',
-    inputVal: [],
-    expectBranch: 'nee',
-    numArms: 1
-  });
-  return doTests(describeSpec, tests);
-});
-describe('ifLengthOne', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: ifLengthOne,
-    is__: false
-  };
-  tests = list({
-    desc: 'array n = 1',
-    inputVal: [9],
-    expectBranch: 'ja',
-    numArms: 2
-  }, {
-    desc: 'array n = 0',
-    inputVal: [],
-    expectBranch: 'nee',
-    numArms: 2
-  });
-  return doTests(describeSpec, tests);
-});
-describe('ifLengthOne__', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: ifLengthOne__,
-    is__: true
-  };
-  tests = list({
-    desc: 'array n = 1',
-    inputVal: [9],
-    expectBranch: 'ja',
-    numArms: 2
-  }, {
-    desc: 'array n = 1, no else',
-    inputVal: [9],
-    expectBranch: 'ja',
-    numArms: 1
-  }, {
-    desc: 'array n = 0',
-    inputVal: [],
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'array n = 0, no else',
     inputVal: [],
     expectBranch: 'nee',
     numArms: 1

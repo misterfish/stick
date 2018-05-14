@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, test, xtest, expectToEqual, expectToBe, zipAll, dot, dot1, dot2, dot3, dotN, dotMut, dot1Mut, dot2Mut, dot3Mut, dotNMut, tapDot, tapDot1, tapDot2, tapDot3, tapDotN, tapMut, tapDotMut, tapDot1Mut, tapDot2Mut, tapDot3Mut, tapDotNMut;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, test, xtest, expectToEqual, expectToBe, zipAll, dot, dot1, dot2, dot3, dotN, side, side1, side2, side3, sideN;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), zipAll = ref$.zipAll, dot = ref$.dot, dot1 = ref$.dot1, dot2 = ref$.dot2, dot3 = ref$.dot3, dotN = ref$.dotN, dotMut = ref$.dotMut, dot1Mut = ref$.dot1Mut, dot2Mut = ref$.dot2Mut, dot3Mut = ref$.dot3Mut, dotNMut = ref$.dotNMut, tapDot = ref$.tapDot, tapDot1 = ref$.tapDot1, tapDot2 = ref$.tapDot2, tapDot3 = ref$.tapDot3, tapDotN = ref$.tapDotN, tapMut = ref$.tapMut, tapDotMut = ref$.tapDotMut, tapDot1Mut = ref$.tapDot1Mut, tapDot2Mut = ref$.tapDot2Mut, tapDot3Mut = ref$.tapDot3Mut, tapDotNMut = ref$.tapDotNMut;
+ref$ = require('../index'), zipAll = ref$.zipAll, dot = ref$.dot, dot1 = ref$.dot1, dot2 = ref$.dot2, dot3 = ref$.dot3, dotN = ref$.dotN, side = ref$.side, side1 = ref$.side1, side2 = ref$.side2, side3 = ref$.side3, sideN = ref$.sideN;
 describe('dot*', function(){
   var obj;
   obj = {
@@ -26,20 +26,6 @@ describe('dot*', function(){
       all);
     }
   };
-  describe('aliases', function(){
-    var normal, mut, names;
-    normal = [dot, dot1, dot2, dot3, dotN];
-    mut = [dotMut, dot1Mut, dot2Mut, dot3Mut, dotNMut];
-    names = ['dot-mut', 'dot1-mut', 'dot2-mut', 'dot3-mut', 'dot-n-mut'];
-    return each(function(arg$){
-      var aliasL, aliasR, name;
-      aliasL = arg$[0], aliasR = arg$[1], name = arg$[2];
-      return test(name, function(){
-        return expect(aliasL).toBe(aliasR);
-      });
-    })(
-    zipAll(normal, mut, names));
-  });
   describe('dot', function(){
     var trim, bark;
     trim = dot('trim');
@@ -56,7 +42,7 @@ describe('dot*', function(){
     });
     return test('array', function(){
       return expectToEqual(1)(
-      dotMut('shift')(
+      dot('shift')(
       [1, 2, 3, 4]));
     });
   });
@@ -164,48 +150,22 @@ describe('tapMut, tapDot*', function(){
       }
     };
   });
-  describe('aliases', function(){
-    var normal, mut, names;
-    normal = [tap, tapDot, tapDot1, tapDot2, tapDot3, tapDotN];
-    mut = [tapMut, tapDotMut, tapDot1Mut, tapDot2Mut, tapDot3Mut, tapDotNMut];
-    names = ['tap-mut', 'tap-dot-mut', 'tap-dot1-mut', 'tap-dot2-mut', 'tap-dot3-mut', 'tap-dot-n-mut'];
-    return each(function(arg$){
-      var aliasL, aliasR, name;
-      aliasL = arg$[0], aliasR = arg$[1], name = arg$[2];
-      return test(name, function(){
-        return expect(aliasL).toBe(aliasR);
-      });
-    })(
-    zipAll(normal, mut, names));
-  });
-  describe('tapMut', function(){
-    return test('array', function(){
-      return expectToEqual([1, 2, 3, 4, 5])(
-      tapMut(function(x){
-        return x.unshift(1);
-      })(
-      tapMut(function(x){
-        return x.push(5);
-      })(
-      [2, 3, 4])));
-    });
-  });
-  describe('tapDot', function(){
+  describe('side', function(){
     test('array 1', function(){
       return expectToEqual([2, 3, 4])(
-      tapDotMut('shift')(
+      side('shift')(
       [1, 2, 3, 4]));
     });
     test('array 2', function(){
       return expectToEqual([4, 3, 2, 1])(
-      tapDotMut('reverse')(
+      side('reverse')(
       [1, 2, 3, 4]));
     });
     return test('user-obj', function(){
       expectToEqual('tac')(
       dot('get-name')(
-      tapDotMut('reverse-name-mut')(
-      tapDot('bark-io')(
+      side('reverse-name-mut')(
+      side('bark-io')(
       obj))));
       return expectToEqual(1)(
       log.mock.calls.length);
@@ -214,12 +174,12 @@ describe('tapMut, tapDot*', function(){
   describe('tapDot1', function(){
     test('array', function(){
       return expectToEqual([1, 2, 3, 4])(
-      tapDot1('concat', 5)(
+      side1('concat', 5)(
       [1, 2, 3, 4]));
     });
     return test('user-obj', function(){
       expectToBe(obj)(
-      tapDot1('speak-io', 'hello')(
+      side1('speak-io', 'hello')(
       obj));
       return expectToEqual([['hello']])(
       log.mock.calls);
@@ -228,12 +188,12 @@ describe('tapMut, tapDot*', function(){
   describe('tapDot2', function(){
     test('array', function(){
       return expectToEqual([1, 2, 3, 4])(
-      tapDot2('concat', 5, 6)(
+      side2('concat', 5, 6)(
       [1, 2, 3, 4]));
     });
     return test('user-obj', function(){
       expectToBe(obj)(
-      tapDot2('garble', 'hello', 'goodbye')(
+      side2('garble', 'hello', 'goodbye')(
       obj));
       return expectToEqual([['hello!goodbye']])(
       log.mock.calls);
@@ -242,12 +202,12 @@ describe('tapMut, tapDot*', function(){
   describe('tapDot3', function(){
     test('array', function(){
       return expectToEqual([1, 2, 3, 4])(
-      tapDot3('concat', 5, 6, 7)(
+      side3('concat', 5, 6, 7)(
       [1, 2, 3, 4]));
     });
     return test('user-obj', function(){
       expectToBe(obj)(
-      tapDot3('garble', 'hello', 'goodbye', 'hello')(
+      side3('garble', 'hello', 'goodbye', 'hello')(
       obj));
       return expectToEqual([['hello!goodbye!hello']])(
       log.mock.calls);
@@ -256,12 +216,12 @@ describe('tapMut, tapDot*', function(){
   describe('tapDotN', function(){
     test('array', function(){
       return expectToEqual([1, 2, 3, 4])(
-      tapDotN('concat', [1, 2, 3])(
+      sideN('concat', [1, 2, 3])(
       [1, 2, 3, 4]));
     });
     return test('user-obj', function(){
       expectToBe(obj)(
-      tapDotN('garble', ['hello', 'goodbye', 'hello'])(
+      sideN('garble', ['hello', 'goodbye', 'hello'])(
       obj));
       return expectToEqual([['hello!goodbye!hello']])(
       log.mock.calls);
@@ -270,11 +230,11 @@ describe('tapMut, tapDot*', function(){
   describe('tapDot combine', function(){
     return test('array', function(){
       return expectToEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])(
-      tapDot1Mut('unshift', 1)(
-      tapDotNMut('push', [11, 12])(
-      tapDot3Mut('push', 8, 9, 10)(
-      tapDot2Mut('push', 6, 7)(
-      tapDot1Mut('push', 5)(
+      side1('unshift', 1)(
+      sideN('push', [11, 12])(
+      side3('push', 8, 9, 10)(
+      side2('push', 6, 7)(
+      side1('push', 5)(
       [2, 3, 4]))))));
     });
   });

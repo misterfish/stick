@@ -44,7 +44,7 @@ describe('factory ', function(){
     afterEach(function(){
       return testProtoUnaltered();
     });
-    test('main', function(){
+    xtest('main', function(){
       var redAnimal, blueAnimal;
       redAnimal = create({
         color: 'red'
@@ -57,7 +57,7 @@ describe('factory ', function(){
       return expectToEqual('I am blue')(
       blueAnimal.confess());
     });
-    test('proto', function(){
+    xtest('proto', function(){
       expectToEqual('Function')(
       toString$.call(proto.ooze).slice(8, -1));
       expectToEqual('Function')(
@@ -65,7 +65,7 @@ describe('factory ', function(){
       return expectToEqual('Function')(
       toString$.call(proto.confess).slice(8, -1));
     });
-    test('instance spec not altered', function(){
+    xtest('instance spec not altered', function(){
       var instanceSpec, redAnimal;
       instanceSpec = {
         color: 'red'
@@ -76,7 +76,7 @@ describe('factory ', function(){
       })(
       instanceSpec);
     });
-    return test('proto chain multi-level', function(){
+    return xtest('proto chain multi-level', function(){
       var redAnimal;
       redAnimal = create({
         color: 'red'
@@ -121,7 +121,7 @@ describe('factory ', function(){
         return 'walker walk';
       }
     };
-    test('instance spec, and mixins pre, right order', function(){
+    xtest('instance spec, and mixins pre, right order', function(){
       expectToEqual('I am red')(
       redAnimal.confess());
       expectToEqual('topper hop')(
@@ -131,7 +131,7 @@ describe('factory ', function(){
       return expectToEqual('walker pop')(
       redAnimal.pop());
     });
-    return test("mixins pre doesn't clobber", function(){
+    return xtest("mixins pre doesn't clobber", function(){
       return expectToEqual('walk')(
       redAnimal.walk());
     });
@@ -172,7 +172,7 @@ describe('factory ', function(){
         return 'walker walk';
       }
     };
-    test('instance spec, and mixins post, right order', function(){
+    xtest('instance spec, and mixins post, right order', function(){
       expectToEqual('I am red')(
       redAnimal.confess());
       expectToEqual('topper hop')(
@@ -182,11 +182,11 @@ describe('factory ', function(){
       return expectToEqual('walker pop')(
       redAnimal.pop());
     });
-    test("mixins post does clobber", function(){
+    xtest("mixins post does clobber", function(){
       return expectToEqual('walker walk')(
       redAnimal.walk());
     });
-    return test('mixins not altered', function(){
+    return xtest('mixins not altered', function(){
       expectToEqual(1)(
       numKeys(hopper));
       expectToEqual(2)(
@@ -225,7 +225,7 @@ describe('factory ', function(){
         return 'walker walk';
       }
     };
-    test('instance spec', function(){
+    xtest('instance spec', function(){
       var redAnimal;
       redAnimal = create({
         color: 'red'
@@ -233,7 +233,7 @@ describe('factory ', function(){
       return expectToEqual('I am red')(
       redAnimal.confess());
     });
-    test('instance spec, multiple', function(){
+    xtest('instance spec, multiple', function(){
       var redAnimal;
       redAnimal = create({
         color: 'red'
@@ -243,7 +243,7 @@ describe('factory ', function(){
       return expectToEqual('I am blue')(
       redAnimal.confess());
     });
-    return test('instance spec, multiple, prototypes discarded', function(){
+    return xtest('instance spec, multiple, prototypes discarded', function(){
       var x$, spec1, y$, spec2, redAnimal;
       x$ = spec1 = Object.create({
         hidden: 42

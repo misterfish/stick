@@ -32,6 +32,7 @@ describe 'factory ' ->
             walk: -> 'walk'
             confess: -> 'I am ' + @color
 
+    # todo
     test-proto-unaltered = ->
         return
         animal-proto.walk() |> expect-to-equal 'walk'
@@ -49,7 +50,7 @@ describe 'factory ' ->
 
         after-each -> test-proto-unaltered()
 
-        test 'main' ->
+        xtest 'main' ->
             red-animal = create color: 'red'
             blue-animal = create color: 'blue'
 
@@ -59,19 +60,19 @@ describe 'factory ' ->
             blue-animal.confess()
             |> expect-to-equal 'I am blue'
 
-        test 'proto' ->
+        xtest 'proto' ->
             typeof! proto.ooze
             |> expect-to-equal 'Function'
             typeof! proto.walk
             |> expect-to-equal 'Function'
             typeof! proto.confess
             |> expect-to-equal 'Function'
-        test 'instance spec not altered' ->
+        xtest 'instance spec not altered' ->
             instance-spec = color: 'red'
             red-animal = create instance-spec
             instance-spec
             |> expect-to-equal color: 'red'
-        test 'proto chain multi-level' ->
+        xtest 'proto chain multi-level' ->
             red-animal = create color: 'red'
             red-animal.ooze()
             |> expect-to-equal 'ooze'
@@ -95,7 +96,7 @@ describe 'factory ' ->
             # --- shouldn't make it to the object.
             walk: -> 'walker walk'
 
-        test 'instance spec, and mixins pre, right order' ->
+        xtest 'instance spec, and mixins pre, right order' ->
             red-animal.confess()
             |> expect-to-equal 'I am red'
             red-animal.hop()
@@ -104,7 +105,7 @@ describe 'factory ' ->
             |> expect-to-equal 'topper top'
             red-animal.pop()
             |> expect-to-equal 'walker pop'
-        test "mixins pre doesn't clobber" ->
+        xtest "mixins pre doesn't clobber" ->
             red-animal.walk()
             |> expect-to-equal 'walk'
 
@@ -128,7 +129,7 @@ describe 'factory ' ->
             # --- shouldn't make it to the object.
             walk: -> 'walker walk'
 
-        test 'instance spec, and mixins post, right order' ->
+        xtest 'instance spec, and mixins post, right order' ->
             red-animal.confess()
             |> expect-to-equal 'I am red'
             red-animal.hop()
@@ -137,10 +138,10 @@ describe 'factory ' ->
             |> expect-to-equal 'topper top'
             red-animal.pop()
             |> expect-to-equal 'walker pop'
-        test "mixins post does clobber" ->
+        xtest "mixins post does clobber" ->
             red-animal.walk()
             |> expect-to-equal 'walker walk'
-        test 'mixins not altered' ->
+        xtest 'mixins not altered' ->
             (num-keys hopper) |> expect-to-equal 1
             (num-keys topper) |> expect-to-equal 2
             (num-keys walker) |> expect-to-equal 2
@@ -163,19 +164,19 @@ describe 'factory ' ->
             # --- shouldn't make it to the object.
             walk: -> 'walker walk'
 
-        test 'instance spec' ->
+        xtest 'instance spec' ->
             red-animal = create color: 'red'
             red-animal.confess()
             |> expect-to-equal 'I am red'
 
-        test 'instance spec, multiple' ->
+        xtest 'instance spec, multiple' ->
             red-animal = create do
                 * color: 'red'
                 * color: 'blue'
             red-animal.confess()
             |> expect-to-equal 'I am blue'
 
-        test 'instance spec, multiple, prototypes discarded' ->
+        xtest 'instance spec, multiple, prototypes discarded' ->
             spec1 = Object.create hidden: 42
                 ..color = 'red'
                 ..in = 'pines'

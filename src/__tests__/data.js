@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, defaultTo, defaultTo__, assocMut, appendTo, appendToMut, appendFrom, appendFromMut, prependFrom, prependFromMut, prependTo, prependToMut, concatTo, concatToMut, concatFrom, concatFromMut, mergeTo, mergeFrom, mergeToMut, mergeFromMut, mergeToWithMut, mergeFromWithMut, mergeToIn, mergeFromIn, mergeToInMut, mergeFromInMut, mergeAllIn, injectToMut, injectFromMut, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, eachObjIn, applyScalar, passScalar;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, defaultTo, defaultTo__, assocM, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, eachObjIn, applyScalar, passScalar;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), defaultTo = ref$.defaultTo, defaultTo__ = ref$.defaultTo__, assocMut = ref$.assocMut, appendTo = ref$.appendTo, appendToMut = ref$.appendToMut, appendFrom = ref$.appendFrom, appendFromMut = ref$.appendFromMut, prependFrom = ref$.prependFrom, prependFromMut = ref$.prependFromMut, prependTo = ref$.prependTo, prependToMut = ref$.prependToMut, concatTo = ref$.concatTo, concatToMut = ref$.concatToMut, concatFrom = ref$.concatFrom, concatFromMut = ref$.concatFromMut, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToMut = ref$.mergeToMut, mergeFromMut = ref$.mergeFromMut, mergeToWithMut = ref$.mergeToWithMut, mergeFromWithMut = ref$.mergeFromWithMut, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInMut = ref$.mergeToInMut, mergeFromInMut = ref$.mergeFromInMut, mergeAllIn = ref$.mergeAllIn, injectToMut = ref$.injectToMut, injectFromMut = ref$.injectFromMut, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, eachObjIn = ref$.eachObjIn, applyScalar = ref$.applyScalar, passScalar = ref$.passScalar;
+ref$ = require('../index'), defaultTo = ref$.defaultTo, defaultTo__ = ref$.defaultTo__, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, eachObjIn = ref$.eachObjIn, applyScalar = ref$.applyScalar, passScalar = ref$.passScalar;
 describe('default to', function(){
   test(1, function(){
     return expectToEqual(false)(
@@ -52,7 +52,7 @@ describe('default to __', function(){
   });
 });
 describe('data transforms', function(){
-  var run, testMut;
+  var run, testM;
   run = function(args){
     var fn, src, tgt, dir;
     fn = args.fn, src = args.src, tgt = args.tgt, dir = args.dir;
@@ -64,7 +64,7 @@ describe('data transforms', function(){
       tgt);
     }
   };
-  testMut = function(args){
+  testM = function(args){
     var res, mut, tgt;
     res = args.res, mut = args.mut, tgt = args.tgt;
     if (mut) {
@@ -80,7 +80,7 @@ describe('data transforms', function(){
         a: 1,
         b: 2
       };
-      nieuw = assocMut('b', 3)(
+      nieuw = assocM('b', 3)(
       orig);
       expect(nieuw).toBe(orig);
       return expect(nieuw).toEqual({
@@ -104,7 +104,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -121,7 +121,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -137,7 +137,7 @@ describe('data transforms', function(){
   });
   describe('appendToMut', function(){
     var fn, dir, mut;
-    fn = appendToMut;
+    fn = appendToM;
     dir = 'to';
     mut = true;
     test('array to array', function(){
@@ -150,7 +150,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -167,7 +167,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -176,7 +176,7 @@ describe('data transforms', function(){
     });
     return test('eg', function(){
       var res;
-      res = appendToMut([4])(
+      res = appendToM([4])(
       3);
       return expect(res).toEqual([4, 3]);
     });
@@ -196,7 +196,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -213,7 +213,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -229,7 +229,7 @@ describe('data transforms', function(){
   });
   describe('appendFromMut', function(){
     var fn, dir, mut;
-    fn = appendFromMut;
+    fn = appendFromM;
     dir = 'from';
     mut = true;
     test('array -> array', function(){
@@ -242,7 +242,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -259,7 +259,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -268,7 +268,7 @@ describe('data transforms', function(){
     });
     return test('eg', function(){
       var res;
-      res = appendFromMut(3)(
+      res = appendFromM(3)(
       [4]);
       return expect(res).toEqual([4, 3]);
     });
@@ -288,7 +288,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -305,7 +305,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -334,7 +334,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -351,7 +351,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -367,7 +367,7 @@ describe('data transforms', function(){
   });
   describe('prependFromMut', function(){
     var fn, dir, mut;
-    fn = prependFromMut;
+    fn = prependFromM;
     dir = 'from';
     mut = true;
     test('array to array', function(){
@@ -380,7 +380,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -397,7 +397,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -406,14 +406,14 @@ describe('data transforms', function(){
     });
     return test('eg', function(){
       var res;
-      res = prependFromMut(4)(
+      res = prependFromM(4)(
       [3]);
       return expect(res).toEqual([4, 3]);
     });
   });
   describe('prependToMut', function(){
     var fn, dir, mut;
-    fn = prependToMut;
+    fn = prependToM;
     dir = 'to';
     mut = true;
     test('array to array', function(){
@@ -426,7 +426,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -443,7 +443,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -452,7 +452,7 @@ describe('data transforms', function(){
     });
     return test('eg', function(){
       var res;
-      res = prependToMut([3])(
+      res = prependToM([3])(
       4);
       return expect(res).toEqual([4, 3]);
     });
@@ -472,7 +472,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -489,7 +489,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -508,7 +508,7 @@ describe('data transforms', function(){
   });
   describe('concatToMut', function(){
     var fn, dir, mut;
-    fn = concatToMut;
+    fn = concatToM;
     dir = 'to';
     mut = true;
     test(1, function(){
@@ -521,7 +521,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -533,7 +533,7 @@ describe('data transforms', function(){
       tgt = "don't give me no ";
       src = 'jibber jabber';
       return expect(function(){
-        return concatToMut(tgt)(
+        return concatToM(tgt)(
         src);
       }).toThrow();
     });
@@ -553,7 +553,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -572,7 +572,7 @@ describe('data transforms', function(){
   });
   describe('concatFromMut', function(){
     var fn, dir, mut;
-    fn = concatFromMut;
+    fn = concatFromM;
     dir = 'from';
     mut = true;
     return test(1, function(){
@@ -585,7 +585,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -614,7 +614,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -643,7 +643,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -671,7 +671,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -699,7 +699,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -733,7 +733,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -762,7 +762,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -790,7 +790,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -818,7 +818,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -833,7 +833,7 @@ describe('data transforms', function(){
   });
   describe('mergeToMut', function(){
     var fn, dir, mut;
-    fn = mergeToMut;
+    fn = mergeToM;
     dir = 'to';
     mut = true;
     test(1, function(){
@@ -852,7 +852,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -879,7 +879,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -907,7 +907,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -937,7 +937,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -948,14 +948,14 @@ describe('data transforms', function(){
         c: 4
       });
     });
-    return test('alias inject-to-mut', function(){
-      return expectToEqual(mergeToMut)(
-      injectToMut);
+    return test('alias inject-to-m', function(){
+      return expectToEqual(mergeToM)(
+      injectToM);
     });
   });
   describe('mergeFromMut', function(){
     var fn, dir, mut;
-    fn = mergeFromMut;
+    fn = mergeFromM;
     dir = 'from';
     mut = true;
     test(1, function(){
@@ -974,7 +974,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1001,7 +1001,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1029,7 +1029,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1059,7 +1059,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1070,9 +1070,9 @@ describe('data transforms', function(){
         c: 4
       });
     });
-    return test('alias inject-from-mut', function(){
-      return expectToEqual(mergeFromMut)(
-      injectFromMut);
+    return test('alias inject-from-m', function(){
+      return expectToEqual(mergeFromM)(
+      injectFromM);
     });
   });
   describe('mergeToWithMut', function(){
@@ -1097,8 +1097,8 @@ describe('data transforms', function(){
         });
         y$.c = 3;
         y$.d = 4;
-        return expectToEqual(mergeToMut(tgt, src))(
-        mergeToWithMut(noop, tgt)(
+        return expectToEqual(mergeToM(tgt, src))(
+        mergeToWithM(noop, tgt)(
         src));
       });
     });
@@ -1117,7 +1117,7 @@ describe('data transforms', function(){
         };
       });
       test('choose target', function(){
-        mergeToWithMut(chooseLeft, tgt)(
+        mergeToWithM(chooseLeft, tgt)(
         src);
         return expectToEqual({
           a: 'target a',
@@ -1127,7 +1127,7 @@ describe('data transforms', function(){
         tgt);
       });
       return test('choose source', function(){
-        mergeToWithMut(chooseRight, tgt)(
+        mergeToWithM(chooseRight, tgt)(
         src);
         return expectToEqual({
           a: 'target a',
@@ -1153,7 +1153,7 @@ describe('data transforms', function(){
         };
       });
       test('choose target, hidden val floats', function(){
-        mergeToWithMut(chooseLeft, tgt)(
+        mergeToWithM(chooseLeft, tgt)(
         src);
         expectToEqual({
           a: 'target a',
@@ -1166,7 +1166,7 @@ describe('data transforms', function(){
         tgt.hidden);
       });
       return test('choose source, hidden val floats', function(){
-        mergeToWithMut(chooseRight, tgt)(
+        mergeToWithM(chooseRight, tgt)(
         src);
         return expectToEqual({
           a: 'target a',
@@ -1200,8 +1200,8 @@ describe('data transforms', function(){
         });
         y$.c = 3;
         y$.d = 4;
-        return expectToEqual(mergeFromMut(src, tgt))(
-        mergeFromWithMut(noop, src)(
+        return expectToEqual(mergeFromM(src, tgt))(
+        mergeFromWithM(noop, src)(
         tgt));
       });
     });
@@ -1220,7 +1220,7 @@ describe('data transforms', function(){
         };
       });
       test('choose target', function(){
-        mergeFromWithMut(chooseLeft, src)(
+        mergeFromWithM(chooseLeft, src)(
         tgt);
         return expectToEqual({
           a: 'target a',
@@ -1230,7 +1230,7 @@ describe('data transforms', function(){
         tgt);
       });
       return test('choose source', function(){
-        mergeFromWithMut(chooseRight, src)(
+        mergeFromWithM(chooseRight, src)(
         tgt);
         return expectToEqual({
           a: 'target a',
@@ -1256,7 +1256,7 @@ describe('data transforms', function(){
         };
       });
       test('choose target, hidden val floats', function(){
-        mergeFromWithMut(chooseLeft, src)(
+        mergeFromWithM(chooseLeft, src)(
         tgt);
         expectToEqual({
           a: 'target a',
@@ -1269,7 +1269,7 @@ describe('data transforms', function(){
         tgt.hidden);
       });
       return test('choose source, hidden val floats', function(){
-        mergeFromWithMut(chooseRight, src)(
+        mergeFromWithM(chooseRight, src)(
         tgt);
         return expectToEqual({
           a: 'target a',
@@ -1302,7 +1302,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1330,7 +1330,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1360,7 +1360,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1394,7 +1394,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1422,7 +1422,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1452,7 +1452,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1467,7 +1467,7 @@ describe('data transforms', function(){
   });
   describe('mergeToInMut', function(){
     var fn, dir, mut;
-    fn = mergeToInMut;
+    fn = mergeToInM;
     dir = 'to';
     mut = true;
     test(1, function(){
@@ -1486,7 +1486,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1514,7 +1514,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1544,7 +1544,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1559,7 +1559,7 @@ describe('data transforms', function(){
   });
   describe('mergeFromInMut', function(){
     var fn, dir, mut;
-    fn = mergeFromInMut;
+    fn = mergeFromInM;
     dir = 'from';
     mut = true;
     test(1, function(){
@@ -1578,7 +1578,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1606,7 +1606,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt
@@ -1636,7 +1636,7 @@ describe('data transforms', function(){
         tgt: tgt,
         dir: dir
       });
-      testMut({
+      testM({
         res: res,
         mut: mut,
         tgt: tgt

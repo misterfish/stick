@@ -508,6 +508,7 @@ export const scalarPass = passScalar
 // --------- laat
 
 export const laat = (xs, f) => f.apply (null, xs)
+export const given = laat
 
 // note that f is optional: the last function in xs serves the same purpose, but it can be used for
 // symmetry with laat.
@@ -524,6 +525,8 @@ export const laats = (...xs) => {
 
     return ys | last
 }
+
+export const lets = laats
 
 // --- 'call' always means pass a context.
 // --- 'apply' always means 'apply this function to some params'

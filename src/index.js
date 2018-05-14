@@ -916,13 +916,18 @@ export const factoryMixins = curry ((mixinsPre, mixinsPost, proto) =>
 // without this, you will get an instance!
 // This is a good place to document the properties: put them in the instance{} even if they're
 // undefined.
+// props is altered.
 export const factoryProps = curry ((props, factory) => {
     const orig = (...args) => factory.create (...args)
     return {
         ... factory,
-        create (...args) {
-            // return orig (...args) | mergeFromM (props)
-            return orig (... [props, ...args])
+        create (args) {
+            for (let i in args) {
+                const [src, tgt] = [args, props]
+                if (oPro.hasOwnProperty.call (src, i) && ok (src[i]))
+                    tgt[i] = src[i]
+            }
+            return orig (tgt)
         },
     }
 })

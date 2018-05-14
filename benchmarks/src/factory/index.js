@@ -53,12 +53,6 @@ import { bench, } from '../util'
 
 const logWith = header => (...args) => log (... [header, ...args])
 
-const laats3 = (f1, f2, f3) => {
-    const n1 = f1 ()
-    const n2 = f2 (n1)
-    return f3 (n1, n2)
-}
-
 const trad = n => () => {
     for (let i = 0; i < n; i++) new DogTrad ()
 }

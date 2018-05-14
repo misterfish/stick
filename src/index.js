@@ -510,10 +510,45 @@ export const scalarPass = passScalar
 export const laat = (xs, f) => f.apply (null, xs)
 export const given = laat
 
-// note that f is optional: the last function in xs serves the same purpose, but it can be used for
-// symmetry with laat.
+// --- these can be called directly by speed freaks; `laats` should be good enough for nearly all
+// uses.
+export const laats2 = (f1, f2) => {
+    const n1 = f1 ()
+    return f2 (n1)
+}
 
-export const laats = (...xs) => {
+export const laats3 = (f1, f2, f3) => {
+    const n1 = f1 ()
+    const n2 = f2 (n1)
+    return f3 (n1, n2)
+}
+
+export const laats4 = (f1, f2, f3, f4) => {
+    const n1 = f1 ()
+    const n2 = f2 (n1)
+    const n3 = f3 (n1, n2)
+    return f4 (n1, n2, n3)
+}
+
+export const laats5 = (f1, f2, f3, f4, f5) => {
+    const n1 = f1 ()
+    const n2 = f2 (n1)
+    const n3 = f3 (n1, n2)
+    const n4 = f4 (n1, n2, n3)
+    return f5 (n1, n2, n3, n4)
+}
+
+export const laats6 = (f1, f2, f3, f4, f5, f6) => {
+    const n1 = f1 ()
+    const n2 = f2 (n1)
+    const n3 = f3 (n1, n2)
+    const n4 = f4 (n1, n2, n3)
+    const n5 = f5 (n1, n2, n3, n4)
+    return f6 (n1, n2, n3, n4, n5)
+}
+
+// --- generic form, for any non-zero number of arguments.
+const _laats = (...xs) => {
     const executeStep = prevVals => applyToN (prevVals)
 
     const ys = xs
@@ -524,6 +559,15 @@ export const laats = (...xs) => {
         | rProp (1)
 
     return ys | last
+}
+
+export const laats = (...xs) => {
+    if (xs.length === 2) return laats2 (...xs)
+    if (xs.length === 3) return laats3 (...xs)
+    if (xs.length === 4) return laats4 (...xs)
+    if (xs.length === 5) return laats5 (...xs)
+    if (xs.length === 6) return laats6 (...xs)
+    return _laats (...xs)
 }
 
 export const lets = laats

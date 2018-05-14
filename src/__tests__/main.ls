@@ -6,6 +6,7 @@
     tap,
     flip,
     zip,
+    sum,
 } = require 'ramda'
 
 {
@@ -24,7 +25,8 @@
     cascade, flip-c,
     sprintf1, sprintf-n,
 
-    given, laat, lets, laats,
+    given, laat, lets,
+    laats, laats2, laats3, laats4, laats5, laats6
 
     nieuw, nieuw1, nieuw2, nieuw3, nieuw-n,
 
@@ -35,6 +37,8 @@
     if-replace, if-x-replace, if-x-replace-str, if-x-replace-str-flags,
 
 } = main = require '../index'
+
+sum-all = list >> sum
 
 describe 'cascade' ->
     test 1 ->
@@ -198,53 +202,74 @@ describe 'laat' ->
         laat [10 12 19] (ten, twelve, nineteen) ->
             (expect ten + twelve + nineteen).to-equal 41
 
-describe 'laatStar' ->
+describe 'laats' ->
     test 'superset of laat' ->
         laats do
             -> 10, -> 12, -> 19, (ten, twelve, nineteen) ->
                 (expect ten + twelve + nineteen).to-equal 41
-    return
-    test 'recursive references' ->
-        laats do
-            [
-                10
-                (ten) -> ten + 2
-                (ten, twelve) -> twelve + 7
-                (ten, twelve, nineteen) -> 2
-            ]
-            (ten, twelve, nineteen, two) ->
-                ten + twelve + nineteen + two
-                |> expect-to-equal 43
-    test 'recursive references, second arg optional' ->
-        laats do
-            [
-                10
-                (ten) -> ten + 2
-                (ten, twelve) -> twelve + 7
-                (ten, twelve, nineteen) -> 2
-                (ten, twelve, nineteen, two) ->
-                    ten + twelve + nineteen + two
-                    |> expect-to-equal 43
-            ]
+    describe 'specific versions' ->
+        test 'laats2' ->
+            laats2 do
+                -> 10
+                (+ 1)
+            |> expect-to-equal 11
+        test 'laats3' ->
+            laats3 do
+                -> 10
+                (+ 1)
+                sum-all # 21
+            |> expect-to-equal 21
+        test 'laats4' ->
+            laats4 do
+                -> 10
+                (+ 1)
+                sum-all # 21
+                sum-all # 42
+            |> expect-to-equal 42
+        test 'laats5' ->
+            laats5 do
+                -> 10
+                (+ 1)   # 11
+                sum-all # 21
+                sum-all # 42
+                sum-all # 84
+            |> expect-to-equal 84
+        test 'laats6' ->
+            laats6 do
+                -> 10
+                (+ 1)
+                sum-all # 21
+                sum-all # 42
+                sum-all # 84
+                sum-all # 168
+            |> expect-to-equal 168
+    describe 'generic version' ->
+        test 'laats (2)' ->
+            laats do
+                -> 10
+                (+ 1)
+            |> expect-to-equal 11
+        test 'laats (3)' ->
+            laats do
+                -> 10
+                (+ 1)
+                sum-all # 21
+            |> expect-to-equal 21
+        test 'laats (6)' ->
+            laats do
+                -> 10
+                (+ 1)
+                sum-all # 21
+                sum-all # 42
+                sum-all # 84
+                sum-all # 168
+            |> expect-to-equal 168
     test 'single function' ->
         laats do
-            [
-                -> 11
-            ]
+            -> 11
             (eleven) ->
                 (expect eleven).to-equal 11
     test 'mixed references' ->
-        laats do
-            [
-                10
-                (ten) -> ten + 2
-                19
-                (ten, twelve, nineteen) -> 2
-                5
-            ]
-            (ten, twelve, nineteen, two, five) ->
-                ten + twelve + nineteen + two + five
-                |> expect-to-equal 48
     test 'fibonacci' ->
         fibonacci = (n) ->
             sum-last-two = (xs) -> xs[*-1] + xs[*-2]
@@ -255,7 +280,8 @@ describe 'laatStar' ->
                 | m == 1 => 1
                 | otherwise => sum-last-two prev
             refs = r-repeat entry, n + 1
-            laats refs, list
+            args = [...refs, list]
+            laats ...args
 
         (expect fibonacci 0).to-equal [1]
         (expect fibonacci 1).to-equal [1 1]

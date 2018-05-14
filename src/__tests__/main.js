@@ -1,7 +1,8 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, expectToThrow, main, ok, zipAll, bind, bindLate, bindTry, cascade, flipC, sprintf1, sprintfN, given, laat, lets, laats, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, slice$ = [].slice;
-ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, sum, list, test, xtest, expectToEqual, expectToBe, expectToThrow, main, ok, zipAll, bind, bindLate, bindTry, cascade, flipC, sprintf1, sprintfN, given, laat, lets, laats, laats2, laats3, laats4, laats5, laats6, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, sumAll, slice$ = [].slice;
+ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip, sum = ref$.sum;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow;
-ref$ = main = require('../index'), ok = ref$.ok, zipAll = ref$.zipAll, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flipC = ref$.flipC, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, given = ref$.given, laat = ref$.laat, lets = ref$.lets, laats = ref$.laats, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags;
+ref$ = main = require('../index'), ok = ref$.ok, zipAll = ref$.zipAll, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flipC = ref$.flipC, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, given = ref$.given, laat = ref$.laat, lets = ref$.lets, laats = ref$.laats, laats2 = ref$.laats2, laats3 = ref$.laats3, laats4 = ref$.laats4, laats5 = ref$.laats5, laats6 = ref$.laats6, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags;
+sumAll = compose$(list, sum);
 describe('cascade', function(){
   return test(1, function(){
     var odd, this$ = this;
@@ -271,7 +272,7 @@ describe('laat', function(){
     });
   });
 });
-describe('laatStar', function(){
+describe('laats', function(){
   test('superset of laat', function(){
     return laats(function(){
       return 10;
@@ -283,58 +284,94 @@ describe('laatStar', function(){
       return expect(ten + twelve + nineteen).toEqual(41);
     });
   });
-  return;
-  test('recursive references', function(){
-    return laats([
-      10, function(ten){
-        return ten + 2;
-      }, function(ten, twelve){
-        return twelve + 7;
-      }, function(ten, twelve, nineteen){
-        return 2;
-      }
-    ], function(ten, twelve, nineteen, two){
-      return expectToEqual(43)(
-      ten + twelve + nineteen + two);
+  describe('specific versions', function(){
+    test('laats2', function(){
+      var this$ = this;
+      return expectToEqual(11)(
+      laats2(function(){
+        return 10;
+      }, (function(it){
+        return it + 1;
+      })));
+    });
+    test('laats3', function(){
+      var this$ = this;
+      return expectToEqual(21)(
+      laats3(function(){
+        return 10;
+      }, (function(it){
+        return it + 1;
+      }), sumAll));
+    });
+    test('laats4', function(){
+      var this$ = this;
+      return expectToEqual(42)(
+      laats4(function(){
+        return 10;
+      }, (function(it){
+        return it + 1;
+      }), sumAll, sumAll));
+    });
+    test('laats5', function(){
+      var this$ = this;
+      return expectToEqual(84)(
+      laats5(function(){
+        return 10;
+      }, (function(it){
+        return it + 1;
+      }), sumAll, sumAll, sumAll));
+    });
+    return test('laats6', function(){
+      var this$ = this;
+      return expectToEqual(168)(
+      laats6(function(){
+        return 10;
+      }, (function(it){
+        return it + 1;
+      }), sumAll, sumAll, sumAll, sumAll));
     });
   });
-  test('recursive references, second arg optional', function(){
-    return laats([
-      10, function(ten){
-        return ten + 2;
-      }, function(ten, twelve){
-        return twelve + 7;
-      }, function(ten, twelve, nineteen){
-        return 2;
-      }, function(ten, twelve, nineteen, two){
-        return expectToEqual(43)(
-        ten + twelve + nineteen + two);
-      }
-    ]);
+  describe('generic version', function(){
+    test('laats (2)', function(){
+      var this$ = this;
+      return expectToEqual(11)(
+      laats(function(){
+        return 10;
+      }, (function(it){
+        return it + 1;
+      })));
+    });
+    test('laats (3)', function(){
+      var this$ = this;
+      return expectToEqual(21)(
+      laats(function(){
+        return 10;
+      }, (function(it){
+        return it + 1;
+      }), sumAll));
+    });
+    return test('laats (6)', function(){
+      var this$ = this;
+      return expectToEqual(168)(
+      laats(function(){
+        return 10;
+      }, (function(it){
+        return it + 1;
+      }), sumAll, sumAll, sumAll, sumAll));
+    });
   });
   test('single function', function(){
-    return laats([function(){
+    return laats(function(){
       return 11;
-    }], function(eleven){
+    }, function(eleven){
       return expect(eleven).toEqual(11);
     });
   });
-  test('mixed references', function(){
-    return laats([
-      10, function(ten){
-        return ten + 2;
-      }, 19, function(ten, twelve, nineteen){
-        return 2;
-      }, 5
-    ], function(ten, twelve, nineteen, two, five){
-      return expectToEqual(48)(
-      ten + twelve + nineteen + two + five);
-    });
-  });
+  test('mixed references', function(){});
   return test('fibonacci', function(){
     var fibonacci;
     fibonacci = function(n){
-      var sumLastTwo, entry, refs;
+      var sumLastTwo, entry, refs, args;
       sumLastTwo = function(xs){
         return xs[xs.length - 1] + xs[xs.length - 2];
       };
@@ -356,7 +393,8 @@ describe('laatStar', function(){
         }
       };
       refs = rRepeat(entry, n + 1);
-      return laats(refs, list);
+      args = slice$.call(refs).concat([list]);
+      return laats.apply(null, args);
     };
     expect(fibonacci(0)).toEqual([1]);
     expect(fibonacci(1)).toEqual([1, 1]);
@@ -657,6 +695,17 @@ describe('ifReplace*', function(){
     });
   });
 });
+function compose$() {
+  var functions = arguments;
+  return function() {
+    var i, result;
+    result = functions[0].apply(this, arguments);
+    for (i = 1; i < functions.length; ++i) {
+      result = functions[i](result);
+    }
+    return result;
+  };
+}
 function curry$(f, bound){
   var context,
   _curry = function(args) {

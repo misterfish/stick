@@ -21,6 +21,7 @@ defineBinaryOperator ('<<', curry ((a, b) => compose (a, b)))
 import {
     splitAt,
     always,
+    // --- has = has own (hence paired with hasIn version)
     isEmpty, tap, has, hasIn, flip, fromPairs, toPairs, toPairsIn, assoc, assocPath, head,
     last, tail, reduceRight, chain, identity, reduce, map, filter, reject, join,
     split, prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
@@ -549,6 +550,7 @@ export const callUnder = curry ((f, o) => f.call (o))
 export const callUnder1 = curry ((f, val, o) => f.call (o, val))
 export const callUnder2 = curry ((f, val1, val2, o) => f.call (o, val1, val2))
 
+// --- alias applyTo0 xxx
 export const invoke = f => f ()
 
 // ------ sum | applyToN ([1, 2, 3])
@@ -558,21 +560,23 @@ export const applyTo2 = curry ((val1, val2, f) => f (val1, val2))
 export const applyTo3 = curry ((val1, val2, val3, f) => f (val1, val2, val3))
 export const applyToN = curry ((vs, f) => f.apply (null, vs))
 
+// maybe: export const applyTo = applyTo1
+
 export const apply1 = applyTo1
 export const apply2 = applyTo2
 export const apply3 = applyTo3
 export const applyN = applyToN
 
-// ------ ; [1, 2, 3] | passToN (sum)
-
+// --- i don't think these are useful. xxx
 export const passTo1 = curry ((f, val) => f (val))
 export const passTo2 = curry ((f, val1, val2) => f (val1, val2))
 export const passTo3 = curry ((f, val1, val2, val3) => f (val1, val2, val3))
-export const passToN = curry ((f, vs) => f.apply (null, vs))
-
 export const pass1 = passTo1
 export const pass2 = passTo2
 export const pass3 = passTo3
+
+// ------ ; [1, 2, 3] | passToN (sum)
+export const passToN = curry ((f, vs) => f.apply (null, vs))
 export const passN = passToN
 
 // --- flip first and second args of a curried function, even for functions with more than 2 args.
@@ -615,6 +619,7 @@ export const repeat = flip (rRepeat)
 export const times = flip (rTimes)
 
 // xxx timesVoid, to not make an array.
+// maybe timesV
 
 // @todo
 // export const rangeBy = curry ((from, to, by, f) => {
@@ -642,6 +647,7 @@ export const joinOk = curry ((j, xs) => xs
 )
 
 // --------- new.
+// xxx german aliases
 
 export const nieuw = x => new x
 export const nieuw1 = curry ((x, val) => new x (val))
@@ -995,6 +1001,8 @@ export const notOk = isNil
 
 
 export const divideBy = flip (divide)
+
+export const defaultToA = blush >> defaultTo
 
 // ditch brackets on cond.
 // a line can still be an array if you want the 'raw' predicate / exec.

@@ -436,6 +436,21 @@ export const mergeFromWithM = curry ((collision, src, tgt) =>
     mergeToWithM (collision, tgt, src)
 )
 
+export const mergeToWhenOkM = (tgt) => (src) => {
+    for (let i in src)
+        if (oPro.hasOwnProperty.call (src, i) && ok (src[i]))
+            tgt[i] = src[i]
+    return tgt
+}
+
+// --- @todo test
+export const mergeFromWhenOkM = (src) => (tgt) => {
+    for (let i in src)
+        if (oPro.hasOwnProperty.call (src, i) && ok (src[i]))
+            tgt[i] = src[i]
+    return tgt
+}
+
 export const injectToM = mergeToM
 export const injectFromM = mergeFromM
 

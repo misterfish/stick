@@ -922,11 +922,10 @@ export const factoryProps = curry ((props, factory) => {
     return {
         ... factory,
         create (args) {
-            for (let i in args) {
-                const [src, tgt] = [args, props]
+            const [src, tgt] = [args, props]
+            for (let i in args)
                 if (oPro.hasOwnProperty.call (src, i) && ok (src[i]))
                     tgt[i] = src[i]
-            }
             return orig (tgt)
         },
     }

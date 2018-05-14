@@ -1,6 +1,6 @@
 {
   "name": "stick",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "lib",
   "dependencies": {
     "babel-cli": "^6.24.1",

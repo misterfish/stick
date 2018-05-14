@@ -54,6 +54,8 @@ export {
     doe,
 }
 
+const oPro = Object.prototype
+
 export const ok = x => !isNil (x)
 
 export const dot  = curry ((prop, o) => o[prop] ())
@@ -393,8 +395,6 @@ export const mergeToM = curry ((tgt, src) => {
     return ret
 })
  */
-
-const oPro = Object.prototype
 
 export const mergeToM = (tgt) => (src) => {
     for (let i in src) if (oPro.hasOwnProperty.call (src, i))
@@ -890,9 +890,9 @@ export const factoryMixins = curry ((mixinsPre, mixinsPost, proto) =>
 
 // --- usage:
 // const dogProps = { name: 'defaultname', age: undefined, ... }
-// const Dog = dogProto | factory | factoryInit (dogProps)
+// const Dog = dogProto | factory | factoryProps (dogProps)
 // or
-// const dogFactory = factory >> factoryInit (dogProps)
+// const dogFactory = factory >> factoryProps (dogProps)
 // const Dog = dogProto | dogFactory
 //
 // const dog = Dog.create ({ age: 10 )
@@ -901,7 +901,7 @@ export const factoryMixins = curry ((mixinsPre, mixinsPost, proto) =>
 // without this, you will get an instance!
 // This is a good place to document the properties: put them in the instance{} even if they're
 // undefined.
-export const factoryInit = curry ((props, factory) => {
+export const factoryProps = curry ((props, factory) => {
     const orig = (...args) => factory.create (...args)
     return {
         ... factory,
@@ -912,7 +912,24 @@ export const factoryInit = curry ((props, factory) => {
     }
 })
 
-export const factory = curry ((proto) => _factory (proto, [], []))
+// @test
+// @todo ref
+// @todo mixins etc.
+export const factoryInit = (init) => (proto) => ({
+    proto,
+    create: (props) => {
+        const o = Object.create (proto)
+        init (o, props)
+        return o
+    },
+})
+
+export const factory = factoryInit ((o, props) => {
+    if (props == null) return
+    for (let i in props) if (oPro.hasOwnProperty.call (props, i))
+        o[i] = props[i]
+})
+
 
 // --- e.g.:
 // const theFactory = proto | factory | factoryStatics (statics) | factoryInit (init)

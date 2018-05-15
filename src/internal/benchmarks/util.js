@@ -33,7 +33,7 @@ import {
     laat, laatO, laats, laatsO,
     compactOk, compact,
     lt, gt, eq, ne, lte, gte,
-} from 'stick'
+} from '../../index'
 
 export const bench = (tag, n) => (f) => {
     const now = Date.now ()

@@ -58,6 +58,7 @@ const oPro = Object.prototype
 
 export const ok = x => !isNil (x)
 
+// --- xxx keep it to 5
 export const dot  = curry ((prop, o) => o[prop] ())
 export const dot1 = curry ((prop, val, o) => o[prop] (val))
 export const dot2 = curry ((prop, val1, val2, o) => o[prop] (val1, val2))
@@ -922,11 +923,12 @@ export const factoryProps = curry ((props, factory) => {
     return {
         ... factory,
         create (args) {
-            const [src, tgt] = [args, props]
+            const o = orig (props)
+            const [src, tgt] = [args, o]
             for (let i in args)
                 if (oPro.hasOwnProperty.call (src, i) && ok (src[i]))
                     tgt[i] = src[i]
-            return orig (tgt)
+            return tgt
         },
     }
 })

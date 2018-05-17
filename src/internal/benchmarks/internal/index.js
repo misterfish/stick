@@ -5,6 +5,7 @@ defineBinaryOperator ('>>', curry ((a, b) => compose (b, a)))
 defineBinaryOperator ('<<', curry ((a, b) => compose (a, b)))
 
 import ramda, {
+    uncurryN,
     always, not,
     either, both,
     any, all, allPass, anyPass,
@@ -33,6 +34,7 @@ import {
     laat, laatO, laats, laatsO,
     compactOk, compact,
     lt, gt, eq, ne, lte, gte,
+    die,
     // side, side1, side2, side3, side4, side5, sideN,
 } from '../../../index'
 
@@ -82,6 +84,94 @@ const testSide1C = _ => obj | toggleC
 const testDot5J = _ => obj | add5J (5, 6, 7, 8, 9)
 const testDot5C = _ => obj | add5C (5, 6, 7, 8, 9)
 
+// --- should not be called recurry, because the resulting function is not curried.
+// there should be a similar version called recurry.
+// then the stick functions can be implemented with it ... ?
+// note that this function does not have a well-defined arity.
+const roll = (f) => (...args) => {
+  let g = f
+  for (const i of args) g = g (i)
+  return g
+}
+
+// const r = (a => b => c => a * b * c) | recurry
+// r (1, 2, 3) = roll (orig) (1, 2, 3)
+// r (1, 2)    = roll (orig) (1, 2)
+// r (1) = roll (orig) (1)
+// r (1) (2) (3)
+// r ()
+const recurry = (n) => (f) => (...args) => {
+    if (args.length >= n - 1)
+        return roll (f) (...args)
+    if (args.length === n - 2) {
+        const k = roll (f) (...args)
+        return recurry (2) (k)
+    }
+}
+
+const multiply5J = a => b => c => d => e => a * b * c * d * e
+
+const multiply5U = multiply5J | roll
+const multiply5UR = multiply5J | uncurryN (5)
+const testUncurryMineMultiply5 = _ => multiply5U (3, 4, 5, 6, 7)
+const testUncurryTheirsMultiply5 = _ => multiply5UR (3, 4, 5, 6, 7)
+
+const multiplyBy120US = multiply5U (2, 3, 4, 5)
+const testMultiplyBy120US = _ => multiplyBy120US (5)
+
+const multiplyBy120UR = multiply5UR (2, 3, 4, 5)
+const testMultiplyBy120UR = _ => multiplyBy120UR (5)
+
+const curryMultiply5 = curry ((a, b, c, d, e) => a * b * c * d * e)
+// --- 12 times faster than curry
+const manualMultiply5 = a => b => c => d => e => a * b * c * d * e
+// --- 1.5 times faster than curry
+// curry is of course much more pleasant to write.
+// and you can curry any function, even one you didn't write.
+const manualPlusRollMultiply5 = manualMultiply5 | roll
+const recurryMultiply5 = manualMultiply5 | recurry (5)
+const manualUncurryNMultiply5 = manualMultiply5 | uncurryN (5)
+
+const testCurryMultiply5 = () => {
+    curryMultiply5 (1, 2, 3, 4, 5)
+    curryMultiply5 (1, 2, 3, 4) (5)
+    curryMultiply5 (1, 2, 3) (4) (5)
+    // curryMultiply5 (1, 2) (3, 4) (5)
+}
+
+const testManualPlusRollMultiply5 = () => {
+    manualPlusRollMultiply5 (1, 2, 3, 4, 5)
+    manualPlusRollMultiply5 (1, 2, 3, 4) (5)
+    manualPlusRollMultiply5 (1, 2, 3) (4) (5)
+    // --- no worky
+    // manualPlusRollMultiply5 (1, 2) (3, 4) (5) | log
+}
+
+const testManualMultiply5 = () => {
+    manualMultiply5 (1) (2) (3) (4) (5)
+    manualMultiply5 (1) (2) (3) (4) (5)
+    manualMultiply5 (1) (2) (3) (4) (5)
+    // --- no worky
+    // manualPlusRollMultiply5 (1, 2) (3, 4) (5) | log
+}
+
+const testRecurryMultiply5 = () => {
+    recurryMultiply5 (1, 2, 3, 4, 5)
+    recurryMultiply5 (1, 2, 3, 4) (5)
+    recurryMultiply5 (1, 2, 3) (4) (5)
+}
+
+// --- more than 3 times slower than just currying with ramda
+const testManualUncurryNMultiply5 = () => {
+    manualUncurryNMultiply5 (1, 2, 3, 4, 5)
+    manualUncurryNMultiply5 (1, 2, 3, 4) (5)
+    manualUncurryNMultiply5 (1, 2, 3) (4) (5)
+}
+
+// 4 and 5 both work
+// const abc = (multiply5J | uncurryN (5)) (2, 3, 4, 5)
+// abc (11) | log | die
+
 // side1, js curry, separate: 1000000 iters, took 54.0 ms (18518.5 iters / ms)
 // side1, js curry, combined: 1000000 iters, took 51.0 ms (19607.8 iters / ms)
 // side1, rd curry: 1000000 iters, took 407.0 ms (2457.0 iters / ms)
@@ -90,6 +180,7 @@ const testDot5C = _ => obj | add5C (5, 6, 7, 8, 9)
 // separate/combined: negligible
 // js curry: much faster.
 // ramda curry is definitely fast enough for apps.
+// my 'roll' is 3-4 times faster than uncurryN, and doesn't need n.
 //
 // Please keep in mind that the speeds we are talking about here only come into play when you're
 // looping millions of times or more per second.
@@ -107,15 +198,31 @@ const suite1 = [
     _ => bench ('dot5, rd curry', n) (testDot5C),
 ]
 
+const suite2 = [
+    _ => bench ('uncurry, mine, multiply, arity 5', n) (testUncurryMineMultiply5),
+    _ => bench ('uncurry, theirs, multiply, arity 5', n) (testUncurryTheirsMultiply5),
+    _ => bench ('partial uncurry, mine', n) (testMultiplyBy120US),
+    _ => bench ('partial uncurry, theirs', n) (testMultiplyBy120UR),
+
+    _ => bench ('curry, theirs', n) (testCurryMultiply5),
+    _ => bench ('manual + roll', n) (testManualPlusRollMultiply5),
+    _ => bench ('manual', n) (testManualMultiply5),
+    _ => bench ('manual + uncurryN', n) (testManualUncurryNMultiply5),
+    _ => bench ('manual + recurry', n) (testRecurryMultiply5),
+]
+
 const suites = [
     suite1,
+    suite2,
 ]
 
 suites | map (invoke | each)
 
+const rec = manualMultiply5 | recurry (5)
 
-obj.flag | log
-
+rec (1, 2, 3, 4, 5) | logWith ('(1, 2, 3, 4, 5)')
+rec (1, 2, 3, 4) (5) | logWith ('(1, 2, 3, 4) (5)')
+rec (1, 2, 3) (4, 5) | logWith ('(1, 2, 3) (4, 5)')
 
 
 // in the js version we could enforce
@@ -141,3 +248,5 @@ obj.flag | log
 //  reference version
 //  normal version (curry, but no flip, etc.)
 //  fast version (js curry, no ramda if possible)
+//
+// now compare a `curry` function with a manual + roll

@@ -7,6 +7,13 @@ const noop = _ => {}
 const oPro = Object.prototype
 const hasOwn = oPro.hasOwnProperty
 
+export const eq = x => y => x === y
+export const ne = x => y => x !== y
+export const gt = m => n => n > m
+export const gte = m => n => n >= m
+export const lt = m => n => n < m
+export const lte = m => n => n <= m
+
 export const dot  = prop => o => o[prop] ()
 
 export const dot1 = prop => val =>
@@ -105,14 +112,13 @@ could be replaced by guardA ('twilight zone')
 
 */
 
-// --- null or undefined test ('otherwise') matches immediately
-// and passes null to the function.
+export const condPredicate = exec => pred => [pred, exec]
+
 // --- we test on truthiness, not strict.
 // --- this feels more natural -- like how if works, and also cond in ramda.
 // trivial to convert to strict.
 export const condo = (...blocks) => {
     for (const [test, exec] of blocks) {
-        if (notOk (test)) return exec (null)
         const result = test ()
         if (result) return exec (result)
     }
@@ -120,7 +126,6 @@ export const condo = (...blocks) => {
 
 export const condO = (blocks) => (target) => {
     for (const [test, exec] of blocks) {
-        if (notOk (test)) return exec (target)
         const result = test (target)
         if (result) return exec (target, result)
     }
@@ -202,6 +207,7 @@ export const mergeFrom = (src) => (tgt) => {
 }
 
 export default {
+    eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,
     ifPredicate, whenPredicate,
@@ -212,7 +218,7 @@ export default {
     ifBind, whenBind,
     bindTry,
     isType,
-    condo, condO,
+    condPredicate, condo, condO,
     subtract, subtractFrom,
     add,
     multiply, divideBy, divideInto,

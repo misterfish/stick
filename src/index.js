@@ -85,8 +85,12 @@ export const notOk = x => x == null
 // --- literally just wraps ===.
 // rationale: must be able to confidently refactor working code which uses ===
 
-export const eq = curry ((x, y) => x === y)
-export const ne = curry ((x, y) => x !== y)
+export const eq = _recurry (2) (manual.eq)
+export const ne = _recurry (2) (manual.ne)
+export const gt = _recurry (2) (manual.gt)
+export const gte = _recurry (2) (manual.gte)
+export const lt = _recurry (2) (manual.lt)
+export const lte = _recurry (2) (manual.lte)
 
 export const dot  = _recurry (2) (manual.dot)
 export const dot1 = _recurry (3) (manual.dot1)
@@ -911,25 +915,16 @@ const listDat6 = applyTo1 >> map | flipC
 
 const listDat5 = flipC (n => n | applyTo1 | map)
 
-const _$ = {}
-
-// xx can lead to annoying bug if a symbol slips past the linter.
-// consider using _$
-export const condElse = appendTo ([void 8])
-
-export const condEquals = curry ((exec, testString) => [
-//     testString | ifEquals (_$) (noop) (equals),
-    testString | equals,
-    exec,
-])
-
-export const condPredicate = curry ((exec, pred) => [
-    pred,
-    exec,
-])
+// const _$ = {}
 
 // --- synonym for always. check impl of always. xxx
 export const blush = x => _ => x
+
+const T = blush (true)
+const F = blush (false)
+
+export const condElse = T
+export const condPredicate = _recurry (2) (manual.condPredicate)
 
 export const guard = condPredicate
 export const guardA = blush >> guard
@@ -938,11 +933,6 @@ export const otherwise = condElse
 export const ifEquals = curry ((test, yes, no, x) => x === test ? yes (x) : no (x))
 export const whenEquals = curry ((test, yes, x) => x | ifEquals (test) (yes) (noop))
 export const ifEquals__ = (x, test, yes, no = noop) => x | ifEquals (test) (yes) (no)
-
-export const gt = flip (rGt)
-export const gte = flip (rGte)
-export const lt = flip (rLt)
-export const lte = flip (rLte)
 
 const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | passToN (f)
 const headTail = f => splitAt (1) >> f

@@ -13,7 +13,7 @@
 {
     list,
     test, xtest,
-    expect-to-equal, expect-to-be,
+    expect-to-equal, expect-to-be, expect-to-throw,
 } = require './common'
 
 {
@@ -731,17 +731,12 @@ describe 'cond' ->
                     [(-> 3 == 4),     -> 'twilight zone']
                     [(-> 3 == 5),     -> 'even stranger']
                 |> expect-to-equal void
-            test 'null test' ->
-                got-null = [false]
-                condo do
+            test 'null test should throw' ->
+                (-> condo do
                     [(-> 3 == 4),     -> 'twilight zone']
                     [(-> 3 == 5),     -> 'even stranger']
-                    [null         (nul) ->
-                        if nul == null then got-null.0 = true
-                        'ok'
-                    ]
-                |> expect-to-equal 'ok'
-                got-null.0 |> expect-to-equal true
+                    [null             -> ]
+                ) |> expect-to-throw
         describe 'idiomatic' ->
             test 'truthy' ->
                 condo do
@@ -778,13 +773,13 @@ describe 'cond' ->
                     [(== 4),       -> 'even stranger']
                 ]
                 |> expect-to-equal void
-            test 'null test' ->
-                3 |> cond-o [
+            test 'null test should throw' ->
+                (-> 3 |> cond-o [
                     [(-> 3 == 4),     -> 'twilight zone']
                     [(-> 3 == 5),     -> 'even stranger']
                     [null             (+ 5)]
-                ]
-                |> expect-to-equal 8
+                ])
+                |> expect-to-throw
         describe 'idiomatic' ->
             test 'truthy' ->
                 3 |> cond-o [
@@ -875,22 +870,6 @@ describe 'cond' ->
         ]
         mock.mock.calls.length
         |> expect-to-equal 0
-    test 3 ->
-        'beetles' |> cond [
-            [
-                (str) -> str === 'lions'
-                -> 'feet'
-            ]
-            [
-                (str) -> str === 'tigers'
-                -> 'heads'
-            ]
-            [
-                void
-                (target) -> 'no match on ' + target
-            ]
-        ]
-        |> expect-to-equal 'no match on beetles'
 
 describe 'is/isNot' ->
     test 'ok' ->

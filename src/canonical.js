@@ -1,9 +1,10 @@
 import {
     curry, tap,
+    has, hasIn,
 } from 'ramda'
 
 // --- canonical can take functions from both main and manual.
-// beware of circular loops -- be sure tests are up to date.
+// beware of circular dependencies -- be sure tests are up to date.
 
 import {
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
@@ -29,4 +30,12 @@ export const sideN = curry (
     (prop, vs) => tap (dotN (prop) (vs))
 )
 
+export const ifPredicate = curry ((f, yes, no, x) => f (x) === true ? yes (x) : no (x))
+export const whenPredicate = curry ((f, yes, x) => x | ifPredicate (f) (yes) (noop))
+
+export const ifHas = curry ((yes, no, [o, k]) => o | has (k) ? yes (o[k], o, k) : no (o, k))
+export const whenHas = curry ((yes, spec) => spec | ifHas (yes) (noop))
+
+export const ifHasIn = curry ((yes, no, [o, k]) => o | hasIn (k) ? yes (o[k], o, k) : no (o, k))
+export const whenHasIn = curry ((yes, spec) => spec | ifHasIn (yes) (noop))
 

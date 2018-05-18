@@ -157,54 +157,49 @@ export const sideN = _recurry (3) (manual.sideN)
 // false, it behaves differently than ifPredicate (pred >> not), which is also confusing.
 //
 
-export const isTrue = true | eq
-// --- exactly false, so do not compose with `not`.
-export const isFalse = false | eq
-export const isYes = Boolean
-// --- falsey, so compose with `not` ok.
-export const isNo = isYes >> not
+export const isTrue   = true  | eq
+export const isFalse  = false | eq // --- exactly false.
+export const isYes    = Boolean
+export const isNo     = isYes >> not
+export const isTruthy = isYes
+export const isFalsey = isNo
 
-export const ifPredicate = curry ((f, yes, no, x) => f (x) === true ? yes (x) : no (x))
-export const whenPredicate = curry ((f, yes, x) => x | ifPredicate (f) (yes) (noop))
+export const ifPredicate   = _recurry (4) (manual.ifPredicate)
+export const whenPredicate = _recurry (3) (manual.whenPredicate)
 
-export const ifOk = ok | ifPredicate
-export const whenOk = ok | whenPredicate
-
-export const ifNotOk = notOk | ifPredicate
-export const whenNotOk = notOk | whenPredicate
-
-export const ifTrue = isTrue | ifPredicate
-export const whenTrue = isTrue | whenPredicate
-
-export const ifFalse = isFalse | ifPredicate
-export const whenFalse = isFalse | whenPredicate
-
-export const ifYes = isYes | ifPredicate
-export const whenYes = isYes | whenPredicate
-export const ifNo = isNo | ifPredicate
-export const whenNo = isNo | whenPredicate
-
-export const ifTruthy = ifYes
-export const whenTruthy = whenYes
-export const ifFalsey = ifNo
-export const whenFalsey = whenNo
+export const ifOk          = ifPredicate   (ok)
+export const whenOk        = whenPredicate (ok)
+export const ifNotOk       = ifPredicate   (notOk)
+export const whenNotOk     = whenPredicate (notOk)
+export const ifTrue        = ifPredicate   (isTrue)
+export const whenTrue      = whenPredicate (isTrue)
+export const ifFalse       = ifPredicate   (isFalse)
+export const whenFalse     = whenPredicate (isFalse)
+export const ifYes         = ifPredicate   (isYes)
+export const whenYes       = whenPredicate (isYes)
+export const ifNo          = ifPredicate   (isNo)
+export const whenNo        = whenPredicate (isNo)
+export const ifTruthy      = ifYes
+export const whenTruthy    = whenYes
+export const ifFalsey      = ifNo
+export const whenFalsey    = whenNo
 
 // whenHas, whenHasIn, whenEmpty, whenFunction: -> user-space.
 // check if whenHasis still useful want array xxx
 
-// @todo test
-export const ifHas = curry ((yes, no, [o, k]) => o | has (k) ? yes (o[k], o, k) : no (o, k))
-export const whenHas = curry ((yes, spec) => spec | ifHas (yes) (noop))
-
-export const ifHasIn = curry ((yes, no, [o, k]) => o | hasIn (k) ? yes (o[k], o, k) : no (o, k))
-export const whenHasIn = curry ((yes, spec) => spec | ifHasIn (yes) (noop))
+// --- these have a different calling convention, so their names are a bit misleading based on the
+// above pattern.
+export const ifHas     = _recurry (3) (manual.ifHas)
+export const whenHas   = _recurry (2) (manual.whenHas)
+export const ifHasIn   = _recurry (3) (manual.ifHasIn)
+export const whenHasIn = _recurry (2) (manual.whenHasIn)
 
 // @todo test
 export const ifBind = curry ((yes, no, [o, k]) => laat (
     [k | bindTry (o)],
     ifOk (yes, no),
 ))
-export const whenBind = curry ((yes, spec) => spec | ifBind (yes) (noop))
+export const whenBind = yes => spec => spec | ifBind (yes) (noop)
 
 
 // --- @deprecated.

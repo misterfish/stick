@@ -1,8 +1,8 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, ok, notOk, isTrue, isFalse, isYes, isNo, isTruthy, isFalsey, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, cond, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, ok, notOk, isTrue, isFalse, isYes, isNo, isTruthy, isFalsey, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, ifHas, whenHas, ifHasIn, whenHasIn, ifBind, whenBind, cond, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, id = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), ok = ref$.ok, notOk = ref$.notOk, isTrue = ref$.isTrue, isFalse = ref$.isFalse, isYes = ref$.isYes, isNo = ref$.isNo, isTruthy = ref$.isTruthy, isFalsey = ref$.isFalsey, ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, cond = ref$.cond, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__;
+ref$ = require('../index'), ok = ref$.ok, notOk = ref$.notOk, isTrue = ref$.isTrue, isFalse = ref$.isFalse, isYes = ref$.isYes, isNo = ref$.isNo, isTruthy = ref$.isTruthy, isFalsey = ref$.isFalsey, ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, ifHas = ref$.ifHas, whenHas = ref$.whenHas, ifHasIn = ref$.ifHasIn, whenHasIn = ref$.whenHasIn, ifBind = ref$.ifBind, whenBind = ref$.whenBind, cond = ref$.cond, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__;
 doTests = curry$(function(describeSpec, tests){
   return each(function(testSpec){
     var numArms, ref$, ref1$, theTest;
@@ -1050,7 +1050,7 @@ describe('is/isNot', function(){
     isYes(
     null));
   });
-  return test('isNo', function(){
+  test('isNo', function(){
     expectToEqual(false)(
     isNo(
     true));
@@ -1081,6 +1081,189 @@ describe('is/isNot', function(){
     return expectToEqual(true)(
     isNo(
     null));
+  });
+  return test('aliases', function(){
+    expectToEqual(isFalsey)(
+    isNo);
+    return expectToEqual(isTruthy)(
+    isYes);
+  });
+});
+describe('if/when has/hasIn', function(){
+  var base, extended, ref$;
+  base = {
+    water: 'wet',
+    nothing: void 8,
+    me: 'ik'
+  };
+  extended = (ref$ = Object.create(base), ref$.baby = 'feet', ref$);
+  describe('if-has', function(){
+    test('main', function(){
+      return expectToEqual('wetwaterik')(
+      ifHas(function(v, o, k){
+        return v + k + o.me;
+      }, function(){
+        return 42;
+      })(
+      [base, 'water']));
+    });
+    test('has undefined (should be true)', function(){
+      return expectToEqual(41)(
+      ifHas(function(v, o, k){
+        return 41;
+      }, function(){
+        return 42;
+      })(
+      [base, 'nothing']));
+    });
+    test('nonexistent', function(){
+      return expectToEqual(42)(
+      ifHas(function(v, o, k){
+        return 41;
+      }, function(){
+        return 42;
+      })(
+      [base, 'nada']));
+    });
+    test('extended', function(){
+      return expectToEqual(42)(
+      ifHas(function(v, o, k){
+        return 41;
+      }, function(){
+        return 42;
+      })(
+      [extended, 'water']));
+    });
+    return test('extended', function(){
+      return expectToEqual(41)(
+      ifHas(function(v, o, k){
+        return 41;
+      }, function(){
+        return 42;
+      })(
+      [extended, 'baby']));
+    });
+  });
+  describe('when-has', function(){
+    test('main', function(){
+      return expectToEqual('wetwaterik')(
+      whenHas(function(v, o, k){
+        return v + k + o.me;
+      })(
+      [base, 'water']));
+    });
+    test('has undefined (should be true)', function(){
+      return expectToEqual(41)(
+      whenHas(function(v, o, k){
+        return 41;
+      })(
+      [base, 'nothing']));
+    });
+    test('nonexistent', function(){
+      return expectToEqual(void 8)(
+      whenHas(function(v, o, k){
+        return 41;
+      })(
+      [base, 'nada']));
+    });
+    test('extended', function(){
+      return expectToEqual(void 8)(
+      whenHas(function(v, o, k){
+        return 41;
+      })(
+      [extended, 'water']));
+    });
+    return test('extended', function(){
+      return expectToEqual(41)(
+      whenHas(function(v, o, k){
+        return 41;
+      })(
+      [extended, 'baby']));
+    });
+  });
+  describe('if-has-in', function(){
+    test('main', function(){
+      return expectToEqual('wetwaterik')(
+      ifHasIn(function(v, o, k){
+        return v + k + o.me;
+      }, function(){
+        return 42;
+      })(
+      [base, 'water']));
+    });
+    test('has-in undefined (should be true)', function(){
+      return expectToEqual(41)(
+      ifHasIn(function(v, o, k){
+        return 41;
+      }, function(){
+        return 42;
+      })(
+      [base, 'nothing']));
+    });
+    test('nonexistent', function(){
+      return expectToEqual(42)(
+      ifHasIn(function(v, o, k){
+        return 41;
+      }, function(){
+        return 42;
+      })(
+      [base, 'nada']));
+    });
+    test('extended', function(){
+      return expectToEqual(41)(
+      ifHasIn(function(v, o, k){
+        return 41;
+      }, function(){
+        return 42;
+      })(
+      [extended, 'water']));
+    });
+    return test('extended', function(){
+      return expectToEqual(41)(
+      ifHasIn(function(v, o, k){
+        return 41;
+      }, function(){
+        return 42;
+      })(
+      [extended, 'baby']));
+    });
+  });
+  return describe('when-has-in', function(){
+    test('main', function(){
+      return expectToEqual('wetwaterik')(
+      whenHasIn(function(v, o, k){
+        return v + k + o.me;
+      })(
+      [base, 'water']));
+    });
+    test('has-in undefined (should be true)', function(){
+      return expectToEqual(41)(
+      whenHasIn(function(v, o, k){
+        return 41;
+      })(
+      [base, 'nothing']));
+    });
+    test('nonexistent', function(){
+      return expectToEqual(void 8)(
+      whenHasIn(function(v, o, k){
+        return 41;
+      })(
+      [base, 'nada']));
+    });
+    test('extended', function(){
+      return expectToEqual(41)(
+      whenHasIn(function(v, o, k){
+        return 41;
+      })(
+      [extended, 'water']));
+    });
+    return test('extended', function(){
+      return expectToEqual(41)(
+      whenHasIn(function(v, o, k){
+        return 41;
+      })(
+      [extended, 'baby']));
+    });
   });
 });
 function curry$(f, bound){

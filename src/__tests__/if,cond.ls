@@ -32,6 +32,9 @@
     if-no, when-no,
     if-falsey, when-falsey,
 
+    if-has, when-has, if-has-in, when-has-in,
+    if-bind, when-bind,
+
     cond,
 
     # --- @deprecated
@@ -863,7 +866,105 @@ describe 'is/isNot' ->
         false |> is-no |> expect-to-equal true
         void |> is-no |> expect-to-equal true
         null |> is-no |> expect-to-equal true
+    test 'aliases' ->
+        is-no |> expect-to-equal is-falsey
+        is-yes |> expect-to-equal is-truthy
 
-
-
-
+describe 'if/when has/hasIn' ->
+    base = water: 'wet' nothing: void me: 'ik'
+    extended = (Object.create base) <<<
+        baby: 'feet'
+    describe 'if-has' ->
+        test 'main' ->
+            [base, 'water'] |> if-has do
+                (v, o, k) -> v + k + o.me
+                -> 42
+            |> expect-to-equal 'wetwaterik'
+        test 'has undefined (should be true)' ->
+            [base, 'nothing'] |> if-has do
+                (v, o, k) -> 41
+                -> 42
+            |> expect-to-equal 41
+        test 'nonexistent' ->
+            [base, 'nada'] |> if-has do
+                (v, o, k) -> 41
+                -> 42
+            |> expect-to-equal 42
+        test 'extended' ->
+            [extended, 'water'] |> if-has do
+                (v, o, k) -> 41
+                -> 42
+            |> expect-to-equal 42
+        test 'extended' ->
+            [extended, 'baby'] |> if-has do
+                (v, o, k) -> 41
+                -> 42
+            |> expect-to-equal 41
+    describe 'when-has' ->
+        test 'main' ->
+            [base, 'water'] |> when-has do
+                (v, o, k) -> v + k + o.me
+            |> expect-to-equal 'wetwaterik'
+        test 'has undefined (should be true)' ->
+            [base, 'nothing'] |> when-has do
+                (v, o, k) -> 41
+            |> expect-to-equal 41
+        test 'nonexistent' ->
+            [base, 'nada'] |> when-has do
+                (v, o, k) -> 41
+            |> expect-to-equal void
+        test 'extended' ->
+            [extended, 'water'] |> when-has do
+                (v, o, k) -> 41
+            |> expect-to-equal void
+        test 'extended' ->
+            [extended, 'baby'] |> when-has do
+                (v, o, k) -> 41
+            |> expect-to-equal 41
+    describe 'if-has-in' ->
+        test 'main' ->
+            [base, 'water'] |> if-has-in do
+                (v, o, k) -> v + k + o.me
+                -> 42
+            |> expect-to-equal 'wetwaterik'
+        test 'has-in undefined (should be true)' ->
+            [base, 'nothing'] |> if-has-in do
+                (v, o, k) -> 41
+                -> 42
+            |> expect-to-equal 41
+        test 'nonexistent' ->
+            [base, 'nada'] |> if-has-in do
+                (v, o, k) -> 41
+                -> 42
+            |> expect-to-equal 42
+        test 'extended' ->
+            [extended, 'water'] |> if-has-in do
+                (v, o, k) -> 41
+                -> 42
+            |> expect-to-equal 41
+        test 'extended' ->
+            [extended, 'baby'] |> if-has-in do
+                (v, o, k) -> 41
+                -> 42
+            |> expect-to-equal 41
+    describe 'when-has-in' ->
+        test 'main' ->
+            [base, 'water'] |> when-has-in do
+                (v, o, k) -> v + k + o.me
+            |> expect-to-equal 'wetwaterik'
+        test 'has-in undefined (should be true)' ->
+            [base, 'nothing'] |> when-has-in do
+                (v, o, k) -> 41
+            |> expect-to-equal 41
+        test 'nonexistent' ->
+            [base, 'nada'] |> when-has-in do
+                (v, o, k) -> 41
+            |> expect-to-equal void
+        test 'extended' ->
+            [extended, 'water'] |> when-has-in do
+                (v, o, k) -> 41
+            |> expect-to-equal 41
+        test 'extended' ->
+            [extended, 'baby'] |> when-has-in do
+                (v, o, k) -> 41
+            |> expect-to-equal 41

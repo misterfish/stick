@@ -527,9 +527,6 @@ describe 'data transforms' ->
             test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
-        test 'alias inject-to-m' ->
-            inject-to-m
-            |> expect-to-equal merge-to-m
 
     describe 'mergeFromM' ->
         fn = merge-from-m
@@ -581,9 +578,6 @@ describe 'data transforms' ->
             test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
-        test 'alias inject-from-m' ->
-            inject-from-m
-            |> expect-to-equal merge-from-m
 
     describe 'mergeToWithM' ->
         var tgt, src
@@ -633,10 +627,19 @@ describe 'data transforms' ->
                     ..b = 'target b'
                 # --- src prototype is discarded anyway.
                 src :=
-                    b: 'source b'
                     c: 'source c'
                     hidden: 'source hidden'
-            test 'choose target, hidden val floats' ->
+
+            test 'proto chain of target is not checked' ->
+                src |> merge-to-with-m null tgt
+                tgt |> expect-to-equal do
+                    a: 'target a'
+                    b: 'target b'
+                    c: 'source c'
+                    hidden: 'source hidden'
+
+            # --- old behaviors.
+            xtest 'choose target, hidden val floats' ->
                 src |> merge-to-with-m choose-left, tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
@@ -644,7 +647,7 @@ describe 'data transforms' ->
                     c: 'source c'
                     hidden: 'target hidden'
                 tgt.hidden |> expect-to-equal 'target hidden'
-            test 'choose source, hidden val floats' ->
+            xtest 'choose source, hidden val floats' ->
                 src |> merge-to-with-m choose-right, tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
@@ -697,13 +700,20 @@ describe 'data transforms' ->
             before-each ->
                 tgt := Object.create hidden: 'target hidden'
                     ..a = 'target a'
-                    ..b = 'target b'
                 # --- src prototype is discarded anyway.
                 src :=
                     b: 'source b'
                     c: 'source c'
                     hidden: 'source hidden'
-            test 'choose target, hidden val floats' ->
+            test 'proto chain of target is not checked' ->
+                tgt |> merge-from-with-m null src
+                tgt |> expect-to-equal do
+                    a: 'target a'
+                    b: 'source b'
+                    c: 'source c'
+                    hidden: 'source hidden'
+            # --- old behaviors.
+            xtest 'choose target, hidden val floats' ->
                 tgt |> merge-from-with-m choose-left, src
                 tgt |> expect-to-equal do
                     a: 'target a'
@@ -711,7 +721,7 @@ describe 'data transforms' ->
                     c: 'source c'
                     hidden: 'target hidden'
                 tgt.hidden |> expect-to-equal 'target hidden'
-            test 'choose source, hidden val floats' ->
+            xtest 'choose source, hidden val floats' ->
                 tgt |> merge-from-with-m choose-right, src
                 tgt |> expect-to-equal do
                     a: 'target a'

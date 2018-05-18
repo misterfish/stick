@@ -128,3 +128,18 @@ export const concatFromM = flip (concatToM)
 export const mergeTo = rMerge
 export const mergeFrom = flip (rMerge)
 
+export const mergeToWithM = curry ((collision, tgt, src) => {
+    const ret = tgt
+    for (let i in src)
+        [src, i] | whenHas ((v, o, k) => {
+            [ret, i] | ifHasIn (
+                (v, o, k) => ret[i] = collision (ret[i], src[i]),
+                (o, k) => ret[i] = src[i],
+            )
+        })
+    return ret
+})
+
+export const mergeFromWithM = curry ((collision, src, tgt) =>
+    mergeToWithM (collision, tgt, src)
+)

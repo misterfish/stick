@@ -945,7 +945,7 @@ describe('data transforms', function(){
       });
       return expect(res.hidden).toEqual(42);
     });
-    test('discards non-own vals 3', function(){
+    return test('discards non-own vals 3', function(){
       var x$, tgt, y$, src, res;
       x$ = tgt = Object.create({
         hidden: 42
@@ -973,10 +973,6 @@ describe('data transforms', function(){
         b: 3,
         c: 4
       });
-    });
-    return test('alias inject-to-m', function(){
-      return expectToEqual(mergeToM)(
-      injectToM);
     });
   });
   describe('mergeFromM', function(){
@@ -1067,7 +1063,7 @@ describe('data transforms', function(){
       });
       return expect(res.hidden).toEqual(42);
     });
-    test('discards non-own vals 3', function(){
+    return test('discards non-own vals 3', function(){
       var x$, tgt, y$, src, res;
       x$ = tgt = Object.create({
         hidden: 42
@@ -1095,10 +1091,6 @@ describe('data transforms', function(){
         b: 3,
         c: 4
       });
-    });
-    return test('alias inject-from-m', function(){
-      return expectToEqual(mergeFromM)(
-      injectFromM);
     });
   });
   describe('mergeToWithM', function(){
@@ -1174,12 +1166,22 @@ describe('data transforms', function(){
         x$.a = 'target a';
         x$.b = 'target b';
         return src = {
-          b: 'source b',
           c: 'source c',
           hidden: 'source hidden'
         };
       });
-      test('choose target, hidden val floats', function(){
+      test('proto chain of target is not checked', function(){
+        mergeToWithM(null, tgt)(
+        src);
+        return expectToEqual({
+          a: 'target a',
+          b: 'target b',
+          c: 'source c',
+          hidden: 'source hidden'
+        })(
+        tgt);
+      });
+      xtest('choose target, hidden val floats', function(){
         mergeToWithM(chooseLeft, tgt)(
         src);
         expectToEqual({
@@ -1192,7 +1194,7 @@ describe('data transforms', function(){
         return expectToEqual('target hidden')(
         tgt.hidden);
       });
-      return test('choose source, hidden val floats', function(){
+      return xtest('choose source, hidden val floats', function(){
         mergeToWithM(chooseRight, tgt)(
         src);
         return expectToEqual({
@@ -1276,14 +1278,24 @@ describe('data transforms', function(){
           hidden: 'target hidden'
         });
         x$.a = 'target a';
-        x$.b = 'target b';
         return src = {
           b: 'source b',
           c: 'source c',
           hidden: 'source hidden'
         };
       });
-      test('choose target, hidden val floats', function(){
+      test('proto chain of target is not checked', function(){
+        mergeFromWithM(null, src)(
+        tgt);
+        return expectToEqual({
+          a: 'target a',
+          b: 'source b',
+          c: 'source c',
+          hidden: 'source hidden'
+        })(
+        tgt);
+      });
+      xtest('choose target, hidden val floats', function(){
         mergeFromWithM(chooseLeft, src)(
         tgt);
         expectToEqual({
@@ -1296,7 +1308,7 @@ describe('data transforms', function(){
         return expectToEqual('target hidden')(
         tgt.hidden);
       });
-      return test('choose source, hidden val floats', function(){
+      return xtest('choose source, hidden val floats', function(){
         mergeFromWithM(chooseRight, src)(
         tgt);
         return expectToEqual({

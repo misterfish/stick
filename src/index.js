@@ -246,21 +246,21 @@ export const mergeFromM = _recurry (2) (manual.mergeFromM)
 export const mergeToM   = _recurry (2) (manual.mergeToM)
 
 // --- copies enumerable own properties from src into tgt, mut.
-// --- uses collision function if key exists in the target, anywhere in target's prototype chain.
+////// --- uses collision function if key exists in the target, anywhere in target's prototype chain.
 // --- 'with' refers to collision
 // --- 'to' refers to tgt
-// --- if a collision occurs in the target's prototype chain, the value will surface, regardless of
-// whether src or tgt version is chosen.
+// --- to avoid non-intuitive behavior, only own properties are checked on the target.
+////// --- if a collision occurs in the target's prototype chain, the value will surface, regardless of whether src or tgt version is chosen.
 
 export const mergeToWithM = curry ((collision, tgt, src) => {
     const ret = tgt
     for (let i in src)
-        [src, i] | whenHas ((v, o, k) => {
-            [ret, i] | ifHasIn (
-                (v, o, k) => ret[i] = collision (ret[i], src[i]),
-                (o, k) => ret[i] = src[i],
-            )
-        })
+        // [src, i] | whenHas ((v, o, k) => [ret, i] | ifHasIn (
+        [src, i] | whenHas ((v, o, k) => [ret, i] | ifHas (
+            (v, o, k) => ret[i] = collision (ret[i], src[i]),
+            (o, k) => ret[i] = src[i],
+        )
+    )
     return ret
 })
 
@@ -282,9 +282,6 @@ export const mergeFromWhenOkM = (src) => (tgt) => {
             tgt[i] = src[i]
     return tgt
 }
-
-export const injectToM = mergeToM
-export const injectFromM = mergeFromM
 
 // --- both will float.
 export const mergeToIn = curry ((tgt, src) => {

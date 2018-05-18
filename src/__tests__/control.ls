@@ -15,7 +15,9 @@
 } = require './common'
 
 {
-    try-catch, try-catch__,
+    try-catch,
+    # --- @deprecated
+    try-catch__,
     exception, raise, die, decorate-exception,
 } = require '../index'
 
@@ -26,29 +28,33 @@ describe 'try/catch__' ->
     how-to-fail = jest.fn()
         ..mock-return-value 'failed'
 
-    test 'should fail' ->
+    # --- @deprecated
+    xtest 'should fail' ->
         try-catch__ fails, how-to-fail
         |> expect-to-equal 'failed'
-    test 'should succeed' ->
+    xtest 'should succeed' ->
         try-catch__ passes, how-to-fail
         |> expect-to-equal 99
 
 describe 'try/catch' ->
-    fails = -> throw new Error
+    fails = -> throw new TypeError ('a thing is not a thang')
     passes = -> 99
 
     how-to-pass = jest.fn()
         ..mock-implementation (x) -> [x, x, x]
     how-to-fail = jest.fn()
-        ..mock-return-value 'failed'
+        ..mock-implementation (e) -> 'failed: ' + e.message
+    try-it = try-catch do
+        how-to-pass
+        how-to-fail
 
     test 'should fail' ->
         fails
-        |> try-catch how-to-pass, how-to-fail
-        |> expect-to-equal 'failed'
+        |> try-it
+        |> expect-to-equal 'failed: a thing is not a thang'
     test 'should succeed, and pass params' ->
         passes
-        |> try-catch how-to-pass, how-to-fail
+        |> try-it
         |> expect-to-equal [99 99 99]
 
 describe 'exceptions' ->

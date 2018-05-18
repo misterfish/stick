@@ -5,14 +5,18 @@ import {
     flip,
     subtract, add,
     divide,
+    join,
+    concat as rConcat,
 } from 'ramda'
 
 // --- canonical can take functions from both main and manual.
 // beware of circular dependencies -- be sure tests are up to date.
+// --- index and manual do not take from canonical, so in princple there shouldn't be any.
 
 import {
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
-    isFunction,
+    isFunction, appendFrom, appendToM,
+    prependTo, concatToM,
 } from './index'
 
 export const side  = (prop) => tap (dot (prop))
@@ -95,4 +99,32 @@ export const plus = add
 
 export const divideBy = flip (divide)
 
+export const tryCatch = curry ((good, bad, f) => {
+    let successVal
+    try {
+        successVal = f ()
+    } catch (e) {
+        return bad (e)
+    }
+    return good (successVal)
+})
+
+export const exception = (...args) => new Error (
+    args | join (' ')
+)
+
+export const decorateException = curry ((prefix, e) =>
+    e | assocM ('message', joinOk (' ') ([prefix, e.message]))
+)
+
+export const appendTo = flip (appendFrom)
+export const appendFromM = flip (appendToM)
+export const prependFrom = flip (prependTo)
+
+export const concatTo = rConcat
+export const concatFrom = flip (rConcat)
+export const concatFromM = flip (concatToM)
+
+export const mergeTo = rMerge
+export const mergeFrom = flip (rMerge)
 

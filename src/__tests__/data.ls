@@ -21,6 +21,7 @@
     append-to, append-to-m, append-from, append-from-m,
     prepend-from, prepend-from-m, prepend-to, prepend-to-m,
     concat-to, concat-to-m, concat-from, concat-from-m,
+    precat-to, precat-from,
 
     merge-to, merge-from, merge-to-m, merge-from-m,
     merge-to-with-m, merge-from-with-m,
@@ -304,10 +305,10 @@ describe 'data transforms' ->
             test-m do
                 { res, mut, tgt, }
             (expect res).to-equal tgt + src
-        test 'unequal types => throw' ->
+        test 'unequal types => dont throw, unlike ramda' ->
             tgt = [1 2 3]
             src = 4
-            (expect -> src |> concat-to tgt).to-throw()
+            (expect -> src |> concat-to tgt).not.to-throw()
 
     describe 'concatToM' ->
         fn = concat-to-m
@@ -342,6 +343,9 @@ describe 'data transforms' ->
             tgt = [1 2 3]
             src = 4
             expect(-> src |> concat-from tgt).to-throw()
+        test 'alias' ->
+            precat-to   |> expect-to-equal concat-from
+            precat-from |> expect-to-equal concat-to
 
     describe 'concatFromM' ->
         fn = concat-from-m
@@ -368,6 +372,13 @@ describe 'data transforms' ->
             test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
+        test 'also takes null/undef' ->
+            tgt = a: 1 b: 2
+            src =      b: 3 c: 4 d: void
+            res = run do
+                { fn, src, tgt, dir, }
+            # --- = JS `in`
+            ('d' of res) |> expect-to-be true
         test 'discards non-own vals 1' ->
             tgt = Object.create hidden: 42
                 ..a = 1

@@ -88,8 +88,6 @@ export const notOk = x => x == null
 export const eq = curry ((x, y) => x === y)
 export const ne = curry ((x, y) => x !== y)
 
-
-
 export const dot  = _recurry (2) (manual.dot)
 export const dot1 = _recurry (3) (manual.dot1)
 export const dot2 = _recurry (4) (manual.dot2)
@@ -163,25 +161,13 @@ export const ifHas__ = (spec, yes, no = noop) => spec | ifHas (yes) (no)
 export const ifHasIn__ = (spec, yes, no = noop) => spec | ifHasIn (yes) (no)
 export const ifBind__ = (spec, yes, no = noop) => spec | ifBind (yes) (no)
 
-
-
 export const condo = manual.condo
 export const condO = _recurry (2) (manual.condO)
 export const cond = condO
 
 // ------ exceptions.
 
-// @todo was buggy, changed
-export const tryCatch = curry ((good, bad, f) => {
-    let successVal
-    try {
-        successVal = f ()
-    } catch (e) {
-        return bad (e)
-    }
-    return good (successVal)
-})
-
+// @deprecated
 export const tryCatch__ = (whatToTry, howToCatch = noop) => {
     try {
         return whatToTry ();
@@ -190,149 +176,72 @@ export const tryCatch__ = (whatToTry, howToCatch = noop) => {
     }
 }
 
-export const exception = (...args) => new Error (
-    args | join (' ')
-)
+export const tryCatch = _recurry (3) (manual.tryCatch)
+
+export const exception = (...args) => new Error (args.join (' '))
+
 export const raise = (e) => { throw e }
-// --- i don't love the name die, because it can be caught.
-// still, it's descriptive, and everyone knows this is js anyway.
-export const die = (...args) => exception (...args) | raise
-export const decorateException = curry ((prefix, e) =>
-    e | assocM ('message', joinOk (' ') ([prefix, e.message]))
-)
 
+// --- die throws an exception, which can of course be caught.
+// it shouldn't be too surprising to JS users that it doesn't halt the runtime.
 
-// @ might be good if __ versions don't call the curried versions, because it messes up TCO.
+export const decorateException = _recurry (2) (manual.decorateException)
 
-// @todo
-export const ifArray = curry ((yes, no, x) => isArray (x) ? yes (x) : no (x))
-
-export const ifZero = curry ((yes, no, x) => x === 0 ? yes (x) : no (x))
-export const whenZero = curry ((yes, x) => x | ifZero (yes) (noop))
-export const ifZero__ = (x, yes, no = noop) => x | ifZero (yes) (no)
-export const ifOne = curry ((yes, no, x) => x === 1 ? yes (x) : no (x))
-export const whenOne = curry ((yes, x) => x | ifOne (yes) (noop))
-export const ifOne__ = (x, yes, no = noop) => x | ifOne (yes) (no)
-
-// --- use ramda empty xxx
-export const ifEmpty = curry ((yes, no, xs) => xs.length === 0 ? yes (xs) : no (xs))
-export const whenEmpty = curry ((yes, xs) => xs | ifEmpty (yes) (noop))
-export const ifEmpty__ = (xs, yes, no = noop) => xs | ifEmpty (yes) (no)
-
-// @todo
-// alias ifEmpty -> isLengthOne
-//
-// @todo
-// isLeft, isRight, isSome, isNone,
+export const die = exception >> raise
 
 // ------ cascade
 
-export const cascade = (val, ...fxs) =>
-    fxs | reduce ((a, b) => b (a), val)
+export const cascade = (val, ...fxs) => fxs
+    .reduce ((a, b) => b (a), val)
 
 // --------- data.
 
 // ------ defaultTo.
 
-// --- f is a *function*.
-export const defaultTo = curry ((f, x) => ok (x) ? x : f ())
+export const defaultTo = _recurry (2) (manual.defaultTo)
+
+// --- @deprecated
 export const defaultTo__ = (x, f) => x | defaultTo (f)
 
 // ------ assoc.
 
-export const assocM = curry ((prop, val, o) => (o[prop] = val, o))
+export const assocM = _recurry (3) (manual.assocM)
 
 // ------ append.
 
-export const appendFrom = curry ((elem, ary) =>
-    [...ary, elem]
-)
-export const appendTo = flip (appendFrom)
-
-// [] -> a -> [], mut
-export const appendToM = curry ((tgt, src) => {
-    tgt.push (src)
-    return tgt
-})
-
-const pushTo = appendToM
-
-// [] -> a -> [], mut
-export const appendFromM = flip (appendToM)
+export const appendFrom   = _recurry (2) (manual.appendFrom)
+export const appendTo     = _recurry (2) (manual.appendTo)
+export const appendFromM  = _recurry (2) (manual.appendFromM)
+export const appendToM    = _recurry (2) (manual.appendToM)
 
 // ------ prepend.
 
-export const prependTo = curry ((ary, elem) =>
-    [elem, ...ary]
-)
+export const prependTo    = _recurry (2) (manual.prependTo)
+export const prependFrom  = _recurry (2) (manual.prependFrom)
+export const prependFromM = _recurry (2) (manual.prependFromM)
+export const prependToM   = _recurry (2) (manual.prependToM)
 
-export const prependFrom = flip (prependTo)
+// --- arrays or strings
+// --- ramda's concat does more type checking and also allows fantasy land semigroups.
+export const concatTo = _recurry (2) (manual.concatTo)
+export const concatFrom = _recurry (2) (manual.concatFrom)
+export const precatTo   = concatFrom
+export const precatFrom = concatTo
 
-export const prependFromM = curry ((src, tgt) => {
-    tgt.unshift (src)
-    return tgt
-})
-
-export const prependToM = curry ((tgt, src) => {
-    tgt.unshift (src)
-    return tgt
-})
-
-// [1 2 3] -> [4 5 6] -> [1 2 3 4 5 6]
-
-// [] -> [] -> []
-// [] -> a -> [] => error
-// String -> String -> String
-// @todo: alias precatFrom
-export const concatTo = rConcat
-
-// @todo: alias precatTo/From
-export const concatFrom = flip (rConcat)
-
-// [] -> [] -> [], mut
-export const concatToM = curry (
-    (tgt, src) => {
-        tgt.push (...src)
-        return tgt
-    }
-)
-
-export const concatFromM = flip (concatToM)
-
-export const mergeTo = rMerge
-export const mergeFrom = flip (rMerge)
+// --- only arrays (strings will throw)
+export const concatToM = _recurry (2) (manual.concatToM)
+export const concatFromM = _recurry (2) (manual.concatFromM)
 
 // --- own properties, including null/undefined.
 // --- 2x faster than Object.assign.
-// --- @test: enumerable own?
 // --- @todo: why is it so much faster?
 
-/** @ref
-export const mergeToM = curry ((tgt, src) => {
-    const ret = tgt
-    for (let i in src) [src, i] | whenHas ((v, o, k) => ret[k] = v)
-    return ret
-})
- */
+export const mergeTo    = _recurry (2) (manual.mergeTo)
+export const mergeFrom  = _recurry (2) (manual.mergeFrom)
+export const mergeFromM = _recurry (2) (manual.mergeFromM)
+export const mergeToM   = _recurry (2) (manual.mergeToM)
 
-export const mergeToM = (tgt) => (src) => {
-    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
-        tgt[i] = src[i]
-    return tgt
-}
-
-/** @ref
-export const mergeFromM = flip (mergeToM)
- */
-
-export const mergeFromM = (src) => (tgt) => {
-    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
-        tgt[i] = src[i]
-    return tgt
-}
-
-// --- discards non-own on src.
-// --- does not discard non-own on tgt, b/c mut.
+// --- copies enumerable own properties from src into tgt, mut.
 // --- uses collision function if key exists in the target, anywhere in target's prototype chain.
 // --- 'with' refers to collision
 // --- 'to' refers to tgt
@@ -414,6 +323,8 @@ export const mergeAllIn = xs => xs | reduce (
 //
 // @todo optimise
 // @todo aren't array pairs better than spaced ones?
+
+const ifArray = (...args) => ifPredicate (isArray) (...args)
 
 export const mapPairs = curry ((f, obj) =>
     obj | ifArray (
@@ -582,6 +493,7 @@ export const passN = passToN
 // --- also works for functions curried with the a => b => ... notation (unlike R.flip).
 // --- does not work with non-curried functions.
 
+export const ifEmpty = curry ((yes, no, xs) => xs.length === 0 ? yes (xs) : no (xs))
 export const flipC = f => curryN (2) (
     (a, b, ...rest) => laat (
         // --- if f had arity 2, f (b) (a) is the answer; otherwise it's a curried interim result,
@@ -607,7 +519,7 @@ export const zipAll = (...xss) => {
     const ret = []
     const l = xss[0].length
     for (let i = 0; i < l; i++)
-        xss | map (xs => xs [i]) | pushTo (ret)
+        xss | map (xs => xs [i]) | appendToM (ret)
     return ret
 }
 

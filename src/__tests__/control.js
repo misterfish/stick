@@ -12,19 +12,19 @@ describe('try/catch__', function(){
   };
   x$ = howToFail = jest.fn();
   x$.mockReturnValue('failed');
-  test('should fail', function(){
+  xtest('should fail', function(){
     return expectToEqual('failed')(
     tryCatch__(fails, howToFail));
   });
-  return test('should succeed', function(){
+  return xtest('should succeed', function(){
     return expectToEqual(99)(
     tryCatch__(passes, howToFail));
   });
 });
 describe('try/catch', function(){
-  var fails, passes, x$, howToPass, y$, howToFail;
+  var fails, passes, x$, howToPass, y$, howToFail, tryIt;
   fails = function(){
-    throw new Error;
+    throw new TypeError('a thing is not a thang');
   };
   passes = function(){
     return 99;
@@ -34,15 +34,18 @@ describe('try/catch', function(){
     return [x, x, x];
   });
   y$ = howToFail = jest.fn();
-  y$.mockReturnValue('failed');
+  y$.mockImplementation(function(e){
+    return 'failed: ' + e.message;
+  });
+  tryIt = tryCatch(howToPass, howToFail);
   test('should fail', function(){
-    return expectToEqual('failed')(
-    tryCatch(howToPass, howToFail)(
+    return expectToEqual('failed: a thing is not a thang')(
+    tryIt(
     fails));
   });
   return test('should succeed, and pass params', function(){
     return expectToEqual([99, 99, 99])(
-    tryCatch(howToPass, howToFail)(
+    tryIt(
     passes));
   });
 });

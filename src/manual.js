@@ -1,5 +1,5 @@
 import {
-    ok, notOk,
+    ok, notOk, whenOk,
     isFunction,
 } from './index'
 
@@ -140,6 +140,67 @@ export const moduloWholePart = m => n => {
 }
 export const toThe = e => b => Math.pow (b, e)
 
+// ------ exceptions
+
+export const tryCatch = (good) => (bad) => (f) => {
+	let successVal
+	try {
+		successVal = f ()
+	} catch (e) {
+		return bad (e)
+	}
+	return good (successVal)
+}
+
+export const decorateException = (prefix) => (e) => {
+    const msg = [prefix]
+    whenOk (m => msg.push (m)) (e.message)
+    e.message = msg.join (' ')
+    return e
+}
+
+export const defaultTo = f => x => ok (x) ? x : f ()
+export const assocM = prop => val => o => (o[prop] = val, o)
+
+export const appendFrom = elem => ary => [...ary, elem]
+export const appendTo   = ary => elem => [...ary, elem]
+
+export const appendToM    = (tgt) => (src) => (tgt.push (src), tgt)
+export const appendFromM  = (src) => (tgt) => (tgt.push (src), tgt)
+export const prependTo    = ary => elem => [elem, ...ary]
+export const prependFrom  = elem => ary => [elem, ...ary]
+export const prependFromM = src => tgt => (tgt.unshift (src), tgt)
+export const prependToM   = tgt => src => (tgt.unshift (src), tgt)
+
+export const concatTo    = tgt => src => tgt.concat (src)
+export const concatFrom  = src => tgt => tgt.concat (src)
+export const concatToM   = tgt => src => (tgt.push (...src), tgt)
+export const concatFromM = src => tgt => (tgt.push (...src), tgt)
+
+// --- these seem to be much faster than Object.assign -- why?
+// @profile
+export const mergeToM = (tgt) => (src) => {
+    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
+        tgt[i] = src[i]
+    return tgt
+}
+
+export const mergeFromM = (src) => (tgt) => {
+    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
+        tgt[i] = src[i]
+    return tgt
+}
+
+export const mergeTo = (tgt) => (src) => {
+    const a = mergeToM ({}) (tgt)
+    return mergeToM (a) (src)
+}
+
+export const mergeFrom = (src) => (tgt) => {
+    const a = mergeToM ({}) (tgt)
+    return mergeToM (a) (src)
+}
+
 export default {
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,
@@ -157,4 +218,11 @@ export default {
     multiply, divideBy, divideInto,
     modulo, moduloWholePart,
     toThe,
+    tryCatch, decorateException,
+    defaultTo,
+    assocM,
+    appendFrom, appendTo, appendToM, appendFromM,
+    prependTo, prependFrom, prependToM, prependFromM,
+    concatTo, concatFrom, concatToM, concatFromM,
+    mergeTo, mergeFrom, mergeToM, mergeFromM,
 }

@@ -808,6 +808,19 @@ describe 'cond' ->
                     otherwise |> (guard -> 'ok')
                 ]
                 |> expect-to-equal 'ok'
+    describe 'misc' ->
+        test 'guardA' ->
+            32 |> cond-o [
+                (> 30)      |> (guardA 'big')
+                (> 20)      |> (guardA 'medium')
+            ]
+            |> expect-to-equal 'big'
+            condo do
+                (-> 21 > 30)      |> (guardA 'big')
+                (-> 21 > 20)      |> (guardA 'medium')
+            |> expect-to-equal 'medium'
+        test 'alias' ->
+            cond |> expect-to-equal cond-o
 
 
 

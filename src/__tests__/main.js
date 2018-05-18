@@ -1,8 +1,132 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, sum, list, test, xtest, expectToEqual, expectToBe, expectToThrow, main, zipAll, bind, bindLate, bindTry, cascade, flipC, sprintf1, sprintfN, given, laat, lets, laats, laats2, laats3, laats4, laats5, laats6, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, sumAll, slice$ = [].slice;
-ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip, sum = ref$.sum;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flipC, sprintf1, sprintfN, given, laat, lets, laats, laats2, laats3, laats4, laats5, laats6, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, sumAll, slice$ = [].slice;
+ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow;
-ref$ = main = require('../index'), zipAll = ref$.zipAll, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flipC = ref$.flipC, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, given = ref$.given, laat = ref$.laat, lets = ref$.lets, laats = ref$.laats, laats2 = ref$.laats2, laats3 = ref$.laats3, laats4 = ref$.laats4, laats5 = ref$.laats5, laats6 = ref$.laats6, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags;
+ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flipC = ref$.flipC, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, given = ref$.given, laat = ref$.laat, lets = ref$.lets, laats = ref$.laats, laats2 = ref$.laats2, laats3 = ref$.laats3, laats4 = ref$.laats4, laats5 = ref$.laats5, laats6 = ref$.laats6, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto;
 sumAll = compose$(list, sum);
+describe('comparisons', function(){
+  describe('eq', function(){
+    test(1, function(){
+      expectToEqual(true)(
+      eq(3)(
+      3));
+      return expectToEqual(false)(
+      eq(3)(
+      4));
+    });
+    test('unlike ramda equals', function(){
+      expectToEqual(true)(
+      rEquals([])(
+      []));
+      return expectToEqual(false)(
+      eq([])(
+      []));
+    });
+    return test('unlike ramda identical', function(){
+      expectToEqual(false)(
+      rIdentical(-0)(
+      0));
+      return expectToEqual(true)(
+      eq(-0)(
+      0));
+    });
+  });
+  describe('ne', function(){
+    return test(1, function(){
+      expectToEqual(false)(
+      ne(3)(
+      3));
+      return expectToEqual(true)(
+      ne(3)(
+      4));
+    });
+  });
+  describe('gt', function(){
+    return test(1, function(){
+      expectToEqual(true)(
+      gt(2)(
+      3));
+      expectToEqual(false)(
+      gt(3)(
+      3));
+      return expectToEqual(false)(
+      gt(4)(
+      3));
+    });
+  });
+  describe('gte', function(){
+    return test(1, function(){
+      expectToEqual(true)(
+      gte(2)(
+      3));
+      expectToEqual(true)(
+      gte(3)(
+      3));
+      return expectToEqual(false)(
+      gte(4)(
+      3));
+    });
+  });
+  describe('lt', function(){
+    return test(1, function(){
+      expectToEqual(false)(
+      lt(2)(
+      3));
+      expectToEqual(false)(
+      lt(3)(
+      3));
+      return expectToEqual(true)(
+      lt(4)(
+      3));
+    });
+  });
+  return describe('lte', function(){
+    return test(1, function(){
+      expectToEqual(false)(
+      lte(2)(
+      3));
+      expectToEqual(true)(
+      lte(3)(
+      3));
+      return expectToEqual(true)(
+      lte(4)(
+      3));
+    });
+  });
+});
+describe('math', function(){
+  test('subtract', function(){
+    expectToEqual(2)(
+    subtractFrom(5)(
+    3));
+    expectToEqual(2)(
+    subtract(3)(
+    5));
+    return expectToEqual(2)(
+    minus(3)(
+    5));
+  });
+  test('add', function(){
+    expectToEqual(8)(
+    plus(5)(
+    3));
+    return expectToEqual(8)(
+    add(5)(
+    3));
+  });
+  test('multiply', function(){
+    return expectToEqual(15)(
+    multiply(5)(
+    3));
+  });
+  return test('divide', function(){
+    expectToEqual(0.6)(
+    divideBy(5)(
+    3));
+    return expectToEqual(2)(
+    divideInto(6)(
+    3));
+  });
+});
 describe('cascade', function(){
   return test(1, function(){
     var odd, this$ = this;

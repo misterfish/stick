@@ -1,6 +1,10 @@
 import {
     curry, tap,
     has, hasIn,
+    gt as rGt, gte as rGte, lt as rLt, lte as rLte,
+    flip,
+    subtract, add,
+    divide,
 } from 'ramda'
 
 // --- canonical can take functions from both main and manual.
@@ -71,3 +75,24 @@ export const _cond = (withTarget, blocks, target) => {
 
 export const condo = blocks => _cond (false, blocks)
 export const condO = curry ((blocks, target) => _cond (true, blocks, target))
+
+
+
+export const ok = isNil >> not
+export const notOk = isNil
+
+
+export const gt  = flip (rGt)
+export const gte = flip (rGte)
+export const lt  = flip (rLt)
+export const lte = flip (rLte)
+
+
+
+export const subtractFrom = subtract
+export const minus = flip (subtractFrom)
+export const plus = add
+
+export const divideBy = flip (divide)
+
+

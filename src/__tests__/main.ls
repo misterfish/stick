@@ -7,6 +7,8 @@
     flip,
     zip,
     sum,
+    equals: r-equals,
+    identical: r-identical,
 } = require 'ramda'
 
 {
@@ -18,6 +20,8 @@
 
 {
     zip-all,
+
+    eq, ne, gt, gte, lt, lte,
 
     bind, bind-late, bind-try,
     cascade, flip-c,
@@ -34,9 +38,63 @@
 
     if-replace, if-x-replace, if-x-replace-str, if-x-replace-str-flags,
 
+    subtract-from, subtract, minus,
+    add, plus,
+    multiply, divide-by, divide-into,
+
 } = main = require '../index'
 
 sum-all = list >> sum
+
+describe 'comparisons' ->
+    describe 'eq' ->
+        test 1 ->
+            3 |> eq 3 |> expect-to-equal true
+            4 |> eq 3 |> expect-to-equal false
+        test 'unlike ramda equals' ->
+            [] |> r-equals [] |> expect-to-equal true
+            [] |> eq [] |> expect-to-equal false
+        test 'unlike ramda identical' ->
+            0 |> r-identical -0 |> expect-to-equal false
+            0 |> eq -0 |> expect-to-equal true
+    describe 'ne' ->
+        test 1 ->
+            3 |> ne 3 |> expect-to-equal false
+            4 |> ne 3 |> expect-to-equal true
+    describe 'gt' ->
+        test 1 ->
+            3 |> gt 2 |> expect-to-equal true
+            3 |> gt 3 |> expect-to-equal false
+            3 |> gt 4 |> expect-to-equal false
+    describe 'gte' ->
+        test 1 ->
+            3 |> gte 2 |> expect-to-equal true
+            3 |> gte 3 |> expect-to-equal true
+            3 |> gte 4 |> expect-to-equal false
+    describe 'lt' ->
+        test 1 ->
+            3 |> lt 2 |> expect-to-equal false
+            3 |> lt 3 |> expect-to-equal false
+            3 |> lt 4 |> expect-to-equal true
+    describe 'lte' ->
+        test 1 ->
+            3 |> lte 2 |> expect-to-equal false
+            3 |> lte 3 |> expect-to-equal true
+            3 |> lte 4 |> expect-to-equal true
+
+describe 'math' ->
+    test 'subtract' ->
+        3 |> subtract-from 5 |> expect-to-equal 2
+        5 |> subtract 3 |> expect-to-equal 2
+        5 |> minus 3 |> expect-to-equal 2
+    test 'add' ->
+        3 |> plus 5 |> expect-to-equal 8
+        3 |> add 5 |> expect-to-equal 8
+    test 'multiply' ->
+        3 |> multiply 5 |> expect-to-equal 15
+    test 'divide' ->
+        3 |> divide-by 5 |> expect-to-equal 0.6
+        3 |> divide-into 6 |> expect-to-equal 2
 
 describe 'cascade' ->
     test 1 ->

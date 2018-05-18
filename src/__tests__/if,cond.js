@@ -1079,6 +1079,34 @@ describe('cond', function(){
       });
     });
   });
+  describe('misc', function(){
+    test('guardA', function(){
+      var this$ = this;
+      expectToEqual('big')(
+      condO([
+        guardA('big')(
+        (function(it){
+          return it > 30;
+        })), guardA('medium')(
+        (function(it){
+          return it > 20;
+        }))
+      ])(
+      32));
+      return expectToEqual('medium')(
+      condo(guardA('big')(
+      function(){
+        return 21 > 30;
+      }), guardA('medium')(
+      function(){
+        return 21 > 20;
+      })));
+    });
+    return test('alias', function(){
+      return expectToEqual(condO)(
+      cond);
+    });
+  });
   test(1, function(){
     return expectToEqual('feet')(
     cond([

@@ -126,6 +126,15 @@ export const condO = (blocks) => (target) => {
     }
 }
 
+export const subtract     = m => n => n - m
+export const subtractFrom = n => m => n - m
+
+export const add = m => n => m + n
+export const multiply = m => n => m * n
+
+export const divideBy = m => n => n / m
+export const divideInto = m => n => m / n
+
 export default {
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,
@@ -138,4 +147,7 @@ export default {
     bindTry,
     isType,
     condo, condO,
+    subtract, subtractFrom,
+    add,
+    multiply, divideBy, divideInto,
 }

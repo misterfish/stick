@@ -366,3 +366,27 @@ const dateToMinutesX = (geth, getm) => laatsO ([
 
 const dateToMinutesTZ   = dateToMinutesX ('getHours', 'getMinutes')
 const dateToMinutesUTC  = dateToMinutesX ('getUTCHours', 'getUTCMinutes')
+
+
+
+
+// functions with an On ending are aliased to a version without it:
+// call = callOn
+// bind = bindOn
+//
+// functions with To and From endings have no aliases.
+
+
+
+
+// @todo need something like
+// when (isTTY, stdin => ...)
+// stdin | whenPredicate (isTTY, stdin => ...)
+//
+// doesn't work
+// stdin.setRawMode | whenFunction (applyTo1 (bool))
+// stdin.bindTry ('setRawMode') | whenFunction (applyTo1 (bool))
+// --- this is horrible.
+// bool => tap (stdin => 'setRawMode' | bindTry (stdin) | whenFunction (applyTo1 (bool))),
+// @todo whenBind? whenCan?
+

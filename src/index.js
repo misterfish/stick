@@ -3,17 +3,6 @@
 //
 // Object.assign and {...} drop proto vals.
 
-// [1 2 3] -> [4 5 6] -> [1 2 3 [4 5 6]]
-// [] -> a -> []
-
-// the preposition refers to the identifier following.
-//
-// functions with an On ending are aliased to a version without it:
-// call = callOn
-// bind = bindOn
-//
-// functions with To and From endings have no aliases.
-
 defineBinaryOperator ('|',  (...args) => pipe         (...args))
 defineBinaryOperator ('<<', (...args) => compose      (...args))
 defineBinaryOperator ('>>', (...args) => composeRight (...args))
@@ -21,31 +10,6 @@ defineBinaryOperator ('>>', (...args) => composeRight (...args))
 export const pipe         = (a, b)    => b (a)
 export const composeRight = (a, b)    => (...args) => b (a (...args))
 export const compose      = (a, b)    => (...args) => a (b (...args))
-
-// --- check compose too ... xxx
-
-// --- the resulting function is not curried.
-// note that this function does not have a well-defined arity.
-
-export const roll = (f) => (...args) => {
-  let g = f
-  for (const i of args) g = g (i)
-  return g
-}
-
-// const r = (a => b => c => a * b * c) | recurry
-// r (1, 2, 3) = roll (orig) (1, 2, 3)
-// r (1, 2)    = roll (orig) (1, 2)
-// r (1) = roll (orig) (1)
-// r (1) (2) (3)
-// r ()
-
-export const recurry = (n) => (f) => (...args) => {
-    const rolled = roll (f) (...args)
-    const dn = n - args.length
-    return dn <= 1 ? rolled
-                   : recurry (dn) (rolled)
-}
 
 import {
     splitAt,
@@ -61,7 +25,7 @@ import {
     merge as rMerge, mergeAll as rMergeAll,
     zip,
     gt as rGt, gte as rGte, lt as rLt, lte as rLte,
-    subtract, add, divide,
+    divide,
     not,
 } from 'ramda'
 
@@ -84,25 +48,44 @@ export {
     doe,
 }
 
+import manual from './manual'
+
 const oPro = Object.prototype
 
-// @canonical:
-// export const ok = isNil >> not
-// export const notOk = isNil
+// const r = (a => b => c => a * b * c) | recurry
+// r (1, 2, 3) = roll (orig) (1, 2, 3)
+// r (1, 2)    = roll (orig) (1, 2)
+// r (1) = roll (orig) (1)
+// r (1) (2) (3)
+// r ()
 
-export const ok    = x => x != null
-export const notOk = x => x == null
-
-import manual from './manual'
+export const recurry = (n) => (f) => (...args) => {
+    const rolled = roll (f) (...args)
+    const dn = n - args.length
+    return dn <= 1 ? rolled
+                   : recurry (dn) (rolled)
+}
 
 const _recurry = recurry
 
+// --- note that the resulting function is not curried, and does not have a well-defined arity. Use
+// R.uncurryN if this is a problem.
+
+export const roll = (f) => (...args) => {
+  let g = f
+  for (const i of args) g = g (i)
+  return g
+}
+
+export const ok    = x => x != null
+export const notOk = x => x == null
 
 // --- different from R.equals, which considers two different objects equal if their contents are
 //     the same (equivalent).
 // --- different from R.identical, which has some different semantics involving e.g. 0 and -0.
 // --- literally just wraps ===.
 // rationale: must be able to confidently refactor working code which uses ===
+
 export const eq = curry ((x, y) => x === y)
 export const ne = curry ((x, y) => x !== y)
 
@@ -124,36 +107,9 @@ export const side4 = _recurry (6) (manual.side4)
 export const side5 = _recurry (7) (manual.side5)
 export const sideN = _recurry (3) (manual.sideN)
 
-// __ = not data-last, not curried
-
-// ------ deps: noop, isFunction, ok
-
-// ------ useless, same as ifYes.
-// --- strict evaluation of cond.
-// --- not anaphoric unless param is baked into yes or no.
-// --- doesn't seem useful to pass anything into the yes and no functions.
-// --- for anaphoric, see cond.
-
-// @todo need something like
-// when (isTTY, stdin => ...)
-// stdin | whenPredicate (isTTY, stdin => ...)
-//
-// doesn't work
-// stdin.setRawMode | whenFunction (applyTo1 (bool))
-// stdin.bindTry ('setRawMode') | whenFunction (applyTo1 (bool))
-// --- this is horrible.
-// bool => tap (stdin => 'setRawMode' | bindTry (stdin) | whenFunction (applyTo1 (bool))),
-// @todo whenBind? whenCan?
-
-//@todo export const ifNotOk = curry ((f, x) => ok (x) ? void 8 : f (x))
-
-// --- tests for exact truth. Rationale: predicate can easily be made to test truthy by adding >>
-// truthy.
-//
-// --- we don't provide an ifNotPredicate function, because users are encouraged to compose their
-// own functions, and it would be confusing.
-//
-// (should ifNotPredicate match falsey or false? If falsey, it breaks symmetry with ifPredicate; if
+// whenEmpty, whenFunction, ifNotPredicate: -> user-space.
+// also, ifNotPredicate would be confusing:
+//  should ifNotPredicate match falsey or false? If falsey, it breaks symmetry with ifPredicate; if
 // false, it behaves differently than ifPredicate (pred >> not), which is also confusing.
 //
 
@@ -183,8 +139,6 @@ export const ifTruthy      = ifYes
 export const whenTruthy    = whenYes
 export const ifFalsey      = ifNo
 export const whenFalsey    = whenNo
-
-// whenEmpty, whenFunction: -> user-space.
 
 // --- these have a different calling convention, so their names are a bit misleading based on the
 // above pattern.
@@ -1010,9 +964,16 @@ export const bindLate = curry ((o, key) => (...args) => o[key] (...args))
 export const mapX = addIndex (map)
 export const mapAccumX = addIndex (mapAccum)
 
-export const subtractFrom = subtract
-export const minus = flip (subtractFrom)
+export const subtract = _recurry (2) (manual.subtract)
+export const subtractFrom = _recurry (2) (manual.subtractFrom)
+export const minus = subtract
+
+export const add = _recurry (2) (manual.add)
 export const plus = add
+
+export const multiply   = _recurry (2) (manual.multiply)
+export const divideBy   = _recurry (2) (manual.divideBy)
+export const divideInto = _recurry (2) (manual.divideInto)
 
 // @test
 export const laatO = curry ((fs, f, x) => laat (
@@ -1085,20 +1046,12 @@ const headTail = f => splitAt (1) >> f
 //
 //
 
-export const divideBy = flip (divide)
-
 export const defaultToA = blush >> defaultTo
 
 // ditch brackets on cond.
 // a line can still be an array if you want the 'raw' predicate / exec.
 // make an extra one (condN ?) for if programmatic building is required.
 
-//
-// subtract, subtractFrom.
-// divide, divideBy.
-//
-//
-//
 // spread. e.g.: csv => [csv, length csv] because spread (identity, length)
 // or spread2 (length)
 // arrows.

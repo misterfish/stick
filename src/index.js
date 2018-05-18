@@ -62,6 +62,7 @@ import {
     zip,
     gt as rGt, gte as rGte, lt as rLt, lte as rLte,
     subtract, add, divide,
+    not,
 } from 'ramda'
 
 import sprintf from 'sprintf'
@@ -84,6 +85,10 @@ export {
 }
 
 const oPro = Object.prototype
+
+// @canonical:
+// export const ok = isNil >> not
+// export const notOk = isNil
 
 export const ok    = x => x != null
 export const notOk = x => x == null
@@ -169,10 +174,9 @@ export const whenFalse = false | eq | whenPredicate
 
 export const ifYes = Boolean | ifPredicate
 export const whenYes = Boolean | whenPredicate
-export const ifNo = curry ((yes, no, x) => (! x) ? yes (x) : no (x))
-export const whenNo = curry ((yes, x) => x | ifNo (yes) (noop))
+export const ifNo = (Boolean >> not) | ifPredicate
+export const whenNo = (Boolean >> not) | whenPredicate
 
-// @test
 export const ifTruthy = ifYes
 export const whenTruthy = whenYes
 export const ifFalsey = ifNo

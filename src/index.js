@@ -252,56 +252,20 @@ export const mergeToM   = _recurry (2) (manual.mergeToM)
 // --- to avoid non-intuitive behavior, only own properties are checked on the target.
 ////// --- if a collision occurs in the target's prototype chain, the value will surface, regardless of whether src or tgt version is chosen.
 
-export const mergeToWithM = curry ((collision, tgt, src) => {
-    const ret = tgt
-    for (let i in src)
-        // [src, i] | whenHas ((v, o, k) => [ret, i] | ifHasIn (
-        [src, i] | whenHas ((v, o, k) => [ret, i] | ifHas (
-            (v, o, k) => ret[i] = collision (ret[i], src[i]),
-            (o, k) => ret[i] = src[i],
-        )
-    )
-    return ret
-})
+export const mergeToWithM   = _recurry (3) (manual.mergeToWithM)
+export const mergeFromWithM = _recurry (3) (manual.mergeFromWithM)
 
-export const mergeFromWithM = curry ((collision, src, tgt) =>
-    mergeToWithM (collision, tgt, src)
-)
+export const mergeToWhenOkM = _recurry (2) (manual.mergeToWhenOkM)
+export const mergeFromWhenOkM = _recurry (2) (manual.mergeFromWhenOkM)
 
-export const mergeToWhenOkM = (tgt) => (src) => {
-    for (let i in src)
-        if (oPro.hasOwnProperty.call (src, i) && ok (src[i]))
-            tgt[i] = src[i]
-    return tgt
-}
-
-// --- @todo test
-export const mergeFromWhenOkM = (src) => (tgt) => {
-    for (let i in src)
-        if (oPro.hasOwnProperty.call (src, i) && ok (src[i]))
-            tgt[i] = src[i]
-    return tgt
-}
+export const mergeToInM = _recurry (2) (manual.mergeToInM)
+export const mergeFromInM = _recurry (2) (manual.mergeFromInM)
 
 // --- both will float.
-export const mergeToIn = curry ((tgt, src) => {
-    const ret = {}
-    for (let i in tgt) ret[i] = tgt[i]
-    for (let i in src) ret[i] = src[i]
-    return ret
-})
+export const mergeFromIn = _recurry (2) (manual.mergeFromIn)
 
 // --- both will float.
-export const mergeFromIn = flip (mergeToIn)
-
-export const mergeToInM = curry ((tgt, src) => {
-    const ret = tgt
-    for (let i in src)
-        ret[i] = src[i]
-    return ret
-})
-
-export const mergeFromInM = flip (mergeToInM)
+export const mergeToIn = _recurry (2) (manual.mergeToIn)
 
 // --- like R.mergeAll but also use prototype vals.
 // --- to and from not applicable, also not curried or meant to be used piped.

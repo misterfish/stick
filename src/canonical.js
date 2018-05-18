@@ -143,3 +143,18 @@ export const mergeToWithM = curry ((collision, tgt, src) => {
 export const mergeFromWithM = curry ((collision, src, tgt) =>
     mergeToWithM (collision, tgt, src)
 )
+
+export const mergeToWithM = curry ((collision, tgt, src) => {
+    const ret = tgt
+    for (let i in src)
+        // [src, i] | whenHas ((v, o, k) => [ret, i] | ifHasIn (
+        [src, i] | whenHas ((v, o, k) => [ret, i] | ifHas (
+            (v, o, k) => ret[i] = collision (ret[i], src[i]),
+            (o, k) => ret[i] = src[i],
+        )
+    )
+    return ret
+})
+
+
+

@@ -206,7 +206,48 @@ export const mergeFrom = (src) => (tgt) => {
     return mergeToM (a) (src)
 }
 
+export const mergeToWithM = (collision) => (tgt) => (src) => {
+	const ret = tgt
+    for (let i in src) whenHas (
+        (v, o, k) => ifHas (
+			(v, o, k) => ret[i] = collision (ret[i], src[i]))
+			((o, k) => ret[i] = src[i])
+            ([ret, i])
+        )
+        ([src, i])
+	return ret
+}
+
+export const mergeFromWithM = (collision) => (src) => (tgt) => mergeToWithM (collision) (tgt) (src)
+
+// --- @test
+export const mergeToWhenOkM = (tgt) => (src) => {
+    for (let i in src) if (hasOwn.call (src, i) && ok (src[i]))
+        tgt[i] = src[i]
+    return tgt
+}
+
+// --- @test
+export const mergeFromWhenOkM = (src) => (tgt) => mergeToWhenOkM (tgt) (src)
+
+export const mergeToInM = (tgt) => (src) => {
+    for (let i in src) tgt[i] = src[i]
+    return tgt
+}
+
+export const mergeFromInM = (src) => (tgt) => mergeToInM (tgt) (src)
+
+export const mergeToIn = (tgt) => (src) => {
+    const a = mergeToInM ({}) (tgt)
+    return mergeToInM (a) (src)
+}
+export const mergeFromIn = (src) => (tgt) => mergeToIn (tgt) (src)
+
+
+
 export default {
+mergeToInM, mergeFromInM,
+mergeToIn, mergeFromIn,
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,
@@ -231,4 +272,6 @@ export default {
     prependTo, prependFrom, prependToM, prependFromM,
     concatTo, concatFrom, concatToM, concatFromM,
     mergeTo, mergeFrom, mergeToM, mergeFromM,
+    mergeToWithM, mergeFromWithM,
+    mergeToWhenOkM, mergeFromWhenOkM,
 }

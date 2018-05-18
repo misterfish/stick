@@ -49,10 +49,20 @@ export const whenHas = yes => ifHas (yes) (noop)
 export const ifHasIn = yes => no => ([o, k]) => hasIn (k) (o) ? yes (o [k], o, k) : no (o, k)
 export const whenHasIn = yes => ifHasIn (yes) (noop)
 
+export const ifBind = yes => no => ([o, k]) => {
+    const bound = bindTry (o) (k)
+    return ok (bound) ? yes (bound) : no ()
+}
+
+export const whenBind = yes => ifBind (yes) (noop)
+
+
+
 export default {
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,
     ifPredicate, whenPredicate,
     ifHas, ifHasIn,
     whenHas, whenHasIn,
+    ifBind, whenBind,
 }

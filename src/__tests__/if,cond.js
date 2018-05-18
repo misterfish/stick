@@ -1266,6 +1266,70 @@ describe('if/when has/hasIn', function(){
     });
   });
 });
+describe('ifBind, whenBind', function(){
+  var base, extended, ref$;
+  base = {
+    water: 'wet',
+    nothing: void 8,
+    me: 'ik',
+    douse: function(level){
+      return this.water + ("ness level " + level);
+    }
+  };
+  extended = (ref$ = Object.create(base), ref$.baby = 'feet', ref$);
+  describe('ifBind', function(){
+    test('base', function(){
+      return expectToEqual('wetness level 10')(
+      ifBind(function(bound){
+        return bound(10);
+      }, function(){
+        return 42;
+      })(
+      [base, 'douse']));
+    });
+    test('extended', function(){
+      return expectToEqual('wetness level 10')(
+      ifBind(function(bound){
+        return bound(10);
+      }, function(){
+        return 42;
+      })(
+      [extended, 'douse']));
+    });
+    return test('no', function(){
+      return expectToEqual(42)(
+      ifBind(function(){
+        return 41;
+      }, function(){
+        return 42;
+      })(
+      [base, 'nothing']));
+    });
+  });
+  return describe('whenBind', function(){
+    test('base', function(){
+      return expectToEqual('wetness level 10')(
+      whenBind(function(bound){
+        return bound(10);
+      })(
+      [base, 'douse']));
+    });
+    test('extended', function(){
+      return expectToEqual('wetness level 10')(
+      whenBind(function(bound){
+        return bound(10);
+      })(
+      [extended, 'douse']));
+    });
+    return test('no', function(){
+      return expectToEqual(void 8)(
+      whenBind(function(){
+        return 41;
+      })(
+      [base, 'nothing']));
+    });
+  });
+});
 function curry$(f, bound){
   var context,
   _curry = function(args) {

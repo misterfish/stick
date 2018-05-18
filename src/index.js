@@ -184,8 +184,7 @@ export const whenTruthy    = whenYes
 export const ifFalsey      = ifNo
 export const whenFalsey    = whenNo
 
-// whenHas, whenHasIn, whenEmpty, whenFunction: -> user-space.
-// check if whenHasis still useful want array xxx
+// whenEmpty, whenFunction: -> user-space.
 
 // --- these have a different calling convention, so their names are a bit misleading based on the
 // above pattern.
@@ -194,12 +193,8 @@ export const whenHas   = _recurry (2) (manual.whenHas)
 export const ifHasIn   = _recurry (3) (manual.ifHasIn)
 export const whenHasIn = _recurry (2) (manual.whenHasIn)
 
-// @todo test
-export const ifBind = curry ((yes, no, [o, k]) => laat (
-    [k | bindTry (o)],
-    ifOk (yes, no),
-))
-export const whenBind = yes => spec => spec | ifBind (yes) (noop)
+export const ifBind    = _recurry (3) (manual.ifBind)
+export const whenBind  = _recurry (2) (manual.whenBind)
 
 
 // --- @deprecated.

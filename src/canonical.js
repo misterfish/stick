@@ -39,3 +39,10 @@ export const whenHas = curry ((yes, spec) => spec | ifHas (yes) (noop))
 export const ifHasIn = curry ((yes, no, [o, k]) => o | hasIn (k) ? yes (o[k], o, k) : no (o, k))
 export const whenHasIn = curry ((yes, spec) => spec | ifHasIn (yes) (noop))
 
+export const ifBind = curry ((yes, no, [o, k]) => lets (
+    _ => k | bindTry (o),
+    ifOk (yes, no),
+))
+
+export const whenBind = yes => ifBind (yes) (noop)
+

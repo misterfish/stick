@@ -968,3 +968,39 @@ describe 'if/when has/hasIn' ->
             [extended, 'baby'] |> when-has-in do
                 (v, o, k) -> 41
             |> expect-to-equal 41
+
+describe 'ifBind, whenBind' ->
+    base =
+        water: 'wet' nothing: void me: 'ik'
+        douse: (level) -> @water + "ness level #level"
+    extended = (Object.create base) <<<
+        baby: 'feet'
+    describe 'ifBind' ->
+        test 'base' ->
+            [base, 'douse'] |> if-bind do
+                (bound) -> bound 10
+                -> 42
+            |> expect-to-equal 'wetness level 10'
+        test 'extended' ->
+            [extended, 'douse'] |> if-bind do
+                (bound) -> bound 10
+                -> 42
+            |> expect-to-equal 'wetness level 10'
+        test 'no' ->
+            [base, 'nothing'] |> if-bind do
+                -> 41
+                -> 42
+            |> expect-to-equal 42
+    describe 'whenBind' ->
+        test 'base' ->
+            [base, 'douse'] |> when-bind do
+                (bound) -> bound 10
+            |> expect-to-equal 'wetness level 10'
+        test 'extended' ->
+            [extended, 'douse'] |> when-bind do
+                (bound) -> bound 10
+            |> expect-to-equal 'wetness level 10'
+        test 'no' ->
+            [base, 'nothing'] |> when-bind do
+                -> 41
+            |> expect-to-equal void

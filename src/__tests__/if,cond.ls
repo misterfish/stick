@@ -17,6 +17,10 @@
 } = require './common'
 
 {
+    ok, not-ok,
+    is-true, is-false,
+    is-yes, is-no, is-truthy, is-falsey,
+
     if-predicate, when-predicate, if-predicate__,
 
     if-ok, when-ok,
@@ -810,6 +814,55 @@ describe 'cond non-strict' ->
             ]
         ]
 
+describe 'is/isNot' ->
+    test 'ok' ->
+        true |> ok |> expect-to-equal true
+        false |> ok |> expect-to-equal true
+        void |> ok |> expect-to-equal false
+        null |> ok |> expect-to-equal false
+    test 'notOk' ->
+        true |> not-ok |> expect-to-equal false
+        false |> not-ok |> expect-to-equal false
+        void |> not-ok |> expect-to-equal true
+        null |> not-ok |> expect-to-equal true
+    test 'isTrue' ->
+        true |> is-true |> expect-to-equal true
+        1 |> is-true |> expect-to-equal false
+        0 |> is-true |> expect-to-equal false
+        '1' |> is-true |> expect-to-equal false
+        false |> is-true |> expect-to-equal false
+        void |> is-true |> expect-to-equal false
+        null |> is-true |> expect-to-equal false
+    test 'isFalse' ->
+        false |> is-false |> expect-to-equal true
+        true |> is-false |> expect-to-equal false
+        0 |> is-false |> expect-to-equal false
+        1 |> is-false |> expect-to-equal false
+        '1' |> is-false |> expect-to-equal false
+        void |> is-false |> expect-to-equal false
+        null |> is-false |> expect-to-equal false
+    test 'isYes' ->
+        true |> is-yes |> expect-to-equal true
+        1 |> is-yes |> expect-to-equal true
+        '1' |> is-yes |> expect-to-equal true
+        '2' |> is-yes |> expect-to-equal true
+        '0' |> is-yes |> expect-to-equal true
+        '' |> is-yes |> expect-to-equal false
+        0 |> is-yes |> expect-to-equal false
+        false |> is-yes |> expect-to-equal false
+        void |> is-yes |> expect-to-equal false
+        null |> is-yes |> expect-to-equal false
+    test 'isNo' ->
+        true |> is-no |> expect-to-equal false
+        1 |> is-no |> expect-to-equal false
+        '1' |> is-no |> expect-to-equal false
+        '2' |> is-no |> expect-to-equal false
+        '0' |> is-no |> expect-to-equal false
+        '' |> is-no |> expect-to-equal true
+        0 |> is-no |> expect-to-equal true
+        false |> is-no |> expect-to-equal true
+        void |> is-no |> expect-to-equal true
+        null |> is-no |> expect-to-equal true
 
 
 

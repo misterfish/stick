@@ -157,6 +157,13 @@ export const sideN = _recurry (3) (manual.sideN)
 // false, it behaves differently than ifPredicate (pred >> not), which is also confusing.
 //
 
+export const isTrue = true | eq
+// --- exactly false, so do not compose with `not`.
+export const isFalse = false | eq
+export const isYes = Boolean
+// --- falsey, so compose with `not` ok.
+export const isNo = isYes >> not
+
 export const ifPredicate = curry ((f, yes, no, x) => f (x) === true ? yes (x) : no (x))
 export const whenPredicate = curry ((f, yes, x) => x | ifPredicate (f) (yes) (noop))
 
@@ -166,36 +173,29 @@ export const whenOk = ok | whenPredicate
 export const ifNotOk = notOk | ifPredicate
 export const whenNotOk = notOk | whenPredicate
 
-export const ifTrue = true | eq | ifPredicate
-export const whenTrue = true | eq | whenPredicate
+export const ifTrue = isTrue | ifPredicate
+export const whenTrue = isTrue | whenPredicate
 
-export const ifFalse = false | eq | ifPredicate
-export const whenFalse = false | eq | whenPredicate
+export const ifFalse = isFalse | ifPredicate
+export const whenFalse = isFalse | whenPredicate
 
-export const ifYes = Boolean | ifPredicate
-export const whenYes = Boolean | whenPredicate
-export const ifNo = (Boolean >> not) | ifPredicate
-export const whenNo = (Boolean >> not) | whenPredicate
+export const ifYes = isYes | ifPredicate
+export const whenYes = isYes | whenPredicate
+export const ifNo = isNo | ifPredicate
+export const whenNo = isNo | whenPredicate
 
 export const ifTruthy = ifYes
 export const whenTruthy = whenYes
 export const ifFalsey = ifNo
 export const whenFalsey = whenNo
 
-export const ifFunction = curry ((yes, no, x) => isFunction (x) ? yes (x) : no (x))
-export const whenFunction = curry ((yes, x) => x | ifFunction (yes) (noop))
-
-// whenEmpty, whenFunction: -> user-space.
+// whenHas, whenHasIn, whenEmpty, whenFunction: -> user-space.
+// check if whenHasis still useful want array xxx
 
 // @todo test
 export const ifHas = curry ((yes, no, [o, k]) => o | has (k) ? yes (o[k], o, k) : no (o, k))
 export const whenHas = curry ((yes, spec) => spec | ifHas (yes) (noop))
 
-// what about is versions?
-//export const isTrue = eq (true)
-//export const isFalse = eq (false)
-
-// @todo test
 export const ifHasIn = curry ((yes, no, [o, k]) => o | hasIn (k) ? yes (o[k], o, k) : no (o, k))
 export const whenHasIn = curry ((yes, spec) => spec | ifHasIn (yes) (noop))
 
@@ -322,30 +322,6 @@ export const ifEmpty__ = (xs, yes, no = noop) => xs | ifEmpty (yes) (no)
 
 export const cascade = (val, ...fxs) =>
     fxs | reduce ((a, b) => b (a), val)
-
-// ------ bind
-
-// would be nice to bind with an arg, e.g. exit with a code.
-//const exit = 'exit' | bind (process)
-
-// xxx bind and invoke
-// bind >> invoke
-// xxx bind the other way around
-// o | bind ('funcname')
-
-// xxx cursor | bind ('theta')
-// xxx 'theta' | bindOn (cursor)
-
-// --- dies if o[prop] is not a function.
-export const bind = curry ((o, prop) => o[prop].bind (o))
-
-// --- returns undefined if o[prop] is not a function.
-export const bindTry = curry ((o, prop) => o[prop]
-    | whenFunction (() => bind (o, prop)))
-
-// --- returns a function representing the 'result' of the bind: doesn't actually try to bind until
-// that function is invoked.
-export const bindLate = curry ((o, key) => (...args) => o[key] (...args))
 
 // --------- data.
 
@@ -1047,6 +1023,36 @@ export const isFunction = isType ('Function')
 // @test
 // --- assumed to be a Number.
 export const isInteger = x => x === Math.floor (x)
+
+
+
+// ------ bind
+
+// would be nice to bind with an arg, e.g. exit with a code.
+//const exit = 'exit' | bind (process)
+
+// xxx bind and invoke
+// bind >> invoke
+// xxx bind the other way around
+// o | bind ('funcname')
+
+// xxx cursor | bind ('theta')
+// xxx 'theta' | bindOn (cursor)
+
+// --- dies if o[prop] is not a function.
+export const bind = curry ((o, prop) => o[prop].bind (o))
+
+const whenFunction = isFunction | whenPredicate
+// --- returns undefined if o[prop] is not a function.
+export const bindTry = curry ((o, prop) => o[prop]
+    | whenFunction (() => bind (o, prop)))
+
+// --- returns a function representing the 'result' of the bind: doesn't actually try to bind until
+// that function is invoked.
+export const bindLate = curry ((o, key) => (...args) => o[key] (...args))
+
+
+
 
 // --- map indexed: not sure about exporting these.
 export const mapX = addIndex (map)

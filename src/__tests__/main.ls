@@ -17,8 +17,6 @@
 } = require './common'
 
 {
-    ok,
-
     zip-all,
 
     bind, bind-late, bind-try,

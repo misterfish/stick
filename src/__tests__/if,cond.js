@@ -1,8 +1,8 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, cond, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, ok, notOk, isTrue, isFalse, isYes, isNo, isTruthy, isFalsey, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, cond, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, id = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, cond = ref$.cond, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__;
+ref$ = require('../index'), ok = ref$.ok, notOk = ref$.notOk, isTrue = ref$.isTrue, isFalse = ref$.isFalse, isYes = ref$.isYes, isNo = ref$.isNo, isTruthy = ref$.isTruthy, isFalsey = ref$.isFalsey, ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, cond = ref$.cond, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__;
 doTests = curry$(function(describeSpec, tests){
   return each(function(testSpec){
     var numArms, ref$, ref1$, theTest;
@@ -941,6 +941,146 @@ describe('cond non-strict', function(){
         }
       ]
     ]);
+  });
+});
+describe('is/isNot', function(){
+  test('ok', function(){
+    expectToEqual(true)(
+    ok(
+    true));
+    expectToEqual(true)(
+    ok(
+    false));
+    expectToEqual(false)(
+    ok(
+    void 8));
+    return expectToEqual(false)(
+    ok(
+    null));
+  });
+  test('notOk', function(){
+    expectToEqual(false)(
+    notOk(
+    true));
+    expectToEqual(false)(
+    notOk(
+    false));
+    expectToEqual(true)(
+    notOk(
+    void 8));
+    return expectToEqual(true)(
+    notOk(
+    null));
+  });
+  test('isTrue', function(){
+    expectToEqual(true)(
+    isTrue(
+    true));
+    expectToEqual(false)(
+    isTrue(
+    1));
+    expectToEqual(false)(
+    isTrue(
+    0));
+    expectToEqual(false)(
+    isTrue(
+    '1'));
+    expectToEqual(false)(
+    isTrue(
+    false));
+    expectToEqual(false)(
+    isTrue(
+    void 8));
+    return expectToEqual(false)(
+    isTrue(
+    null));
+  });
+  test('isFalse', function(){
+    expectToEqual(true)(
+    isFalse(
+    false));
+    expectToEqual(false)(
+    isFalse(
+    true));
+    expectToEqual(false)(
+    isFalse(
+    0));
+    expectToEqual(false)(
+    isFalse(
+    1));
+    expectToEqual(false)(
+    isFalse(
+    '1'));
+    expectToEqual(false)(
+    isFalse(
+    void 8));
+    return expectToEqual(false)(
+    isFalse(
+    null));
+  });
+  test('isYes', function(){
+    expectToEqual(true)(
+    isYes(
+    true));
+    expectToEqual(true)(
+    isYes(
+    1));
+    expectToEqual(true)(
+    isYes(
+    '1'));
+    expectToEqual(true)(
+    isYes(
+    '2'));
+    expectToEqual(true)(
+    isYes(
+    '0'));
+    expectToEqual(false)(
+    isYes(
+    ''));
+    expectToEqual(false)(
+    isYes(
+    0));
+    expectToEqual(false)(
+    isYes(
+    false));
+    expectToEqual(false)(
+    isYes(
+    void 8));
+    return expectToEqual(false)(
+    isYes(
+    null));
+  });
+  return test('isNo', function(){
+    expectToEqual(false)(
+    isNo(
+    true));
+    expectToEqual(false)(
+    isNo(
+    1));
+    expectToEqual(false)(
+    isNo(
+    '1'));
+    expectToEqual(false)(
+    isNo(
+    '2'));
+    expectToEqual(false)(
+    isNo(
+    '0'));
+    expectToEqual(true)(
+    isNo(
+    ''));
+    expectToEqual(true)(
+    isNo(
+    0));
+    expectToEqual(true)(
+    isNo(
+    false));
+    expectToEqual(true)(
+    isNo(
+    void 8));
+    return expectToEqual(true)(
+    isNo(
+    null));
   });
 });
 function curry$(f, bound){

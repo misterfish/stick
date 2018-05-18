@@ -8,6 +8,7 @@ import {
 
 import {
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
+    isFunction,
 } from './index'
 
 export const side  = (prop) => tap (dot (prop))
@@ -39,6 +40,16 @@ export const whenHas = curry ((yes, spec) => spec | ifHas (yes) (noop))
 export const ifHasIn = curry ((yes, no, [o, k]) => o | hasIn (k) ? yes (o[k], o, k) : no (o, k))
 export const whenHasIn = curry ((yes, spec) => spec | ifHasIn (yes) (noop))
 
+
+const whenFunction = isFunction | whenPredicate
+
+// --- dies if o[prop] is not a function.
+export const bind = curry ((o, prop) => o [prop].bind (o))
+
+// --- returns undefined if o[prop] is not a function.
+export const bindTry = curry ((o, prop) => o[prop]
+    | whenFunction (() => bind (o, prop)))
+
 export const ifBind = curry ((yes, no, [o, k]) => lets (
     _ => k | bindTry (o),
     ifOk (yes, no),
@@ -46,3 +57,17 @@ export const ifBind = curry ((yes, no, [o, k]) => lets (
 
 export const whenBind = yes => ifBind (yes) (noop)
 
+export const _cond = (withTarget, blocks, target) => {
+    let result
+    for (const [test, exec] of blocks) {
+        // --- null or undefined test ('otherwise') matches immediately
+        if (test | notOk) return withTarget ? exec (target) : exec ()
+
+        const result = withTarget ? test (target) : test ()
+        // @todo test.
+        if (result) return withTarget ? exec (target, result) : exec (result)
+    }
+}
+
+export const condo = blocks => _cond (false, blocks)
+export const condO = curry ((blocks, target) => _cond (true, blocks, target))

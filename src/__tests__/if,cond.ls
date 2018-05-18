@@ -36,6 +36,7 @@
     if-bind, when-bind,
 
     cond,
+    condo, cond-o, guard, guard-a, otherwise,
 
     # --- @deprecated
     if-ok__, if-true__, if-false__,
@@ -716,6 +717,101 @@ describe 'ifNo__' ->
     do-tests describe-spec, tests
 
 describe 'cond' ->
+    describe 'condo' ->
+        describe 'raw' ->
+            test 'truthy' ->
+                condo do
+                    [(-> 3 == 4),     -> 'twilight zone']
+                    [(-> 3 == 5),     -> 'even stranger']
+                    [(-> 'ok'), (str) -> str]
+                    [null             -> 'error']
+                |> expect-to-equal 'ok'
+            test 'fallthrough' ->
+                condo do
+                    [(-> 3 == 4),     -> 'twilight zone']
+                    [(-> 3 == 5),     -> 'even stranger']
+                |> expect-to-equal void
+            test 'null test' ->
+                got-null = [false]
+                condo do
+                    [(-> 3 == 4),     -> 'twilight zone']
+                    [(-> 3 == 5),     -> 'even stranger']
+                    [null         (nul) ->
+                        if nul == null then got-null.0 = true
+                        'ok'
+                    ]
+                |> expect-to-equal 'ok'
+                got-null.0 |> expect-to-equal true
+        describe 'idiomatic' ->
+            test 'truthy' ->
+                condo do
+                    (-> 3 == 4) |> (guard -> 'twilight zone')
+                    (-> 3 == 5) |> (guard -> 'even stranger')
+                    (-> 'ok')   |> (guard (str) -> str)
+                    otherwise   |> (guard -> 'error')
+                |> expect-to-equal 'ok'
+            test 'fallthrough' ->
+                condo do
+                    (-> 3 == 4) |> (guard -> 'twilight zone')
+                    (-> 3 == 5) |> (guard -> 'even stranger')
+                |> expect-to-equal void
+            test 'otherwise' ->
+                condo do
+                    (-> 3 == 4) |> (guard -> 'twilight zone')
+                    (-> 3 == 5) |> (guard -> 'even stranger')
+                    otherwise   |> (guard -> 'ok')
+                |> expect-to-equal 'ok'
+
+    describe 'condO' ->
+        describe 'raw' ->
+            test 'truthy' ->
+                3 |> cond-o [
+                    [(== 5),       -> 'twilight zone']
+                    [(== 4),       -> 'even stranger']
+                    [odd,          (+ 2)]
+                    [null          -> 'error']
+                ]
+                |> expect-to-equal 5
+            test 'fallthrough' ->
+                3 |> cond-o [
+                    [(== 5),       -> 'twilight zone']
+                    [(== 4),       -> 'even stranger']
+                ]
+                |> expect-to-equal void
+            test 'null test' ->
+                3 |> cond-o [
+                    [(-> 3 == 4),     -> 'twilight zone']
+                    [(-> 3 == 5),     -> 'even stranger']
+                    [null             (+ 5)]
+                ]
+                |> expect-to-equal 8
+        describe 'idiomatic' ->
+            test 'truthy' ->
+                3 |> cond-o [
+                    (== 4)    |> (guard -> 'twilight zone')
+                    (== 5)    |> (guard -> 'even stranger')
+                    odd       |> (guard (+ 9))
+                    otherwise |> (guard -> 'error')
+                ]
+                |> expect-to-equal 12
+            test 'fallthrough' ->
+                3 |> cond-o [
+                    (== 4)    |> (guard -> 'twilight zone')
+                    (== 5)    |> (guard -> 'even stranger')
+                    even      |> (guard (+ 9))
+                ]
+                |> expect-to-equal void
+            test 'otherwise' ->
+                3 |> cond-o [
+                    (== 4)    |> (guard -> 'twilight zone')
+                    (== 5)    |> (guard -> 'even stranger')
+                    otherwise |> (guard -> 'ok')
+                ]
+                |> expect-to-equal 'ok'
+
+
+
+
     test 1 ->
         'lions' |> cond [
             [
@@ -782,40 +878,6 @@ describe 'cond' ->
             ]
         ]
         |> expect-to-equal 'no match on beetles'
-
-describe 'cond strict' ->
-    xtest 1 ->
-        cond-strict [
-            [
-                1 + 1 == 3
-                -> 'hands'
-            ]
-            [
-                1 + 1 == 2
-                -> 'nails'
-            ]
-            [
-                void
-                -> 'no match'
-            ]
-        ]
-
-describe 'cond non-strict' ->
-    xtest 1 ->
-        cond-non-strict [
-            [
-                -> 1 + 1 == 3
-                -> 'hands'
-            ]
-            [
-                -> 1 + 1 == 2
-                -> 'nails'
-            ]
-            [
-                void
-                -> 'no match'
-            ]
-        ]
 
 describe 'is/isNot' ->
     test 'ok' ->

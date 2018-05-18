@@ -212,44 +212,8 @@ export const ifBind__ = (spec, yes, no = noop) => spec | ifBind (yes) (no)
 
 
 
-// --- last one always? undef if none?
-// tests for truthINEss, so it acts like if().
-// export const cond = curry ((blocks, target) => {
-//     let result
-//     for (const [test, exec] of blocks) {
-//         if (!ok (test)) return exec (target)
-//
-//         const result = test (target)
-// 		// @todo test.
-//         // this order for symmetry with null case.
-//         if (result) return exec (target, result)
-//     }
-// })
-
-// --- can't funnel through ramda's cond, because they miss the 'otherwise' behavior.
-const _cond = (withTarget, blocks, target) => {
-    let result
-    for (const [a, b] of blocks) {
-        const [test, exec] = b | ifOk (
-            () => [a, b],
-            () => [null, a],
-        )
-
-        // --- null or undefined test ('otherwise') matches immediately
-        if (test | notOk) return withTarget ? exec (target) : exec ()
-
-        const result = withTarget ? test (target) : test ()
-        // @todo test.
-        if (result) return withTarget ? exec (target, result) : exec (result)
-    }
-}
-
-// --- no target, but predicate functions should still be functions and not expressions, to keep it
-// lazy.
-// xxx ditch brackets!
-export const condo = blocks => _cond (false, blocks)
-
-export const condO = curry ((blocks, target) => _cond (true, blocks, target))
+export const condo = manual.condo
+export const condO = _recurry (2) (manual.condO)
 export const cond = condO
 
 // ------ exceptions.
@@ -1002,11 +966,13 @@ const Cat = (() => {
 //)
 
 // --- wants upper case, e.g. output of toString.
-export const isType = curry ((t, x) => x
+export const CANONisType = curry ((t, x) => x
     | callUnder ({}.toString)
     | dot2 ('slice') (8, -1)
     | equals (t)
 )
+
+export const isType = _recurry (2) (manual.isType)
 export const isArray = isType ('Array')
 export const isFunction = isType ('Function')
 
@@ -1030,12 +996,8 @@ export const isInteger = x => x === Math.floor (x)
 // xxx 'theta' | bindOn (cursor)
 
 // --- dies if o[prop] is not a function.
-export const bind = curry ((o, prop) => o[prop].bind (o))
-
-const whenFunction = isFunction | whenPredicate
-// --- returns undefined if o[prop] is not a function.
-export const bindTry = curry ((o, prop) => o[prop]
-    | whenFunction (() => bind (o, prop)))
+export const bind = _recurry (2) (manual.bind)
+export const bindTry = _recurry (2) (manual.bindTry)
 
 // --- returns a function representing the 'result' of the bind: doesn't actually try to bind until
 // that function is invoked.

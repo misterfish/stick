@@ -1,8 +1,8 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, ok, notOk, isTrue, isFalse, isYes, isNo, isTruthy, isFalsey, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, ifHas, whenHas, ifHasIn, whenHasIn, ifBind, whenBind, cond, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, ok, notOk, isTrue, isFalse, isYes, isNo, isTruthy, isFalsey, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, ifHas, whenHas, ifHasIn, whenHasIn, ifBind, whenBind, cond, condo, condO, guard, guardA, otherwise, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, id = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), ok = ref$.ok, notOk = ref$.notOk, isTrue = ref$.isTrue, isFalse = ref$.isFalse, isYes = ref$.isYes, isNo = ref$.isNo, isTruthy = ref$.isTruthy, isFalsey = ref$.isFalsey, ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, ifHas = ref$.ifHas, whenHas = ref$.whenHas, ifHasIn = ref$.ifHasIn, whenHasIn = ref$.whenHasIn, ifBind = ref$.ifBind, whenBind = ref$.whenBind, cond = ref$.cond, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__;
+ref$ = require('../index'), ok = ref$.ok, notOk = ref$.notOk, isTrue = ref$.isTrue, isFalse = ref$.isFalse, isYes = ref$.isYes, isNo = ref$.isNo, isTruthy = ref$.isTruthy, isFalsey = ref$.isFalsey, ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, ifHas = ref$.ifHas, whenHas = ref$.whenHas, ifHasIn = ref$.ifHasIn, whenHasIn = ref$.whenHasIn, ifBind = ref$.ifBind, whenBind = ref$.whenBind, cond = ref$.cond, condo = ref$.condo, condO = ref$.condO, guard = ref$.guard, guardA = ref$.guardA, otherwise = ref$.otherwise, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__;
 doTests = curry$(function(describeSpec, tests){
   return each(function(testSpec){
     var numArms, ref$, ref1$, theTest;
@@ -807,6 +807,278 @@ describe('ifNo__', function(){
   return doTests(describeSpec, tests);
 });
 describe('cond', function(){
+  describe('condo', function(){
+    describe('raw', function(){
+      test('truthy', function(){
+        return expectToEqual('ok')(
+        condo([
+          function(){
+            return 3 === 4;
+          }, function(){
+            return 'twilight zone';
+          }
+        ], [
+          function(){
+            return 3 === 5;
+          }, function(){
+            return 'even stranger';
+          }
+        ], [
+          function(){
+            return 'ok';
+          }, function(str){
+            return str;
+          }
+        ], [
+          null, function(){
+            return 'error';
+          }
+        ]));
+      });
+      test('fallthrough', function(){
+        return expectToEqual(void 8)(
+        condo([
+          function(){
+            return 3 === 4;
+          }, function(){
+            return 'twilight zone';
+          }
+        ], [
+          function(){
+            return 3 === 5;
+          }, function(){
+            return 'even stranger';
+          }
+        ]));
+      });
+      return test('null test', function(){
+        var gotNull;
+        gotNull = [false];
+        expectToEqual('ok')(
+        condo([
+          function(){
+            return 3 === 4;
+          }, function(){
+            return 'twilight zone';
+          }
+        ], [
+          function(){
+            return 3 === 5;
+          }, function(){
+            return 'even stranger';
+          }
+        ], [
+          null, function(nul){
+            if (nul === null) {
+              gotNull[0] = true;
+            }
+            return 'ok';
+          }
+        ]));
+        return expectToEqual(true)(
+        gotNull[0]);
+      });
+    });
+    return describe('idiomatic', function(){
+      test('truthy', function(){
+        return expectToEqual('ok')(
+        condo(guard(function(){
+          return 'twilight zone';
+        })(
+        function(){
+          return 3 === 4;
+        }), guard(function(){
+          return 'even stranger';
+        })(
+        function(){
+          return 3 === 5;
+        }), guard(function(str){
+          return str;
+        })(
+        function(){
+          return 'ok';
+        }), guard(function(){
+          return 'error';
+        })(
+        otherwise)));
+      });
+      test('fallthrough', function(){
+        return expectToEqual(void 8)(
+        condo(guard(function(){
+          return 'twilight zone';
+        })(
+        function(){
+          return 3 === 4;
+        }), guard(function(){
+          return 'even stranger';
+        })(
+        function(){
+          return 3 === 5;
+        })));
+      });
+      return test('otherwise', function(){
+        return expectToEqual('ok')(
+        condo(guard(function(){
+          return 'twilight zone';
+        })(
+        function(){
+          return 3 === 4;
+        }), guard(function(){
+          return 'even stranger';
+        })(
+        function(){
+          return 3 === 5;
+        }), guard(function(){
+          return 'ok';
+        })(
+        otherwise)));
+      });
+    });
+  });
+  describe('condO', function(){
+    describe('raw', function(){
+      test('truthy', function(){
+        var this$ = this;
+        return expectToEqual(5)(
+        condO([
+          [
+            (function(it){
+              return it === 5;
+            }), function(){
+              return 'twilight zone';
+            }
+          ], [
+            (function(it){
+              return it === 4;
+            }), function(){
+              return 'even stranger';
+            }
+          ], [
+            odd, (function(it){
+              return it + 2;
+            })
+          ], [
+            null, function(){
+              return 'error';
+            }
+          ]
+        ])(
+        3));
+      });
+      test('fallthrough', function(){
+        var this$ = this;
+        return expectToEqual(void 8)(
+        condO([
+          [
+            (function(it){
+              return it === 5;
+            }), function(){
+              return 'twilight zone';
+            }
+          ], [
+            (function(it){
+              return it === 4;
+            }), function(){
+              return 'even stranger';
+            }
+          ]
+        ])(
+        3));
+      });
+      return test('null test', function(){
+        var this$ = this;
+        return expectToEqual(8)(
+        condO([
+          [
+            function(){
+              return 3 === 4;
+            }, function(){
+              return 'twilight zone';
+            }
+          ], [
+            function(){
+              return 3 === 5;
+            }, function(){
+              return 'even stranger';
+            }
+          ], [
+            null, (function(it){
+              return it + 5;
+            })
+          ]
+        ])(
+        3));
+      });
+    });
+    return describe('idiomatic', function(){
+      test('truthy', function(){
+        var this$ = this;
+        return expectToEqual(12)(
+        condO([
+          guard(function(){
+            return 'twilight zone';
+          })(
+          (function(it){
+            return it === 4;
+          })), guard(function(){
+            return 'even stranger';
+          })(
+          (function(it){
+            return it === 5;
+          })), guard((function(it){
+            return it + 9;
+          }))(
+          odd), guard(function(){
+            return 'error';
+          })(
+          otherwise)
+        ])(
+        3));
+      });
+      test('fallthrough', function(){
+        var this$ = this;
+        return expectToEqual(void 8)(
+        condO([
+          guard(function(){
+            return 'twilight zone';
+          })(
+          (function(it){
+            return it === 4;
+          })), guard(function(){
+            return 'even stranger';
+          })(
+          (function(it){
+            return it === 5;
+          })), guard((function(it){
+            return it + 9;
+          }))(
+          even)
+        ])(
+        3));
+      });
+      return test('otherwise', function(){
+        var this$ = this;
+        return expectToEqual('ok')(
+        condO([
+          guard(function(){
+            return 'twilight zone';
+          })(
+          (function(it){
+            return it === 4;
+          })), guard(function(){
+            return 'even stranger';
+          })(
+          (function(it){
+            return it === 5;
+          })), guard(function(){
+            return 'ok';
+          })(
+          otherwise)
+        ])(
+        3));
+      });
+    });
+  });
   test(1, function(){
     return expectToEqual('feet')(
     cond([
@@ -899,48 +1171,6 @@ describe('cond', function(){
       ]
     ])(
     'beetles'));
-  });
-});
-describe('cond strict', function(){
-  return xtest(1, function(){
-    return condStrict([
-      [
-        1 + 1 === 3, function(){
-          return 'hands';
-        }
-      ], [
-        1 + 1 === 2, function(){
-          return 'nails';
-        }
-      ], [
-        void 8, function(){
-          return 'no match';
-        }
-      ]
-    ]);
-  });
-});
-describe('cond non-strict', function(){
-  return xtest(1, function(){
-    return condNonStrict([
-      [
-        function(){
-          return 1 + 1 === 3;
-        }, function(){
-          return 'hands';
-        }
-      ], [
-        function(){
-          return 1 + 1 === 2;
-        }, function(){
-          return 'nails';
-        }
-      ], [
-        void 8, function(){
-          return 'no match';
-        }
-      ]
-    ]);
   });
 });
 describe('is/isNot', function(){

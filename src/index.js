@@ -14,9 +14,38 @@
 //
 // functions with To and From endings have no aliases.
 
-defineBinaryOperator ('|', (a, b) => b (a))
-defineBinaryOperator ('>>', curry ((a, b) => compose (b, a)))
-defineBinaryOperator ('<<', curry ((a, b) => compose (a, b)))
+defineBinaryOperator ('|',  (...args) => pipe         (...args))
+defineBinaryOperator ('<<', (...args) => compose      (...args))
+defineBinaryOperator ('>>', (...args) => composeRight (...args))
+
+export const pipe         = (a, b)    => b (a)
+export const composeRight = (a, b)    => (...args) => b (a (...args))
+export const compose      = (a, b)    => (...args) => a (b (...args))
+
+// --- check compose too ... xxx
+
+// --- the resulting function is not curried.
+// note that this function does not have a well-defined arity.
+
+export const roll = (f) => (...args) => {
+  let g = f
+  for (const i of args) g = g (i)
+  return g
+}
+
+// const r = (a => b => c => a * b * c) | recurry
+// r (1, 2, 3) = roll (orig) (1, 2, 3)
+// r (1, 2)    = roll (orig) (1, 2)
+// r (1) = roll (orig) (1)
+// r (1) (2) (3)
+// r ()
+
+export const recurry = (n) => (f) => (...args) => {
+    const rolled = roll (f) (...args)
+    const dn = n - args.length
+    return dn <= 1 ? rolled
+                   : recurry (dn) (rolled)
+}
 
 import {
     splitAt,
@@ -28,7 +57,7 @@ import {
     splitEvery,
     forEach as each, forEachObjIndexed as eachObj, complement, times as rTimes,
     range as rRange, isNil, addIndex, take, equals, mapAccum,
-    repeat as rRepeat, concat as rConcat, append as rAppend, compose,
+    repeat as rRepeat, concat as rConcat, append as rAppend, compose as rCompose,
     merge as rMerge, mergeAll as rMergeAll,
     zip,
     gt as rGt, gte as rGte, lt as rLt, lte as rLte,

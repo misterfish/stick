@@ -105,17 +105,7 @@ export const side2 = _recurry (4) (manual.side2)
 export const side3 = _recurry (5) (manual.side3)
 export const side4 = _recurry (6) (manual.side4)
 export const side5 = _recurry (7) (manual.side5)
-export const sideN = curry (
-    (prop, vs) => tap (dotN (prop) (vs))
-)
-
-// deprecated
-// export const dotM = dot
-// export const dot1M = dot1
-// export const dot2M = dot2
-// export const dot3M = dot3
-// export const dotNM = dotN
-// export const dot4M = dot3
+export const sideN = _recurry (3) (manual.sideN)
 
 // __ = not data-last, not curried
 

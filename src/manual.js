@@ -31,7 +31,9 @@ export const side4 = prop => val1 => val2 => val3 => val4 =>
 export const side5 = prop => val1 => val2 => val3 => val4 => val5 =>
     o => (dot5 (prop) (val1) (val2) (val3) (val4) (val5)
     (o), o)
-let   sideN
+
+export const sideN = prop => vs =>
+    o => (dotN (prop) (vs) (o), o)
 
 
 export default {

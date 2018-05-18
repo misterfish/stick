@@ -287,7 +287,7 @@ describe('side*', function(){
       log.mock.calls);
     });
   });
-  describe('tapDotN', function(){
+  describe('sideN', function(){
     test('array', function(){
       return expectToEqual([1, 2, 3, 4])(
       sideN('concat', [1, 2, 3])(
@@ -301,7 +301,7 @@ describe('side*', function(){
       log.mock.calls);
     });
   });
-  describe('tapDot combine', function(){
+  return describe('side combine', function(){
     return test('array', function(){
       return expectToEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])(
       side1('unshift', 1)(
@@ -311,25 +311,5 @@ describe('side*', function(){
       side1('push', 5)(
       [2, 3, 4]))))));
     });
-  });
-  describe('tapDot', function(){
-    test('array', function(){});
-    return test('user-obj', function(){});
-  });
-  describe('tapDot', function(){
-    test('array', function(){});
-    return test('user-obj', function(){});
-  });
-  describe('tapDot', function(){
-    test('array', function(){});
-    return test('user-obj', function(){});
-  });
-  describe('tapDot', function(){
-    test('array', function(){});
-    return test('user-obj', function(){});
-  });
-  return describe('tapDot', function(){
-    test('array', function(){});
-    return test('user-obj', function(){});
   });
 });

@@ -228,7 +228,7 @@ describe 'side*' ->
 
             log.mock.calls
             |> expect-to-equal [['ranting hier/daar,nergens+ergens--overal']]
-    describe 'tapDotN' ->
+    describe 'sideN' ->
         test 'array' ->
             [1 to 4]
             |> side-n 'concat' [1 2 3]
@@ -240,7 +240,7 @@ describe 'side*' ->
 
             log.mock.calls
             |> expect-to-equal [['hello!goodbye!hello']]
-    describe 'tapDot combine' ->
+    describe 'side combine' ->
         test 'array' ->
             [2, 3, 4]
             |> side1 'push' 5
@@ -249,18 +249,3 @@ describe 'side*' ->
             |> side-n 'push' [11 12]
             |> side1 'unshift' 1
             |> expect-to-equal [1 to 12]
-    describe 'tapDot' ->
-        test 'array' ->
-        test 'user-obj' ->
-    describe 'tapDot' ->
-        test 'array' ->
-        test 'user-obj' ->
-    describe 'tapDot' ->
-        test 'array' ->
-        test 'user-obj' ->
-    describe 'tapDot' ->
-        test 'array' ->
-        test 'user-obj' ->
-    describe 'tapDot' ->
-        test 'array' ->
-        test 'user-obj' ->

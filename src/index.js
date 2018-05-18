@@ -52,7 +52,7 @@ import {
     always,
     // --- has = has own (hence paired with hasIn version)
     isEmpty, tap, has, hasIn, flip, fromPairs, toPairs, toPairsIn, assoc, assocPath, head,
-    last, tail, reduceRight, chain, identity, reduce, map, filter, reject, join,
+    last, tail, reduceRight, chain, identity as id, reduce, map, filter, reject, join,
     split, prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
     splitEvery,
     forEach as each, forEachObjIndexed as eachObj, complement, times as rTimes,
@@ -85,11 +85,23 @@ export {
 
 const oPro = Object.prototype
 
-export const ok = x => !isNil (x)
+export const ok    = x => x != null
+export const notOk = x => x == null
 
 import manual from './manual'
 
 const _recurry = recurry
+
+
+// --- different from R.equals, which considers two different objects equal if their contents are
+//     the same (equivalent).
+// --- different from R.identical, which has some different semantics involving e.g. 0 and -0.
+// --- literally just wraps ===.
+// rationale: must be able to confidently refactor working code which uses ===
+export const eq = curry ((x, y) => x === y)
+export const ne = curry ((x, y) => x !== y)
+
+
 
 export const dot  = _recurry (2) (manual.dot)
 export const dot1 = _recurry (3) (manual.dot1)
@@ -130,42 +142,48 @@ export const sideN = _recurry (3) (manual.sideN)
 
 //@todo export const ifNotOk = curry ((f, x) => ok (x) ? void 8 : f (x))
 
-export const ifOk = curry ((yes, no, x) => ok (x) ? yes (x) : no (x))
-export const whenOk = curry ((yes, x) => x | ifOk (yes) (noop))
-export const ifOk__ = (x, yes, no = noop) => x | ifOk (yes) (no)
+// --- tests for exact truth. Rationale: predicate can easily be made to test truthy by adding >>
+// truthy.
+//
+// --- we don't provide an ifNotPredicate function, because users are encouraged to compose their
+// own functions, and it would be confusing.
+//
+// (should ifNotPredicate match falsey or false? If falsey, it breaks symmetry with ifPredicate; if
+// false, it behaves differently than ifPredicate (pred >> not), which is also confusing.
+//
 
-// @todo
-export const ifNotOk = curry ((yes, no, x) => isNil (x) ? yes (x) : no (x))
-export const whenNotOk = curry ((yes, x) => x | ifNotOk (yes) (noop))
-export const ifNotOk__ = (x, yes, no = noop) => x | ifNotOk (yes) (no)
+export const ifPredicate = curry ((f, yes, no, x) => f (x) === true ? yes (x) : no (x))
+export const whenPredicate = curry ((f, yes, x) => x | ifPredicate (f) (yes) (noop))
 
-export const ifTrue = curry ((yes, no, x) => x === true ? yes (x) : no (x))
-export const whenTrue = curry ((yes, x) => x | ifTrue (yes) (noop))
-export const ifTrue__ = (x, yes, no = noop) => x | ifTrue (yes) (no)
+export const ifOk = ok | ifPredicate
+export const whenOk = ok | whenPredicate
 
-export const ifFalse = curry ((yes, no, x) => x === false ? yes (x) : no (x))
-export const whenFalse = curry ((yes, x) => x | ifFalse (yes) (noop))
-export const ifFalse__ = (x, yes, no = noop) => x | ifFalse (yes) (no)
+export const ifNotOk = notOk | ifPredicate
+export const whenNotOk = notOk | whenPredicate
 
-// --- xxx alias as ifTruthy / falsey
-export const ifYes = curry ((yes, no, x) => x ? yes (x) : no (x))
-export const whenYes = curry ((yes, x) => x | ifYes (yes) (noop))
-export const ifYes__ = (x, yes, no = noop) => x | ifYes (yes) (no)
+export const ifTrue = true | eq | ifPredicate
+export const whenTrue = true | eq | whenPredicate
 
-// --- single-letter lower case flag instead of __? xxx
-// --- xxx is it possible to compose the __ versions, like with ifPredicate?
+export const ifFalse = false | eq | ifPredicate
+export const whenFalse = false | eq | whenPredicate
+
+export const ifYes = Boolean | ifPredicate
+export const whenYes = Boolean | whenPredicate
 export const ifNo = curry ((yes, no, x) => (! x) ? yes (x) : no (x))
 export const whenNo = curry ((yes, x) => x | ifNo (yes) (noop))
-export const ifNo__ = (x, yes, no = noop) => x | ifNo (yes) (no)
+
+// @test
+export const ifTruthy = ifYes
+export const whenTruthy = whenYes
+export const ifFalsey = ifNo
+export const whenFalsey = whenNo
 
 export const ifFunction = curry ((yes, no, x) => isFunction (x) ? yes (x) : no (x))
 export const whenFunction = curry ((yes, x) => x | ifFunction (yes) (noop))
-export const ifFunction__ = (x, yes, no = noop) => x | ifFunction (yes) (no)
 
 // @todo test
 export const ifHas = curry ((yes, no, [o, k]) => o | has (k) ? yes (o[k], o, k) : no (o, k))
 export const whenHas = curry ((yes, spec) => spec | ifHas (yes) (noop))
-export const ifHas__ = (spec, yes, no = noop) => spec | ifHas (yes) (no)
 
 // what about is versions?
 //export const isTrue = eq (true)
@@ -174,7 +192,6 @@ export const ifHas__ = (spec, yes, no = noop) => spec | ifHas (yes) (no)
 // @todo test
 export const ifHasIn = curry ((yes, no, [o, k]) => o | hasIn (k) ? yes (o[k], o, k) : no (o, k))
 export const whenHasIn = curry ((yes, spec) => spec | ifHasIn (yes) (noop))
-export const ifHasIn__ = (spec, yes, no = noop) => spec | ifHasIn (yes) (no)
 
 // @todo test
 export const ifBind = curry ((yes, no, [o, k]) => laat (
@@ -182,7 +199,22 @@ export const ifBind = curry ((yes, no, [o, k]) => laat (
     ifOk (yes, no),
 ))
 export const whenBind = curry ((yes, spec) => spec | ifBind (yes) (noop))
+
+
+// --- @deprecated.
+export const ifPredicate__ = (f, x, yes, no = noop) => x | ifPredicate (f) (yes) (no)
+export const ifOk__ = (x, yes, no = noop) => x | ifOk (yes) (no)
+export const ifNotOk__ = (x, yes, no = noop) => x | ifNotOk (yes) (no)
+export const ifTrue__ = (x, yes, no = noop) => x | ifTrue (yes) (no)
+export const ifFalse__ = (x, yes, no = noop) => x | ifFalse (yes) (no)
+export const ifYes__ = (x, yes, no = noop) => x | ifYes (yes) (no)
+export const ifNo__ = (x, yes, no = noop) => x | ifNo (yes) (no)
+export const ifFunction__ = (x, yes, no = noop) => x | ifFunction (yes) (no)
+export const ifHas__ = (spec, yes, no = noop) => spec | ifHas (yes) (no)
+export const ifHasIn__ = (spec, yes, no = noop) => spec | ifHasIn (yes) (no)
 export const ifBind__ = (spec, yes, no = noop) => spec | ifBind (yes) (no)
+
+
 
 // --- last one always? undef if none?
 // tests for truthINEss, so it acts like if().
@@ -273,20 +305,6 @@ export const ifOne__ = (x, yes, no = noop) => x | ifOne (yes) (no)
 export const ifEmpty = curry ((yes, no, xs) => xs.length === 0 ? yes (xs) : no (xs))
 export const whenEmpty = curry ((yes, xs) => xs | ifEmpty (yes) (noop))
 export const ifEmpty__ = (xs, yes, no = noop) => xs | ifEmpty (yes) (no)
-
-// --- tests for exact truth. Rationale: predicate can easily be made to test truthy by adding >>
-// truthy.
-//
-// --- we don't provide an ifNotPredicate function, because users are encouraged to compose their
-// own functions, and it would be confusing.
-//
-// (should ifNotPredicate match falsey or false? If falsey, it breaks symmetry with ifPredicate; if
-// false, it behaves differently than ifPredicate (pred >> not), which is also confusing.
-//
-export const ifPredicate = curry ((f, yes, no, x) => f (x) === true ? yes (x) : no (x))
-export const whenPredicate = curry ((f, yes, x) => x | ifPredicate (f) (yes) (noop))
-export const ifPredicate__ = (f, x, yes, no = noop) => x | ifPredicate (f) (yes) (no)
-
 
 // @todo
 // alias ifEmpty -> isLengthOne
@@ -1089,14 +1107,6 @@ export const gte = flip (rGte)
 export const lt = flip (rLt)
 export const lte = flip (rLte)
 
-// --- different from R.equals, which considers two different objects equal if their contents are
-//     the same (equivalent).
-// --- different from R.identical, which has some different semantics involving e.g. 0 and -0.
-// --- literally just wraps ===.
-// rationale: must be able to confidently refactor working code which uses ===
-export const eq = curry ((x, y) => x === y)
-export const ne = curry ((x, y) => x !== y)
-
 const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | passToN (f)
 const headTail = f => splitAt (1) >> f
 
@@ -1110,9 +1120,6 @@ const headTail = f => splitAt (1) >> f
 // condMultiple
 //
 //
-
-export const notOk = isNil
-
 
 export const divideBy = flip (divide)
 

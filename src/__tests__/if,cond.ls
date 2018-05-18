@@ -17,17 +17,24 @@
 {
     if-predicate, when-predicate, if-predicate__,
 
-    if-ok, when-ok, if-ok__,
-    if-true, when-true, if-true__,
-    if-false, when-false, if-false__,
-    if-yes, when-yes, if-yes__,
-    if-no, when-no, if-no__,
+    if-ok, when-ok,
+    if-not-ok, when-not-ok,
+    if-true, when-true,
+    if-false, when-false,
+    if-yes, when-yes,
+    if-truthy, when-truthy,
+    if-no, when-no,
+    if-falsey, when-falsey,
 
     # --- @todo, test composing
-    if-function, when-function, if-function__,
-    if-empty, when-empty, if-empty__,
+    if-function, when-function,
+    if-empty, when-empty,
 
     cond,
+
+    if-ok__, if-true__, if-false__,
+    if-yes__, if-no__,
+    if-function__, if-empty__,
 
 } = require '../index'
 
@@ -286,6 +293,68 @@ describe 'ifOk__' ->
 
     do-tests describe-spec, tests
 
+describe 'whenNotOk' ->
+    describe-spec =
+        fn: when-not-ok
+        is__: false
+
+    tests = list do
+        *   desc: 'true'
+            input-val: true
+            expect-branch: 'nee'
+            num-arms: 1
+        *   desc: 'false'
+            input-val: false
+            expect-branch: 'nee'
+            num-arms: 1
+        *   desc: 'empty string'
+            input-val: ''
+            expect-branch: 'nee'
+            num-arms: 1
+        *   desc: 'undefined'
+            input-val: void
+            expect-branch: 'ja'
+            num-arms: 1
+        *   desc: 'null'
+            input-val: null
+            expect-branch: 'ja'
+            num-arms: 1
+
+    do-tests describe-spec, tests
+
+describe 'ifNotOk' ->
+    describe-spec =
+        fn: if-not-ok
+        is__: false
+
+    tests = list do
+        *   desc: 'true'
+            input-val: true
+            expect-branch: 'nee'
+            num-arms: 2
+        *   desc: 'false'
+            input-val: false
+            expect-branch: 'nee'
+            num-arms: 2
+        *   desc: 'empty string'
+            input-val: ''
+            expect-branch: 'nee'
+            num-arms: 2
+        *   desc: 'undefined'
+            input-val: void
+            expect-branch: 'ja'
+            num-arms: 2
+        *   desc: 'null'
+            input-val: null
+            expect-branch: 'ja'
+            num-arms: 2
+
+    do-tests describe-spec, tests
+
+
+
+
+
 describe 'whenTrue' ->
     describe-spec =
         fn: when-true
@@ -473,6 +542,9 @@ describe 'whenYes' ->
 
     do-tests describe-spec, tests
 
+    test 'alias whenTruthy' ->
+        when-yes |> expect-to-equal when-truthy
+
 describe 'ifYes' ->
     describe-spec =
         fn: if-yes
@@ -501,6 +573,9 @@ describe 'ifYes' ->
             num-arms: 2
 
     do-tests describe-spec, tests
+
+    test 'alias ifTruthy' ->
+        if-yes |> expect-to-equal if-truthy
 
 describe 'ifYes__' ->
     describe-spec =
@@ -564,6 +639,9 @@ describe 'whenNo' ->
 
     do-tests describe-spec, tests
 
+    test 'alias whenFalsey' ->
+        when-no |> expect-to-equal when-falsey
+
 describe 'ifNo' ->
     describe-spec =
         fn: if-no
@@ -592,6 +670,9 @@ describe 'ifNo' ->
             num-arms: 2
 
     do-tests describe-spec, tests
+
+    test 'alias ifFalsey' ->
+        if-no |> expect-to-equal if-falsey
 
 describe 'ifNo__' ->
     describe-spec =

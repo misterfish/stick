@@ -126,14 +126,19 @@ export const condO = (blocks) => (target) => {
     }
 }
 
+export const add          = m => n => m + n
+export const multiply     = m => n => m * n
+export const divideBy     = m => n => n / m
+export const divideInto   = m => n => m / n
 export const subtract     = m => n => n - m
-export const subtractFrom = n => m => n - m
-
-export const add = m => n => m + n
-export const multiply = m => n => m * n
-
-export const divideBy = m => n => n / m
-export const divideInto = m => n => m / n
+export const subtractFrom = m => n => m - n
+export const modulo = m => n => n % m
+export const moduloWholePart = m => n => {
+    const div = n / m
+    const flo = Math.floor (div)
+    return div < 0 ? 1 + flo : flo
+}
+export const toThe = e => b => Math.pow (b, e)
 
 export default {
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
@@ -150,4 +155,6 @@ export default {
     subtract, subtractFrom,
     add,
     multiply, divideBy, divideInto,
+    modulo, moduloWholePart,
+    toThe,
 }

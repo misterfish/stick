@@ -25,7 +25,6 @@ import {
     merge as rMerge, mergeAll as rMergeAll,
     zip,
     gt as rGt, gte as rGte, lt as rLt, lte as rLte,
-    divide,
     not,
 } from 'ramda'
 
@@ -967,13 +966,14 @@ export const mapAccumX = addIndex (mapAccum)
 export const subtract = _recurry (2) (manual.subtract)
 export const subtractFrom = _recurry (2) (manual.subtractFrom)
 export const minus = subtract
-
 export const add = _recurry (2) (manual.add)
 export const plus = add
-
 export const multiply   = _recurry (2) (manual.multiply)
 export const divideBy   = _recurry (2) (manual.divideBy)
 export const divideInto = _recurry (2) (manual.divideInto)
+export const modulo = _recurry (2) (manual.modulo)
+export const moduloWholePart = _recurry (2) (manual.moduloWholePart)
+export const toThe = _recurry (2) (manual.toThe)
 
 // @test
 export const laatO = curry ((fs, f, x) => laat (

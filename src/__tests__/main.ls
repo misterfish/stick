@@ -41,6 +41,8 @@
     subtract-from, subtract, minus,
     add, plus,
     multiply, divide-by, divide-into,
+    modulo, modulo-whole-part,
+    to-the,
 
 } = main = require '../index'
 
@@ -95,6 +97,13 @@ describe 'math' ->
     test 'divide' ->
         3 |> divide-by 5 |> expect-to-equal 0.6
         3 |> divide-into 6 |> expect-to-equal 2
+    test 'modulo' ->
+        10 |> modulo 3 |> expect-to-equal 1
+        10 |> modulo-whole-part 3 |> expect-to-equal 3
+        -10 |> modulo-whole-part 3 |> expect-to-equal -3
+    test 'exp' ->
+        10 |> to-the 2 |> expect-to-equal 100
+#         10 |> to-the (-2) |> expect-to-equal 0.01
 
 describe 'cascade' ->
     test 1 ->

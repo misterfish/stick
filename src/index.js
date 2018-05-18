@@ -261,18 +261,21 @@ export const mergeFromWhenOkM = _recurry (2) (manual.mergeFromWhenOkM)
 export const mergeToInM = _recurry (2) (manual.mergeToInM)
 export const mergeFromInM = _recurry (2) (manual.mergeFromInM)
 
-// --- both will float.
+// --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
+// object.
 export const mergeFromIn = _recurry (2) (manual.mergeFromIn)
 
-// --- both will float.
+// --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
+// object.
 export const mergeToIn = _recurry (2) (manual.mergeToIn)
 
 // --- like R.mergeAll but also use prototype vals.
 // --- to and from not applicable, also not curried or meant to be used piped.
-export const mergeAllIn = xs => xs | reduce (
-    (target, source) => source | mergeToInM (target),
+export const mergeAllIn = xs => xs.reduce (
+    (tgt, src) => mergeToInM (tgt) (src),
     {},
 )
+
 
 // ------ map.
 

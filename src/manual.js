@@ -244,10 +244,8 @@ export const mergeToIn = (tgt) => (src) => {
 export const mergeFromIn = (src) => (tgt) => mergeToIn (tgt) (src)
 
 
-
 export default {
-mergeToInM, mergeFromInM,
-mergeToIn, mergeFromIn,
+mergeToInM, mergeFromInM, mergeToIn, mergeFromIn,
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,

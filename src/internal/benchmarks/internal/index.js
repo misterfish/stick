@@ -101,13 +101,15 @@ const roll = (f) => (...args) => {
 // r (1) (2) (3)
 // r ()
 const recurry = (n) => (f) => (...args) => {
-    if (args.length >= n - 1)
-        return roll (f) (...args)
-    if (args.length === n - 2) {
-        const k = roll (f) (...args)
-        return recurry (2) (k)
-    }
+    const rolled = roll (f) (...args)
+    const dn = n - args.length
+    return dn <= 1 ? rolled
+                   : recurry (dn) (rolled)
 }
+
+// if maximising iterations per millisecond is crucial to you, you can import the manual versions
+// directly.
+// everyone else will probably want to use the normal versions.
 
 const multiply5J = a => b => c => d => e => a * b * c * d * e
 
@@ -136,25 +138,21 @@ const testCurryMultiply5 = () => {
     curryMultiply5 (1, 2, 3, 4, 5)
     curryMultiply5 (1, 2, 3, 4) (5)
     curryMultiply5 (1, 2, 3) (4) (5)
-    // curryMultiply5 (1, 2) (3, 4) (5)
 }
 
 const testManualPlusRollMultiply5 = () => {
     manualPlusRollMultiply5 (1, 2, 3, 4, 5)
     manualPlusRollMultiply5 (1, 2, 3, 4) (5)
     manualPlusRollMultiply5 (1, 2, 3) (4) (5)
-    // --- no worky
-    // manualPlusRollMultiply5 (1, 2) (3, 4) (5) | log
 }
 
 const testManualMultiply5 = () => {
     manualMultiply5 (1) (2) (3) (4) (5)
     manualMultiply5 (1) (2) (3) (4) (5)
     manualMultiply5 (1) (2) (3) (4) (5)
-    // --- no worky
-    // manualPlusRollMultiply5 (1, 2) (3, 4) (5) | log
 }
 
+// --- about 4 times faster than uncurry
 const testRecurryMultiply5 = () => {
     recurryMultiply5 (1, 2, 3, 4, 5)
     recurryMultiply5 (1, 2, 3, 4) (5)
@@ -167,10 +165,6 @@ const testManualUncurryNMultiply5 = () => {
     manualUncurryNMultiply5 (1, 2, 3, 4) (5)
     manualUncurryNMultiply5 (1, 2, 3) (4) (5)
 }
-
-// 4 and 5 both work
-// const abc = (multiply5J | uncurryN (5)) (2, 3, 4, 5)
-// abc (11) | log | die
 
 // side1, js curry, separate: 1000000 iters, took 54.0 ms (18518.5 iters / ms)
 // side1, js curry, combined: 1000000 iters, took 51.0 ms (19607.8 iters / ms)
@@ -216,13 +210,29 @@ const suites = [
     suite2,
 ]
 
-suites | map (invoke | each)
+// suites | map (invoke | each)
 
 const rec = manualMultiply5 | recurry (5)
 
-rec (1, 2, 3, 4, 5) | logWith ('(1, 2, 3, 4, 5)')
-rec (1, 2, 3, 4) (5) | logWith ('(1, 2, 3, 4) (5)')
-rec (1, 2, 3) (4, 5) | logWith ('(1, 2, 3) (4, 5)')
+rec (1, 2, 3, 4, 5) | log
+rec (1, 2, 3, 4) (5) | log
+rec (1, 2, 3) (4, 5) | log
+rec (1, 2, 3) (4) (5) | log
+
+rec (1, 2) (3, 4, 5) | log
+rec (1, 2) (3, 4) (5) | log
+rec (1, 2) (3) (4) (5) | log
+rec (1, 2) (3) (4, 5) | log
+
+rec (1) (2) (3, 4, 5) | log
+rec (1) (2) (3) (4, 5) | log
+rec (1) (2) (3, 4) (5) | log
+rec (1) (2) (3) (4) (5) | log
+
+rec (1) (2, 3) (4, 5) | log
+rec (1) (2, 3) (4) (5) | log
+
+rec (1) (2, 3, 4) (5) | log
 
 
 // in the js version we could enforce

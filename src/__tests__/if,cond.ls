@@ -8,6 +8,8 @@
     zip,
 } = require 'ramda'
 
+{ odd, even } = require 'prelude-ls'
+
 {
     list,
     test, xtest,
@@ -26,19 +28,13 @@
     if-no, when-no,
     if-falsey, when-falsey,
 
-    # --- @todo, test composing
-    if-function, when-function,
-    if-empty, when-empty,
-
     cond,
 
+    # --- @deprecated
     if-ok__, if-true__, if-false__,
     if-yes__, if-no__,
-    if-function__, if-empty__,
 
 } = require '../index'
-
-# --- @todo test anaphoric
 
 # --- note that num-arms is part of the test spec, not describe spec
 # (because of the __ variants).
@@ -54,7 +50,7 @@ do-tests = (describe-spec, tests) -->
 # --- for anaphoric ones, also check that ja/nee were passed input and
 # therefore return the expected value.
 
-do-test-double-arm = ({ fn, is__, anaphoric = true }, { desc, input-val, expect-branch, }) --> test desc, ->
+do-test-double-arm = ({ fn, is__ }, { desc, input-val, expect-branch, }) --> test desc, ->
     ja = jest.fn()
         ..mock-implementation (x) -> [x] * 3
     nee = jest.fn()
@@ -72,9 +68,9 @@ do-test-double-arm = ({ fn, is__, anaphoric = true }, { desc, input-val, expect-
     ja.mock.calls.length |> expect-to-equal expected-calls-ja
     nee.mock.calls.length |> expect-to-equal expected-calls-nee
 
-    if anaphoric then ret |> expect-to-equal expected-ret
+    ret |> expect-to-equal expected-ret
 
-do-test-single-arm = ({ fn, is__, anaphoric = true }, { desc, input-val, expect-branch, }) --> test desc, ->
+do-test-single-arm = ({ fn, is__ }, { desc, input-val, expect-branch, }) --> test desc, ->
     ja = jest.fn()
         ..mock-implementation (x) -> [x] * 3
 
@@ -88,14 +84,12 @@ do-test-single-arm = ({ fn, is__, anaphoric = true }, { desc, input-val, expect-
 
     ja.mock.calls.length |> expect-to-equal expected-calls-ja
 
-    if anaphoric then ret |> expect-to-equal expected-ret
+    ret |> expect-to-equal expected-ret
 
-# --- @todo: remove anaphoric (they are all anaphoric)
 describe 'whenPredicate' ->
     describe-spec =
         fn: when-predicate (> 3)
         is__: false
-        anaphoric: true
 
     tests = list do
         *   desc: '4'
@@ -116,7 +110,6 @@ describe 'whenPredicate' ->
     describe-spec2 =
         fn: when-predicate id
         is__: false
-        anaphoric: true
 
     tests2 = list do
         *   desc: 'exact truth, not truthy'
@@ -130,7 +123,6 @@ describe 'ifPredicate' ->
     describe-spec =
         fn: if-predicate (> 3)
         is__: false
-        anaphoric: true
 
     tests = list do
         *   desc: '4'
@@ -151,7 +143,6 @@ describe 'ifPredicate' ->
     describe-spec2 =
         fn: if-predicate id
         is__: false
-        anaphoric: true
 
     tests2 = list do
         *   desc: 'exact truth, not truthy'
@@ -160,6 +151,16 @@ describe 'ifPredicate' ->
             num-arms: 2
 
     do-tests describe-spec2, tests2
+
+    test 'anaphoric' ->
+        3 |> if-predicate odd, (+ 1), (- 1)
+          |> expect-to-equal 4
+        3 |> if-predicate even, (+ 1), (- 1)
+          |> expect-to-equal 2
+        3 |> when-predicate odd, (+ 1)
+          |> expect-to-equal 4
+        3 |> when-predicate even, (+ 1)
+          |> expect-to-equal void
 
 describe 'ifPredicate__' ->
     describe-spec =
@@ -702,154 +703,6 @@ describe 'ifNo__' ->
             num-arms: 2
         *   desc: 'empty string, no else'
             input-val: ''
-            expect-branch: 'ja'
-            num-arms: 1
-
-    do-tests describe-spec, tests
-
-
-
-describe 'whenFunction' ->
-    describe-spec =
-        fn: when-function
-        is__: false
-
-    tests = list do
-        *   desc: 'function'
-            input-val: ->
-            expect-branch: 'ja'
-            num-arms: 1
-        *   desc: 'false'
-            input-val: false
-            expect-branch: 'nee'
-            num-arms: 1
-        *   desc: 'empty string'
-            input-val: ''
-            expect-branch: 'nee'
-            num-arms: 1
-        *   desc: 'undefined'
-            input-val: void
-            expect-branch: 'nee'
-            num-arms: 1
-        *   desc: 'array'
-            input-val: []
-            expect-branch: 'nee'
-            num-arms: 1
-
-    do-tests describe-spec, tests
-
-describe 'ifFunction' ->
-    describe-spec =
-        fn: if-function
-        is__: false
-
-    tests = list do
-        *   desc: 'function'
-            input-val: ->
-            expect-branch: 'ja'
-            num-arms: 2
-        *   desc: 'false'
-            input-val: false
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'empty string'
-            input-val: ''
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'array'
-            input-val: []
-            expect-branch: 'nee'
-            num-arms: 2
-
-    do-tests describe-spec, tests
-
-describe 'ifFunction__' ->
-    describe-spec =
-        fn: if-function__
-        is__: true
-
-    tests = list do
-        *   desc: 'function'
-            input-val: ->
-            expect-branch: 'ja'
-            num-arms: 2
-        *   desc: 'function, no else'
-            input-val: ->
-            expect-branch: 'ja'
-            num-arms: 1
-        *   desc: 'false'
-            input-val: false
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'false, no else'
-            input-val: false
-            expect-branch: 'nee'
-            num-arms: 1
-        *   desc: 'array'
-            input-val: []
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'array, no else'
-            input-val: []
-            expect-branch: 'nee'
-            num-arms: 1
-
-    do-tests describe-spec, tests
-
-describe 'whenEmpty' ->
-    describe-spec =
-        fn: when-empty
-        is__: false
-
-    tests = list do
-        *   desc: 'array n = 1'
-            input-val: [9]
-            expect-branch: 'nee'
-            num-arms: 1
-        *   desc: 'array n = 0'
-            input-val: []
-            expect-branch: 'ja'
-            num-arms: 1
-
-    do-tests describe-spec, tests
-
-describe 'ifEmpty' ->
-    describe-spec =
-        fn: if-empty
-        is__: false
-
-    tests = list do
-        *   desc: 'array n = 1'
-            input-val: [9]
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'array n = 0'
-            input-val: []
-            expect-branch: 'ja'
-            num-arms: 2
-
-    do-tests describe-spec, tests
-
-describe 'ifEmpty__' ->
-    describe-spec =
-        fn: if-empty__
-        is__: true
-
-    tests = list do
-        *   desc: 'array n = 1'
-            input-val: [9]
-            expect-branch: 'nee'
-            num-arms: 2
-        *   desc: 'array n = 1, no else'
-            input-val: [9]
-            expect-branch: 'nee'
-            num-arms: 1
-        *   desc: 'array n = 0'
-            input-val: []
-            expect-branch: 'ja'
-            num-arms: 2
-        *   desc: 'array n = 0, no else'
-            input-val: []
             expect-branch: 'ja'
             num-arms: 1
 

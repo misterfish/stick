@@ -1,7 +1,8 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, ifFunction, whenFunction, ifEmpty, whenEmpty, cond, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, ifFunction__, ifEmpty__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, cond, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, id = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
+ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, ifFunction = ref$.ifFunction, whenFunction = ref$.whenFunction, ifEmpty = ref$.ifEmpty, whenEmpty = ref$.whenEmpty, cond = ref$.cond, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__, ifFunction__ = ref$.ifFunction__, ifEmpty__ = ref$.ifEmpty__;
+ref$ = require('../index'), ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, cond = ref$.cond, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__;
 doTests = curry$(function(describeSpec, tests){
   return each(function(testSpec){
     var numArms, ref$, ref1$, theTest;
@@ -12,8 +13,8 @@ doTests = curry$(function(describeSpec, tests){
   tests);
 });
 doTestDoubleArm = curry$(function(arg$, arg1$){
-  var fn, is__, anaphoric, ref$, desc, inputVal, expectBranch;
-  fn = arg$.fn, is__ = arg$.is__, anaphoric = (ref$ = arg$.anaphoric) != null ? ref$ : true;
+  var fn, is__, desc, inputVal, expectBranch;
+  fn = arg$.fn, is__ = arg$.is__;
   desc = arg1$.desc, inputVal = arg1$.inputVal, expectBranch = arg1$.expectBranch;
   return test(desc, function(){
     var x$, ja, y$, nee, ret, ref$, expectedRet, expectedCallsJa, expectedCallsNee;
@@ -36,15 +37,13 @@ doTestDoubleArm = curry$(function(arg$, arg1$){
     ja.mock.calls.length);
     expectToEqual(expectedCallsNee)(
     nee.mock.calls.length);
-    if (anaphoric) {
-      return expectToEqual(expectedRet)(
-      ret);
-    }
+    return expectToEqual(expectedRet)(
+    ret);
   });
 });
 doTestSingleArm = curry$(function(arg$, arg1$){
-  var fn, is__, anaphoric, ref$, desc, inputVal, expectBranch;
-  fn = arg$.fn, is__ = arg$.is__, anaphoric = (ref$ = arg$.anaphoric) != null ? ref$ : true;
+  var fn, is__, desc, inputVal, expectBranch;
+  fn = arg$.fn, is__ = arg$.is__;
   desc = arg1$.desc, inputVal = arg1$.inputVal, expectBranch = arg1$.expectBranch;
   return test(desc, function(){
     var x$, ja, ret, ref$, expectedRet, expectedCallsJa;
@@ -61,10 +60,8 @@ doTestSingleArm = curry$(function(arg$, arg1$){
       : [void 8, 0], expectedRet = ref$[0], expectedCallsJa = ref$[1];
     expectToEqual(expectedCallsJa)(
     ja.mock.calls.length);
-    if (anaphoric) {
-      return expectToEqual(expectedRet)(
-      ret);
-    }
+    return expectToEqual(expectedRet)(
+    ret);
   });
 });
 describe('whenPredicate', function(){
@@ -73,8 +70,7 @@ describe('whenPredicate', function(){
     fn: whenPredicate((function(it){
       return it > 3;
     })),
-    is__: false,
-    anaphoric: true
+    is__: false
   };
   tests = list({
     desc: '4',
@@ -95,8 +91,7 @@ describe('whenPredicate', function(){
   doTests(describeSpec, tests);
   describeSpec2 = {
     fn: whenPredicate(id),
-    is__: false,
-    anaphoric: true
+    is__: false
   };
   tests2 = list({
     desc: 'exact truth, not truthy',
@@ -112,8 +107,7 @@ describe('ifPredicate', function(){
     fn: ifPredicate((function(it){
       return it > 3;
     })),
-    is__: false,
-    anaphoric: true
+    is__: false
   };
   tests = list({
     desc: '4',
@@ -134,8 +128,7 @@ describe('ifPredicate', function(){
   doTests(describeSpec, tests);
   describeSpec2 = {
     fn: ifPredicate(id),
-    is__: false,
-    anaphoric: true
+    is__: false
   };
   tests2 = list({
     desc: 'exact truth, not truthy',
@@ -143,7 +136,34 @@ describe('ifPredicate', function(){
     expectBranch: 'nee',
     numArms: 2
   });
-  return doTests(describeSpec2, tests2);
+  doTests(describeSpec2, tests2);
+  return test('anaphoric', function(){
+    var this$ = this;
+    expectToEqual(4)(
+    ifPredicate(odd, (function(it){
+      return it + 1;
+    }), (function(it){
+      return it - 1;
+    }))(
+    3));
+    expectToEqual(2)(
+    ifPredicate(even, (function(it){
+      return it + 1;
+    }), (function(it){
+      return it - 1;
+    }))(
+    3));
+    expectToEqual(4)(
+    whenPredicate(odd, (function(it){
+      return it + 1;
+    }))(
+    3));
+    return expectToEqual(void 8)(
+    whenPredicate(even, (function(it){
+      return it + 1;
+    }))(
+    3));
+  });
 });
 describe('ifPredicate__', function(){
   var describeSpec, tests, describeSpec2, tests2;
@@ -781,175 +801,6 @@ describe('ifNo__', function(){
   }, {
     desc: 'empty string, no else',
     inputVal: '',
-    expectBranch: 'ja',
-    numArms: 1
-  });
-  return doTests(describeSpec, tests);
-});
-describe('whenFunction', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: whenFunction,
-    is__: false
-  };
-  tests = list({
-    desc: 'function',
-    inputVal: function(){},
-    expectBranch: 'ja',
-    numArms: 1
-  }, {
-    desc: 'false',
-    inputVal: false,
-    expectBranch: 'nee',
-    numArms: 1
-  }, {
-    desc: 'empty string',
-    inputVal: '',
-    expectBranch: 'nee',
-    numArms: 1
-  }, {
-    desc: 'undefined',
-    inputVal: void 8,
-    expectBranch: 'nee',
-    numArms: 1
-  }, {
-    desc: 'array',
-    inputVal: [],
-    expectBranch: 'nee',
-    numArms: 1
-  });
-  return doTests(describeSpec, tests);
-});
-describe('ifFunction', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: ifFunction,
-    is__: false
-  };
-  tests = list({
-    desc: 'function',
-    inputVal: function(){},
-    expectBranch: 'ja',
-    numArms: 2
-  }, {
-    desc: 'false',
-    inputVal: false,
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'empty string',
-    inputVal: '',
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'array',
-    inputVal: [],
-    expectBranch: 'nee',
-    numArms: 2
-  });
-  return doTests(describeSpec, tests);
-});
-describe('ifFunction__', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: ifFunction__,
-    is__: true
-  };
-  tests = list({
-    desc: 'function',
-    inputVal: function(){},
-    expectBranch: 'ja',
-    numArms: 2
-  }, {
-    desc: 'function, no else',
-    inputVal: function(){},
-    expectBranch: 'ja',
-    numArms: 1
-  }, {
-    desc: 'false',
-    inputVal: false,
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'false, no else',
-    inputVal: false,
-    expectBranch: 'nee',
-    numArms: 1
-  }, {
-    desc: 'array',
-    inputVal: [],
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'array, no else',
-    inputVal: [],
-    expectBranch: 'nee',
-    numArms: 1
-  });
-  return doTests(describeSpec, tests);
-});
-describe('whenEmpty', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: whenEmpty,
-    is__: false
-  };
-  tests = list({
-    desc: 'array n = 1',
-    inputVal: [9],
-    expectBranch: 'nee',
-    numArms: 1
-  }, {
-    desc: 'array n = 0',
-    inputVal: [],
-    expectBranch: 'ja',
-    numArms: 1
-  });
-  return doTests(describeSpec, tests);
-});
-describe('ifEmpty', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: ifEmpty,
-    is__: false
-  };
-  tests = list({
-    desc: 'array n = 1',
-    inputVal: [9],
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'array n = 0',
-    inputVal: [],
-    expectBranch: 'ja',
-    numArms: 2
-  });
-  return doTests(describeSpec, tests);
-});
-describe('ifEmpty__', function(){
-  var describeSpec, tests;
-  describeSpec = {
-    fn: ifEmpty__,
-    is__: true
-  };
-  tests = list({
-    desc: 'array n = 1',
-    inputVal: [9],
-    expectBranch: 'nee',
-    numArms: 2
-  }, {
-    desc: 'array n = 1, no else',
-    inputVal: [9],
-    expectBranch: 'nee',
-    numArms: 1
-  }, {
-    desc: 'array n = 0',
-    inputVal: [],
-    expectBranch: 'ja',
-    numArms: 2
-  }, {
-    desc: 'array n = 0, no else',
-    inputVal: [],
     expectBranch: 'ja',
     numArms: 1
   });

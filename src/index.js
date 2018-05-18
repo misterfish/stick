@@ -185,6 +185,8 @@ export const whenFalsey = whenNo
 export const ifFunction = curry ((yes, no, x) => isFunction (x) ? yes (x) : no (x))
 export const whenFunction = curry ((yes, x) => x | ifFunction (yes) (noop))
 
+// whenEmpty, whenFunction: -> user-space.
+
 // @todo test
 export const ifHas = curry ((yes, no, [o, k]) => o | has (k) ? yes (o[k], o, k) : no (o, k))
 export const whenHas = curry ((yes, spec) => spec | ifHas (yes) (noop))

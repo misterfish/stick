@@ -5,6 +5,10 @@ import {
 // --- canonical can take functions from both main and manual.
 // beware of circular loops -- be sure tests are up to date.
 
+import {
+    dot, dot1, dot2, dot3, dot4, dot5, dotN,
+} from './index'
+
 export const side  = (prop) => tap (dot (prop))
 export const side1 = curry (
     (prop, val) => tap (dot1 (prop) (val))

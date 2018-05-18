@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, test, xtest, expectToEqual, expectToBe, zipAll, dot, dot1, dot2, dot3, dotN, side, side1, side2, side3, sideN;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, test, xtest, expectToEqual, expectToBe, zipAll, dot, dot1, dot2, dot3, dot4, dot5, dotN, side, side1, side2, side3, side4, side5, sideN;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), zipAll = ref$.zipAll, dot = ref$.dot, dot1 = ref$.dot1, dot2 = ref$.dot2, dot3 = ref$.dot3, dotN = ref$.dotN, side = ref$.side, side1 = ref$.side1, side2 = ref$.side2, side3 = ref$.side3, sideN = ref$.sideN;
+ref$ = require('../index'), zipAll = ref$.zipAll, dot = ref$.dot, dot1 = ref$.dot1, dot2 = ref$.dot2, dot3 = ref$.dot3, dot4 = ref$.dot4, dot5 = ref$.dot5, dotN = ref$.dotN, side = ref$.side, side1 = ref$.side1, side2 = ref$.side2, side3 = ref$.side3, side4 = ref$.side4, side5 = ref$.side5, sideN = ref$.sideN;
 describe('dot*', function(){
   var obj;
   obj = {
@@ -14,6 +14,15 @@ describe('dot*', function(){
     },
     jump: function(where, howHigh){
       return "jumping " + howHigh + " " + where;
+    },
+    paint: function(color, force, why){
+      return "painting " + color + " " + force + " " + why;
+    },
+    pant: function(up, down, left, right){
+      return "panting " + up + "/" + down + "," + left + "+" + right;
+    },
+    rant: function(up, down, left, right, around){
+      return "ranting " + up + "/" + down + "," + left + "+" + right + "--" + around;
     },
     garble: function(){
       var all, res$, i$, to$;
@@ -75,16 +84,44 @@ describe('dot*', function(){
     });
   });
   describe('dot3', function(){
-    var garble;
-    garble = dot3('garble');
+    var paint;
+    paint = dot3('paint');
     test('string', function(){
       return expectToEqual('doggies')(
       dot3('concat', 'g', 'ie', 's')(
       'dog'));
     });
     return test('user-obj', function(){
-      return expectToEqual('a!b!c')(
-      garble('a', 'b', 'c')(
+      return expectToEqual('painting red hard because')(
+      paint('red', 'hard', 'because')(
+      obj));
+    });
+  });
+  describe('dot4', function(){
+    var pant;
+    pant = dot4('pant');
+    test('string', function(){
+      return expectToEqual('doggies')(
+      dot4('concat', 'g', 'i', 'e', 's')(
+      'dog'));
+    });
+    return test('user-obj', function(){
+      return expectToEqual('panting hier/daar,nergens+ergens')(
+      pant('hier', 'daar', 'nergens', 'ergens')(
+      obj));
+    });
+  });
+  describe('dot5', function(){
+    var rant;
+    rant = dot5('rant');
+    test('string', function(){
+      return expectToEqual('doggies')(
+      dot5('concat', 'g', 'g', 'i', 'e', 's')(
+      'do'));
+    });
+    return test('user-obj', function(){
+      return expectToEqual('ranting hier/daar,nergens+ergens--overal')(
+      rant('hier', 'daar', 'nergens', 'ergens', 'overal')(
       obj));
     });
   });
@@ -118,7 +155,7 @@ describe('dot*', function(){
     });
   });
 });
-describe('tapMut, tapDot*', function(){
+describe('side*', function(){
   var log, obj;
   beforeEach(function(){
     log = jest.fn();
@@ -137,7 +174,16 @@ describe('tapMut, tapDot*', function(){
         return log(word);
       },
       jump: function(where, howHigh){
-        return "jumping " + howHigh + " " + where;
+        return log("jumping " + howHigh + " " + where);
+      },
+      paint: function(color, force, why){
+        return log("painting " + color + " " + force + " " + why);
+      },
+      pant: function(up, down, left, right){
+        return log("panting " + up + "/" + down + "," + left + "+" + right);
+      },
+      rant: function(up, down, left, right, around){
+        return log("ranting " + up + "/" + down + "," + left + "+" + right + "--" + around);
       },
       garble: function(){
         var all, res$, i$, to$;
@@ -171,7 +217,7 @@ describe('tapMut, tapDot*', function(){
       log.mock.calls.length);
     });
   });
-  describe('tapDot1', function(){
+  describe('side1', function(){
     test('array', function(){
       return expectToEqual([1, 2, 3, 4])(
       side1('concat', 5)(
@@ -185,7 +231,7 @@ describe('tapMut, tapDot*', function(){
       log.mock.calls);
     });
   });
-  describe('tapDot2', function(){
+  describe('side2', function(){
     test('array', function(){
       return expectToEqual([1, 2, 3, 4])(
       side2('concat', 5, 6)(
@@ -193,13 +239,13 @@ describe('tapMut, tapDot*', function(){
     });
     return test('user-obj', function(){
       expectToBe(obj)(
-      side2('garble', 'hello', 'goodbye')(
+      side2('jump', 'up', '4m')(
       obj));
-      return expectToEqual([['hello!goodbye']])(
+      return expectToEqual([['jumping 4m up']])(
       log.mock.calls);
     });
   });
-  describe('tapDot3', function(){
+  describe('side3', function(){
     test('array', function(){
       return expectToEqual([1, 2, 3, 4])(
       side3('concat', 5, 6, 7)(
@@ -207,9 +253,37 @@ describe('tapMut, tapDot*', function(){
     });
     return test('user-obj', function(){
       expectToBe(obj)(
-      side3('garble', 'hello', 'goodbye', 'hello')(
+      side3('paint', 'hello', 'goodbye', 'hello')(
       obj));
-      return expectToEqual([['hello!goodbye!hello']])(
+      return expectToEqual([['painting hello goodbye hello']])(
+      log.mock.calls);
+    });
+  });
+  describe('side4', function(){
+    test('array', function(){
+      return expectToEqual([1, 2, 3, 4])(
+      side4('concat', 5, 6, 7, 8)(
+      [1, 2, 3, 4]));
+    });
+    return test('user-obj', function(){
+      expectToBe(obj)(
+      side4('pant', 'hier', 'daar', 'nergens', 'ergens')(
+      obj));
+      return expectToEqual([['panting hier/daar,nergens+ergens']])(
+      log.mock.calls);
+    });
+  });
+  describe('side5', function(){
+    test('array', function(){
+      return expectToEqual([1, 2, 3, 4])(
+      side5('concat', 5, 6, 7, 8, 9)(
+      [1, 2, 3, 4]));
+    });
+    return test('user-obj', function(){
+      expectToBe(obj)(
+      side5('rant', 'hier', 'daar', 'nergens', 'ergens', 'overal')(
+      obj));
+      return expectToEqual([['ranting hier/daar,nergens+ergens--overal']])(
       log.mock.calls);
     });
   });

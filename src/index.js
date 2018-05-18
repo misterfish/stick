@@ -87,32 +87,24 @@ const oPro = Object.prototype
 
 export const ok = x => !isNil (x)
 
-// --- xxx keep it to 5
-export const dot  = curry ((prop, o) => o[prop] ())
-export const dot1 = curry ((prop, val, o) => o[prop] (val))
-export const dot2 = curry ((prop, val1, val2, o) => o[prop] (val1, val2))
-export const dot3 = curry ((prop, val1, val2, val3, o) => o[prop] (val1, val2, val3))
-export const dot4 = curry ((prop, val1, val2, val3, val4, o) => o[prop] (val1, val2, val3, val4))
-export const dot5 = curry ((prop, val1, val2, val3, val4, val5, o) => o[prop] (val1, val2, val3, val4, val5))
-export const dot6 = curry ((prop, val1, val2, val3, val4, val5, val6, o) => o[prop] (val1, val2, val3, val4, val5, val6))
-export const dotN = curry ((prop, vs, o) => o[prop] (...vs))
+import manual from './manual'
 
-export const side  = (prop) => tap (dot (prop))
-export const side1 = curry (
-    (prop, val) => tap (dot1 (prop) (val))
-)
-export const side2 = curry (
-    (prop, val1, val2) => tap (dot2 (prop) (val1) (val2))
-)
-export const side3 = curry (
-    (prop, val1, val2, val3) => tap (dot3 (prop) (val1) (val2) (val3))
-)
-export const side4 = curry (
-    (prop, val1, val2, val3, val4) => tap (dot4 (prop) (val1) (val2) (val3) (val4))
-)
-export const side5 = curry (
-    (prop, val1, val2, val3, val4,val5) => tap (dot5 (prop) (val1) (val2) (val3) (val4) (val5))
-)
+const _recurry = recurry
+
+export const dot  = _recurry (2) (manual.dot)
+export const dot1 = _recurry (3) (manual.dot1)
+export const dot2 = _recurry (4) (manual.dot2)
+export const dot3 = _recurry (5) (manual.dot3)
+export const dot4 = _recurry (6) (manual.dot4)
+export const dot5 = _recurry (7) (manual.dot5)
+export const dotN = _recurry (3) (manual.dotN)
+
+export const side  = _recurry (2) (manual.side)
+export const side1 = _recurry (3) (manual.side1)
+export const side2 = _recurry (4) (manual.side2)
+export const side3 = _recurry (5) (manual.side3)
+export const side4 = _recurry (6) (manual.side4)
+export const side5 = _recurry (7) (manual.side5)
 export const sideN = curry (
     (prop, vs) => tap (dotN (prop) (vs))
 )

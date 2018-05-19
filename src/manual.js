@@ -165,6 +165,13 @@ export const decorateException = (prefix) => (e) => {
 }
 
 export const defaultTo = f => x => ok (x) ? x : f ()
+
+export const assoc = (prop) => (val) => (o) => {
+    const oo = mergeFromInM (o) ({})
+    oo [prop] = val
+    return oo
+}
+
 export const assocM = prop => val => o => (o[prop] = val, o)
 
 export const appendFrom = elem => ary => [...ary, elem]
@@ -384,7 +391,7 @@ export default {
     toThe,
     tryCatch, decorateException,
     defaultTo,
-    assocM,
+    assoc, assocM,
     appendFrom, appendTo, appendToM, appendFromM,
     prependTo, prependFrom, prependToM, prependFromM,
     concatTo, concatFrom, concatToM, concatFromM,

@@ -1,5 +1,5 @@
 {
-    assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: each, complement, isNil,
+    assoc: rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map: rMap, filter, join, split, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: rEach, complement, isNil,
     repeat: rRepeat,
     times: r-times,
     reverse,
@@ -15,9 +15,12 @@
 } = require './common'
 
 {
+    map, each, each-obj, each-obj-in,
+    add-index, add-collection,
+
     default-to, default-to__,
 
-    assoc-m,
+    assoc, assoc-m, prop,
     append-to, append-to-m, append-from, append-from-m,
     prepend-from, prepend-from-m, prepend-to, prepend-to-m,
     concat-to, concat-to-m, concat-from, concat-from-m,
@@ -31,10 +34,90 @@
 
     discard-prototype, flatten-prototype,
 
-    map-pairs, map-pairs-in, each-obj-in,
+    map-pairs, map-pairs-in,
     ampersand, asterisk,
 
 } = require '../index'
+
+describe 'map, each' ->
+    describe 'map' ->
+        map-x = map |> add-index
+        map-x-c = map |> add-index |> add-collection
+        map-c-x = map |> add-collection |> add-index
+
+        test 1 ->
+            [1 2 3] |> map (* 2) |> expect-to-equal [2 4 6]
+        test 'capped' ->
+            [1 2 3]
+            |> map (x, arg2) -> arg2
+            |> expect-to-equal [void void void]
+        test 'indexed' ->
+            [1 2 3]
+            |> map-x (x, idx) -> idx
+            |> expect-to-equal [0 1 2]
+        test 'mapXC' ->
+            [1 2 3]
+            |> map-x-c (x, i, c) -> i * c.length
+            |> expect-to-equal [0 3 6]
+        test 'mapCX' ->
+            [1 2 3]
+            |> map-c-x (x, c, i) -> i * c.length
+            |> expect-to-equal [0 3 6]
+
+    describe 'each' ->
+        each-x = each |> add-index
+        each-x-c = each |> add-index |> add-collection
+        each-c-x = each |> add-collection |> add-index
+        y = y: []
+        ping = (x) -> y.y.push x
+
+        before-each -> y.y = []
+        test 1 ->
+            [1 2 3] |> each (x) -> ping x
+            y.y |> expect-to-equal [1 2 3]
+        test 'capped' ->
+            [1 2 3] |> each (x, arg2) -> ping arg2
+            y.y |> expect-to-equal [void void void]
+        test 'indexed' ->
+            [1 2 3] |> each-x (x, idx) -> ping idx
+            y.y |> expect-to-equal [0 1 2]
+        test 'eachXC' ->
+            [1 2 3] |> each-x-c (x, i, c) -> ping i * c.length
+            y.y |> expect-to-equal [0 3 6]
+        test 'eachCX' ->
+            [1 2 3] |> each-c-x (x, c, i) -> ping i * c.length
+            y.y |> expect-to-equal [0 3 6]
+
+    describe 'eachObj' ->
+        each-obj-x = each-obj |> add-index
+        each-obj-x-c = each-obj |> add-index |> add-collection
+        each-obj-c-x = each-obj |> add-collection |> add-index
+        base = base-val: 15
+        o = (Object.create base) <<< a: 1 b: 2
+        y =
+            y: void
+            z: []
+
+        before-each -> y.y = {}; y.z = []
+        test 1 ->
+            o |> each-obj (v, k) -> y.y[k] = v
+            y.y |> expect-to-equal a: 1 b: 2
+        test 'capped' ->
+            o |> each-obj (v, k, arg3) -> y.z.push arg3
+            y.z |> expect-to-equal [void void]
+        test 'indexed' ->
+            o |> each-obj-x (v, k, idx) -> y.y[k] = v; y.z.push idx
+            y.y |> expect-to-equal a: 1 b: 2
+            y.z |> expect-to-equal [0 1]
+        test 'eachObjXC' ->
+            o |> each-obj-x-c (v, k, idx, c) -> y.y[k] = v; y.z.push idx; y.z.push c
+            y.y |> expect-to-equal a: 1 b: 2
+            y.z |> expect-to-equal [0, o, 1, o]
+        test 'eachObjCX' ->
+            o |> each-obj-c-x (v, k, c, idx) -> y.y[k] = v; y.z.push idx; y.z.push c
+            y.y |> expect-to-equal a: 1 b: 2
+            y.z |> expect-to-equal [0, o, 1, o]
+
 
 describe 'default to' ->
     test 1 ->
@@ -77,6 +160,17 @@ describe 'data transforms' ->
         if mut then (expect res).to-be tgt
         else        (expect res).not.to-be tgt
 
+    describe 'assoc' ->
+        base = base-val: 10
+        orig = (Object.create base) <<< a: 1 b:2
+        nieuw = orig |> assoc 'b' 3
+        test 1 ->
+            (expect nieuw).not.to-be orig
+            nieuw.a |> expect-to-equal 1
+            nieuw.b |> expect-to-equal 3
+        test 'flattens proto' ->
+            nieuw.base-val |> expect-to-equal 10
+
     describe 'assocM' ->
         test 1 ->
             orig = a: 1 b:2
@@ -84,6 +178,13 @@ describe 'data transforms' ->
                 |> assoc-m 'b' 3
             (expect nieuw).to-be orig
             (expect nieuw).to-equal a: 1 b: 3
+
+    describe 'prop' ->
+        test 'prop' ->
+            (a: 1
+            b: 2)
+            |> prop 'b'
+            |> expect-to-equal 2
 
     describe 'appendTo' ->
         fn = append-to

@@ -1,7 +1,202 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, defaultTo, defaultTo__, assocM, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, precatTo, precatFrom, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, eachObjIn, ampersand, asterisk;
-ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
+var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, filter, join, split, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, map, each, eachObj, eachObjIn, addIndex, addCollection, defaultTo, defaultTo__, assoc, assocM, prop, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, precatTo, precatFrom, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, ampersand, asterisk;
+ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), defaultTo = ref$.defaultTo, defaultTo__ = ref$.defaultTo__, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, precatTo = ref$.precatTo, precatFrom = ref$.precatFrom, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, eachObjIn = ref$.eachObjIn, ampersand = ref$.ampersand, asterisk = ref$.asterisk;
+ref$ = require('../index'), map = ref$.map, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, addIndex = ref$.addIndex, addCollection = ref$.addCollection, defaultTo = ref$.defaultTo, defaultTo__ = ref$.defaultTo__, assoc = ref$.assoc, assocM = ref$.assocM, prop = ref$.prop, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, precatTo = ref$.precatTo, precatFrom = ref$.precatFrom, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, ampersand = ref$.ampersand, asterisk = ref$.asterisk;
+describe('map, each', function(){
+  describe('map', function(){
+    var mapX, mapXC, mapCX;
+    mapX = addIndex(
+    map);
+    mapXC = addCollection(
+    addIndex(
+    map));
+    mapCX = addIndex(
+    addCollection(
+    map));
+    test(1, function(){
+      var this$ = this;
+      return expectToEqual([2, 4, 6])(
+      map((function(it){
+        return it * 2;
+      }))(
+      [1, 2, 3]));
+    });
+    test('capped', function(){
+      return expectToEqual([void 8, void 8, void 8])(
+      map(function(x, arg2){
+        return arg2;
+      })(
+      [1, 2, 3]));
+    });
+    test('indexed', function(){
+      return expectToEqual([0, 1, 2])(
+      mapX(function(x, idx){
+        return idx;
+      })(
+      [1, 2, 3]));
+    });
+    test('mapXC', function(){
+      return expectToEqual([0, 3, 6])(
+      mapXC(function(x, i, c){
+        return i * c.length;
+      })(
+      [1, 2, 3]));
+    });
+    return test('mapCX', function(){
+      return expectToEqual([0, 3, 6])(
+      mapCX(function(x, c, i){
+        return i * c.length;
+      })(
+      [1, 2, 3]));
+    });
+  });
+  describe('each', function(){
+    var eachX, eachXC, eachCX, y, ping;
+    eachX = addIndex(
+    each);
+    eachXC = addCollection(
+    addIndex(
+    each));
+    eachCX = addIndex(
+    addCollection(
+    each));
+    y = {
+      y: []
+    };
+    ping = function(x){
+      return y.y.push(x);
+    };
+    beforeEach(function(){
+      return y.y = [];
+    });
+    test(1, function(){
+      each(function(x){
+        return ping(x);
+      })(
+      [1, 2, 3]);
+      return expectToEqual([1, 2, 3])(
+      y.y);
+    });
+    test('capped', function(){
+      each(function(x, arg2){
+        return ping(arg2);
+      })(
+      [1, 2, 3]);
+      return expectToEqual([void 8, void 8, void 8])(
+      y.y);
+    });
+    test('indexed', function(){
+      eachX(function(x, idx){
+        return ping(idx);
+      })(
+      [1, 2, 3]);
+      return expectToEqual([0, 1, 2])(
+      y.y);
+    });
+    test('eachXC', function(){
+      eachXC(function(x, i, c){
+        return ping(i * c.length);
+      })(
+      [1, 2, 3]);
+      return expectToEqual([0, 3, 6])(
+      y.y);
+    });
+    return test('eachCX', function(){
+      eachCX(function(x, c, i){
+        return ping(i * c.length);
+      })(
+      [1, 2, 3]);
+      return expectToEqual([0, 3, 6])(
+      y.y);
+    });
+  });
+  return describe('eachObj', function(){
+    var eachObjX, eachObjXC, eachObjCX, base, o, ref$, y;
+    eachObjX = addIndex(
+    eachObj);
+    eachObjXC = addCollection(
+    addIndex(
+    eachObj));
+    eachObjCX = addIndex(
+    addCollection(
+    eachObj));
+    base = {
+      baseVal: 15
+    };
+    o = (ref$ = Object.create(base), ref$.a = 1, ref$.b = 2, ref$);
+    y = {
+      y: void 8,
+      z: []
+    };
+    beforeEach(function(){
+      y.y = {};
+      return y.z = [];
+    });
+    test(1, function(){
+      eachObj(function(v, k){
+        return y.y[k] = v;
+      })(
+      o);
+      return expectToEqual({
+        a: 1,
+        b: 2
+      })(
+      y.y);
+    });
+    test('capped', function(){
+      eachObj(function(v, k, arg3){
+        return y.z.push(arg3);
+      })(
+      o);
+      return expectToEqual([void 8, void 8])(
+      y.z);
+    });
+    test('indexed', function(){
+      eachObjX(function(v, k, idx){
+        y.y[k] = v;
+        return y.z.push(idx);
+      })(
+      o);
+      expectToEqual({
+        a: 1,
+        b: 2
+      })(
+      y.y);
+      return expectToEqual([0, 1])(
+      y.z);
+    });
+    test('eachObjXC', function(){
+      eachObjXC(function(v, k, idx, c){
+        y.y[k] = v;
+        y.z.push(idx);
+        return y.z.push(c);
+      })(
+      o);
+      expectToEqual({
+        a: 1,
+        b: 2
+      })(
+      y.y);
+      return expectToEqual([0, o, 1, o])(
+      y.z);
+    });
+    return test('eachObjCX', function(){
+      eachObjCX(function(v, k, c, idx){
+        y.y[k] = v;
+        y.z.push(idx);
+        return y.z.push(c);
+      })(
+      o);
+      expectToEqual({
+        a: 1,
+        b: 2
+      })(
+      y.y);
+      return expectToEqual([0, o, 1, o])(
+      y.z);
+    });
+  });
+});
 describe('default to', function(){
   test(1, function(){
     return expectToEqual(false)(
@@ -73,6 +268,26 @@ describe('data transforms', function(){
       return expect(res).not.toBe(tgt);
     }
   };
+  describe('assoc', function(){
+    var base, orig, ref$, nieuw;
+    base = {
+      baseVal: 10
+    };
+    orig = (ref$ = Object.create(base), ref$.a = 1, ref$.b = 2, ref$);
+    nieuw = assoc('b', 3)(
+    orig);
+    test(1, function(){
+      expect(nieuw).not.toBe(orig);
+      expectToEqual(1)(
+      nieuw.a);
+      return expectToEqual(3)(
+      nieuw.b);
+    });
+    return test('flattens proto', function(){
+      return expectToEqual(10)(
+      nieuw.baseVal);
+    });
+  });
   describe('assocM', function(){
     return test(1, function(){
       var orig, nieuw;
@@ -87,6 +302,18 @@ describe('data transforms', function(){
         a: 1,
         b: 3
       });
+    });
+  });
+  describe('prop', function(){
+    return test('prop', function(){
+      ({
+        a: 1
+      });
+      return expectToEqual(2)(
+      prop('b')(
+      {
+        b: 2
+      }));
     });
   });
   describe('appendTo', function(){

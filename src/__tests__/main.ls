@@ -32,6 +32,7 @@
 
     nieuw, nieuw1, nieuw2, nieuw3, nieuw-n,
 
+    prop,
     x-reg-exp, x-reg-exp-str,
     x-match, x-match-str, x-match-str-flags, #match
     x-replace, x-replace-str, x-replace-str-flags,
@@ -588,7 +589,3 @@ describe 'ifReplace*' ->
         ]
         do-test 'sandmishes' 0 false (ja, nee) ->
             target |> (if-x-replace-str-flags ja, nee, re-str, 'g', replacement)
-
-# defaultTo
-
-# defaultTo

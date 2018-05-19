@@ -21,7 +21,7 @@ import {
     splitAt,
     always,
     // --- has = has own (hence paired with hasIn version)
-    isEmpty, tap, has, hasIn, flip as rFlip, fromPairs, toPairs, toPairsIn, assoc, assocPath, head,
+    isEmpty, tap, has, hasIn, flip as rFlip, fromPairs, toPairs, toPairsIn, assoc as rAssoc, assocPath, head,
     last, tail, reduceRight, chain, identity as id, reduce, map as rMap, filter, reject, join,
     split, prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
     splitEvery,
@@ -216,6 +216,7 @@ export const defaultTo__ = (x, f) => x | defaultTo (f)
 
 // ------ assoc.
 
+export const assoc  = _recurry (3) (manual.assoc)
 export const assocM = _recurry (3) (manual.assocM)
 
 // ------ append.
@@ -449,31 +450,10 @@ export const passToN = _recurry (2) (manual.passToN)
 
 export const prop = _recurry (2) (manual.prop)
 
-// --- didn't really work competely.
-export const OLDflipC = (() => {
-    const ifEmpty = ifPredicate (prop ('length') >> eq (0))
-    // --- not sure any more how this works with curryN (2), because it seems to work for any
-    // function.
-    return f => curryN (2) (
-        (a, b, ...rest) => lets (
-            // --- f can not have arity 1 of course.
-            // --- if f had arity 2, f (b) (a) is the answer;
-            // otherwise it's a curried interim result,
-            // since f itself was curried.
-            _ => f (b) (a),
-            (interimResult) => rest | ifEmpty (
-                _ => interimResult,
-                reduce ((a, b) => a (b)) (interimResult),
-            )
-        )
-    )
-}) ()
-
-export const flip = _recurry (3) (manual.flip)
+export const flip  = _recurry (3) (manual.flip)
 export const flip3 = _recurry (4) (manual.flip3)
 export const flip4 = _recurry (5) (manual.flip4)
 export const flip5 = _recurry (6) (manual.flip5)
-
 
 // ------ sprintf
 
@@ -482,13 +462,13 @@ export const sprintfN = curry ((str, xs) => sprintf.apply (null, [str, ...xs]))
 
 export const noop = () => {}
 
-// --- r's zip only takes two.
-// @dep appendToM
+// --- R.zip only takes two.
 export const zipAll = (...xss) => {
     const ret = []
-    const l = xss[0].length
-    for (let i = 0; i < l; i++)
-        xss | map (xs => xs [i]) | appendToM (ret)
+    const l = xss [0].length
+    for (let i = 0; i < l; i++) ret.push (
+        xss.map (xs => xs [i])
+    )
     return ret
 }
 
@@ -942,30 +922,11 @@ export const defaultToA = blush >> defaultTo
 // this | pluck ('beans', 'bones', 'binds', (dit, beans, bones, binds) => ...)
 // could combine ramda props with apply.
 
-const mapX = map | addIndex
-const mapXL = map | addIndex | addCollection
-const mapLX = map | addCollection | addIndex
-
-
 const { log, } = console
 const logWith = header => (...args) => log (... [header, ...args])
-    /*
-; [ 1, 2, 3 ]
-    | mapX ((x, idx) => {
-        [x | double, idx] | tap (logWith ('mapX'))
-        return x
-    })
-    | mapXL ((x, idx, ary) => {
-        [x | double, idx, ary] | tap (logWith ('mapXL'))
-        return x
-    })
-    | mapLX ((x, ary, idx) => {
-        [x | double, idx, ary] | tap (logWith ('mapLX'))
-        return x
-    })
-    */
 
-const reduceObj = (f) => (acc) => (o) => {
+// @test
+export const reduceObj = (f) => (acc) => (o) => {
     let curAcc = acc
     for (const k in o) if (hasOwn.call (o, k))
         curAcc = f (curAcc, [k, o [k]])

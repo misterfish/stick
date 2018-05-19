@@ -16,11 +16,11 @@ import {
     always,
     // --- has = has own (hence paired with hasIn version)
     isEmpty, tap, has, hasIn, flip, fromPairs, toPairs, toPairsIn, assoc, assocPath, head,
-    last, tail, reduceRight, chain, identity as id, reduce, map, filter, reject, join,
+    last, tail, reduceRight, chain, identity as id, reduce, map as rMap, filter, reject, join,
     split, prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
     splitEvery,
-    forEach as each, forEachObjIndexed as eachObj, complement, times as rTimes,
-    range as rRange, isNil, addIndex, take, equals, mapAccum,
+    forEach as rEach, forEachObjIndexed as eachObj, complement, times as rTimes,
+    range as rRange, isNil, addIndex as rAddIndex, take, equals, mapAccum,
     repeat as rRepeat, concat as rConcat, append as rAppend, compose as rCompose,
     merge as rMerge, mergeAll as rMergeAll,
     zip,
@@ -278,6 +278,12 @@ export const mergeAllIn = xs => xs.reduce (
 
 
 // ------ map.
+
+// --- simple dispatches to Array.prototype.map
+export const map = f => ary => ary.map ((x) => f (x))
+export const each = f => ary => ary.forEach (f)
+
+const double = x => x | multiply (2)
 
 // --- returns an object.
 // --- user function f is expected to return pairs: [k, v]
@@ -840,8 +846,8 @@ export const bindLate = curry ((o, key) => (...args) => o[key] (...args))
 
 
 // --- map indexed: not sure about exporting these.
-export const mapX = addIndex (map)
-export const mapAccumX = addIndex (mapAccum)
+// export const mapX = rAddIndex (map)
+export const mapAccumX = rAddIndex (mapAccum)
 
 export const subtract = _recurry (2) (manual.subtract)
 export const subtractFrom = _recurry (2) (manual.subtractFrom)
@@ -940,3 +946,40 @@ export const defaultToA = blush >> defaultTo
 // or like this, except that you lose the documentation aspect.
 // this | pluck ('beans', 'bones', 'binds', (dit, beans, bones, binds) => ...)
 // could combine ramda props with apply.
+
+
+export const addIndex = (orig) => (f) => (ary) => {
+    let idx = -1
+    const g = (...args) => f (...args, ++idx)
+    return orig (g) (ary)
+}
+
+export const addList = (orig) => (f) => (ary) => {
+    const g = (...args) => f (...args, ary)
+    return orig (g) (ary)
+}
+
+const mapX = map | addIndex
+const mapXL = map | addIndex | addList
+const mapLX = map | addList | addIndex
+
+const { log, } = console
+const logWith = header => (...args) => log (... [header, ...args])
+; [ 1, 2, 3 ]
+    | mapX ((x, idx) => {
+        [x | double, idx] | tap (logWith ('mapX'))
+        return x
+    })
+    | mapXL ((x, idx, ary) => {
+        [x | double, idx, ary] | tap (logWith ('mapXL'))
+        return x
+    })
+    | mapLX ((x, ary, idx) => {
+        [x | double, idx, ary] | tap (logWith ('mapLX'))
+        return x
+    })
+
+
+
+// map an object, what do you expect?
+// mapAsTuples

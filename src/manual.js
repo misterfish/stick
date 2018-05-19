@@ -305,6 +305,54 @@ export const asterisk = curry ((fs, xs) => xs
 
 export const laat = xs => f => f.apply (null, xs)
 
+// ------ call/provide
+
+export const callOn = o =>
+    f => f.call (o)
+export const callOn1 = o => val1 =>
+    f => f.call (o, val1)
+export const callOn2 = o => val1 => val2 =>
+    f => f.call (o, val1, val2)
+export const callOn3 = o => val1 => val2 => val3 =>
+    f => f.call (o, val1, val2, val3)
+export const callOn4 = o => val1 => val2 => val3 => val4 =>
+    f => f.call (o, val1, val2, val3, val4)
+export const callOn5 = o => val1 => val2 => val3 => val4 => val5 =>
+    f => f.call (o, val1, val2, val3, val4, val5)
+export const callOnN = o => vs =>
+    f => f.apply (o, vs)
+
+export const provideTo = f =>
+    o => f.call (o)
+export const provideTo1 = f => val =>
+    o => f.call (o, val)
+export const provideTo2 = f => val1 => val2 =>
+    o => f.call (o, val1, val2)
+export const provideTo3 = f => val1 => val2 => val3 =>
+    o => f.call (o, val1, val2, val3)
+export const provideTo4 = f => val1 => val2 => val3 => val4 =>
+    o => f.call (o, val1, val2, val3, val4)
+export const provideTo5 = f => val1 => val2 => val3 => val4 => val5 =>
+    o => f.call (o, val1, val2, val3, val4, val5)
+export const provideToN = f => vs =>
+    o => f.apply (o, vs)
+
+export const applyTo1 = val1 =>
+    f => f (val1)
+export const applyTo2 = val1 => val2 =>
+    f => f (val1, val2)
+export const applyTo3 = val1 => val2 => val3 =>
+    f => f (val1, val2, val3)
+export const applyTo4 = val1 => val2 => val3 => val4 =>
+    f => f (val1, val2, val3, val4)
+export const applyTo5 = val1 => val2 => val3 => val4 => val5 =>
+    f => f (val1, val2, val3, val4, val5)
+export const applyToN = vs =>
+    f => f.apply (null, vs)
+
+export const passTo = f => val => f (val)
+export const passToN = f => vs => f.apply (null, vs)
+
 export default {
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
@@ -337,4 +385,8 @@ export default {
     map, each, eachObj, eachObjIn,
     ampersand, asterisk,
     laat,
+    callOn, callOn1, callOn2, callOn3, callOn4, callOn5, callOnN,
+    provideTo, provideTo1, provideTo2, provideTo3, provideTo4, provideTo5, provideToN,
+    applyTo1, applyTo2, applyTo3, applyTo4, applyTo5, applyToN,
+    passTo, passToN,
 }

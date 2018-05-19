@@ -410,46 +410,46 @@ export const lets = laats
 
 // ------ ; {}.toString | callOn ([])
 
-export const callOn = curry ((o, f) => f.call (o))
-export const callOn1 = curry ((o, val, f) => f.call (o, val))
-export const callOn2 = curry ((o, val1, val2, f) => f.call (o, val1, val2))
-export const callOn3 = curry ((o, val1, val2, val3, f) => f.call (o, val1, val2, val3))
-export const callOnN = curry ((o, vs, f) => f.apply (o, vs))
+export const callOn = _recurry (2) (manual.callOn)
+export const callOn1 = _recurry (3) (manual.callOn1)
+export const callOn2 = _recurry (4) (manual.callOn2)
+export const callOn3 = _recurry (5) (manual.callOn3)
+export const callOn4 = _recurry (6) (manual.callOn4)
+export const callOn5 = _recurry (7) (manual.callOn5)
+export const callOnN = _recurry (3) (manual.callOnN)
 
 // ------ ; [] | provideTo ({}.toString)
 
-export const provideTo = curry ((f, o) => f.call (o))
-export const provideTo1 = curry ((f, val, o) => f.call (o, val))
-export const provideTo2 = curry ((f, val1, val2, o) => f.call (o, val1, val2))
+export const provideTo = _recurry (2) (manual.provideTo)
+export const provideTo1 = _recurry (3) (manual.provideTo1)
+export const provideTo2 = _recurry (4) (manual.provideTo2)
+export const provideTo3 = _recurry (5) (manual.provideTo3)
+export const provideTo4 = _recurry (6) (manual.provideTo4)
+export const provideTo5 = _recurry (7) (manual.provideTo5)
+export const provideToN = _recurry (3) (manual.provideToN)
 
-// --- alias applyTo0 xxx
 export const invoke = f => f ()
 
 // ------ sum | applyToN ([1, 2, 3])
-
-export const applyTo1 = curry ((val, f) => f (val))
-export const applyTo2 = curry ((val1, val2, f) => f (val1, val2))
-export const applyTo3 = curry ((val1, val2, val3, f) => f (val1, val2, val3))
-export const applyToN = curry ((vs, f) => f.apply (null, vs))
-
-// maybe: export const applyTo = applyTo1
-
-export const apply1 = applyTo1
-export const apply2 = applyTo2
-export const apply3 = applyTo3
-export const applyN = applyToN
+export const applyTo1 = _recurry (2) (manual.applyTo1)
+export const applyTo2 = _recurry (3) (manual.applyTo2)
+export const applyTo3 = _recurry (4) (manual.applyTo3)
+export const applyTo4 = _recurry (5) (manual.applyTo4)
+export const applyTo5 = _recurry (6) (manual.applyTo5)
+export const applyToN = _recurry (2) (manual.applyToN)
 
 // --- i don't think these are useful. xxx
-export const passTo1 = curry ((f, val) => f (val))
-export const passTo2 = curry ((f, val1, val2) => f (val1, val2))
-export const passTo3 = curry ((f, val1, val2, val3) => f (val1, val2, val3))
-export const pass1 = passTo1
-export const pass2 = passTo2
-export const pass3 = passTo3
+// export const passTo1 = curry ((f, val) => f (val))
+// export const passTo2 = curry ((f, val1, val2) => f (val1, val2))
+// export const passTo3 = curry ((f, val1, val2, val3) => f (val1, val2, val3))
+// export const pass1 = passTo1
+// export const pass2 = passTo2
+// export const pass3 = passTo3
 
-// ------ ; [1, 2, 3] | passToN (sum)
-export const passToN = curry ((f, vs) => f.apply (null, vs))
-export const passN = passToN
+// --- 1 | passTo (double)
+export const passTo = _recurry (2) (manual.passTo)
+// --- ; [1, 2, 3] | passToN (sum)
+export const passToN = _recurry (2) (manual.passToN)
 
 // --- flip first and second args of a curried function, even for functions with more than 2 args.
 // --- also works for functions curried with the a => b => ... notation (unlike R.flip).

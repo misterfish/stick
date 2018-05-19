@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, zipAll, invoke, applyTo1, applyTo2, applyTo3, applyToN, passTo1, passTo2, passTo3, passToN, apply1, apply2, apply3, applyN, pass1, pass2, pass3, passN, call, call1, call2, call3, callN, callOn, callOn1, callOn2, callOn3, callOnN, provideTo, provideTo1, provideTo2, sumAll;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, zipAll, invoke, applyTo1, applyTo2, applyTo3, applyTo4, applyTo5, applyToN, passTo, passToN, call, call1, call2, call3, callN, callOn, callOn1, callOn2, callOn3, callOn4, callOn5, callOnN, provideTo, provideTo1, provideTo2, provideTo3, provideTo4, provideTo5, provideToN, sumAll;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), zipAll = ref$.zipAll, invoke = ref$.invoke, applyTo1 = ref$.applyTo1, applyTo2 = ref$.applyTo2, applyTo3 = ref$.applyTo3, applyToN = ref$.applyToN, passTo1 = ref$.passTo1, passTo2 = ref$.passTo2, passTo3 = ref$.passTo3, passToN = ref$.passToN, apply1 = ref$.apply1, apply2 = ref$.apply2, apply3 = ref$.apply3, applyN = ref$.applyN, pass1 = ref$.pass1, pass2 = ref$.pass2, pass3 = ref$.pass3, passN = ref$.passN, call = ref$.call, call1 = ref$.call1, call2 = ref$.call2, call3 = ref$.call3, callN = ref$.callN, callOn = ref$.callOn, callOn1 = ref$.callOn1, callOn2 = ref$.callOn2, callOn3 = ref$.callOn3, callOnN = ref$.callOnN, provideTo = ref$.provideTo, provideTo1 = ref$.provideTo1, provideTo2 = ref$.provideTo2;
+ref$ = require('../index'), zipAll = ref$.zipAll, invoke = ref$.invoke, applyTo1 = ref$.applyTo1, applyTo2 = ref$.applyTo2, applyTo3 = ref$.applyTo3, applyTo4 = ref$.applyTo4, applyTo5 = ref$.applyTo5, applyToN = ref$.applyToN, passTo = ref$.passTo, passToN = ref$.passToN, call = ref$.call, call1 = ref$.call1, call2 = ref$.call2, call3 = ref$.call3, callN = ref$.callN, callOn = ref$.callOn, callOn1 = ref$.callOn1, callOn2 = ref$.callOn2, callOn3 = ref$.callOn3, callOn4 = ref$.callOn4, callOn5 = ref$.callOn5, callOnN = ref$.callOnN, provideTo = ref$.provideTo, provideTo1 = ref$.provideTo1, provideTo2 = ref$.provideTo2, provideTo3 = ref$.provideTo3, provideTo4 = ref$.provideTo4, provideTo5 = ref$.provideTo5, provideToN = ref$.provideToN;
 sumAll = function(){
   var args, res$, i$, to$;
   res$ = [];
@@ -92,7 +92,21 @@ describe('pass*', function(){
       })));
     });
   });
-  describe('applyToN', function(){
+  describe('applyTo4', function(){
+    return test(1, function(){
+      return expectToEqual(54)(
+      applyTo4(12, 13, 14, 15)(
+      sumAll));
+    });
+  });
+  describe('applyTo5', function(){
+    return test(1, function(){
+      return expectToEqual(70)(
+      applyTo5(12, 13, 14, 15, 16)(
+      sumAll));
+    });
+  });
+  return describe('applyToN', function(){
     test(1, function(){
       return expectToEqual(54)(
       applyToN([12, 13, 14, 15])(
@@ -106,75 +120,33 @@ describe('pass*', function(){
       })));
     });
   });
-  return describe('aliases', function(){
-    test(1, function(){
-      return expectToEqual(applyTo1)(
-      apply1);
-    });
-    test(2, function(){
-      return expectToEqual(applyTo2)(
-      apply2);
-    });
-    test(3, function(){
-      return expectToEqual(applyTo3)(
-      apply3);
-    });
-    return test('n', function(){
-      return expectToEqual(applyToN)(
-      applyN);
-    });
-  });
 });
 describe('passTo*', function(){
   var func;
   func = function(){
     return 'horse';
   };
-  describe('passTo1', function(){
+  describe('passTo', function(){
     test(1, function(){
       return expectToEqual(12)(
-      passTo1(sumAll)(
+      passTo(sumAll)(
       12));
     });
     test(2, function(){
       var this$ = this;
       return expectToEqual(16)(
-      passTo1((function(it){
+      passTo((function(it){
         return it + 4;
       }))(
       12));
     });
     return test('discards extra args 1', function(){
       return expectToEqual('horse')(
-      passTo1(func)(
+      passTo(func)(
       'abc'));
     });
   });
-  describe('passTo2', function(){
-    test(1, function(){
-      return expectToEqual(25)(
-      passTo2(sumAll)(12, 13));
-    });
-    return test(2, function(){
-      return expectToEqual(50)(
-      passTo2(curry$(function(x$, y$){
-        return x$ + y$;
-      }))(20, 30));
-    });
-  });
-  describe('passTo3', function(){
-    test(1, function(){
-      return expectToEqual(39)(
-      passTo3(sumAll)(12, 13, 14));
-    });
-    return test('discards', function(){
-      return expectToEqual(50)(
-      passTo3(curry$(function(x$, y$){
-        return x$ + y$;
-      }))(20, 30, 40));
-    });
-  });
-  describe('passToN', function(){
+  return describe('passToN', function(){
     test(1, function(){
       return expectToEqual(54)(
       passToN(sumAll)(
@@ -188,29 +160,13 @@ describe('passTo*', function(){
       [20, 30]));
     });
   });
-  return describe('aliases', function(){
-    test(1, function(){
-      return expectToEqual(passTo1)(
-      pass1);
-    });
-    test(2, function(){
-      return expectToEqual(passTo2)(
-      pass2);
-    });
-    test(3, function(){
-      return expectToEqual(passTo3)(
-      pass3);
-    });
-    return test('n', function(){
-      return expectToEqual(passToN)(
-      passN);
-    });
-  });
 });
 describe('call*', function(){
-  var obj;
-  obj = {
-    name: 'dog',
+  var obj1, obj2;
+  obj1 = {
+    name: 'dog'
+  };
+  obj2 = {
     speak: function(){
       return 'my name is ' + this.name;
     },
@@ -227,8 +183,8 @@ describe('call*', function(){
     });
     return test('user-obj', function(){
       return expectToEqual('my name is dog')(
-      callOn(obj)(
-      obj.speak));
+      callOn(obj1)(
+      obj2.speak));
     });
   });
   describe('callOn1', function(){
@@ -239,8 +195,8 @@ describe('call*', function(){
     });
     return test('user-obj', function(){
       return expectToEqual('my friend is dog')(
-      callOn1(obj, 'friend')(
-      obj.speak1));
+      callOn1(obj1, 'friend')(
+      obj2.speak1));
     });
   });
   describe('callOn2', function(){
@@ -251,13 +207,13 @@ describe('call*', function(){
     });
     test('user-obj, caps (discards) second arg', function(){
       return expectToEqual('my friend is dog')(
-      callOn2(obj, 'friend', 'send')(
-      obj.speak1));
+      callOn2(obj1, 'friend', 'send')(
+      obj2.speak1));
     });
     return test('user-obj', function(){
       return expectToEqual('friend:send')(
-      callOn2(obj, 'friend', 'send')(
-      obj.speakAll));
+      callOn2(obj1, 'friend', 'send')(
+      obj2.speakAll));
     });
   });
   describe('callOn3', function(){
@@ -268,8 +224,32 @@ describe('call*', function(){
     });
     return test('user-obj', function(){
       return expectToEqual('friend:send:end')(
-      callOn3(obj, 'friend', 'send', 'end')(
-      obj.speakAll));
+      callOn3(obj1, 'friend', 'send', 'end')(
+      obj2.speakAll));
+    });
+  });
+  describe('callOn4', function(){
+    test('array', function(){
+      return expectToEqual([1, 2, 3, 4, 5, 6, 7])(
+      callOn4([1, 2, 3], 4, 5, 6, 7)(
+      [].concat));
+    });
+    return test('user-obj', function(){
+      return expectToEqual('friend:send:end:lend')(
+      callOn4(obj1, 'friend', 'send', 'end', 'lend')(
+      obj2.speakAll));
+    });
+  });
+  describe('callOn5', function(){
+    test('array', function(){
+      return expectToEqual([1, 2, 3, 4, 5, 6, 7, 8])(
+      callOn5([1, 2, 3], 4, 5, 6, 7, 8)(
+      [].concat));
+    });
+    return test('user-obj', function(){
+      return expectToEqual('friend:send:end:lend:trend')(
+      callOn5(obj1, 'friend', 'send', 'end', 'lend', 'trend')(
+      obj2.speakAll));
     });
   });
   describe('callOnN', function(){
@@ -280,8 +260,8 @@ describe('call*', function(){
     });
     return test('user-obj', function(){
       return expectToEqual('friend:lend')(
-      callOnN(obj, ['friend', 'lend'])(
-      obj.speakAll));
+      callOnN(obj1, ['friend', 'lend'])(
+      obj2.speakAll));
     });
   });
   describe('provideTo', function(){
@@ -298,8 +278,8 @@ describe('call*', function(){
     });
     return test('user-obj', function(){
       return expectToEqual('my name is dog')(
-      provideTo(obj.speak)(
-      obj));
+      provideTo(obj2.speak)(
+      obj1));
     });
   });
   describe('provideTo1', function(){
@@ -310,16 +290,74 @@ describe('call*', function(){
     });
     return test('user-obj', function(){
       return expectToEqual('my friend is dog')(
-      provideTo1(obj.speak1, 'friend')(
-      obj));
+      provideTo1(obj2.speak1, 'friend')(
+      obj1));
     });
   });
-  return describe('provideTo2', function(){
-    return test('bound function alias', function(){
+  describe('provideTo2', function(){
+    test('bound function alias', function(){
       var replaceDl;
       replaceDl = provideTo2(''.replace, 'd', 'l');
       return expectToEqual('log')(
       replaceDl('dog'));
+    });
+    test('array', function(){
+      return expectToEqual([1, 2, 3, 4, 5])(
+      provideTo2([].concat, 4, 5)(
+      [1, 2, 3]));
+    });
+    return test('user-obj', function(){
+      return expectToEqual('friend:send')(
+      provideTo2(obj2.speakAll, 'friend', 'send')(
+      obj1));
+    });
+  });
+  describe('provideTo3', function(){
+    test('array', function(){
+      return expectToEqual([1, 2, 3, 4, 5, 6])(
+      provideTo3([].concat, 4, 5, 6)(
+      [1, 2, 3]));
+    });
+    return test('user-obj', function(){
+      return expectToEqual('friend:send:end')(
+      provideTo3(obj2.speakAll, 'friend', 'send', 'end')(
+      obj1));
+    });
+  });
+  describe('provideTo4', function(){
+    test('array', function(){
+      return expectToEqual([1, 2, 3, 4, 5, 6, 7])(
+      provideTo4([].concat, 4, 5, 6, 7)(
+      [1, 2, 3]));
+    });
+    return test('user-obj', function(){
+      return expectToEqual('friend:send:end:lend')(
+      provideTo4(obj2.speakAll, 'friend', 'send', 'end', 'lend')(
+      obj1));
+    });
+  });
+  describe('provideTo5', function(){
+    test('array', function(){
+      return expectToEqual([1, 2, 3, 4, 5, 6, 7, 8])(
+      provideTo5([].concat, 4, 5, 6, 7, 8)(
+      [1, 2, 3]));
+    });
+    return test('user-obj', function(){
+      return expectToEqual('friend:send:end:lend:trend')(
+      provideTo5(obj2.speakAll, 'friend', 'send', 'end', 'lend', 'trend')(
+      obj1));
+    });
+  });
+  return describe('provideToN', function(){
+    test('array', function(){
+      return expectToEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])(
+      provideToN([].concat, [4, 5, 6, 7, 8, 9])(
+      [1, 2, 3]));
+    });
+    return test('user-obj', function(){
+      return expectToEqual('friend:send:end:lend')(
+      provideToN(obj2.speakAll, ['friend', 'send', 'end', 'lend'])(
+      obj1));
     });
   });
 });

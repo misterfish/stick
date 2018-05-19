@@ -18,14 +18,14 @@
     zip-all,
     invoke,
 
-    apply-to1, apply-to2, apply-to3, apply-to-n,
-    pass-to1, pass-to2, pass-to3, pass-to-n,
-    apply1, apply2, apply3, apply-n,
-    pass1, pass2, pass3, pass-n,
+    apply-to1, apply-to2, apply-to3, apply-to4, apply-to5,
+    apply-to-n,
+    pass-to, pass-to-n,
 
     call, call1, call2, call3, call-n,
-    call-on, call-on1, call-on2, call-on3, call-on-n,
-    provide-to, provide-to1, provide-to2,
+    call-on, call-on1, call-on2, call-on3, call-on4, call-on5, call-on-n,
+    provide-to, provide-to1, provide-to2, provide-to3, provide-to4,
+    provide-to5, provide-to-n,
 
 } = require '../index'
 
@@ -78,6 +78,16 @@ describe 'pass*' ->
             (+)
             |> apply-to3 20 30 40
             |> expect-to-equal 50
+    describe 'applyTo4' ->
+        test 1 ->
+            sum-all
+            |> apply-to4 12 13 14 15
+            |> expect-to-equal 54
+    describe 'applyTo5' ->
+        test 1 ->
+            sum-all
+            |> apply-to5 12 13 14 15 16
+            |> expect-to-equal 70
     describe 'applyToN' ->
         test 1 ->
             sum-all
@@ -87,45 +97,22 @@ describe 'pass*' ->
             (+)
             |> apply-to-n [20 30]
             |> expect-to-equal 50
-    describe 'aliases' ->
-        test 1 ->
-            apply1 |> expect-to-equal apply-to1
-        test 2 ->
-            apply2 |> expect-to-equal apply-to2
-        test 3 ->
-            apply3 |> expect-to-equal apply-to3
-        test 'n' ->
-            apply-n |> expect-to-equal apply-to-n
 
 describe 'passTo*' ->
     func = -> 'horse'
-    describe 'passTo1' ->
+    describe 'passTo' ->
         test 1 ->
             12
-            |> pass-to1 sum-all
+            |> pass-to sum-all
             |> expect-to-equal 12
         test 2 ->
             12
-            |> pass-to1 (+ 4)
+            |> pass-to (+ 4)
             |> expect-to-equal 16
         test 'discards extra args 1' ->
             'abc'
-            |> pass-to1 func
+            |> pass-to func
             |> expect-to-equal 'horse'
-    describe 'passTo2' ->
-        test 1 ->
-            (pass-to2 sum-all) 12 13
-            |> expect-to-equal 25
-        test 2 ->
-            (pass-to2 (+)) 20 30
-            |> expect-to-equal 50
-    describe 'passTo3' ->
-        test 1 ->
-            (pass-to3 sum-all) 12 13 14
-            |> expect-to-equal 39
-        test 'discards' ->
-            (pass-to3 (+)) 20 30 40
-            |> expect-to-equal 50
     describe 'passToN' ->
         test 1 ->
             [12 to 15]
@@ -135,19 +122,11 @@ describe 'passTo*' ->
             [20 30]
             |> pass-to-n (+)
             |> expect-to-equal 50
-    describe 'aliases' ->
-        test 1 ->
-            pass1 |> expect-to-equal pass-to1
-        test 2 ->
-            pass2 |> expect-to-equal pass-to2
-        test 3 ->
-            pass3 |> expect-to-equal pass-to3
-        test 'n' ->
-            pass-n |> expect-to-equal pass-to-n
 
 describe 'call*' ->
-    obj =
+    obj1 =
         name: 'dog'
+    obj2 =
         speak: -> 'my name is ' + @name
         speak1: (word) -> "my #word is " + @name
         speak-all: list >> join ':'
@@ -157,8 +136,8 @@ describe 'call*' ->
             |> call-on [1 to 3]
             |> expect-to-equal [3 to 1]
         test 'user-obj' ->
-            obj.speak
-            |> call-on obj
+            obj2.speak
+            |> call-on obj1
             |> expect-to-equal 'my name is dog'
     describe 'callOn1' ->
         test 'array' ->
@@ -166,8 +145,8 @@ describe 'call*' ->
             |> call-on1 [1 to 3] 4
             |> expect-to-equal [1 to 4]
         test 'user-obj' ->
-            obj.speak1
-            |> call-on1 obj, 'friend'
+            obj2.speak1
+            |> call-on1 obj1, 'friend'
             |> expect-to-equal 'my friend is dog'
     describe 'callOn2' ->
         test 'array' ->
@@ -175,12 +154,12 @@ describe 'call*' ->
             |> call-on2 [1 to 3] 4 5
             |> expect-to-equal [1 to 5]
         test 'user-obj, caps (discards) second arg' ->
-            obj.speak1
-            |> call-on2 obj, 'friend' 'send'
+            obj2.speak1
+            |> call-on2 obj1, 'friend' 'send'
             |> expect-to-equal 'my friend is dog'
         test 'user-obj' ->
-            obj.speak-all
-            |> call-on2 obj, 'friend' 'send'
+            obj2.speak-all
+            |> call-on2 obj1, 'friend' 'send'
             |> expect-to-equal 'friend:send'
     describe 'callOn3' ->
         test 'array' ->
@@ -188,17 +167,35 @@ describe 'call*' ->
             |> call-on3 [1 to 3] 4 5 6
             |> expect-to-equal [1 to 6]
         test 'user-obj' ->
-            obj.speak-all
-            |> call-on3 obj, 'friend' 'send' 'end'
+            obj2.speak-all
+            |> call-on3 obj1, 'friend' 'send' 'end'
             |> expect-to-equal 'friend:send:end'
+    describe 'callOn4' ->
+        test 'array' ->
+            [].concat
+            |> call-on4 [1 to 3] 4 5 6 7
+            |> expect-to-equal [1 to 7]
+        test 'user-obj' ->
+            obj2.speak-all
+            |> call-on4 obj1, 'friend' 'send' 'end' 'lend'
+            |> expect-to-equal 'friend:send:end:lend'
+    describe 'callOn5' ->
+        test 'array' ->
+            [].concat
+            |> call-on5 [1 to 3] 4 5 6 7 8
+            |> expect-to-equal [1 to 8]
+        test 'user-obj' ->
+            obj2.speak-all
+            |> call-on5 obj1, 'friend' 'send' 'end' 'lend' 'trend'
+            |> expect-to-equal 'friend:send:end:lend:trend'
     describe 'callOnN' ->
         test 'array' ->
             [].concat
             |> call-on-n [1 to 3] [4 5 6]
             |> expect-to-equal [1 to 6]
         test 'user-obj' ->
-            obj.speak-all
-            |> call-on-n obj, ['friend' 'lend']
+            obj2.speak-all
+            |> call-on-n obj1, ['friend' 'lend']
             |> expect-to-equal 'friend:lend'
 
     describe 'provideTo' ->
@@ -211,8 +208,8 @@ describe 'call*' ->
             trim ' dog '
             |> expect-to-equal 'dog'
         test 'user-obj' ->
-            obj
-            |> provide-to obj.speak
+            obj1
+            |> provide-to obj2.speak
             |> expect-to-equal 'my name is dog'
     describe 'provideTo1' ->
         test 'array' ->
@@ -220,12 +217,58 @@ describe 'call*' ->
             |> provide-to1 [].concat, 4
             |> expect-to-equal [1 to 4]
         test 'user-obj' ->
-            obj
-            |> provide-to1 obj.speak1, 'friend'
+            obj1
+            |> provide-to1 obj2.speak1, 'friend'
             |> expect-to-equal 'my friend is dog'
     describe 'provideTo2' ->
         test 'bound function alias' ->
             replace-dl = provide-to2 ''.replace, 'd' 'l'
             replace-dl 'dog'
             |> expect-to-equal 'log'
+        test 'array' ->
+            [1 to 3]
+            |> provide-to2 [].concat, 4 5
+            |> expect-to-equal [1 to 5]
+        test 'user-obj' ->
+            obj1
+            |> provide-to2 obj2.speak-all, 'friend' 'send'
+            |> expect-to-equal 'friend:send'
+    describe 'provideTo3' ->
+        test 'array' ->
+            [1 to 3]
+            |> provide-to3 [].concat, 4 5 6
+            |> expect-to-equal [1 to 6]
+        test 'user-obj' ->
+            obj1
+            |> provide-to3 obj2.speak-all, 'friend' 'send' 'end'
+            |> expect-to-equal 'friend:send:end'
+    describe 'provideTo4' ->
+        test 'array' ->
+            [1 to 3]
+            |> provide-to4 [].concat, 4 5 6 7
+            |> expect-to-equal [1 to 7]
+        test 'user-obj' ->
+            obj1
+            |> provide-to4 obj2.speak-all, 'friend' 'send' 'end' 'lend'
+            |> expect-to-equal 'friend:send:end:lend'
+    describe 'provideTo5' ->
+        test 'array' ->
+            [1 to 3]
+            |> provide-to5 [].concat, 4 5 6 7 8
+            |> expect-to-equal [1 to 8]
+        test 'user-obj' ->
+            obj1
+            |> provide-to5 obj2.speak-all, 'friend' 'send' 'end' 'lend' 'trend'
+            |> expect-to-equal 'friend:send:end:lend:trend'
+    describe 'provideToN' ->
+        test 'array' ->
+            [1 to 3]
+            |> provide-to-n [].concat, [4 to 9]
+            |> expect-to-equal [1 to 9]
+        test 'user-obj' ->
+            obj1
+            |> provide-to-n obj2.speak-all, ['friend' 'send' 'end' 'lend']
+            |> expect-to-equal 'friend:send:end:lend'
+
+
 

@@ -50,6 +50,7 @@ export {
 import manual from './manual'
 
 const oPro = Object.prototype
+const hasOwn = oPro.hasOwnProperty
 
 // const r = (a => b => c => a * b * c) | recurry
 // r (1, 2, 3) = roll (orig) (1, 2, 3)
@@ -979,7 +980,204 @@ const logWith = header => (...args) => log (... [header, ...args])
         return x
     })
 
+const reduceObj = (f) => (acc) => (o) => {
+    let curAcc = acc
+    for (let k in o) if (hasOwn.call (o, k))
+        curAcc = f (curAcc, [k, o [k]])
+    return curAcc
+}
 
 
-// map an object, what do you expect?
-// mapAsTuples
+// a map results in a collection of the same shape: list to list, object to object.
+// the modifier As means the shape will change.
+
+// filter: truthy, like JS filter & R filter
+// map + filter could also be done with reduceObj, of course.
+// filter applies to the mapped value.
+
+const _withFilter = _ => new Map ()
+    .set (mapAsKeys, mapAsKeysWithFilter)
+    .set (mapAsKeysIn, mapAsKeysInWithFilter)
+    .set (mapAsValues, mapAsValuesWithFilter)
+    .set (mapAsValuesIn, mapAsValuesInWithFilter)
+
+const withFilter = (p) => (mapper) =>
+    _withFilter ().get (mapper) | ifOk (
+        f => f (p),
+        _ => die ('cannot augment mapper'),
+    )
+
+const mapAsKeys = (f) => (o) => {
+    const ret = []
+    for (let k in o) if (hasOwn.call (o, k)) ret.push (f (k))
+    return ret
+}
+
+const mapAsKeysWithFilter = (p) => (f) => (o) => {
+    const ret = []
+    for (let k in o) if (hasOwn.call (o, k)) {
+        const kk = f (k)
+        if (p (kk)) ret.push (f (k))
+    }
+    return ret
+}
+
+const mapAsKeysIn = (f) => (o) => {
+    const ret = []
+    for (let k in o) ret.push (f (k))
+    return ret
+}
+
+const mapAsKeysInWithFilter = (p) => (f) => (o) => {
+    const ret = []
+    for (let k in o) {
+        const kk = f (k)
+        if (p (kk)) ret.push (f (k))
+    }
+    return ret
+}
+
+// @canonical
+// const keys = mapAsKeys (id)
+// const keysIn = mapAsKeysIn (id)
+
+const keys = (o) => {
+    const ret = []
+    for (let k in o) if (hasOwn.call (o, k)) ret.push (k)
+    return ret
+}
+
+const keysIn = (o) => {
+    const ret = []
+    for (let k in o) ret.push (k)
+    return ret
+}
+
+const mapAsValues = (f) => (o) => {
+    const ret = []
+    for (let k in o) if (hasOwn.call (o, k)) ret.push (f (o [k]))
+    return ret
+}
+
+const mapAsValuesWithFilter = (p) => (f) => (o) => {
+    const ret = []
+    for (let k in o) if (hasOwn.call (o, k)) {
+        const kk = f (o [k])
+        if (p (kk)) ret.push (kk)
+    }
+    return ret
+}
+
+const mapAsValuesIn = (f) => (o) => {
+    const ret = []
+    for (let k in o) ret.push (f (o [k]))
+    return ret
+}
+
+const mapAsValuesInWithFilter = (p) => (f) => (o) => {
+    const ret = []
+    for (let k in o) {
+        const kk = f (o [k])
+        if (p (kk)) ret.push (kk)
+    }
+    return ret
+}
+
+// @canonical
+// const values = mapAsValues (id)
+// const valuesIn = mapAsValuesIn (id)
+
+const values = (o) => {
+    const ret = []
+    for (let k in o) if (hasOwn.call (o, k)) ret.push (o [k])
+    return ret
+}
+
+const valuesIn = (o) => {
+    const ret = []
+    for (let k in o) ret.push (o [k])
+    return ret
+}
+
+// like R.map
+const mapKeys = (f) => (o) => {
+    const ret = {}
+    for (let k in o) if (hasOwn.call (o, k)) ret [f (k)] = o [k]
+    return ret
+}
+
+const mapValues = (f) => (o) => {
+    const ret = {}
+    for (let k in o) if (hasOwn.call (o, k)) ret [k] = f (o [k])
+    return ret
+}
+
+const mapKeysIn = (f) => (o) => {
+    const ret = {}
+    for (let k in o) ret [f (k)] = o [k]
+    return ret
+}
+
+const mapValuesIn = (f) => (o) => {
+    const ret = {}
+    for (let k in o) ret [k] = f (o [k])
+    return ret
+}
+
+// --- note: it is up to you to ensure that the resulting keys don't clash
+const mapTuples = (f) => (o) => {
+    const ret = {}
+    for (let k in o) if (hasOwn.call (o, k)) {
+        const [kk, vv] = f ([k, o [k]])
+        ret [kk] = vv
+    }
+
+    return ret
+}
+
+const mapTuplesIn = (f) => (o) => {
+    const ret = {}
+    for (let k in o) {
+        const [kk, vv] = f ([k, o [k]])
+        ret [kk] = vv
+    }
+
+    return ret
+}
+
+// removeNull
+
+const o = Object.create ({ a: 1, b: 2 }) | mergeFromM ({ c: 3, d: 4 })
+
+o | mapAsKeysIn (id)
+  | log
+
+o | valuesIn
+  | log
+
+o | mapValues (double)
+  | log
+
+o | mapTuplesIn (([k, v]) => [k + ',', v + 1])
+  | log
+
+// const betterMap = mapTuples | withFilter (ok)
+// o | betterMap (([k, v]) => {
+//     const kk = k == 'a' ? null : k
+//     return [k + ',', v + 1]
+// })
+
+const toUpperCase = dot ('toUpperCase')
+const ifEqualsD = 'd' | eq | ifPredicate
+const mapper = ifEqualsD (_ => null) (toUpperCase)
+
+o | (mapAsKeys | withFilter (ok)) (mapper)
+  | tap (logWith ('ere'))
+
+const reducer = (acc, [k, v]) => {
+    if (k === 'd') return acc
+    return [...acc, toUpperCase (k)]
+}
+
+o | reduceObj (reducer) ([])
+  | log

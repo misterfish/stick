@@ -403,7 +403,7 @@ export const laats = (...xs) => {
 
 export const lets = laats
 
-// --- 'call' always means pass a context.
+// --- 'call' and 'provide' always mean pass a context.
 // --- 'apply' always means 'apply this function to some params'
 // --- 'pass' means 'pass these params to a function'
 // --- 'invoke' means just call this function, no context or params.
@@ -416,17 +416,11 @@ export const callOn2 = curry ((o, val1, val2, f) => f.call (o, val1, val2))
 export const callOn3 = curry ((o, val1, val2, val3, f) => f.call (o, val1, val2, val3))
 export const callOnN = curry ((o, vs, f) => f.apply (o, vs))
 
-export const call = callOn
-export const call1 = callOn1
-export const call2 = callOn2
-export const call3 = callOn3
-export const callN = callOnN
+// ------ ; [] | provideTo ({}.toString)
 
-// ------ ; [] | callUnder ({}.toString)
-
-export const callUnder = curry ((f, o) => f.call (o))
-export const callUnder1 = curry ((f, val, o) => f.call (o, val))
-export const callUnder2 = curry ((f, val1, val2, o) => f.call (o, val1, val2))
+export const provideTo = curry ((f, o) => f.call (o))
+export const provideTo1 = curry ((f, val, o) => f.call (o, val))
+export const provideTo2 = curry ((f, val1, val2, o) => f.call (o, val1, val2))
 
 // --- alias applyTo0 xxx
 export const invoke = f => f ()
@@ -794,13 +788,13 @@ const Cat = (() => {
 
 
 // xxx getType
-// export const getType = callUnder ({}.toString)
+// export const getType = provideTo ({}.toString)
 //    >> dot2 ('slice') (8, -1) (
 //)
 
 // --- wants upper case, e.g. output of toString.
 export const CANONisType = curry ((t, x) => x
-    | callUnder ({}.toString)
+    | provideTo ({}.toString)
     | dot2 ('slice') (8, -1)
     | equals (t)
 )

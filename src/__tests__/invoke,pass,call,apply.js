@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, zipAll, invoke, applyTo1, applyTo2, applyTo3, applyToN, passTo1, passTo2, passTo3, passToN, apply1, apply2, apply3, applyN, pass1, pass2, pass3, passN, call, call1, call2, call3, callN, callOn, callOn1, callOn2, callOn3, callOnN, callUnder, callUnder1, callUnder2, sumAll;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, zipAll, invoke, applyTo1, applyTo2, applyTo3, applyToN, passTo1, passTo2, passTo3, passToN, apply1, apply2, apply3, applyN, pass1, pass2, pass3, passN, call, call1, call2, call3, callN, callOn, callOn1, callOn2, callOn3, callOnN, provideTo, provideTo1, provideTo2, sumAll;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), zipAll = ref$.zipAll, invoke = ref$.invoke, applyTo1 = ref$.applyTo1, applyTo2 = ref$.applyTo2, applyTo3 = ref$.applyTo3, applyToN = ref$.applyToN, passTo1 = ref$.passTo1, passTo2 = ref$.passTo2, passTo3 = ref$.passTo3, passToN = ref$.passToN, apply1 = ref$.apply1, apply2 = ref$.apply2, apply3 = ref$.apply3, applyN = ref$.applyN, pass1 = ref$.pass1, pass2 = ref$.pass2, pass3 = ref$.pass3, passN = ref$.passN, call = ref$.call, call1 = ref$.call1, call2 = ref$.call2, call3 = ref$.call3, callN = ref$.callN, callOn = ref$.callOn, callOn1 = ref$.callOn1, callOn2 = ref$.callOn2, callOn3 = ref$.callOn3, callOnN = ref$.callOnN, callUnder = ref$.callUnder, callUnder1 = ref$.callUnder1, callUnder2 = ref$.callUnder2;
+ref$ = require('../index'), zipAll = ref$.zipAll, invoke = ref$.invoke, applyTo1 = ref$.applyTo1, applyTo2 = ref$.applyTo2, applyTo3 = ref$.applyTo3, applyToN = ref$.applyToN, passTo1 = ref$.passTo1, passTo2 = ref$.passTo2, passTo3 = ref$.passTo3, passToN = ref$.passToN, apply1 = ref$.apply1, apply2 = ref$.apply2, apply3 = ref$.apply3, applyN = ref$.applyN, pass1 = ref$.pass1, pass2 = ref$.pass2, pass3 = ref$.pass3, passN = ref$.passN, call = ref$.call, call1 = ref$.call1, call2 = ref$.call2, call3 = ref$.call3, callN = ref$.callN, callOn = ref$.callOn, callOn1 = ref$.callOn1, callOn2 = ref$.callOn2, callOn3 = ref$.callOn3, callOnN = ref$.callOnN, provideTo = ref$.provideTo, provideTo1 = ref$.provideTo1, provideTo2 = ref$.provideTo2;
 sumAll = function(){
   var args, res$, i$, to$;
   res$ = [];
@@ -219,20 +219,6 @@ describe('call*', function(){
     },
     speakAll: compose$(list, join(':'))
   };
-  describe('aliases', function(){
-    var normal, alias, names;
-    normal = [callOn, callOn1, callOn2, callOn3, callOnN];
-    alias = [call, call1, call2, call3, callN];
-    names = ['call', 'call1', 'call2', 'call3', 'call-n'];
-    return each(function(arg$){
-      var aliasL, aliasR, name;
-      aliasL = arg$[0], aliasR = arg$[1], name = arg$[2];
-      return test(name, function(){
-        return expect(aliasL).toBe(aliasR);
-      });
-    })(
-    zipAll(normal, alias, names));
-  });
   describe('callOn', function(){
     test('array', function(){
       return expectToEqual([3, 2, 1])(
@@ -298,40 +284,40 @@ describe('call*', function(){
       obj.speakAll));
     });
   });
-  describe('callUnder', function(){
+  describe('provideTo', function(){
     test('array', function(){
       return expectToEqual([3, 2, 1])(
-      callUnder([].reverse)(
+      provideTo([].reverse)(
       [1, 2, 3]));
     });
     test('bound function alias', function(){
       var trim;
-      trim = callUnder(''.trim);
+      trim = provideTo(''.trim);
       return expectToEqual('dog')(
       trim(' dog '));
     });
     return test('user-obj', function(){
       return expectToEqual('my name is dog')(
-      callUnder(obj.speak)(
+      provideTo(obj.speak)(
       obj));
     });
   });
-  describe('callUnder1', function(){
+  describe('provideTo1', function(){
     test('array', function(){
       return expectToEqual([1, 2, 3, 4])(
-      callUnder1([].concat, 4)(
+      provideTo1([].concat, 4)(
       [1, 2, 3]));
     });
     return test('user-obj', function(){
       return expectToEqual('my friend is dog')(
-      callUnder1(obj.speak1, 'friend')(
+      provideTo1(obj.speak1, 'friend')(
       obj));
     });
   });
-  return describe('callUnder2', function(){
+  return describe('provideTo2', function(){
     return test('bound function alias', function(){
       var replaceDl;
-      replaceDl = callUnder2(''.replace, 'd', 'l');
+      replaceDl = provideTo2(''.replace, 'd', 'l');
       return expectToEqual('log')(
       replaceDl('dog'));
     });

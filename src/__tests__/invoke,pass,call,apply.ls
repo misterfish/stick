@@ -25,7 +25,7 @@
 
     call, call1, call2, call3, call-n,
     call-on, call-on1, call-on2, call-on3, call-on-n,
-    call-under, call-under1, call-under2,
+    provide-to, provide-to1, provide-to2,
 
 } = require '../index'
 
@@ -151,15 +151,6 @@ describe 'call*' ->
         speak: -> 'my name is ' + @name
         speak1: (word) -> "my #word is " + @name
         speak-all: list >> join ':'
-    describe 'aliases' ->
-        normal = [call-on, call-on1, call-on2, call-on3, call-on-n]
-        alias = [call, call1, call2, call3, call-n]
-        names = ['call', 'call1', 'call2', 'call3', 'call-n']
-
-        zip-all normal, alias, names
-        |> each ([alias-l, alias-r, name]) ->
-            test name, ->
-                (expect alias-l).to-be alias-r
     describe 'callOn' ->
         test 'array' ->
             [].reverse
@@ -210,31 +201,31 @@ describe 'call*' ->
             |> call-on-n obj, ['friend' 'lend']
             |> expect-to-equal 'friend:lend'
 
-    describe 'callUnder' ->
+    describe 'provideTo' ->
         test 'array' ->
             [1 to 3]
-            |> call-under [].reverse
+            |> provide-to [].reverse
             |> expect-to-equal [3 to 1]
         test 'bound function alias' ->
-            trim = call-under ''.trim
+            trim = provide-to ''.trim
             trim ' dog '
             |> expect-to-equal 'dog'
         test 'user-obj' ->
             obj
-            |> call-under obj.speak
+            |> provide-to obj.speak
             |> expect-to-equal 'my name is dog'
-    describe 'callUnder1' ->
+    describe 'provideTo1' ->
         test 'array' ->
             [1 to 3]
-            |> call-under1 [].concat, 4
+            |> provide-to1 [].concat, 4
             |> expect-to-equal [1 to 4]
         test 'user-obj' ->
             obj
-            |> call-under1 obj.speak1, 'friend'
+            |> provide-to1 obj.speak1, 'friend'
             |> expect-to-equal 'my friend is dog'
-    describe 'callUnder2' ->
+    describe 'provideTo2' ->
         test 'bound function alias' ->
-            replace-dl = call-under2 ''.replace, 'd' 'l'
+            replace-dl = provide-to2 ''.replace, 'd' 'l'
             replace-dl 'dog'
             |> expect-to-equal 'log'
 

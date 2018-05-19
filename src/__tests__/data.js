@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, defaultTo, defaultTo__, assocM, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, precatTo, precatFrom, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, eachObjIn, applyScalar, passScalar;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, defaultTo, defaultTo__, assocM, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, precatTo, precatFrom, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, eachObjIn, ampersand, asterisk;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), defaultTo = ref$.defaultTo, defaultTo__ = ref$.defaultTo__, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, precatTo = ref$.precatTo, precatFrom = ref$.precatFrom, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, eachObjIn = ref$.eachObjIn, applyScalar = ref$.applyScalar, passScalar = ref$.passScalar;
+ref$ = require('../index'), defaultTo = ref$.defaultTo, defaultTo__ = ref$.defaultTo__, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, precatTo = ref$.precatTo, precatFrom = ref$.precatFrom, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, eachObjIn = ref$.eachObjIn, ampersand = ref$.ampersand, asterisk = ref$.asterisk;
 describe('default to', function(){
   test(1, function(){
     return expectToEqual(false)(
@@ -1819,11 +1819,11 @@ describe('eachObjIn', function(){
     ret);
   });
 });
-describe('applyScalar', function(){
+describe('asterisk', function(){
   return test(1, function(){
     var this$ = this;
     return expectToEqual([2, 3, 1.5])(
-    applyScalar([
+    asterisk([
       (function(it){
         return it * 2;
       }), (function(it){
@@ -1835,12 +1835,11 @@ describe('applyScalar', function(){
     [1, 2, 3]));
   });
 });
-describe('passScalar', function(){
+describe('ampersand', function(){
   return test(1, function(){
     var this$ = this;
-    return expectToEqual([2, 3, 1.5])(
-    passScalar([1, 2, 3])(
-    [
+    return expectToEqual([20, 11, 5])(
+    ampersand([
       (function(it){
         return it * 2;
       }), (function(it){
@@ -1848,6 +1847,7 @@ describe('passScalar', function(){
       }), (function(it){
         return it / 2;
       })
-    ]));
+    ])(
+    10));
   });
 });

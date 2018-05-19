@@ -271,6 +271,40 @@ export const addCollection = (orig) => (f) => (ary) => {
     return orig (g) (ary)
 }
 
+// --- @canonical
+/*
+export const ampersand = (fs) => (x) => fs | laatsO ([
+    _ => f => f (x),
+    (fs, mapper) => fs | map (mapper),
+])
+*/
+
+export const ampersand = (fs) => (x) => {
+    const mapper = f => f (x)
+    return map (mapper) (fs)
+}
+
+export const asterisk = (fs) => (xs) => {
+    const ret = []
+    let i = -1
+    for (const f of fs) {
+        const x = xs [++i]
+        ret.push (f (x))
+    }
+    return ret
+}
+
+/*
+export const asterisk = curry ((fs, xs) => xs
+    | zip (fs)
+    | map (([f, x]) => f (x))
+)
+*/
+
+// ------ laat / let
+
+export const laat = xs => f => f.apply (null, xs)
+
 export default {
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
@@ -301,4 +335,6 @@ export default {
     mergeToInM, mergeFromInM, mergeToIn, mergeFromIn,
     addIndex, addCollection,
     map, each, eachObj, eachObjIn,
+    ampersand, asterisk,
+    laat,
 }

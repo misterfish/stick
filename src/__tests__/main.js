@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flipC, sprintf1, sprintfN, given, laat, lets, laats, laats2, laats3, laats4, laats5, laats6, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, sumAll, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flipC, sprintf1, sprintfN, laat, lets, laats, laats2, laats3, laats4, laats5, laats6, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, sumAll, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow;
-ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flipC = ref$.flipC, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, given = ref$.given, laat = ref$.laat, lets = ref$.lets, laats = ref$.laats, laats2 = ref$.laats2, laats3 = ref$.laats3, laats4 = ref$.laats4, laats5 = ref$.laats5, laats6 = ref$.laats6, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe;
+ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flipC = ref$.flipC, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, laat = ref$.laat, lets = ref$.lets, laats = ref$.laats, laats2 = ref$.laats2, laats3 = ref$.laats3, laats4 = ref$.laats4, laats5 = ref$.laats5, laats6 = ref$.laats6, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe;
 sumAll = compose$(list, sum);
 describe('comparisons', function(){
   describe('eq', function(){
@@ -403,16 +403,13 @@ describe('flipC', function(){
   });
 });
 describe('laat', function(){
-  test('alias given', function(){
-    return expect(given).toBe(laat);
-  });
   return test(1, function(){
     return expectToEqual(41)(
     laat([10, 12, 19], sumAll));
   });
 });
 describe('laats', function(){
-  test('superset of laat', function(){
+  test('main', function(){
     return expectToEqual(41)(
     laats(function(){
       return 10;
@@ -421,6 +418,10 @@ describe('laats', function(){
     }, function(){
       return 19;
     }, sumAll));
+  });
+  test('alias lets', function(){
+    return expectToEqual(laats)(
+    lets);
   });
   describe('specific versions', function(){
     test('laats2', function(){
@@ -488,7 +489,7 @@ describe('laats', function(){
         return it + 1;
       }), sumAll));
     });
-    return test('laats (6)', function(){
+    test('laats (6)', function(){
       var this$ = this;
       return expectToEqual(168)(
       laats(function(){
@@ -497,6 +498,15 @@ describe('laats', function(){
         return it + 1;
       }), sumAll, sumAll, sumAll, sumAll));
     });
+    return test('laats (10)', function(){
+      var this$ = this;
+      return expectToEqual(2688)(
+      laats(function(){
+        return 10;
+      }, (function(it){
+        return it + 1;
+      }), sumAll, sumAll, sumAll, sumAll, sumAll, sumAll, sumAll, sumAll));
+    });
   });
   test('single function', function(){
     return expectToEqual(11)(
@@ -504,7 +514,6 @@ describe('laats', function(){
       return 11;
     }));
   });
-  test('mixed references', function(){});
   return test('fibonacci', function(){
     var fibonacci;
     fibonacci = function(n){

@@ -27,7 +27,7 @@
     cascade, flip-c,
     sprintf1, sprintf-n,
 
-    given, laat, lets,
+    laat, lets,
     laats, laats2, laats3, laats4, laats5, laats6
 
     nieuw, nieuw1, nieuw2, nieuw3, nieuw-n,
@@ -261,17 +261,17 @@ describe 'flipC' ->
                 (expect (divide-and-add-four-args-flipped 10 5 1) 2).to-equal 3.5
 
 describe 'laat' ->
-    test 'alias given' ->
-        (expect given).to-be laat
     test 1 ->
         laat [10 12 19], sum-all
         |> expect-to-equal 41
 
 describe 'laats' ->
-    test 'superset of laat' ->
+    test 'main' ->
         laats do
             -> 10, -> 12, -> 19, sum-all
         |> expect-to-equal 41
+    test 'alias lets' ->
+        lets |> expect-to-equal laats
     describe 'specific versions' ->
         test 'laats2' ->
             laats2 do
@@ -329,11 +329,23 @@ describe 'laats' ->
                 sum-all # 84
                 sum-all # 168
             |> expect-to-equal 168
+        test 'laats (10)' ->
+            laats do
+                -> 10
+                (+ 1)
+                sum-all # 21
+                sum-all # 42
+                sum-all # 84
+                sum-all # 168
+                sum-all # 336
+                sum-all # 672
+                sum-all # 1344
+                sum-all # 2688
+            |> expect-to-equal 2688
     test 'single function' ->
         laats do
             -> 11
         |> expect-to-equal 11
-    test 'mixed references' ->
     test 'fibonacci' ->
         fibonacci = (n) ->
             sum-last-two = (xs) -> xs[*-1] + xs[*-2]

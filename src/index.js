@@ -7,6 +7,12 @@ defineBinaryOperator ('|',  (...args) => pipe         (...args))
 defineBinaryOperator ('<<', (...args) => compose      (...args))
 defineBinaryOperator ('>>', (...args) => composeRight (...args))
 
+// --- xxx
+const double = x => x | multiply (2)
+const triple = x => x | multiply (3)
+const quadruple = x => x | multiply (4)
+// ---
+
 export const pipe         = (a, b)    => b (a)
 export const composeRight = (a, b)    => (...args) => b (a (...args))
 export const compose      = (a, b)    => (...args) => a (b (...args))
@@ -324,34 +330,16 @@ export const mapPairsIn = curry ((f, obj) => obj
     | fromPairs,
 )
 
-// --- ramda already gives us eachObj.
-
 export const eachObj = _recurry (2) (manual.eachObj)
-export const eachObjIn = curry ((f, obj) => {
-    for (const k in obj) f (obj[k], k)
-})
+export const eachObjIn = _recurry (2) (manual.eachObjIn)
 
-// [a -> b] -> [a] -> [b]
-export const applyScalar = curry ((fs, xs) => xs
-    | zip (fs)
-    | map (([f, x]) => f (x))
-)
-
-export const applyScalarIfOk = curry ((fs, xs) => xs
-    | zip (fs)
-    | map (([f, x]) => x | whenOk (f))
-)
-
-export const passScalar = flip (applyScalar)
-
-// @todo
-export const scalarApply = applyScalar
-export const scalarPass = passScalar
+// fs `ampersand` x = map map' fs where map' f = f x
+export const ampersand = _recurry (2) (manual.ampersand)
+export const asterisk = _recurry (2) (manual.asterisk)
 
 // --------- laat
 
-export const laat = (xs, f) => f.apply (null, xs)
-export const given = laat
+export const laat = _recurry (2) (manual.laat)
 
 // --- these can be called directly by speed freaks; `laats` should be good enough for nearly all
 // uses.
@@ -957,9 +945,10 @@ const mapX = map | addIndex
 const mapXL = map | addIndex | addCollection
 const mapLX = map | addCollection | addIndex
 
+
 const { log, } = console
-const double = x => x | multiply (2)
 const logWith = header => (...args) => log (... [header, ...args])
+    /*
 ; [ 1, 2, 3 ]
     | mapX ((x, idx) => {
         [x | double, idx] | tap (logWith ('mapX'))
@@ -973,6 +962,7 @@ const logWith = header => (...args) => log (... [header, ...args])
         [x | double, idx, ary] | tap (logWith ('mapLX'))
         return x
     })
+    */
 
 const reduceObj = (f) => (acc) => (o) => {
     let curAcc = acc
@@ -1206,6 +1196,7 @@ const mapTuplesInWithFilter = (p) => (f) => (o) => {
 
 const o = Object.create ({ a: 1, b: 2 }) | mergeFromM ({ c: 3, d: 4 })
 
+    /*
 o | mapAsKeysIn (id)
   | log
 
@@ -1217,6 +1208,7 @@ o | mapValues (double)
 
 o | mapTuplesIn (([k, v]) => [k + ',', v + 1])
   | log
+  */
 
 // const betterMap = mapTuples | withFilter (ok)
 // o | betterMap (([k, v]) => {
@@ -1228,6 +1220,7 @@ const toUpperCase = dot ('toUpperCase')
 const ifEqualsD = 'd' | eq | ifPredicate
 const mapper = ifEqualsD (_ => null) (toUpperCase)
 
+    /*
 o | (mapAsKeys | withFilter (ok)) (mapper)
   | tap (logWith ('ere'))
 
@@ -1240,8 +1233,11 @@ o | reduceObj (reducer) ([])
   | log
 
 
-
-
 o | eachObj ((...args) => args | logWith ('eachObj'))
 o | (eachObj | addIndex) ((...args) => args | logWith ('eachObj'))
 o | (eachObj | addCollection) ((...args) => args | logWith ('eachObj'))
+
+10 | ampersand ([double, triple, quadruple]) | log
+; [10, 20] | asterisk ([double, triple]) | log
+
+*/

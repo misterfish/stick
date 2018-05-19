@@ -32,7 +32,7 @@
     discard-prototype, flatten-prototype,
 
     map-pairs, map-pairs-in, each-obj-in,
-    apply-scalar, pass-scalar,
+    ampersand, asterisk,
 
 } = require '../index'
 
@@ -994,14 +994,14 @@ describe 'eachObjIn' ->
             #
             # --- apply -> func
 
-describe 'applyScalar' ->
+describe 'asterisk' ->
     test 1 ->
         [1 2 3]
-        |> apply-scalar [(* 2), ( + 1), (/ 2)]
+        |> asterisk [(* 2), ( + 1), (/ 2)]
         |> expect-to-equal [2 3 1.5]
 
-describe 'passScalar' ->
+describe 'ampersand' ->
     test 1 ->
-        [(* 2), ( + 1), (/ 2)]
-        |> pass-scalar [1 2 3]
-        |> expect-to-equal [2 3 1.5]
+        10
+        |> ampersand [(* 2), ( + 1), (/ 2)]
+        |> expect-to-equal [20 11 5]

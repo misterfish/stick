@@ -1000,6 +1000,12 @@ const _withFilter = _ => new Map ()
     .set (mapAsKeysIn, mapAsKeysInWithFilter)
     .set (mapAsValues, mapAsValuesWithFilter)
     .set (mapAsValuesIn, mapAsValuesInWithFilter)
+    .set (mapKeys, mapKeysWithFilter)
+    .set (mapValues, mapValuesWithFilter)
+    .set (mapKeysIn, mapKeysInWithFilter)
+    .set (mapValuesIn, mapValuesInWithFilter)
+    .set (mapTuples, mapTuplesWithFilter)
+    .set (mapTuplesIn, mapTuplesInWithFilter)
 
 const withFilter = (p) => (mapper) =>
     _withFilter ().get (mapper) | ifOk (
@@ -1099,10 +1105,18 @@ const valuesIn = (o) => {
     return ret
 }
 
-// like R.map
 const mapKeys = (f) => (o) => {
     const ret = {}
     for (let k in o) if (hasOwn.call (o, k)) ret [f (k)] = o [k]
+    return ret
+}
+
+const mapKeysWithFilter = (p) => (f) => (o) => {
+    const ret = {}
+    for (let k in o) if (hasOwn.call (o, k)) {
+        const kk = f (k)
+        if (p (kk)) ret [kk] = o [k]
+    }
     return ret
 }
 
@@ -1112,9 +1126,27 @@ const mapValues = (f) => (o) => {
     return ret
 }
 
+const mapValuesWithFilter = (p) => (f) => (o) => {
+    const ret = {}
+    for (let k in o) if (hasOwn.call (o, k)) {
+        const vv = f (o [k])
+        if (p (vv)) ret [k] = vv
+    }
+    return ret
+}
+
 const mapKeysIn = (f) => (o) => {
     const ret = {}
     for (let k in o) ret [f (k)] = o [k]
+    return ret
+}
+
+const mapKeysInWithFilter = (p) => (f) => (o) => {
+    const ret = {}
+    for (let k in o) {
+        const kk = f (k)
+        if (p (kk)) ret [kk] = o [k]
+    }
     return ret
 }
 
@@ -1124,11 +1156,32 @@ const mapValuesIn = (f) => (o) => {
     return ret
 }
 
+const mapValuesInWithFilter = (p) => (f) => (o) => {
+    const ret = {}
+    for (let k in o) {
+        const vv = f (o [k])
+        if (p (vv)) ret [k] = vv
+    }
+    return ret
+}
+
 // --- note: it is up to you to ensure that the resulting keys don't clash
 const mapTuples = (f) => (o) => {
     const ret = {}
     for (let k in o) if (hasOwn.call (o, k)) {
         const [kk, vv] = f ([k, o [k]])
+        ret [kk] = vv
+    }
+
+    return ret
+}
+
+const mapTuplesWithFilter = (p) => (f) => (o) => {
+    const ret = {}
+    for (let k in o) if (hasOwn.call (o, k)) {
+        const kkvv = f ([k, o [k]])
+        if (! p (kkvv)) return
+        const [kk, vv] = kkvv
         ret [kk] = vv
     }
 
@@ -1145,7 +1198,17 @@ const mapTuplesIn = (f) => (o) => {
     return ret
 }
 
-// removeNull
+const mapTuplesInWithFilter = (p) => (f) => (o) => {
+    const ret = {}
+    for (let k in o) {
+        const kkvv = f ([k, o [k]])
+        if (! p (kkvv)) return
+        const [kk, vv] = kkvv
+        ret [kk] = vv
+    }
+
+    return ret
+}
 
 const o = Object.create ({ a: 1, b: 2 }) | mergeFromM ({ c: 3, d: 4 })
 

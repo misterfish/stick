@@ -19,7 +19,7 @@ import {
     last, tail, reduceRight, chain, identity as id, reduce, map as rMap, filter, reject, join,
     split, prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
     splitEvery,
-    forEach as rEach, forEachObjIndexed as eachObj, complement, times as rTimes,
+    forEach as rEach, forEachObjIndexed as rEachObj, complement, times as rTimes,
     range as rRange, isNil, addIndex as rAddIndex, take, equals, mapAccum,
     repeat as rRepeat, concat as rConcat, append as rAppend, compose as rCompose,
     merge as rMerge, mergeAll as rMergeAll,
@@ -281,10 +281,12 @@ export const mergeAllIn = xs => xs.reduce (
 // ------ map.
 
 // --- simple dispatches to Array.prototype.map
-export const map = f => ary => ary.map ((x) => f (x))
-export const each = f => ary => ary.forEach (f)
 
-const double = x => x | multiply (2)
+export const map = _recurry (2) (manual.map)
+export const each = _recurry (2) (manual.each)
+
+export const addIndex = _recurry (3) (manual.addIndex)
+export const addCollection  = _recurry (3) (manual.addCollection)
 
 // --- returns an object.
 // --- user function f is expected to return pairs: [k, v]
@@ -301,6 +303,7 @@ const double = x => x | multiply (2)
 
 const ifArray = (...args) => ifPredicate (isArray) (...args)
 
+// @todo
 export const mapPairs = curry ((f, obj) =>
     obj | ifArray (
         splitEvery (2)
@@ -313,6 +316,7 @@ export const mapPairs = curry ((f, obj) =>
     )
 )
 
+// @todo
 // --- doesn't take array, only obj.
 export const mapPairsIn = curry ((f, obj) => obj
     | toPairsIn
@@ -322,6 +326,7 @@ export const mapPairsIn = curry ((f, obj) => obj
 
 // --- ramda already gives us eachObj.
 
+export const eachObj = _recurry (2) (manual.eachObj)
 export const eachObjIn = curry ((f, obj) => {
     for (const k in obj) f (obj[k], k)
 })
@@ -730,7 +735,7 @@ export const factoryProps = curry ((props, factory) => {
         create (args) {
             const o = orig (props)
             const [src, tgt] = [args, o]
-            for (let i in args)
+            for (const i in args)
                 if (oPro.hasOwnProperty.call (src, i) && ok (src[i]))
                     tgt[i] = src[i]
             return tgt
@@ -752,7 +757,7 @@ export const factoryInit = (init) => (proto) => ({
 
 export const factory = factoryInit ((o, props) => {
     if (props == null) return
-    for (let i in props) if (oPro.hasOwnProperty.call (props, i))
+    for (const i in props) if (oPro.hasOwnProperty.call (props, i))
         o[i] = props[i]
 })
 
@@ -948,23 +953,12 @@ export const defaultToA = blush >> defaultTo
 // this | pluck ('beans', 'bones', 'binds', (dit, beans, bones, binds) => ...)
 // could combine ramda props with apply.
 
-
-export const addIndex = (orig) => (f) => (ary) => {
-    let idx = -1
-    const g = (...args) => f (...args, ++idx)
-    return orig (g) (ary)
-}
-
-export const addList = (orig) => (f) => (ary) => {
-    const g = (...args) => f (...args, ary)
-    return orig (g) (ary)
-}
-
 const mapX = map | addIndex
-const mapXL = map | addIndex | addList
-const mapLX = map | addList | addIndex
+const mapXL = map | addIndex | addCollection
+const mapLX = map | addCollection | addIndex
 
 const { log, } = console
+const double = x => x | multiply (2)
 const logWith = header => (...args) => log (... [header, ...args])
 ; [ 1, 2, 3 ]
     | mapX ((x, idx) => {
@@ -982,7 +976,7 @@ const logWith = header => (...args) => log (... [header, ...args])
 
 const reduceObj = (f) => (acc) => (o) => {
     let curAcc = acc
-    for (let k in o) if (hasOwn.call (o, k))
+    for (const k in o) if (hasOwn.call (o, k))
         curAcc = f (curAcc, [k, o [k]])
     return curAcc
 }
@@ -996,32 +990,32 @@ const reduceObj = (f) => (acc) => (o) => {
 // filter applies to the mapped value.
 
 const _withFilter = _ => new Map ()
-    .set (mapAsKeys, mapAsKeysWithFilter)
-    .set (mapAsKeysIn, mapAsKeysInWithFilter)
-    .set (mapAsValues, mapAsValuesWithFilter)
+    .set (mapAsKeys,     mapAsKeysWithFilter)
+    .set (mapAsKeysIn,   mapAsKeysInWithFilter)
+    .set (mapAsValues,   mapAsValuesWithFilter)
     .set (mapAsValuesIn, mapAsValuesInWithFilter)
-    .set (mapKeys, mapKeysWithFilter)
-    .set (mapValues, mapValuesWithFilter)
-    .set (mapKeysIn, mapKeysInWithFilter)
-    .set (mapValuesIn, mapValuesInWithFilter)
-    .set (mapTuples, mapTuplesWithFilter)
-    .set (mapTuplesIn, mapTuplesInWithFilter)
+    .set (mapKeys,       mapKeysWithFilter)
+    .set (mapValues,     mapValuesWithFilter)
+    .set (mapKeysIn,     mapKeysInWithFilter)
+    .set (mapValuesIn,   mapValuesInWithFilter)
+    .set (mapTuples,     mapTuplesWithFilter)
+    .set (mapTuplesIn,   mapTuplesInWithFilter)
 
-const withFilter = (p) => (mapper) =>
-    _withFilter ().get (mapper) | ifOk (
+const withFilter = (p) => (mapper) => _withFilter ()
+    .get (mapper) | ifOk (
         f => f (p),
         _ => die ('cannot augment mapper'),
     )
 
 const mapAsKeys = (f) => (o) => {
     const ret = []
-    for (let k in o) if (hasOwn.call (o, k)) ret.push (f (k))
+    for (const k in o) if (hasOwn.call (o, k)) ret.push (f (k))
     return ret
 }
 
 const mapAsKeysWithFilter = (p) => (f) => (o) => {
     const ret = []
-    for (let k in o) if (hasOwn.call (o, k)) {
+    for (const k in o) if (hasOwn.call (o, k)) {
         const kk = f (k)
         if (p (kk)) ret.push (f (k))
     }
@@ -1030,13 +1024,13 @@ const mapAsKeysWithFilter = (p) => (f) => (o) => {
 
 const mapAsKeysIn = (f) => (o) => {
     const ret = []
-    for (let k in o) ret.push (f (k))
+    for (const k in o) ret.push (f (k))
     return ret
 }
 
 const mapAsKeysInWithFilter = (p) => (f) => (o) => {
     const ret = []
-    for (let k in o) {
+    for (const k in o) {
         const kk = f (k)
         if (p (kk)) ret.push (f (k))
     }
@@ -1049,25 +1043,25 @@ const mapAsKeysInWithFilter = (p) => (f) => (o) => {
 
 const keys = (o) => {
     const ret = []
-    for (let k in o) if (hasOwn.call (o, k)) ret.push (k)
+    for (const k in o) if (hasOwn.call (o, k)) ret.push (k)
     return ret
 }
 
 const keysIn = (o) => {
     const ret = []
-    for (let k in o) ret.push (k)
+    for (const k in o) ret.push (k)
     return ret
 }
 
 const mapAsValues = (f) => (o) => {
     const ret = []
-    for (let k in o) if (hasOwn.call (o, k)) ret.push (f (o [k]))
+    for (const k in o) if (hasOwn.call (o, k)) ret.push (f (o [k]))
     return ret
 }
 
 const mapAsValuesWithFilter = (p) => (f) => (o) => {
     const ret = []
-    for (let k in o) if (hasOwn.call (o, k)) {
+    for (const k in o) if (hasOwn.call (o, k)) {
         const kk = f (o [k])
         if (p (kk)) ret.push (kk)
     }
@@ -1076,13 +1070,13 @@ const mapAsValuesWithFilter = (p) => (f) => (o) => {
 
 const mapAsValuesIn = (f) => (o) => {
     const ret = []
-    for (let k in o) ret.push (f (o [k]))
+    for (const k in o) ret.push (f (o [k]))
     return ret
 }
 
 const mapAsValuesInWithFilter = (p) => (f) => (o) => {
     const ret = []
-    for (let k in o) {
+    for (const k in o) {
         const kk = f (o [k])
         if (p (kk)) ret.push (kk)
     }
@@ -1095,25 +1089,25 @@ const mapAsValuesInWithFilter = (p) => (f) => (o) => {
 
 const values = (o) => {
     const ret = []
-    for (let k in o) if (hasOwn.call (o, k)) ret.push (o [k])
+    for (const k in o) if (hasOwn.call (o, k)) ret.push (o [k])
     return ret
 }
 
 const valuesIn = (o) => {
     const ret = []
-    for (let k in o) ret.push (o [k])
+    for (const k in o) ret.push (o [k])
     return ret
 }
 
 const mapKeys = (f) => (o) => {
     const ret = {}
-    for (let k in o) if (hasOwn.call (o, k)) ret [f (k)] = o [k]
+    for (const k in o) if (hasOwn.call (o, k)) ret [f (k)] = o [k]
     return ret
 }
 
 const mapKeysWithFilter = (p) => (f) => (o) => {
     const ret = {}
-    for (let k in o) if (hasOwn.call (o, k)) {
+    for (const k in o) if (hasOwn.call (o, k)) {
         const kk = f (k)
         if (p (kk)) ret [kk] = o [k]
     }
@@ -1122,13 +1116,13 @@ const mapKeysWithFilter = (p) => (f) => (o) => {
 
 const mapValues = (f) => (o) => {
     const ret = {}
-    for (let k in o) if (hasOwn.call (o, k)) ret [k] = f (o [k])
+    for (const k in o) if (hasOwn.call (o, k)) ret [k] = f (o [k])
     return ret
 }
 
 const mapValuesWithFilter = (p) => (f) => (o) => {
     const ret = {}
-    for (let k in o) if (hasOwn.call (o, k)) {
+    for (const k in o) if (hasOwn.call (o, k)) {
         const vv = f (o [k])
         if (p (vv)) ret [k] = vv
     }
@@ -1137,13 +1131,13 @@ const mapValuesWithFilter = (p) => (f) => (o) => {
 
 const mapKeysIn = (f) => (o) => {
     const ret = {}
-    for (let k in o) ret [f (k)] = o [k]
+    for (const k in o) ret [f (k)] = o [k]
     return ret
 }
 
 const mapKeysInWithFilter = (p) => (f) => (o) => {
     const ret = {}
-    for (let k in o) {
+    for (const k in o) {
         const kk = f (k)
         if (p (kk)) ret [kk] = o [k]
     }
@@ -1152,13 +1146,13 @@ const mapKeysInWithFilter = (p) => (f) => (o) => {
 
 const mapValuesIn = (f) => (o) => {
     const ret = {}
-    for (let k in o) ret [k] = f (o [k])
+    for (const k in o) ret [k] = f (o [k])
     return ret
 }
 
 const mapValuesInWithFilter = (p) => (f) => (o) => {
     const ret = {}
-    for (let k in o) {
+    for (const k in o) {
         const vv = f (o [k])
         if (p (vv)) ret [k] = vv
     }
@@ -1168,7 +1162,7 @@ const mapValuesInWithFilter = (p) => (f) => (o) => {
 // --- note: it is up to you to ensure that the resulting keys don't clash
 const mapTuples = (f) => (o) => {
     const ret = {}
-    for (let k in o) if (hasOwn.call (o, k)) {
+    for (const k in o) if (hasOwn.call (o, k)) {
         const [kk, vv] = f ([k, o [k]])
         ret [kk] = vv
     }
@@ -1178,9 +1172,9 @@ const mapTuples = (f) => (o) => {
 
 const mapTuplesWithFilter = (p) => (f) => (o) => {
     const ret = {}
-    for (let k in o) if (hasOwn.call (o, k)) {
+    for (const k in o) if (hasOwn.call (o, k)) {
         const kkvv = f ([k, o [k]])
-        if (! p (kkvv)) return
+        if (! p (kkvv)) continue
         const [kk, vv] = kkvv
         ret [kk] = vv
     }
@@ -1190,7 +1184,7 @@ const mapTuplesWithFilter = (p) => (f) => (o) => {
 
 const mapTuplesIn = (f) => (o) => {
     const ret = {}
-    for (let k in o) {
+    for (const k in o) {
         const [kk, vv] = f ([k, o [k]])
         ret [kk] = vv
     }
@@ -1200,9 +1194,9 @@ const mapTuplesIn = (f) => (o) => {
 
 const mapTuplesInWithFilter = (p) => (f) => (o) => {
     const ret = {}
-    for (let k in o) {
+    for (const k in o) {
         const kkvv = f ([k, o [k]])
-        if (! p (kkvv)) return
+        if (! p (kkvv)) continue
         const [kk, vv] = kkvv
         ret [kk] = vv
     }
@@ -1244,3 +1238,10 @@ const reducer = (acc, [k, v]) => {
 
 o | reduceObj (reducer) ([])
   | log
+
+
+
+
+o | eachObj ((...args) => args | logWith ('eachObj'))
+o | (eachObj | addIndex) ((...args) => args | logWith ('eachObj'))
+o | (eachObj | addCollection) ((...args) => args | logWith ('eachObj'))

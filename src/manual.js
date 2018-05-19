@@ -185,13 +185,13 @@ export const concatFromM = src => tgt => (tgt.push (...src), tgt)
 // --- these seem to be much faster than Object.assign -- why?
 // @profile
 export const mergeToM = (tgt) => (src) => {
-    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
+    for (const i in src) if (oPro.hasOwnProperty.call (src, i))
         tgt[i] = src[i]
     return tgt
 }
 
 export const mergeFromM = (src) => (tgt) => {
-    for (let i in src) if (oPro.hasOwnProperty.call (src, i))
+    for (const i in src) if (oPro.hasOwnProperty.call (src, i))
         tgt[i] = src[i]
     return tgt
 }
@@ -208,7 +208,7 @@ export const mergeFrom = (src) => (tgt) => {
 
 export const mergeToWithM = (collision) => (tgt) => (src) => {
 	const ret = tgt
-    for (let i in src) whenHas (
+    for (const i in src) whenHas (
         (v, o, k) => ifHas (
 			(v, o, k) => ret[i] = collision (ret[i], src[i]))
 			((o, k) => ret[i] = src[i])
@@ -222,7 +222,7 @@ export const mergeFromWithM = (collision) => (src) => (tgt) => mergeToWithM (col
 
 // --- @test
 export const mergeToWhenOkM = (tgt) => (src) => {
-    for (let i in src) if (hasOwn.call (src, i) && ok (src[i]))
+    for (const i in src) if (hasOwn.call (src, i) && ok (src[i]))
         tgt[i] = src[i]
     return tgt
 }
@@ -231,7 +231,7 @@ export const mergeToWhenOkM = (tgt) => (src) => {
 export const mergeFromWhenOkM = (src) => (tgt) => mergeToWhenOkM (tgt) (src)
 
 export const mergeToInM = (tgt) => (src) => {
-    for (let i in src) tgt[i] = src[i]
+    for (const i in src) tgt[i] = src[i]
     return tgt
 }
 
@@ -243,9 +243,35 @@ export const mergeToIn = (tgt) => (src) => {
 }
 export const mergeFromIn = (src) => (tgt) => mergeToIn (tgt) (src)
 
+export const map  = f => ary => ary.map     (x => f (x))
+export const each = f => ary => ary.forEach (x => f (x))
+
+// --- returns obj
+export const eachObj = (f) => (o) => {
+    for (const k in o) if (hasOwn.call (o, k)) f (o [k], k)
+    return o
+}
+
+// --- returns obj
+export const eachObjIn = (f) => (o) => {
+    for (const k in o) f (o [k], k)
+    return o
+}
+
+// --- works on lists & objects
+export const addIndex = (orig) => (f) => (ary) => {
+    let idx = -1
+    const g = (...args) => f (...args, ++idx)
+    return orig (g) (ary)
+}
+
+// --- works on lists & objects
+export const addCollection = (orig) => (f) => (ary) => {
+    const g = (...args) => f (...args, ary)
+    return orig (g) (ary)
+}
 
 export default {
-mergeToInM, mergeFromInM, mergeToIn, mergeFromIn,
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,
@@ -272,4 +298,7 @@ mergeToInM, mergeFromInM, mergeToIn, mergeFromIn,
     mergeTo, mergeFrom, mergeToM, mergeFromM,
     mergeToWithM, mergeFromWithM,
     mergeToWhenOkM, mergeFromWhenOkM,
+    mergeToInM, mergeFromInM, mergeToIn, mergeFromIn,
+    addIndex, addCollection,
+    map, each, eachObj, eachObjIn,
 }

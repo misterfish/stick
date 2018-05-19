@@ -4,7 +4,6 @@
     times: r-times,
     reverse,
     tap,
-    flip,
     zip,
     sum,
     equals: r-equals,
@@ -24,7 +23,8 @@
     eq, ne, gt, gte, lt, lte,
 
     bind, bind-late, bind-try,
-    cascade, flip-c,
+    cascade,
+    flip, flip3, flip4, flip5,
     sprintf1, sprintf-n,
 
     laat, lets,
@@ -158,16 +158,15 @@ describe 'bind*' ->
         xtest '1' ->
             bindTry(obj, 'speak') |> if-ok
 
-describe 'flipC' ->
-    fn = flip-c
-    describe 'target created with "haskell" curry notation' ->
+describe 'flip' ->
+    describe 'target manually curried' ->
         divide = (a) -> (b) -> a / b
         divide-and-add-three-args = (a) -> (b) -> (c) -> a / b + c
         divide-and-add-four-args = (a) -> (b) -> (c) -> (d) -> a / b + c + d
 
-        divide-flipped = flip-c divide
-        divide-and-add-three-args-flipped = flip-c divide-and-add-three-args
-        divide-and-add-four-args-flipped = flip-c divide-and-add-four-args
+        divide-flipped = flip divide
+        divide-and-add-three-args-flipped = flip3 divide-and-add-three-args
+        divide-and-add-four-args-flipped = flip4 divide-and-add-four-args
 
         test 'init' ->
             (expect (divide 10) 5).to-equal 2
@@ -193,14 +192,18 @@ describe 'flipC' ->
                 (expect (((divide-and-add-four-args-flipped 10) 5) 1) 2).to-equal 3.5
             test 'result is curried part deux' ->
                 (expect (divide-and-add-four-args-flipped 10 5 1) 2).to-equal 3.5
+            test 'result is curried part trois' ->
+                (expect (divide-and-add-four-args-flipped 10 5) 1 2).to-equal 3.5
+            test 'result is curried part quatre' ->
+                (expect (divide-and-add-four-args-flipped 10) 5 1 2).to-equal 3.5
     describe 'target created with LS curry function' ->
         divide = (a, b) --> a / b
         divide-and-add-three-args = (a, b, c) --> a / b + c
         divide-and-add-four-args = (a, b, c, d) --> a / b + c + d
 
-        divide-flipped = flip-c divide
-        divide-and-add-three-args-flipped = flip-c divide-and-add-three-args
-        divide-and-add-four-args-flipped = flip-c divide-and-add-four-args
+        divide-flipped = flip divide
+        divide-and-add-three-args-flipped = flip3 divide-and-add-three-args
+        divide-and-add-four-args-flipped = flip4 divide-and-add-four-args
 
         test 'init' ->
             (expect (divide 10) 5).to-equal 2
@@ -226,14 +229,18 @@ describe 'flipC' ->
                 (expect (((divide-and-add-four-args-flipped 10) 5) 1) 2).to-equal 3.5
             test 'result is curried part deux' ->
                 (expect (divide-and-add-four-args-flipped 10 5 1) 2).to-equal 3.5
+            test 'result is curried part trois' ->
+                (expect (divide-and-add-four-args-flipped 10 5) 1 2).to-equal 3.5
+            test 'result is curried part quatre' ->
+                (expect (divide-and-add-four-args-flipped 10) 5 1 2).to-equal 3.5
     describe 'target created with ramda curry function' ->
         divide = curry (a, b) -> a / b
         divide-and-add-three-args = curry (a, b, c) -> a / b + c
         divide-and-add-four-args = curry (a, b, c, d) -> a / b + c + d
 
-        divide-flipped = flip-c divide
-        divide-and-add-three-args-flipped = flip-c divide-and-add-three-args
-        divide-and-add-four-args-flipped = flip-c divide-and-add-four-args
+        divide-flipped = flip divide
+        divide-and-add-three-args-flipped = flip3 divide-and-add-three-args
+        divide-and-add-four-args-flipped = flip4 divide-and-add-four-args
 
         test 'init' ->
             (expect (divide 10) 5).to-equal 2
@@ -259,6 +266,10 @@ describe 'flipC' ->
                 (expect (((divide-and-add-four-args-flipped 10) 5) 1) 2).to-equal 3.5
             test 'result is curried part deux' ->
                 (expect (divide-and-add-four-args-flipped 10 5 1) 2).to-equal 3.5
+            test 'result is curried part trois' ->
+                (expect (divide-and-add-four-args-flipped 10 5) 1 2).to-equal 3.5
+            test 'result is curried part quatre' ->
+                (expect (divide-and-add-four-args-flipped 10) 5 1 2).to-equal 3.5
 
 describe 'laat' ->
     test 1 ->

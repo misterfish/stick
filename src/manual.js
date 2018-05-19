@@ -353,6 +353,17 @@ export const applyToN = vs =>
 export const passTo = f => val => f (val)
 export const passToN = f => vs => f.apply (null, vs)
 
+export const prop = p => o => o [p]
+
+export const flip  = f => a => b =>
+    f (b) (a)
+export const flip3 = f => a => b => c =>
+    f (b) (a) (c)
+export const flip4 = f => a => b => c => d =>
+    f (b) (a) (c) (d)
+export const flip5 = f => a => b => c => d => e =>
+    f (b) (a) (c) (d) (e)
+
 export default {
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
@@ -389,4 +400,6 @@ export default {
     provideTo, provideTo1, provideTo2, provideTo3, provideTo4, provideTo5, provideToN,
     applyTo1, applyTo2, applyTo3, applyTo4, applyTo5, applyToN,
     passTo, passToN,
+    prop,
+    flip, flip3, flip4, flip5,
 }

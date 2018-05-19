@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flipC, sprintf1, sprintfN, laat, lets, laats, laats2, laats3, laats4, laats5, laats6, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, sumAll, slice$ = [].slice;
-ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, laat, lets, laats, laats2, laats3, laats4, laats5, laats6, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, sumAll, slice$ = [].slice;
+ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow;
-ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flipC = ref$.flipC, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, laat = ref$.laat, lets = ref$.lets, laats = ref$.laats, laats2 = ref$.laats2, laats3 = ref$.laats3, laats4 = ref$.laats4, laats5 = ref$.laats5, laats6 = ref$.laats6, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe;
+ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, laat = ref$.laat, lets = ref$.lets, laats = ref$.laats, laats2 = ref$.laats2, laats3 = ref$.laats3, laats4 = ref$.laats4, laats5 = ref$.laats5, laats6 = ref$.laats6, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe;
 sumAll = compose$(list, sum);
 describe('comparisons', function(){
   describe('eq', function(){
@@ -236,10 +236,8 @@ describe('bind*', function(){
     });
   });
 });
-describe('flipC', function(){
-  var fn;
-  fn = flipC;
-  describe('target created with "haskell" curry notation', function(){
+describe('flip', function(){
+  describe('target manually curried', function(){
     var divide, divideAndAddThreeArgs, divideAndAddFourArgs, divideFlipped, divideAndAddThreeArgsFlipped, divideAndAddFourArgsFlipped;
     divide = function(a){
       return function(b){
@@ -262,9 +260,9 @@ describe('flipC', function(){
         };
       };
     };
-    divideFlipped = flipC(divide);
-    divideAndAddThreeArgsFlipped = flipC(divideAndAddThreeArgs);
-    divideAndAddFourArgsFlipped = flipC(divideAndAddFourArgs);
+    divideFlipped = flip(divide);
+    divideAndAddThreeArgsFlipped = flip3(divideAndAddThreeArgs);
+    divideAndAddFourArgsFlipped = flip4(divideAndAddFourArgs);
     test('init', function(){
       expect(divide(10)(5)).toEqual(2);
       expect(divideAndAddThreeArgs(10)(5)(1)).toEqual(3);
@@ -296,8 +294,14 @@ describe('flipC', function(){
       test('result is curried', function(){
         return expect(divideAndAddFourArgsFlipped(10)(5)(1)(2)).toEqual(3.5);
       });
-      return test('result is curried part deux', function(){
+      test('result is curried part deux', function(){
         return expect(divideAndAddFourArgsFlipped(10, 5, 1)(2)).toEqual(3.5);
+      });
+      test('result is curried part trois', function(){
+        return expect(divideAndAddFourArgsFlipped(10, 5)(1, 2)).toEqual(3.5);
+      });
+      return test('result is curried part quatre', function(){
+        return expect(divideAndAddFourArgsFlipped(10)(5, 1, 2)).toEqual(3.5);
       });
     });
   });
@@ -312,9 +316,9 @@ describe('flipC', function(){
     divideAndAddFourArgs = curry$(function(a, b, c, d){
       return a / b + c + d;
     });
-    divideFlipped = flipC(divide);
-    divideAndAddThreeArgsFlipped = flipC(divideAndAddThreeArgs);
-    divideAndAddFourArgsFlipped = flipC(divideAndAddFourArgs);
+    divideFlipped = flip(divide);
+    divideAndAddThreeArgsFlipped = flip3(divideAndAddThreeArgs);
+    divideAndAddFourArgsFlipped = flip4(divideAndAddFourArgs);
     test('init', function(){
       expect(divide(10)(5)).toEqual(2);
       expect(divideAndAddThreeArgs(10)(5)(1)).toEqual(3);
@@ -346,8 +350,14 @@ describe('flipC', function(){
       test('result is curried', function(){
         return expect(divideAndAddFourArgsFlipped(10)(5)(1)(2)).toEqual(3.5);
       });
-      return test('result is curried part deux', function(){
+      test('result is curried part deux', function(){
         return expect(divideAndAddFourArgsFlipped(10, 5, 1)(2)).toEqual(3.5);
+      });
+      test('result is curried part trois', function(){
+        return expect(divideAndAddFourArgsFlipped(10, 5)(1, 2)).toEqual(3.5);
+      });
+      return test('result is curried part quatre', function(){
+        return expect(divideAndAddFourArgsFlipped(10)(5, 1, 2)).toEqual(3.5);
       });
     });
   });
@@ -362,9 +372,9 @@ describe('flipC', function(){
     divideAndAddFourArgs = curry(function(a, b, c, d){
       return a / b + c + d;
     });
-    divideFlipped = flipC(divide);
-    divideAndAddThreeArgsFlipped = flipC(divideAndAddThreeArgs);
-    divideAndAddFourArgsFlipped = flipC(divideAndAddFourArgs);
+    divideFlipped = flip(divide);
+    divideAndAddThreeArgsFlipped = flip3(divideAndAddThreeArgs);
+    divideAndAddFourArgsFlipped = flip4(divideAndAddFourArgs);
     test('init', function(){
       expect(divide(10)(5)).toEqual(2);
       expect(divideAndAddThreeArgs(10)(5)(1)).toEqual(3);
@@ -396,8 +406,14 @@ describe('flipC', function(){
       test('result is curried', function(){
         return expect(divideAndAddFourArgsFlipped(10)(5)(1)(2)).toEqual(3.5);
       });
-      return test('result is curried part deux', function(){
+      test('result is curried part deux', function(){
         return expect(divideAndAddFourArgsFlipped(10, 5, 1)(2)).toEqual(3.5);
+      });
+      test('result is curried part trois', function(){
+        return expect(divideAndAddFourArgsFlipped(10, 5)(1, 2)).toEqual(3.5);
+      });
+      return test('result is curried part quatre', function(){
+        return expect(divideAndAddFourArgsFlipped(10)(5, 1, 2)).toEqual(3.5);
       });
     });
   });

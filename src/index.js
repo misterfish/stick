@@ -21,7 +21,7 @@ import {
     splitAt,
     always,
     // --- has = has own (hence paired with hasIn version)
-    isEmpty, tap, has, hasIn, flip, fromPairs, toPairs, toPairsIn, assoc, assocPath, head,
+    isEmpty, tap, has, hasIn, flip as rFlip, fromPairs, toPairs, toPairsIn, assoc, assocPath, head,
     last, tail, reduceRight, chain, identity as id, reduce, map as rMap, filter, reject, join,
     split, prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
     splitEvery,
@@ -438,35 +438,42 @@ export const applyTo4 = _recurry (5) (manual.applyTo4)
 export const applyTo5 = _recurry (6) (manual.applyTo5)
 export const applyToN = _recurry (2) (manual.applyToN)
 
-// --- i don't think these are useful. xxx
-// export const passTo1 = curry ((f, val) => f (val))
-// export const passTo2 = curry ((f, val1, val2) => f (val1, val2))
-// export const passTo3 = curry ((f, val1, val2, val3) => f (val1, val2, val3))
-// export const pass1 = passTo1
-// export const pass2 = passTo2
-// export const pass3 = passTo3
-
 // --- 1 | passTo (double)
 export const passTo = _recurry (2) (manual.passTo)
 // --- ; [1, 2, 3] | passToN (sum)
 export const passToN = _recurry (2) (manual.passToN)
 
-// --- flip first and second args of a curried function, even for functions with more than 2 args.
-// --- also works for functions curried with the a => b => ... notation (unlike R.flip).
+// --- flip first and second args of a curried function, even for functions with more than 2 args
+// and for manually curried functions, unlike R.flip.
 // --- does not work with non-curried functions.
 
-export const ifEmpty = curry ((yes, no, xs) => xs.length === 0 ? yes (xs) : no (xs))
-export const flipC = f => curryN (2) (
-    (a, b, ...rest) => laat (
-        // --- if f had arity 2, f (b) (a) is the answer; otherwise it's a curried interim result,
-        // since f itself was curried.
-        [f (b) (a)],
-        interimResult => rest | ifEmpty (
-            () => interimResult,
-            reduce ((a, b) => a (b)) (interimResult),
+export const prop = _recurry (2) (manual.prop)
+
+// --- didn't really work competely.
+export const OLDflipC = (() => {
+    const ifEmpty = ifPredicate (prop ('length') >> eq (0))
+    // --- not sure any more how this works with curryN (2), because it seems to work for any
+    // function.
+    return f => curryN (2) (
+        (a, b, ...rest) => lets (
+            // --- f can not have arity 1 of course.
+            // --- if f had arity 2, f (b) (a) is the answer;
+            // otherwise it's a curried interim result,
+            // since f itself was curried.
+            _ => f (b) (a),
+            (interimResult) => rest | ifEmpty (
+                _ => interimResult,
+                reduce ((a, b) => a (b)) (interimResult),
+            )
         )
     )
-)
+}) ()
+
+export const flip = _recurry (3) (manual.flip)
+export const flip3 = _recurry (4) (manual.flip3)
+export const flip4 = _recurry (5) (manual.flip4)
+export const flip5 = _recurry (6) (manual.flip5)
+
 
 // ------ sprintf
 
@@ -488,8 +495,8 @@ export const zipAll = (...xss) => {
 // --------- list.
 
 // multiple versions with preps ??
-export const repeat = flip (rRepeat)
-export const times = flip (rTimes)
+export const repeat = rFlip (rRepeat)
+export const times = rFlip (rTimes)
 
 // xxx timesVoid, to not make an array.
 // maybe timesV
@@ -865,13 +872,13 @@ const listDat = curry ((fs, n) => fs | map (
 ))
 
 // --- or:
-const listDat2 = (n => map (applyTo1 (n)) | flipC)
-const listDat3 = flipC (n => map (applyTo1 (n)))
-// --- >> is higher.
-const listDat4 = applyTo1 >> map | curry | flipC
-const listDat6 = applyTo1 >> map | flipC
-
-const listDat5 = flipC (n => n | applyTo1 | map)
+// const listDat2 = (n => map (applyTo1 (n)) | flipC)
+// const listDat3 = flipC (n => map (applyTo1 (n)))
+// // --- >> is higher.
+// const listDat4 = applyTo1 >> map | curry | flipC
+// const listDat6 = applyTo1 >> map | flipC
+// 
+// const listDat5 = flipC (n => n | applyTo1 | map)
 
 // const _$ = {}
 

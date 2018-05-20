@@ -302,12 +302,10 @@ export const mergeAllIn = xs => xs.reduce (
 export const map    = _recurry (2) (manual.map)
 export const each   = _recurry (2) (manual.each)
 
-// @test
 export const filter = _recurry (2) (manual.filter)
 export const reject = _recurry (2) (manual.reject)
 
 // --- undef on empty array, like ramda
-// @test
 export const last = xs => xs [xs.length - 1]
 
 export const addIndex      = _recurry (3) (manual.addIndex)
@@ -613,14 +611,13 @@ export const xRegExpStr = (reStr, flags = '') => laat (
 
 export const match = _recurry (2) (manual.match)
 
-// @todo test
+// --- not every function (currently) has a matching 'replace' version.
 
-// @todo there should be a 'replace' version of all these functions as well.
 // @todo make xMatch incur only a compile-time cost.
 
 // --- input: regex.
 export const xMatch = curry ((re, target) =>
-    xRegExp (re) | dot1 ('exec', target)
+    xRegExp (re) | dot1 ('edfec', target)
 )
 
 export const xMatchGlobal = _recurry (3) (manual.xMatchGlobal)

@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, test, xtest, expectToEqual, expectToBe, array, compact, compactOk, list;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, test, xtest, expectToEqual, expectToBe, array, compact, compactOk, list, last;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), array = ref$.array, compact = ref$.compact, compactOk = ref$.compactOk, list = ref$.list;
+ref$ = require('../index'), array = ref$.array, compact = ref$.compact, compactOk = ref$.compactOk, list = ref$.list, last = ref$.last;
 describe('list', function(){
   test(1, function(){
     return expectToEqual([3, 4, 5])(
@@ -50,5 +50,20 @@ describe('compact*', function(){
       compactOk(
       truthy));
     });
+  });
+});
+describe('last', function(){
+  var x, y;
+  x = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  y = [];
+  test(1, function(){
+    return expectToEqual(10)(
+    last(
+    x));
+  });
+  return test('undef on empty', function(){
+    return expectToEqual(void 8)(
+    last(
+    y));
   });
 });

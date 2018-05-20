@@ -15,7 +15,7 @@
 
 {
     array, compact, compact-ok,
-    list,
+    list, last,
 } = require '../index'
 
 describe 'list' ->
@@ -63,3 +63,9 @@ describe 'compact*' ->
             truthy
             |> compact-ok
             |> expect-to-equal truthy
+
+describe 'last' ->
+    x = [1 to 10]
+    y = []
+    test 1 -> x |> last |> expect-to-equal 10
+    test 'undef on empty' -> y |> last |> expect-to-equal void

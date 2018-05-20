@@ -485,6 +485,7 @@ export const applyTo4 = _recurry (5) (manual.applyTo4)
 export const applyTo5 = _recurry (6) (manual.applyTo5)
 export const applyToN = _recurry (2) (manual.applyToN)
 
+// --- passTo is not called apply ...
 // --- 1 | passTo (double)
 export const passTo = _recurry (2) (manual.passTo)
 // --- ; [1, 2, 3] | passToN (sum)

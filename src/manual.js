@@ -100,7 +100,7 @@ export const bindTry       = f => o =>    typeof f        === 'function'
     ? bindTo (o) (f)
     : null
 
-export const ifBind = trier => ifPredicateOk (([o, prop]) => trier (o) (prop))
+export const ifBind   = trier => ifPredicateOk (passToN (trier))
 export const whenBind = trier => yes => ifBind (trier) (yes) (noop)
 
 // ------ cond

@@ -24,7 +24,8 @@
 
     eq, ne, gt, gte, lt, lte,
 
-    bind, bind-late, bind-try,
+    bind-prop-to, bind-prop,
+    bind-late, bind-try,
     cascade,
     flip, flip3, flip4, flip5,
     sprintf1, sprintf-n,
@@ -38,13 +39,16 @@
     is-number, is-reg-exp, is-boolean, is-string,
     is-integer,
 
+    range-from, range-to,
     range-from-by, range-to-by,
     range-from-by-asc, range-from-by-desc,
 
-    nieuw, nieuw1, nieuw2, nieuw3, nieuw-n,
+    neu, neu1, neu2, neu3, neu4, neu5, neu-n,
 
-    x-reg-exp, x-reg-exp-str,
-    x-match, x-match-str, x-match-str-flags, #match
+    x-reg-exp, x-reg-exp-str, x-reg-exp-flags,
+    x-match, x-match-str, x-match-str-flags,
+    match: stick-match,
+    x-match-global,
     x-replace, x-replace-str, x-replace-str-flags,
 
     if-replace, if-x-replace, if-x-replace-str, if-x-replace-str-flags,
@@ -129,34 +133,36 @@ describe 'cascade' ->
         |> expect-to-equal [2 6 10]
 
 describe 'bind*' ->
-    obj =
+    dog =
         name: 'dog'
         speak: -> 'my name is ' + @name
         garble: (...args) -> r-join '!' args
 
-    # --- common to all.
-    zip [bind, bind-late, bind-try] <[ bind bindLate bindTry ]>
-    |> each ([bind-func, bind-func-name]) ->
-        describe bind-func-name, ->
-            test 'binds' ->
-                bad-speak = obj.speak
-                bad-speak |> expect-to-throw
+    describe 'bind prop to' ->
+        test 2 ->
+            f = 'speak' |> bind-prop-to dog
+            f () |> expect-to-equal 'my name is dog'
+        test 'passes args' ->
+            garble = 'garble' |> bind-prop-to dog
+            garble 'a' 1 'c' |> expect-to-equal 'a!1!c'
+        test 'dies' ->
+            -> 'nothing' |> bind-prop dog
+            |> expect-to-throw
 
-                good-speak = bind-func obj, 'speak'
-                (expect good-speak()).to-equal 'my name is dog'
-            test 'passes args' ->
-                garble = bind-func obj, 'garble'
-                garble 'a' 1 'c'
-                |> expect-to-equal 'a!1!c'
-            test 'curried' ->
-                'speak'
-                |> bind-func obj
-                |> (x) -> x()
-                |> expect-to-equal 'my name is dog'
+    describe 'bind prop from' ->
+        test 2 ->
+            f = dog |> bind-prop 'speak'
+            f () |> expect-to-equal 'my name is dog'
+        test 'passes args' ->
+            garble = dog |> bind-prop 'garble'
+            garble 'a' 1 'c' |> expect-to-equal 'a!1!c'
+        test 'dies' ->
+            -> dog |> bind-prop 'nothing'
+            |> expect-to-throw
 
     describe 'bind hard' ->
         test 'fails on undefined function' ->
-            (expect -> obj.squeak()).to-throw TypeError
+            (expect -> dog.squeak()).to-throw TypeError
     describe 'bind late' ->
         test '1' ->
             obj2 = {}
@@ -166,11 +172,11 @@ describe 'bind*' ->
             (expect bound()).to-equal 'spoke'
     describe 'bind try' ->
         test 'returns undefined on bad bind' ->
-            bind-try obj, 'squeqk'
+            bind-try dog, 'squeqk'
             |> expect-to-equal void
     describe 'forms' ->
         xtest '1' ->
-            bindTry(obj, 'speak') |> if-ok
+            bindTry(dog, 'speak') |> if-ok
 
 describe 'flip' ->
     describe 'target manually curried' ->
@@ -472,31 +478,41 @@ describe 'new' ->
             ...@nums
         ]
 
-    test 'nieuw' ->
+    test 'neu' ->
         C
-        |> nieuw
+        |> neu
         |> (.speak())
         |> expect-to-equal 'hulu'
 
-    test 'nieuw1' ->
+    test 'neu1' ->
         10
-        |> nieuw1 C
+        |> neu1 C
         |> (.speak())
         |> expect-to-equal 'hulu 10'
 
-    test 'nieuw2' ->
-        (nieuw2 C) 20 30
+    test 'neu2' ->
+        (neu2 C) 20 30
         |> (.speak())
         |> expect-to-equal 'hulu 20 30'
 
-    test 'nieuw3' ->
-        (nieuw3 C) 2 4 6
+    test 'neu3' ->
+        (neu3 C) 2 4 6
         |> (.speak())
         |> expect-to-equal 'hulu 2 4 6'
 
-    test 'nieuwN' ->
+    test 'neu4' ->
+        (neu4 C) 2 4 6 8
+        |> (.speak())
+        |> expect-to-equal 'hulu 2 4 6 8'
+
+    test 'neu5' ->
+        (neu5 C) 2 4 6 8 10
+        |> (.speak())
+        |> expect-to-equal 'hulu 2 4 6 8 10'
+
+    test 'neuN' ->
         [4 8 9]
-        |> nieuw-n C
+        |> neu-n C
         |> (.speak())
         |> expect-to-equal 'hulu 4 8 9'
 
@@ -507,6 +523,21 @@ describe 'match/regex' ->
         |> (.match re)
         |> (m) -> m.1
         |> expect-to-equal 'ses'
+    test 'x-regexp-flags' ->
+        re = x-reg-exp-flags do
+            new RegExp ' (SeS) $'
+            'mi'
+        'horses\npigs'
+        |> (.match re)
+        |> (m) -> m.1
+        |> expect-to-equal 'ses'
+    test 'x-regexp-flags, overrides existing flags' ->
+        re = x-reg-exp-flags do
+            new RegExp ' (SeS) $' 'i'
+            'm'
+        'horses\npigs'
+        |> (.match re)
+        |> expect-to-equal null
     test 'x-regexp-str, no flags' ->
         re = x-reg-exp-str ' (igs) $'
         'horses\npigs'
@@ -534,9 +565,15 @@ describe 'match/regex' ->
         |> x-match new RegExp ' ( o . s ) '
         |> (m) -> m.1
         |> expect-to-equal 'ors'
+    test 'xmatch-global' ->
+        y = []
+        re = new RegExp ' (s .) '
+        'shorses and shoes'
+        |> x-match-global re, (m) -> y.push m
+        y |> expect-to-equal ['sh' 'se' 's ' 'sh']
     test 'match' ->
         'horses'
-        |> main.match new RegExp '(o.s)'
+        |> stick-match new RegExp '(o.s)'
         |> (m) -> m.1
         |> expect-to-equal 'ors'
     test 'x-replace' ->
@@ -740,9 +777,17 @@ describe 'range, compact' ->
         test 1 ->
             range-from-by-asc 2 0 10 |> expect-to-equal [0 to 9 by 2]
         test 3 ->
-            range-from-by-desc -2 10 0 |> expect-to-equal [10 to 1 by -2]
+            0 |> range-from-by-desc -2 10 |> expect-to-equal [10 to 1 by -2]
     describe 'rangeToBy' ->
         test 1 ->
             range-to-by 2 10 0 |> expect-to-equal [0 to 9 by 2]
+        test 2 ->
+            0 |> range-to-by 2 10 |> expect-to-equal [0 to 9 by 2]
         test 3 ->
             range-to-by -2 0 10 |> expect-to-equal [10 to 1 by -2]
+    describe 'rangeFrom' ->
+        test 1 ->
+            10 |> range-from 0 |> expect-to-equal [0 to 9]
+    describe 'rangeTo' ->
+        test 1 ->
+            0 |> range-to 10 |> expect-to-equal [0 to 9]

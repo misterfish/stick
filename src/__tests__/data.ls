@@ -39,16 +39,15 @@
     prop,
 
     assoc, assoc-m,
-    append-to, append-to-m, append-from, append-from-m,
-    prepend-from, prepend-from-m, prepend-to, prepend-to-m,
-    concat-to, concat-to-m, concat-from, concat-from-m,
-    precat-to, precat-from,
+    append-to, append-to-m, append, append-m,
+    prepend, prepend-m, prepend-to, prepend-to-m,
+    concat-to, concat-to-m, concat, concat-m,
+    precat-to, precat,
 
-    merge-to, merge-from, merge-to-m, merge-from-m,
-    merge-to-with-m, merge-from-with-m,
-    merge-to-in, merge-from-in, merge-to-in-m, merge-from-in-m,
+    merge-to, merge, merge-to-m, merge-m,
+    merge-to-with-m, merge-with-m,
+    merge-to-in, merge-in, merge-to-in-m, merge-in-m,
     merge-all-in,
-    inject-to-m, inject-from-m,
 
     discard-prototype, flatten-prototype,
 
@@ -437,8 +436,8 @@ describe 'data stuff' ->
             |> append-to-m [4]
             (expect res).to-equal [4 3]
 
-    describe 'appendFrom' ->
-        fn = append-from
+    describe 'append' ->
+        fn = append
         dir = 'from'
         mut = false
         test 1 ->
@@ -459,11 +458,11 @@ describe 'data stuff' ->
             (expect res).to-equal [1 to 4]
         test 'eg' ->
             res = [3]
-            |> append-from 4
+            |> append 4
             (expect res).to-equal [3 4]
 
-    describe 'appendFromM' ->
-        fn = append-from-m
+    describe 'appendM' ->
+        fn = append-m
         dir = 'from'
         mut = true
         test 'array -> array' ->
@@ -484,7 +483,7 @@ describe 'data stuff' ->
             (expect res).to-equal [1 to 4]
         test 'eg' ->
             res = [4]
-            |> append-from-m 3
+            |> append-m 3
             (expect res).to-equal [4 3]
 
     describe 'prependTo' ->
@@ -512,8 +511,8 @@ describe 'data stuff' ->
             |> prepend-to [4]
             (expect res).to-equal [3 4]
 
-    describe 'prependFrom' ->
-        fn = prepend-from
+    describe 'prepend' ->
+        fn = prepend
         dir = 'from'
         mut = false
         test 'array -> array' ->
@@ -534,11 +533,11 @@ describe 'data stuff' ->
             (expect res).to-equal [4 1 2 3]
         test 'eg' ->
             res = [4]
-            |> prepend-from 3
+            |> prepend 3
             (expect res).to-equal [3 4]
 
-    describe 'prependFromM' ->
-        fn = prepend-from-m
+    describe 'prependM' ->
+        fn = prepend-m
         dir = 'from'
         mut = true
         test 'array to array' ->
@@ -559,7 +558,7 @@ describe 'data stuff' ->
             (expect res).to-equal [4 1 2 3]
         test 'eg' ->
             res = [3]
-            |> prepend-from-m 4
+            |> prepend-m 4
             (expect res).to-equal [4 3]
 
     describe 'prependToM' ->
@@ -629,8 +628,8 @@ describe 'data stuff' ->
             src = 'jibber jabber'
             (expect -> src |> concat-to-m tgt).to-throw()
 
-    describe 'concatFrom' ->
-        fn = concat-from
+    describe 'concat' ->
+        fn = concat
         dir = 'from'
         mut = false
         test 'array -> array' ->
@@ -644,13 +643,13 @@ describe 'data stuff' ->
         test 'elem -> array' ->
             tgt = [1 2 3]
             src = 4
-            expect(-> src |> concat-from tgt).to-throw()
+            expect(-> src |> concat tgt).to-throw()
         test 'alias' ->
-            precat-to   |> expect-to-equal concat-from
-            precat-from |> expect-to-equal concat-to
+            precat-to   |> expect-to-equal concat
+            precat |> expect-to-equal concat-to
 
-    describe 'concatFromM' ->
-        fn = concat-from-m
+    describe 'concatM' ->
+        fn = concat-m
         dir = 'from'
         mut = true
         test 1 ->
@@ -724,8 +723,8 @@ describe 'data stuff' ->
             (expect res).to-equal a: 1 b: 3 c: 4
             (expect res.hidden).to-equal void
 
-    describe 'mergeFrom' ->
-        fn = merge-from
+    describe 'merge' ->
+        fn = merge
         dir = 'from'
         mut = false
         test 1 ->
@@ -830,8 +829,8 @@ describe 'data stuff' ->
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
 
-    describe 'mergeFromM' ->
-        fn = merge-from-m
+    describe 'mergeM' ->
+        fn = merge-m
         dir = 'from'
         mut = true
         test 1 ->
@@ -957,13 +956,13 @@ describe 'data stuff' ->
                     c: 'source c'
                     hidden: 'source hidden'
 
-    describe 'mergeFromWithM' ->
+    describe 'mergeWithM' ->
         var tgt, src
         noop = ->
         choose-left = (a, b) -> a
         choose-right = (a, b) -> b
         describe 'main' ->
-            test 'when no collisions, acts like mergeFromM' ->
+            test 'when no collisions, acts like mergeM' ->
                 tgt = Object.create hidden1: 42
                     ..a = 1
                     ..b = 2
@@ -971,8 +970,8 @@ describe 'data stuff' ->
                     ..c = 3
                     ..d = 4
                 tgt
-                |> merge-from-with-m noop, src
-                |> expect-to-equal (tgt |> merge-from-m src)
+                |> merge-with-m noop, src
+                |> expect-to-equal (tgt |> merge-m src)
 
         describe 'collide with own of target' ->
             var tgt, src
@@ -985,13 +984,13 @@ describe 'data stuff' ->
                     b: 'source b'
                     c: 'source c'
             test 'choose target' ->
-                tgt |> merge-from-with-m choose-left, src
+                tgt |> merge-with-m choose-left, src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
                     c: 'source c'
             test 'choose source' ->
-                tgt |> merge-from-with-m choose-right, src
+                tgt |> merge-with-m choose-right, src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
@@ -1008,7 +1007,7 @@ describe 'data stuff' ->
                     c: 'source c'
                     hidden: 'source hidden'
             test 'proto chain of target is not checked' ->
-                tgt |> merge-from-with-m null src
+                tgt |> merge-with-m null src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
@@ -1016,7 +1015,7 @@ describe 'data stuff' ->
                     hidden: 'source hidden'
             # --- old behaviors.
             xtest 'choose target, hidden val floats' ->
-                tgt |> merge-from-with-m choose-left, src
+                tgt |> merge-with-m choose-left, src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
@@ -1024,7 +1023,7 @@ describe 'data stuff' ->
                     hidden: 'target hidden'
                 tgt.hidden |> expect-to-equal 'target hidden'
             xtest 'choose source, hidden val floats' ->
-                tgt |> merge-from-with-m choose-right, src
+                tgt |> merge-with-m choose-right, src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
@@ -1075,8 +1074,8 @@ describe 'data stuff' ->
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
 
-    describe 'mergeFromIn' ->
-        fn = merge-from-in
+    describe 'mergeIn' ->
+        fn = merge-in
         dir = 'from'
         mut = false
         test 1 ->
@@ -1164,8 +1163,8 @@ describe 'data stuff' ->
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
 
-    describe 'mergeFromInM' ->
-        fn = merge-from-in-m
+    describe 'mergeInM' ->
+        fn = merge-in-m
         dir = 'from'
         mut = true
         test 1 ->

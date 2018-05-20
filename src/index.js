@@ -208,36 +208,49 @@ export const assocM = _recurry (3) (manual.assocM)
 
 // ------ append.
 
-export const appendFrom   = _recurry (2) (manual.appendFrom)
+// --- 4 | appendTo ([1, 2, 3])
+// --- ([1, 2, 3]) | appendFrom (4)
+// --- ([1, 2, 3]) | append (4)
+
+export const append   = _recurry (2) (manual.append)
 export const appendTo     = _recurry (2) (manual.appendTo)
-export const appendFromM  = _recurry (2) (manual.appendFromM)
+export const appendM  = _recurry (2) (manual.appendM)
 export const appendToM    = _recurry (2) (manual.appendToM)
 
 // ------ prepend.
 
+// --- 1 | prependTo ([2, 3, 4])
+// --- ([2, 3, 4]) | prependFrom (1)
+// --- ([2, 3, 4]) | prepend (1)
 export const prependTo    = _recurry (2) (manual.prependTo)
-export const prependFrom  = _recurry (2) (manual.prependFrom)
-export const prependFromM = _recurry (2) (manual.prependFromM)
+export const prepend  = _recurry (2) (manual.prepend)
+export const prependM = _recurry (2) (manual.prependM)
 export const prependToM   = _recurry (2) (manual.prependToM)
 
 // --- arrays or strings
 // --- ramda's concat does more type checking and also allows fantasy land semigroups.
+// --- [4] | concatTo ([1, 2, 3])
+// --- [1, 2, 3] | concat ([4])
+// --- [1, 2, 3] | concat ([4])
 export const concatTo = _recurry (2) (manual.concatTo)
-export const concatFrom = _recurry (2) (manual.concatFrom)
-export const precatTo   = concatFrom
-export const precatFrom = concatTo
+export const concat = _recurry (2) (manual.concat)
+export const precatTo   = concat
+export const precat = concatTo
 
 // --- only arrays (strings will throw)
 export const concatToM = _recurry (2) (manual.concatToM)
-export const concatFromM = _recurry (2) (manual.concatFromM)
+export const concatM = _recurry (2) (manual.concatM)
 
 // --- own properties, including null/undefined.
 // --- 2x faster than Object.assign.
 // --- @todo: why is it so much faster?
 
+// --- { b: 2 } | mergeTo ({ a: 1, b: null })
+// --- ({ a: 1, b: null }) | merge ({ b: 2 })
+// --- ({ a: 1, b: null }) | merge     ({ b: 2 })
 export const mergeTo    = _recurry (2) (manual.mergeTo)
-export const mergeFrom  = _recurry (2) (manual.mergeFrom)
-export const mergeFromM = _recurry (2) (manual.mergeFromM)
+export const merge  = _recurry (2) (manual.merge)
+export const mergeM = _recurry (2) (manual.mergeM)
 export const mergeToM   = _recurry (2) (manual.mergeToM)
 
 // --- copies enumerable own properties from src into tgt, mut.
@@ -248,19 +261,19 @@ export const mergeToM   = _recurry (2) (manual.mergeToM)
 ////// --- if a collision occurs in the target's prototype chain, the value will surface, regardless of whether src or tgt version is chosen.
 
 export const mergeToWithM   = _recurry (3) (manual.mergeToWithM)
-export const mergeFromWithM = _recurry (3) (manual.mergeFromWithM)
+export const mergeWithM = _recurry (3) (manual.mergeWithM)
 
 // @test
 export const mergeToWhenOkM   = _recurry (2) (manual.mergeToWhenOkM)
 // @test
-export const mergeFromWhenOkM = _recurry (2) (manual.mergeFromWhenOkM)
+export const mergeWhenOkM = _recurry (2) (manual.mergeWhenOkM)
 
 export const mergeToInM   = _recurry (2) (manual.mergeToInM)
-export const mergeFromInM = _recurry (2) (manual.mergeFromInM)
+export const mergeInM = _recurry (2) (manual.mergeInM)
 
 // --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
 // object.
-export const mergeFromIn = _recurry (2) (manual.mergeFromIn)
+export const mergeIn = _recurry (2) (manual.mergeIn)
 
 // --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
 // object.
@@ -535,9 +548,7 @@ export const isInteger = x => x === Math.floor (x)
 // })
 // export const range = curry ((from, to, f) => rangeBy (from, to, 1, f))
 
-// excl, so it's like ramda.
-// they already provide range.
-
+// --- excl, so it's like ramda.
 // --- note that `by` should be negative to count down.
 
 export const rangeFromBy     = _recurry (3) (manual.rangeFromBy)
@@ -550,26 +561,26 @@ export const rangeToByDesc   = _recurry (3) (manual.rangeToByDesc)
 export const rangeTo         = rangeToBy (1)
 export const rangeFrom       = rangeFromBy (1)
 
-export const compact = filter (Boolean)
+export const compact   = filter (Boolean)
 export const compactOk = reject (notOk)
 
 // --- turn positional args into a list with those values.
 export const list = (...args) => args
 
 // --------- new.
-// xxx german aliases
 
-export const nieuw = x => new x
-export const nieuw1 = curry ((x, val) => new x (val))
-export const nieuw2 = curry ((x, val1, val2) => new x (val1, val2))
-export const nieuw3 = curry ((x, val1, val2, val3) => new x (val1, val2, val3))
-export const nieuwN = curry ((x, vs) => new x (...vs))
+export const neu = x => new x
+export const neu1 = _recurry (2) (manual.neu1)
+export const neu2 = _recurry (3) (manual.neu2)
+export const neu3 = _recurry (4) (manual.neu3)
+export const neu4 = _recurry (5) (manual.neu4)
+export const neu5 = _recurry (6) (manual.neu5)
+export const neuN = _recurry (2) (manual.neuN)
 
 // --------- regex.
-// @deps: dot1
 
-// --- leaving out the 'flip' versions: assuming you generally want to pipe the target to the match
-// functions.
+// --- these deviate somewhat from the naming conventions: we're assuming you generally want to pipe
+// the target to the match functions.
 
 const removeSpaces = dot2 ('replace') (/\s+/g) ('')
 
@@ -579,7 +590,6 @@ export const xRegExp = re => new RegExp (
     re.flags,
 )
 
-// @todo test
 // --- beware, overwrites any flags that the re already had.
 export const xRegExpFlags = (re, flags) => new RegExp (
     re.source | removeSpaces,
@@ -587,35 +597,25 @@ export const xRegExpFlags = (re, flags) => new RegExp (
 )
 
 // --- input: string, [string].
-export const xRegExpStr = (reStr, flags = '') => letNV (
-    [
-        reStr | removeSpaces,
-        flags,
-    ],
-    nieuw2 (RegExp)
+export const xRegExpStr = (reStr, flags = '') => laat (
+    _ => reStr | removeSpaces,
+    _ => flags,
+    neu2 (RegExp),
 )
 
-export const match = curry ((re, target) => re.exec (target))
-
-// xxx there should be a 'replace' version of all these functions as well.
-
-// xxx make xMatch incur only a compile-time cost.
+export const match = _recurry (2) (manual.match)
 
 // @todo test
-// @todo xMatchStrGlobal, maybe flags variations too
-export const xMatchGlobal = curry ((re, mapper, target) => {
-    let out = []
-    const reGlobal = xRegExpFlags (re, 'g')
-    let m
-    while (m = reGlobal.exec (target))
-        mapper (...m) | appendToM (out)
-    return out
-})
+
+// @todo there should be a 'replace' version of all these functions as well.
+// @todo make xMatch incur only a compile-time cost.
 
 // --- input: regex.
 export const xMatch = curry ((re, target) =>
     xRegExp (re) | dot1 ('exec', target)
 )
+
+export const xMatchGlobal = _recurry (3) (manual.xMatchGlobal)
 
 // --- input: string.
 export const xMatchStr = curry ((reStr, target) => target
@@ -698,7 +698,7 @@ const _factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
         proto: protoMixed,
         create: (...instanceExtension) => protoMixed
             | Object.create
-            | mergeFromM (instanceExtension | rMergeAll),
+            | mergeM (instanceExtension | rMergeAll),
     })
 )
 
@@ -781,7 +781,7 @@ export const factory = factoryInit ((o, props) => {
 // const dog = dogFactory.create ()
 // dog.numLegs () // 4
 
-export const factoryStatics = mergeFromM
+export const factoryStatics = mergeM
 
 // --- don't really like this.
 // proto gets altered.
@@ -791,30 +791,16 @@ export const factoryMixinPost = curry ((mixin, proto) => factoryMixinPre ([], [m
 
 // ------ bind
 
-// would be nice to bind with an arg, e.g. exit with a code.
-//const exit = 'exit' | bind (process)
-
-// xxx bind and invoke
-// bind >> invoke
-// xxx bind the other way around
-// o | bind ('funcname')
-
-// xxx cursor | bind ('theta')
-// xxx 'theta' | bindOn (cursor)
-
-// xxx preps
-// --- dies if o[prop] is not a function.
-export const bindTo = _recurry (2) (manual.bindTo)
-export const bindTry = _recurry (2) (manual.bindTry)
-
-// bindPropTo
 // 'log'   | bindPropTo (console)
 // console | bindProp   ('log')
-//
+
+// --- dies if o[prop] is not a function.
+export const bindPropTo = _recurry (2) (manual.bindPropTo)
+export const bindProp   = _recurry (2) (manual.bindProp)
+export const bindTry    = _recurry (2) (manual.bindTry)
+
 // console.log | bindTo (console)
 // console     | bind   (console.log)
-
-export const bind = bindTo
 
 // --- returns a thunk (function) representing the bind: doesn't actually try to bind until that function is invoked.
 export const bindLate = curry ((o, key) => (...args) => o[key] (...args))

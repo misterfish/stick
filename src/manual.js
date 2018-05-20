@@ -5,6 +5,7 @@ import {
     isFunction, ifYes,
     laat,
     getType,
+    xRegExpFlags,
 } from './index'
 
 const noop = _ => {}
@@ -65,7 +66,8 @@ export const whenHas = yes => ifHas (yes) (noop)
 export const ifHasIn = yes => no => ([o, k]) => hasIn (k) (o) ? yes (o [k], o, k) : no (o, k)
 export const whenHasIn = yes => ifHasIn (yes) (noop)
 
-export const bindTo = o => prop => o [prop].bind (o)
+export const bindPropTo = o => prop => o [prop].bind (o)
+export const bindProp   = prop => o => o [prop].bind (o)
 
 export const isType = t => x => getType (x) === t
 
@@ -74,7 +76,7 @@ const whenFunction = (yes, o) => whenPredicate (isFunction) (yes) (o)
 
 // --- returns undefined if o[prop] is not a function.
 export const bindTry = o => prop => whenFunction (
-    _ => bindTo (o) (prop),
+    _ => bindPropTo (o) (prop),
     o [prop],
 )
 
@@ -168,27 +170,27 @@ export const decorateException = (prefix) => (e) => {
 export const defaultTo = f => x => ok (x) ? x : f ()
 
 export const assoc = (prop) => (val) => (o) => {
-    const oo = mergeFromInM (o) ({})
+    const oo = mergeInM (o) ({})
     oo [prop] = val
     return oo
 }
 
 export const assocM = prop => val => o => (o[prop] = val, o)
 
-export const appendFrom = elem => ary => [...ary, elem]
+export const append = elem => ary => [...ary, elem]
 export const appendTo   = ary => elem => [...ary, elem]
 
 export const appendToM    = (tgt) => (src) => (tgt.push (src), tgt)
-export const appendFromM  = (src) => (tgt) => (tgt.push (src), tgt)
+export const appendM  = (src) => (tgt) => (tgt.push (src), tgt)
 export const prependTo    = ary => elem => [elem, ...ary]
-export const prependFrom  = elem => ary => [elem, ...ary]
-export const prependFromM = src => tgt => (tgt.unshift (src), tgt)
+export const prepend  = elem => ary => [elem, ...ary]
+export const prependM = src => tgt => (tgt.unshift (src), tgt)
 export const prependToM   = tgt => src => (tgt.unshift (src), tgt)
 
 export const concatTo    = tgt => src => tgt.concat (src)
-export const concatFrom  = src => tgt => tgt.concat (src)
+export const concat  = src => tgt => tgt.concat (src)
 export const concatToM   = tgt => src => (tgt.push (...src), tgt)
-export const concatFromM = src => tgt => (tgt.push (...src), tgt)
+export const concatM = src => tgt => (tgt.push (...src), tgt)
 
 // --- these seem to be much faster than Object.assign -- why?
 // @profile
@@ -198,7 +200,7 @@ export const mergeToM = (tgt) => (src) => {
     return tgt
 }
 
-export const mergeFromM = (src) => (tgt) => {
+export const mergeM = (src) => (tgt) => {
     for (const i in src) if (oPro.hasOwnProperty.call (src, i))
         tgt[i] = src[i]
     return tgt
@@ -209,7 +211,7 @@ export const mergeTo = (tgt) => (src) => {
     return mergeToM (a) (src)
 }
 
-export const mergeFrom = (src) => (tgt) => {
+export const merge = (src) => (tgt) => {
     const a = mergeToM ({}) (tgt)
     return mergeToM (a) (src)
 }
@@ -226,7 +228,7 @@ export const mergeToWithM = (collision) => (tgt) => (src) => {
 	return ret
 }
 
-export const mergeFromWithM = (collision) => (src) => (tgt) => mergeToWithM (collision) (tgt) (src)
+export const mergeWithM = (collision) => (src) => (tgt) => mergeToWithM (collision) (tgt) (src)
 
 // --- @test
 export const mergeToWhenOkM = (tgt) => (src) => {
@@ -236,20 +238,20 @@ export const mergeToWhenOkM = (tgt) => (src) => {
 }
 
 // --- @test
-export const mergeFromWhenOkM = (src) => (tgt) => mergeToWhenOkM (tgt) (src)
+export const mergeWhenOkM = (src) => (tgt) => mergeToWhenOkM (tgt) (src)
 
 export const mergeToInM = (tgt) => (src) => {
     for (const i in src) tgt[i] = src[i]
     return tgt
 }
 
-export const mergeFromInM = (src) => (tgt) => mergeToInM (tgt) (src)
+export const mergeInM = (src) => (tgt) => mergeToInM (tgt) (src)
 
 export const mergeToIn = (tgt) => (src) => {
     const a = mergeToInM ({}) (tgt)
     return mergeToInM (a) (src)
 }
-export const mergeFromIn = (src) => (tgt) => mergeToIn (tgt) (src)
+export const mergeIn = (src) => (tgt) => mergeToIn (tgt) (src)
 
 // --- note: capped.
 export const map  = f => ary => ary.map     (x => f (x))
@@ -441,6 +443,30 @@ export const rangeToBy = (by) => (to) => (from) =>
     from > to ? rangeFromByDesc (by) (from) (to) :
     []
 
+export const neu1 = x => val1 =>
+    new x (val1)
+export const neu2 = x => val1 => val2 =>
+    new x (val1, val2)
+export const neu3 = x => val1 => val2 => val3 =>
+    new x (val1, val2, val3)
+export const neu4 = x => val1 => val2 => val3 => val4 =>
+    new x (val1, val2, val3, val4)
+export const neu5 = x => val1 => val2 => val3 => val4 => val5 =>
+    new x (val1, val2, val3, val4, val5)
+export const neuN = x => vs =>
+    new x (...vs)
+
+export const match = re => target => re.exec (target)
+
+export const xMatchGlobal = (re) => (mapper) => (target) => {
+	let out = []
+	const reGlobal = xRegExpFlags (re, 'g')
+	let m
+	while (m = reGlobal.exec (target))
+        appendToM (out) (mapper (...m))
+	return out
+}
+
 export default {
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
@@ -449,7 +475,7 @@ export default {
     has, hasIn,
     ifHas, ifHasIn,
     whenHas, whenHasIn,
-    bindTo,
+    bindPropTo, bindProp,
     ifBind, whenBind,
     bindTry,
     isType, getType,
@@ -462,13 +488,13 @@ export default {
     tryCatch, decorateException,
     defaultTo,
     assoc, assocM,
-    appendFrom, appendTo, appendToM, appendFromM,
-    prependTo, prependFrom, prependToM, prependFromM,
-    concatTo, concatFrom, concatToM, concatFromM,
-    mergeTo, mergeFrom, mergeToM, mergeFromM,
-    mergeToWithM, mergeFromWithM,
-    mergeToWhenOkM, mergeFromWhenOkM,
-    mergeToInM, mergeFromInM, mergeToIn, mergeFromIn,
+    append, appendTo, appendToM, appendM,
+    prependTo, prepend, prependToM, prependM,
+    concatTo, concat, concatToM, concatM,
+    mergeTo, merge, mergeToM, mergeM,
+    mergeToWithM, mergeWithM,
+    mergeToWhenOkM, mergeWhenOkM,
+    mergeToInM, mergeInM, mergeToIn, mergeIn,
     addIndex, addCollection,
     map, filter, reject,
     each, eachObj, eachObjIn,
@@ -488,4 +514,6 @@ export default {
     ifReplace,
     rangeFromBy, rangeToBy,
     rangeFromByAsc, rangeFromByDesc,
+    neu1, neu2, neu3, neu4, neu5, neuN,
+    match, xMatchGlobal,
 }

@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, letV, letNV, laat, let2, let3, let4, let5, let6, letN, letS, isType, getType, isFunction, isArray, isObject, isNumber, isRegExp, isBoolean, isString, isInteger, rangeFromBy, rangeToBy, rangeFromByAsc, rangeFromByDesc, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bindPropTo, bindProp, bindLate, bindTry, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, letV, letNV, laat, let2, let3, let4, let5, let6, letN, letS, isType, getType, isFunction, isArray, isObject, isNumber, isRegExp, isBoolean, isString, isInteger, rangeFrom, rangeTo, rangeFromBy, rangeToBy, rangeFromByAsc, rangeFromByDesc, neu, neu1, neu2, neu3, neu4, neu5, neuN, xRegExp, xRegExpStr, xRegExpFlags, xMatch, xMatchStr, xMatchStrFlags, stickMatch, xMatchGlobal, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow, expectNotToThrow = ref$.expectNotToThrow;
-ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, letV = ref$.letV, letNV = ref$.letNV, laat = ref$.laat, let2 = ref$.let2, let3 = ref$.let3, let4 = ref$.let4, let5 = ref$.let5, let6 = ref$.let6, letN = ref$.letN, letS = ref$.letS, isType = ref$.isType, getType = ref$.getType, isFunction = ref$.isFunction, isArray = ref$.isArray, isObject = ref$.isObject, isNumber = ref$.isNumber, isRegExp = ref$.isRegExp, isBoolean = ref$.isBoolean, isString = ref$.isString, isInteger = ref$.isInteger, rangeFromBy = ref$.rangeFromBy, rangeToBy = ref$.rangeToBy, rangeFromByAsc = ref$.rangeFromByAsc, rangeFromByDesc = ref$.rangeFromByDesc, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
+ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bindPropTo = ref$.bindPropTo, bindProp = ref$.bindProp, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, letV = ref$.letV, letNV = ref$.letNV, laat = ref$.laat, let2 = ref$.let2, let3 = ref$.let3, let4 = ref$.let4, let5 = ref$.let5, let6 = ref$.let6, letN = ref$.letN, letS = ref$.letS, isType = ref$.isType, getType = ref$.getType, isFunction = ref$.isFunction, isArray = ref$.isArray, isObject = ref$.isObject, isNumber = ref$.isNumber, isRegExp = ref$.isRegExp, isBoolean = ref$.isBoolean, isString = ref$.isString, isInteger = ref$.isInteger, rangeFrom = ref$.rangeFrom, rangeTo = ref$.rangeTo, rangeFromBy = ref$.rangeFromBy, rangeToBy = ref$.rangeToBy, rangeFromByAsc = ref$.rangeFromByAsc, rangeFromByDesc = ref$.rangeFromByDesc, neu = ref$.neu, neu1 = ref$.neu1, neu2 = ref$.neu2, neu3 = ref$.neu3, neu4 = ref$.neu4, neu5 = ref$.neu5, neuN = ref$.neuN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xRegExpFlags = ref$.xRegExpFlags, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, stickMatch = ref$.match, xMatchGlobal = ref$.xMatchGlobal, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
 sumAll = compose$(list, sum);
 describe('comparisons', function(){
   describe('eq', function(){
@@ -156,8 +156,8 @@ describe('cascade', function(){
   });
 });
 describe('bind*', function(){
-  var obj;
-  obj = {
+  var dog;
+  dog = {
     name: 'dog',
     speak: function(){
       return 'my name is ' + this.name;
@@ -172,39 +172,56 @@ describe('bind*', function(){
       return rJoin('!', args);
     }
   };
-  each(function(arg$){
-    var bindFunc, bindFuncName;
-    bindFunc = arg$[0], bindFuncName = arg$[1];
-    return describe(bindFuncName, function(){
-      test('binds', function(){
-        var badSpeak, goodSpeak;
-        badSpeak = obj.speak;
-        expectToThrow(
-        badSpeak);
-        goodSpeak = bindFunc(obj, 'speak');
-        return expect(goodSpeak()).toEqual('my name is dog');
-      });
-      test('passes args', function(){
-        var garble;
-        garble = bindFunc(obj, 'garble');
-        return expectToEqual('a!1!c')(
-        garble('a', 1, 'c'));
-      });
-      return test('curried', function(){
-        return expectToEqual('my name is dog')(
-        function(x){
-          return x();
-        }(
-        bindFunc(obj)(
-        'speak')));
+  describe('bind prop to', function(){
+    test(2, function(){
+      var f;
+      f = bindPropTo(dog)(
+      'speak');
+      return expectToEqual('my name is dog')(
+      f());
+    });
+    test('passes args', function(){
+      var garble;
+      garble = bindPropTo(dog)(
+      'garble');
+      return expectToEqual('a!1!c')(
+      garble('a', 1, 'c'));
+    });
+    return test('dies', function(){
+      return expectToThrow(
+      function(){
+        return bindProp(dog)(
+        'nothing');
       });
     });
-  })(
-  zip([bind, bindLate, bindTry], ['bind', 'bindLate', 'bindTry']));
+  });
+  describe('bind prop from', function(){
+    test(2, function(){
+      var f;
+      f = bindProp('speak')(
+      dog);
+      return expectToEqual('my name is dog')(
+      f());
+    });
+    test('passes args', function(){
+      var garble;
+      garble = bindProp('garble')(
+      dog);
+      return expectToEqual('a!1!c')(
+      garble('a', 1, 'c'));
+    });
+    return test('dies', function(){
+      return expectToThrow(
+      function(){
+        return bindProp('nothing')(
+        dog);
+      });
+    });
+  });
   describe('bind hard', function(){
     return test('fails on undefined function', function(){
       return expect(function(){
-        return obj.squeak();
+        return dog.squeak();
       }).toThrow(TypeError);
     });
   });
@@ -226,13 +243,13 @@ describe('bind*', function(){
   describe('bind try', function(){
     return test('returns undefined on bad bind', function(){
       return expectToEqual(void 8)(
-      bindTry(obj, 'squeqk'));
+      bindTry(dog, 'squeqk'));
     });
   });
   return describe('forms', function(){
     return xtest('1', function(){
       return ifOk(
-      bindTry(obj, 'speak'));
+      bindTry(dog, 'speak'));
     });
   });
 });
@@ -666,47 +683,63 @@ describe('new', function(){
     };
     return C;
   }());
-  test('nieuw', function(){
+  test('neu', function(){
     var this$ = this;
     return expectToEqual('hulu')(
     function(it){
       return it.speak();
     }(
-    nieuw(
+    neu(
     C)));
   });
-  test('nieuw1', function(){
+  test('neu1', function(){
     var this$ = this;
     return expectToEqual('hulu 10')(
     function(it){
       return it.speak();
     }(
-    nieuw1(C)(
+    neu1(C)(
     10)));
   });
-  test('nieuw2', function(){
+  test('neu2', function(){
     var this$ = this;
     return expectToEqual('hulu 20 30')(
     function(it){
       return it.speak();
     }(
-    nieuw2(C)(20, 30)));
+    neu2(C)(20, 30)));
   });
-  test('nieuw3', function(){
+  test('neu3', function(){
     var this$ = this;
     return expectToEqual('hulu 2 4 6')(
     function(it){
       return it.speak();
     }(
-    nieuw3(C)(2, 4, 6)));
+    neu3(C)(2, 4, 6)));
   });
-  return test('nieuwN', function(){
+  test('neu4', function(){
+    var this$ = this;
+    return expectToEqual('hulu 2 4 6 8')(
+    function(it){
+      return it.speak();
+    }(
+    neu4(C)(2, 4, 6, 8)));
+  });
+  test('neu5', function(){
+    var this$ = this;
+    return expectToEqual('hulu 2 4 6 8 10')(
+    function(it){
+      return it.speak();
+    }(
+    neu5(C)(2, 4, 6, 8, 10)));
+  });
+  return test('neuN', function(){
     var this$ = this;
     return expectToEqual('hulu 4 8 9')(
     function(it){
       return it.speak();
     }(
-    nieuwN(C)(
+    neuN(C)(
     [4, 8, 9])));
   });
 });
@@ -722,6 +755,27 @@ describe('match/regex', function(){
       return it.match(re);
     }(
     'horses\npigs')));
+  });
+  test('x-regexp-flags', function(){
+    var re, this$ = this;
+    re = xRegExpFlags(new RegExp(' (SeS) $'), 'mi');
+    return expectToEqual('ses')(
+    function(m){
+      return m[1];
+    }(
+    function(it){
+      return it.match(re);
+    }(
+    'horses\npigs')));
+  });
+  test('x-regexp-flags, overrides existing flags', function(){
+    var re, this$ = this;
+    re = xRegExpFlags(new RegExp(' (SeS) $', 'i'), 'm');
+    return expectToEqual(null)(
+    function(it){
+      return it.match(re);
+    }(
+    'horses\npigs'));
   });
   test('x-regexp-str, no flags', function(){
     var re, this$ = this;
@@ -773,12 +827,23 @@ describe('match/regex', function(){
     xMatch(new RegExp(' ( o . s ) '))(
     'horses')));
   });
+  test('xmatch-global', function(){
+    var y, re;
+    y = [];
+    re = new RegExp(' (s .) ');
+    xMatchGlobal(re, function(m){
+      return y.push(m);
+    })(
+    'shorses and shoes');
+    return expectToEqual(['sh', 'se', 's ', 'sh'])(
+    y);
+  });
   test('match', function(){
     return expectToEqual('ors')(
     function(m){
       return m[1];
     }(
-    main.match(new RegExp('(o.s)'))(
+    stickMatch(new RegExp('(o.s)'))(
     'horses')));
   });
   test('x-replace', function(){
@@ -1146,17 +1211,37 @@ describe('range, compact', function(){
     });
     return test(3, function(){
       return expectToEqual([10, 8, 6, 4, 2])(
-      rangeFromByDesc(-2, 10, 0));
+      rangeFromByDesc(-2, 10)(
+      0));
     });
   });
-  return describe('rangeToBy', function(){
+  describe('rangeToBy', function(){
     test(1, function(){
       return expectToEqual([0, 2, 4, 6, 8])(
       rangeToBy(2, 10, 0));
     });
+    test(2, function(){
+      return expectToEqual([0, 2, 4, 6, 8])(
+      rangeToBy(2, 10)(
+      0));
+    });
     return test(3, function(){
       return expectToEqual([10, 8, 6, 4, 2])(
       rangeToBy(-2, 0, 10));
+    });
+  });
+  describe('rangeFrom', function(){
+    return test(1, function(){
+      return expectToEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])(
+      rangeFrom(0)(
+      10));
+    });
+  });
+  return describe('rangeTo', function(){
+    return test(1, function(){
+      return expectToEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])(
+      rangeTo(10)(
+      0));
     });
   });
 });

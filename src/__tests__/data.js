@@ -1,8 +1,8 @@
-var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, filter, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, precatTo, precatFrom, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, this$ = this, slice$ = [].slice;
+var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, filter, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeToWithM, mergeWithM, mergeToIn, mergeIn, mergeToInM, mergeInM, mergeAllIn, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, this$ = this, slice$ = [].slice;
 ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), map = ref$.map, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, precatTo = ref$.precatTo, precatFrom = ref$.precatFrom, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
+ref$ = require('../index'), map = ref$.map, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeToWithM = ref$.mergeToWithM, mergeWithM = ref$.mergeWithM, mergeToIn = ref$.mergeToIn, mergeIn = ref$.mergeIn, mergeToInM = ref$.mergeToInM, mergeInM = ref$.mergeInM, mergeAllIn = ref$.mergeAllIn, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
 sortAlpha = function(it){
   return it.sort();
 };
@@ -807,9 +807,9 @@ describe('data stuff', function(){
       return expect(res).toEqual([4, 3]);
     });
   });
-  describe('appendFrom', function(){
+  describe('append', function(){
     var fn, dir, mut;
-    fn = appendFrom;
+    fn = append;
     dir = 'from';
     mut = false;
     test(1, function(){
@@ -848,14 +848,14 @@ describe('data stuff', function(){
     });
     return test('eg', function(){
       var res;
-      res = appendFrom(4)(
+      res = append(4)(
       [3]);
       return expect(res).toEqual([3, 4]);
     });
   });
-  describe('appendFromM', function(){
+  describe('appendM', function(){
     var fn, dir, mut;
-    fn = appendFromM;
+    fn = appendM;
     dir = 'from';
     mut = true;
     test('array -> array', function(){
@@ -894,7 +894,7 @@ describe('data stuff', function(){
     });
     return test('eg', function(){
       var res;
-      res = appendFromM(3)(
+      res = appendM(3)(
       [4]);
       return expect(res).toEqual([4, 3]);
     });
@@ -945,9 +945,9 @@ describe('data stuff', function(){
       return expect(res).toEqual([3, 4]);
     });
   });
-  describe('prependFrom', function(){
+  describe('prepend', function(){
     var fn, dir, mut;
-    fn = prependFrom;
+    fn = prepend;
     dir = 'from';
     mut = false;
     test('array -> array', function(){
@@ -986,14 +986,14 @@ describe('data stuff', function(){
     });
     return test('eg', function(){
       var res;
-      res = prependFrom(3)(
+      res = prepend(3)(
       [4]);
       return expect(res).toEqual([3, 4]);
     });
   });
-  describe('prependFromM', function(){
+  describe('prependM', function(){
     var fn, dir, mut;
-    fn = prependFromM;
+    fn = prependM;
     dir = 'from';
     mut = true;
     test('array to array', function(){
@@ -1032,7 +1032,7 @@ describe('data stuff', function(){
     });
     return test('eg', function(){
       var res;
-      res = prependFromM(4)(
+      res = prependM(4)(
       [3]);
       return expect(res).toEqual([4, 3]);
     });
@@ -1164,9 +1164,9 @@ describe('data stuff', function(){
       }).toThrow();
     });
   });
-  describe('concatFrom', function(){
+  describe('concat', function(){
     var fn, dir, mut;
-    fn = concatFrom;
+    fn = concat;
     dir = 'from';
     mut = false;
     test('array -> array', function(){
@@ -1191,20 +1191,20 @@ describe('data stuff', function(){
       tgt = [1, 2, 3];
       src = 4;
       return expect(function(){
-        return concatFrom(tgt)(
+        return concat(tgt)(
         src);
       }).toThrow();
     });
     return test('alias', function(){
-      expectToEqual(concatFrom)(
+      expectToEqual(concat)(
       precatTo);
       return expectToEqual(concatTo)(
-      precatFrom);
+      precat);
     });
   });
-  describe('concatFromM', function(){
+  describe('concatM', function(){
     var fn, dir, mut;
-    fn = concatFromM;
+    fn = concatM;
     dir = 'from';
     mut = true;
     return test(1, function(){
@@ -1364,9 +1364,9 @@ describe('data stuff', function(){
       return expect(res.hidden).toEqual(void 8);
     });
   });
-  describe('mergeFrom', function(){
+  describe('merge', function(){
     var fn, dir, mut;
-    fn = mergeFrom;
+    fn = merge;
     dir = 'from';
     mut = false;
     test(1, function(){
@@ -1601,9 +1601,9 @@ describe('data stuff', function(){
       });
     });
   });
-  describe('mergeFromM', function(){
+  describe('mergeM', function(){
     var fn, dir, mut;
-    fn = mergeFromM;
+    fn = mergeM;
     dir = 'from';
     mut = true;
     test(1, function(){
@@ -1833,7 +1833,7 @@ describe('data stuff', function(){
       });
     });
   });
-  describe('mergeFromWithM', function(){
+  describe('mergeWithM', function(){
     var tgt, src, noop, chooseLeft, chooseRight;
     noop = function(){};
     chooseLeft = function(a, b){
@@ -1843,7 +1843,7 @@ describe('data stuff', function(){
       return b;
     };
     describe('main', function(){
-      return test('when no collisions, acts like mergeFromM', function(){
+      return test('when no collisions, acts like mergeM', function(){
         var x$, tgt, y$, src;
         x$ = tgt = Object.create({
           hidden1: 42
@@ -1855,9 +1855,9 @@ describe('data stuff', function(){
         });
         y$.c = 3;
         y$.d = 4;
-        return expectToEqual(mergeFromM(src)(
+        return expectToEqual(mergeM(src)(
         tgt))(
-        mergeFromWithM(noop, src)(
+        mergeWithM(noop, src)(
         tgt));
       });
     });
@@ -1876,7 +1876,7 @@ describe('data stuff', function(){
         };
       });
       test('choose target', function(){
-        mergeFromWithM(chooseLeft, src)(
+        mergeWithM(chooseLeft, src)(
         tgt);
         return expectToEqual({
           a: 'target a',
@@ -1886,7 +1886,7 @@ describe('data stuff', function(){
         tgt);
       });
       return test('choose source', function(){
-        mergeFromWithM(chooseRight, src)(
+        mergeWithM(chooseRight, src)(
         tgt);
         return expectToEqual({
           a: 'target a',
@@ -1911,7 +1911,7 @@ describe('data stuff', function(){
         };
       });
       test('proto chain of target is not checked', function(){
-        mergeFromWithM(null, src)(
+        mergeWithM(null, src)(
         tgt);
         return expectToEqual({
           a: 'target a',
@@ -1922,7 +1922,7 @@ describe('data stuff', function(){
         tgt);
       });
       xtest('choose target, hidden val floats', function(){
-        mergeFromWithM(chooseLeft, src)(
+        mergeWithM(chooseLeft, src)(
         tgt);
         expectToEqual({
           a: 'target a',
@@ -1935,7 +1935,7 @@ describe('data stuff', function(){
         tgt.hidden);
       });
       return xtest('choose source, hidden val floats', function(){
-        mergeFromWithM(chooseRight, src)(
+        mergeWithM(chooseRight, src)(
         tgt);
         return expectToEqual({
           a: 'target a',
@@ -2039,9 +2039,9 @@ describe('data stuff', function(){
       });
     });
   });
-  describe('mergeFromIn', function(){
+  describe('mergeIn', function(){
     var fn, dir, mut;
-    fn = mergeFromIn;
+    fn = mergeIn;
     dir = 'from';
     mut = false;
     test(1, function(){
@@ -2223,9 +2223,9 @@ describe('data stuff', function(){
       });
     });
   });
-  describe('mergeFromInM', function(){
+  describe('mergeInM', function(){
     var fn, dir, mut;
-    fn = mergeFromInM;
+    fn = mergeInM;
     dir = 'from';
     mut = true;
     test(1, function(){

@@ -9,19 +9,22 @@
 } = require 'ramda'
 
 {
-    list,
     test, xtest,
     expect-to-equal, expect-to-be,
 } = require './common'
 
 {
     array, compact, compact-ok,
+    list,
 } = require '../index'
 
-describe 'array' ->
+describe 'list' ->
     test 1 ->
-        [3 4 5]
+        list 3 4 5
         |> expect-to-equal [3 to 5]
+    test 'empty' ->
+        list()
+        |> expect-to-equal []
 
 describe 'compact*' ->
     mixed = [1 '' 0 '0' void false true 2]

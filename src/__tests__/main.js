@@ -1,8 +1,118 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, main, eq, ne, gt, gte, lt, lte, bindPropTo, bindProp, bindTo, bind, bindTryPropTo, bindTryProp, bindTryTo, bindTry, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, letV, letNV, laat, let2, let3, let4, let5, let6, letN, letS, zipAll, isType, getType, isFunction, isArray, isObject, isNumber, isRegExp, isBoolean, isString, isInteger, rangeFrom, rangeTo, rangeFromBy, rangeToBy, rangeFromByAsc, rangeFromByDesc, neu, neu1, neu2, neu3, neu4, neu5, neuN, xRegExp, xRegExpStr, xRegExpFlags, xMatch, xMatchStr, xMatchStrFlags, stickMatch, xMatchGlobal, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, blush, always, T, F, bindLatePropTo, bindLateProp, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
-ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical;
-ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow, expectNotToThrow = ref$.expectNotToThrow;
-ref$ = main = require('../index'), eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bindPropTo = ref$.bindPropTo, bindProp = ref$.bindProp, bindTo = ref$.bindTo, bind = ref$.bind, bindTryPropTo = ref$.bindTryPropTo, bindTryProp = ref$.bindTryProp, bindTryTo = ref$.bindTryTo, bindTry = ref$.bindTry, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, letV = ref$.letV, letNV = ref$.letNV, laat = ref$.laat, let2 = ref$.let2, let3 = ref$.let3, let4 = ref$.let4, let5 = ref$.let5, let6 = ref$.let6, letN = ref$.letN, letS = ref$.letS, zipAll = ref$.zipAll, isType = ref$.isType, getType = ref$.getType, isFunction = ref$.isFunction, isArray = ref$.isArray, isObject = ref$.isObject, isNumber = ref$.isNumber, isRegExp = ref$.isRegExp, isBoolean = ref$.isBoolean, isString = ref$.isString, isInteger = ref$.isInteger, rangeFrom = ref$.rangeFrom, rangeTo = ref$.rangeTo, rangeFromBy = ref$.rangeFromBy, rangeToBy = ref$.rangeToBy, rangeFromByAsc = ref$.rangeFromByAsc, rangeFromByDesc = ref$.rangeFromByDesc, neu = ref$.neu, neu1 = ref$.neu1, neu2 = ref$.neu2, neu3 = ref$.neu3, neu4 = ref$.neu4, neu5 = ref$.neu5, neuN = ref$.neuN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xRegExpFlags = ref$.xRegExpFlags, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, stickMatch = ref$.match, xMatchGlobal = ref$.xMatchGlobal, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, blush = ref$.blush, always = ref$.always, T = ref$.T, F = ref$.F, bindLatePropTo = ref$.bindLatePropTo, bindLateProp = ref$.bindLateProp, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, zip, sum, rEquals, rIdentical, curry, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, expectToBeInstanceOf, main, eq, ne, gt, gte, lt, lte, bindPropTo, bindProp, bindTo, bind, bindTryPropTo, bindTryProp, bindTryTo, bindTry, noop, stickNot, roll, recurry, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, letV, letNV, laat, let2, let3, let4, let5, let6, letN, letS, zipAll, isType, getType, isFunction, isArray, isObject, isNumber, isRegExp, isBoolean, isString, isInteger, rangeFrom, rangeTo, rangeFromBy, rangeToBy, rangeFromByAsc, rangeFromByDesc, neu, neu1, neu2, neu3, neu4, neu5, neuN, xRegExp, xRegExpStr, xRegExpFlags, xMatch, xMatchStr, xMatchStrFlags, stickMatch, xMatchGlobal, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, blush, always, T, F, bindLatePropTo, bindLateProp, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
+ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical, curry = ref$.curry;
+ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow, expectNotToThrow = ref$.expectNotToThrow, expectToBeInstanceOf = ref$.expectToBeInstanceOf;
+ref$ = main = require('../index'), eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bindPropTo = ref$.bindPropTo, bindProp = ref$.bindProp, bindTo = ref$.bindTo, bind = ref$.bind, bindTryPropTo = ref$.bindTryPropTo, bindTryProp = ref$.bindTryProp, bindTryTo = ref$.bindTryTo, bindTry = ref$.bindTry, noop = ref$.noop, stickNot = ref$.not, roll = ref$.roll, recurry = ref$.recurry, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, letV = ref$.letV, letNV = ref$.letNV, laat = ref$.laat, let2 = ref$.let2, let3 = ref$.let3, let4 = ref$.let4, let5 = ref$.let5, let6 = ref$.let6, letN = ref$.letN, letS = ref$.letS, zipAll = ref$.zipAll, isType = ref$.isType, getType = ref$.getType, isFunction = ref$.isFunction, isArray = ref$.isArray, isObject = ref$.isObject, isNumber = ref$.isNumber, isRegExp = ref$.isRegExp, isBoolean = ref$.isBoolean, isString = ref$.isString, isInteger = ref$.isInteger, rangeFrom = ref$.rangeFrom, rangeTo = ref$.rangeTo, rangeFromBy = ref$.rangeFromBy, rangeToBy = ref$.rangeToBy, rangeFromByAsc = ref$.rangeFromByAsc, rangeFromByDesc = ref$.rangeFromByDesc, neu = ref$.neu, neu1 = ref$.neu1, neu2 = ref$.neu2, neu3 = ref$.neu3, neu4 = ref$.neu4, neu5 = ref$.neu5, neuN = ref$.neuN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xRegExpFlags = ref$.xRegExpFlags, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, stickMatch = ref$.match, xMatchGlobal = ref$.xMatchGlobal, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, blush = ref$.blush, always = ref$.always, T = ref$.T, F = ref$.F, bindLatePropTo = ref$.bindLatePropTo, bindLateProp = ref$.bindLateProp, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
 sumAll = compose$(list, sum);
+describe('noop, not', function(){
+  test('noop', function(){
+    expectToEqual(void 8)(
+    noop());
+    expectToEqual(void 8)(
+    noop(5));
+    return expectToEqual(void 8)(
+    noop([4]));
+  });
+  return test('not', function(){
+    expectToEqual(false)(
+    stickNot(
+    3));
+    expectToEqual(false)(
+    stickNot(
+    true));
+    expectToEqual(true)(
+    stickNot(
+    false));
+    expectToEqual(true)(
+    stickNot(
+    ''));
+    return expectToEqual(false)(
+    stickNot(
+    '0'));
+  });
+});
+describe('recurry, roll', function(){
+  var f, g;
+  f = function(a){
+    return function(b){
+      return function(c){
+        return function(d){
+          return function(e){
+            return function(f){
+              return a + b + c + d + e + f;
+            };
+          };
+        };
+      };
+    };
+  };
+  g = curry(function(a, b, c, d, e, f){
+    return a + b + c + d + e + f;
+  });
+  describe('roll a manually curried function', function(){
+    var r;
+    r = roll(f);
+    test(1, function(){
+      return expectToEqual(33)(
+      r(3, 4, 5, 6, 7, 8));
+    });
+    test('too few args, result can be called using manual style', function(){
+      expectToEqual(33)(
+      r(3, 4, 5, 6, 7)(8));
+      return expectToEqual(33)(
+      r(3, 4, 5)(6)(7)(8));
+    });
+    test('too few args, result can not be called using normal style', function(){
+      return expectToBeInstanceOf(Function)(
+      r(3, 4, 5)(6, 7, 8));
+    });
+    test('arity of rolled is 0 (not well-defined)', function(){
+      return expectToEqual(0)(
+      r.length);
+    });
+    return test('arity of partial is always 1 (due to manual currying)', function(){
+      return expectToEqual(1)(
+      r(3, 4, 5).length);
+    });
+  });
+  describe('roll a ramda curried function', function(){
+    var r;
+    r = roll(g);
+    test(1, function(){
+      return expectToEqual(33)(
+      r(3, 4, 5, 6, 7, 8));
+    });
+    test('too few args, result can be called using manual style', function(){
+      expectToEqual(33)(
+      r(3, 4, 5, 6, 7)(8));
+      return expectToEqual(33)(
+      r(3, 4, 5)(6)(7)(8));
+    });
+    test('too few args, result can be called using normal style', function(){
+      return expectToEqual(33)(
+      r(3, 4, 5)(6, 7, 8));
+    });
+    return test('arity works the normal way', function(){
+      return expectToEqual(4)(
+      r(3, 4).length);
+    });
+  });
+  return describe('recurry a manually curried function', function(){
+    var r;
+    r = recurry(6)(f);
+    test('manual style', function(){
+      return expectToEqual(33)(
+      r(3, 4, 5)(6)(7)(8));
+    });
+    test('normal style', function(){
+      return expectToEqual(33)(
+      r(3, 4, 5)(6, 7, 8));
+    });
+    return test('arity is 0 (not well-defined)', function(){
+      return expectToEqual(0)(
+      r.length);
+    });
+  });
+});
 describe('comparisons', function(){
   describe('eq', function(){
     test(1, function(){

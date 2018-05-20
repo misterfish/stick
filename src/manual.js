@@ -12,6 +12,19 @@ const noop = _ => {}
 const oPro = Object.prototype
 const hasOwn = oPro.hasOwnProperty
 
+export const roll = (f) => (...args) => {
+    let g = f
+    for (const i of args) g = g (i)
+    return g
+}
+
+export const recurry = (n) => (f) => (...args) => {
+    const rolled = roll (f) (...args)
+    const dn = n - args.length
+    return dn <= 1 ? rolled
+                   : recurry (dn) (rolled)
+}
+
 export const eq = x => y => x === y
 export const ne = x => y => x !== y
 export const gt = m => n => n > m
@@ -498,6 +511,7 @@ export const xMatchGlobal = (re) => (mapper) => (target) => {
 }
 
 export default {
+    roll, recurry,
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,

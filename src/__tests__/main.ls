@@ -1,5 +1,5 @@
 {
-    assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: each, complement, isNil,
+    assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, prop: rProp, path: rPath, defaultTo: rDefaultTo, forEach: each, complement, isNil,
     repeat: rRepeat,
     times: r-times,
     join: r-join,
@@ -10,6 +10,7 @@
     sum,
     equals: r-equals,
     identical: r-identical,
+    curry,
 } = require 'ramda'
 
 {
@@ -17,6 +18,7 @@
     test, xtest,
     expect-to-equal, expect-to-be,
     expect-to-throw, expect-not-to-throw,
+    expect-to-be-instance-of,
 } = require './common'
 
 {
@@ -24,6 +26,10 @@
 
     bind-prop-to, bind-prop, bind-to, bind,
     bind-try-prop-to, bind-try-prop, bind-try-to, bind-try,
+
+    noop,
+    not: stick-not,
+    roll, recurry,
 
     cascade,
     flip, flip3, flip4, flip5,
@@ -69,6 +75,54 @@
 } = main = require '../index'
 
 sum-all = list >> sum
+
+describe 'noop, not' ->
+    test 'noop' ->
+        noop ()  |> expect-to-equal void
+        noop 5   |> expect-to-equal void
+        noop [4] |> expect-to-equal void
+    test 'not' ->
+        3     |> stick-not |> expect-to-equal false
+        true  |> stick-not |> expect-to-equal false
+        false |> stick-not |> expect-to-equal true
+        ''    |> stick-not |> expect-to-equal true
+        '0'   |> stick-not |> expect-to-equal false
+describe 'recurry, roll' ->
+    f = (a) -> (b) -> (c) -> (d) -> (e) -> (f) ->
+        a + b + c + d + e + f
+    g = curry (a, b, c, d, e, f) -> a + b + c + d + e + f
+    describe 'roll a manually curried function' ->
+        r = roll f
+        test 1 ->
+            r 3 4 5 6 7 8 |> expect-to-equal 33
+        test 'too few args, result can be called using manual style' ->
+            (r 3 4 5 6 7) 8 |> expect-to-equal 33
+            (((r 3 4 5) 6) 7) 8 |> expect-to-equal 33
+        test 'too few args, result can not be called using normal style' ->
+            (r 3 4 5) 6 7 8 |> expect-to-be-instance-of Function
+        test 'arity of rolled is 0 (not well-defined)' ->
+            r.length |> expect-to-equal 0
+        test 'arity of partial is always 1 (due to manual currying)' ->
+            (r 3 4 5).length |> expect-to-equal 1
+    describe 'roll a ramda curried function' ->
+        r = roll g
+        test 1 ->
+            r 3 4 5 6 7 8 |> expect-to-equal 33
+        test 'too few args, result can be called using manual style' ->
+            (r 3 4 5 6 7) 8 |> expect-to-equal 33
+            (((r 3 4 5) 6) 7) 8 |> expect-to-equal 33
+        test 'too few args, result can be called using normal style' ->
+            (r 3 4 5) 6 7 8 |> expect-to-equal 33
+        test 'arity works the normal way' ->
+            (r 3 4).length |> expect-to-equal 4
+    describe 'recurry a manually curried function' ->
+        r = (recurry 6) f
+        test 'manual style' ->
+            (((r 3 4 5) 6) 7) 8 |> expect-to-equal 33
+        test 'normal style' ->
+            (r 3 4 5) 6 7 8 |> expect-to-equal 33
+        test 'arity is 0 (not well-defined)' ->
+            r.length |> expect-to-equal 0
 
 describe 'comparisons' ->
     describe 'eq' ->

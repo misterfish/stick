@@ -39,6 +39,24 @@ import manual from './manual'
 const oPro = Object.prototype
 const hasOwn = oPro.hasOwnProperty
 
+// --- takes a manually curried function like
+// f = a => b => c => d => { body }
+// and returns a new function g which can be called as:
+// g (a, b, c, d)
+//
+// g is curried, but only allows the manual calling style.
+//
+// g does not have a well-defined arity.
+//
+// Consider using R.uncurryN if this latter is a problem. The resulting function will still be curried, despite the name.
+
+export const roll = manual.roll
+
+// --- takes a manually curried function and allows it to be called using either of the two calling
+// styles.
+// --- `recurry` itself must be called using the manual style.
+// --- as with `roll`, the recurried function does not have a well-defined arity.
+
 // const r = (a => b => c => a * b * c) | recurry
 // r (1, 2, 3) = roll (orig) (1, 2, 3)
 // r (1, 2)    = roll (orig) (1, 2)
@@ -46,26 +64,15 @@ const hasOwn = oPro.hasOwnProperty
 // r (1) (2) (3)
 // r ()
 
-export const recurry = (n) => (f) => (...args) => {
-    const rolled = roll (f) (...args)
-    const dn = n - args.length
-    return dn <= 1 ? rolled
-                   : recurry (dn) (rolled)
-}
+// --- it does work to recurry `recurry` using itself, in order to allow both calling styles, but
+// will probably cause a performance hit.
+// const _recurry = manual.recurry (2) (manual.recurry)
+
+export const recurry = manual.recurry
 
 const _recurry = recurry
 
-// --- note that the resulting function is not curried, and does not have a well-defined arity.
-// Consider using R.uncurryN if this latter is a problem, though the resulting function will then be curried (despite the name).
-
-export const roll = (f) => (...args) => {
-  let g = f
-  for (const i of args) g = g (i)
-  return g
-}
-
 export const noop = () => {}
-// @test
 export const not = f => !f
 
 export const ok    = x => x != null
@@ -526,7 +533,7 @@ export const timesV     = _recurry (2) (manual.timesV)
 export const timesF     = _recurry (2) (manual.timesF)
 export const timesSide  = _recurry (2) (manual.timesSide)
 
-// ------ types. @test
+// ------ types.
 
 export const getType = x => oPro
     .toString.call (x).slice (8, -1)

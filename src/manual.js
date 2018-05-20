@@ -278,9 +278,24 @@ export const addCollection = (orig) => (f) => (ary) => {
     return orig (g) (ary)
 }
 
+export const reduceObj = (f) => (acc) => (o) => {
+    let curAcc = acc
+    for (const k in o) if (hasOwn.call (o, k))
+        curAcc = f (curAcc, [k, o [k]])
+    return curAcc
+}
+
+export const reduceObjIn = (f) => (acc) => (o) => {
+    let curAcc = acc
+    for (const k in o)
+        curAcc = f (curAcc, [k, o [k]])
+    return curAcc
+}
+
+
 // --- @canonical
 /*
-export const ampersand = (fs) => (x) => fs | laatsO ([
+export const ampersand = (fs) => (x) => fs | letsO ([
     _ => f => f (x),
     (fs, mapper) => fs | map (mapper),
 ])
@@ -310,7 +325,7 @@ export const asterisk = curry ((fs, xs) => xs
 
 // ------ laat / let
 
-export const laat = xs => f => f.apply (null, xs)
+export const letN = xs => f => f.apply (null, xs)
 
 // ------ call/provide
 
@@ -401,8 +416,9 @@ export default {
     mergeToInM, mergeFromInM, mergeToIn, mergeFromIn,
     addIndex, addCollection,
     map, each, eachObj, eachObjIn,
+    reduceObj, reduceObjIn,
     ampersand, asterisk,
-    laat,
+    letN,
     callOn, callOn1, callOn2, callOn3, callOn4, callOn5, callOnN,
     provideTo, provideTo1, provideTo2, provideTo3, provideTo4, provideTo5, provideToN,
     applyTo1, applyTo2, applyTo3, applyTo4, applyTo5, applyToN,

@@ -334,35 +334,45 @@ export const mapPairsIn = curry ((f, obj) => obj
 export const eachObj = _recurry (2) (manual.eachObj)
 export const eachObjIn = _recurry (2) (manual.eachObjIn)
 
+export const reduceObj = _recurry (3) (manual.reduceObj)
+export const reduceObjIn = _recurry (3) (manual.reduceObjIn)
+
 // fs `ampersand` x = map map' fs where map' f = f x
 export const ampersand = _recurry (2) (manual.ampersand)
 export const asterisk = _recurry (2) (manual.asterisk)
 
-// --------- laat
+// --------- laat / let
 
-export const laat = _recurry (2) (manual.laat)
+// --- last arg must be a function.
+// 1 arg is possible but trivial.
+export const laat = (...xs) => {
+    const f = xs.pop ()
+    return letN (xs, f)
+}
 
-// --- these can be called directly by speed freaks; `laats` should be good enough for nearly all
+export const letN = _recurry (2) (manual.letN)
+
+// --- these can be called directly by speed freaks; `lets` should be good enough for nearly all
 // uses.
-export const laats2 = (f1, f2) => {
+export const lets2 = (f1, f2) => {
     const n1 = f1 ()
     return f2 (n1)
 }
 
-export const laats3 = (f1, f2, f3) => {
+export const lets3 = (f1, f2, f3) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     return f3 (n1, n2)
 }
 
-export const laats4 = (f1, f2, f3, f4) => {
+export const lets4 = (f1, f2, f3, f4) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     const n3 = f3 (n1, n2)
     return f4 (n1, n2, n3)
 }
 
-export const laats5 = (f1, f2, f3, f4, f5) => {
+export const lets5 = (f1, f2, f3, f4, f5) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     const n3 = f3 (n1, n2)
@@ -370,7 +380,7 @@ export const laats5 = (f1, f2, f3, f4, f5) => {
     return f5 (n1, n2, n3, n4)
 }
 
-export const laats6 = (f1, f2, f3, f4, f5, f6) => {
+export const lets6 = (f1, f2, f3, f4, f5, f6) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     const n3 = f3 (n1, n2)
@@ -379,8 +389,10 @@ export const laats6 = (f1, f2, f3, f4, f5, f6) => {
     return f6 (n1, n2, n3, n4, n5)
 }
 
+export const letsN = (xs) => lets (...xs)
+
 // --- generic form, for any non-zero number of arguments.
-const _laats = (...xs) => {
+const _lets = (...xs) => {
     const executeStep = prevVals => applyToN (prevVals)
 
     const ys = xs
@@ -393,16 +405,19 @@ const _laats = (...xs) => {
     return ys | last
 }
 
-export const laats = (...xs) => {
-    if (xs.length === 2) return laats2 (...xs)
-    if (xs.length === 3) return laats3 (...xs)
-    if (xs.length === 4) return laats4 (...xs)
-    if (xs.length === 5) return laats5 (...xs)
-    if (xs.length === 6) return laats6 (...xs)
-    return _laats (...xs)
+export const lets = (...xs) => {
+    if (xs.length === 2) return lets2 (...xs)
+    if (xs.length === 3) return lets3 (...xs)
+    if (xs.length === 4) return lets4 (...xs)
+    if (xs.length === 5) return lets5 (...xs)
+    if (xs.length === 6) return lets6 (...xs)
+    return _lets (...xs)
 }
 
-export const lets = laats
+export const letsO = curry ((specAry, tgt) => lets (
+  _ => tgt,
+  ... specAry,
+))
 
 // --- 'call' and 'provide' always mean pass a context.
 // --- 'apply' always means 'apply this function to some params'
@@ -537,7 +552,7 @@ export const xRegExpFlags = (re, flags) => new RegExp (
 )
 
 // --- input: string, [string].
-export const xRegExpStr = (reStr, flags = '') => laat (
+export const xRegExpStr = (reStr, flags = '') => letN (
     [
         reStr | removeSpaces,
         flags,
@@ -658,7 +673,7 @@ const mergeMixins = (mixinsPre, proto, mixinsPost) => {
 // note: you are free to put properties in the prototype, though this is probably not a great idea.
 // at the very least, you should ensure that they are never mutated.
 
-const _factory = (proto, mixinsPre = [], mixinsPost = []) => laats (
+const _factory = (proto, mixinsPre = [], mixinsPost = []) => lets (
     _ => mergeMixins (mixinsPre, proto, mixinsPost),
     (protoMixed) => ({
         // --- consider dropping this: Object.getPrototypeOf xxx
@@ -836,17 +851,6 @@ export const modulo = _recurry (2) (manual.modulo)
 export const moduloWholePart = _recurry (2) (manual.moduloWholePart)
 export const toThe = _recurry (2) (manual.toThe)
 
-// @test
-export const laatO = curry ((fs, f, x) => laat (
-    fs | map (applyTo1 (x)),
-    (...args) => f | applyToN ([x, ...args]),
-))
-
-export const laatsO = curry ((specAry, tgt) => laats (
-  _ => tgt,
-  ... specAry,
-))
-
 const listDat = curry ((fs, n) => fs | map (
     applyTo1 (n),
 ))
@@ -924,14 +928,6 @@ export const defaultToA = blush >> defaultTo
 
 const { log, } = console
 const logWith = header => (...args) => log (... [header, ...args])
-
-// @test
-export const reduceObj = (f) => (acc) => (o) => {
-    let curAcc = acc
-    for (const k in o) if (hasOwn.call (o, k))
-        curAcc = f (curAcc, [k, o [k]])
-    return curAcc
-}
 
 
 // a map results in a collection of the same shape: list to list, object to object.

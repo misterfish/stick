@@ -17,6 +17,7 @@
 {
     map, each, each-obj, each-obj-in,
     add-index, add-collection,
+    reduce-obj, reduce-obj-in,
 
     default-to, default-to__,
 
@@ -118,6 +119,32 @@ describe 'map, each' ->
             y.y |> expect-to-equal a: 1 b: 2
             y.z |> expect-to-equal [0, o, 1, o]
 
+describe 'reduceObj' ->
+    base = base-val: 15
+    o = (Object.create base) <<< a: 1 b: 2
+    # --- remember not to depend on order.
+    describe 'reduceObj' ->
+        test 1 ->
+            f = (acc, [k, v]) -> [...acc, "\"#k\": #v"]
+            reduced = o |> reduce-obj f, []
+            json = reduced
+                |> join ', '
+                |> (x) -> "{#x}"
+            (JSON.parse json).a
+            |> expect-to-equal 1
+            (JSON.parse json).base-val
+            |> expect-to-equal void
+    describe 'reduceObjIn' ->
+        test 1 ->
+            f = (acc, [k, v]) -> [...acc, "\"#k\": #v"]
+            reduced = o |> reduce-obj-in f, []
+            json = reduced
+                |> join ', '
+                |> (x) -> "{#x}"
+            (JSON.parse json).a
+            |> expect-to-equal 1
+            (JSON.parse json).base-val
+            |> expect-to-equal 15
 
 describe 'default to' ->
     test 1 ->

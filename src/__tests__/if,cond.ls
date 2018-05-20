@@ -2,6 +2,7 @@
     assoc, assocPath, head, tail, reduceRight, chain, identity: id, reduce, map, filter, join, split, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: each, complement, isNil,
     repeat: rRepeat,
     times: r-times,
+    join: r-join,
     reverse,
     tap,
     flip,
@@ -21,7 +22,11 @@
     is-true, is-false,
     is-yes, is-no, is-truthy, is-falsey,
 
-    if-predicate, when-predicate, if-predicate__,
+    if-predicate, when-predicate,
+    if-predicate-ok, when-predicate-ok,
+
+    # @deprecated
+    if-predicate__,
 
     if-ok, when-ok,
     if-not-ok, when-not-ok,
@@ -172,7 +177,19 @@ describe 'ifPredicate' ->
         3 |> when-predicate even, (+ 1)
           |> expect-to-equal void
 
+describe 'ifPredicateOk' ->
+    x = <[ eg bert ]>
+    y = void
+    iffer = if-predicate-ok do
+        (n) -> if odd n then x
+        r-join '!'
+        -> null
+    test 1 ->
+        1 |> iffer |> expect-to-equal 'eg!bert'
+    test 2 ->
+        2 |> iffer |> expect-to-equal null
 describe 'ifPredicate__' ->
+    return
     describe-spec =
         fn: -> if-predicate__ ...[(> 3), ...&]
         is__: true

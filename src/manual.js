@@ -59,7 +59,6 @@ export const sideN = prop => vs =>
 export const ifPredicate = f => yes => no => x => f (x) === true ? yes (x) : no (x)
 export const whenPredicate = f => yes => ifPredicate (f) (yes) (noop)
 
-// @test
 // --- passes the *result* of the predicate test to the yes/no functions instead of passing `x`.
 export const ifPredicateOk = f => yes => no => x => {
     const p = f (x)
@@ -247,15 +246,29 @@ export const mergeToWithM = (collision) => (tgt) => (src) => {
 
 export const mergeWithM = (collision) => (src) => (tgt) => mergeToWithM (collision) (tgt) (src)
 
-// --- @test
-export const mergeToWhenOkM = (tgt) => (src) => {
-    for (const i in src) if (hasOwn.call (src, i) && ok (src[i]))
-        tgt[i] = src[i]
+// --- we don't (currently) have `in`, and `with` forms for the `when` form.
+// --- tests `f` for truthiness.
+export const mergeToWhenM = (f) => (tgt) => (src) => {
+    for (const i in src)
+        if (hasOwn.call (src, i) && f (src [i], tgt [i]))
+            tgt[i] = src[i]
     return tgt
 }
 
-// --- @test
-export const mergeWhenOkM = (src) => (tgt) => mergeToWhenOkM (tgt) (src)
+// --- tests `f` for truthiness.
+export const mergeToWhen = (f) => (tgt) => (src) => {
+    const a = mergeToM ({}) (tgt)
+    return mergeToWhenM (f) (a) (src)
+}
+
+// --- tests `f` for truthiness.
+export const mergeWhenM = f => src => tgt => mergeToWhenM (f) (tgt) (src)
+
+// --- tests `f` for truthiness.
+export const mergeWhen = (f) => (src) => (tgt) => {
+    const a = mergeToM ({}) (tgt)
+    return mergeToWhenM (f) (a) (src)
+}
 
 export const mergeToInM = (tgt) => (src) => {
     for (const i in src) tgt[i] = src[i]
@@ -489,6 +502,7 @@ export default {
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,
     ifPredicate, whenPredicate,
+    ifPredicateOk, whenPredicateOk,
     has, hasIn,
     ifHas, ifHasIn,
     whenHas, whenHasIn,
@@ -511,7 +525,8 @@ export default {
     concatTo, concat, concatToM, concatM,
     mergeTo, merge, mergeToM, mergeM,
     mergeToWithM, mergeWithM,
-    mergeToWhenOkM, mergeWhenOkM,
+    mergeToWhenM, mergeWhenM,
+    mergeToWhen, mergeWhen,
     mergeToInM, mergeInM, mergeToIn, mergeIn,
     addIndex, addCollection,
     map, filter, reject,

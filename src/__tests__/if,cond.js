@@ -1,8 +1,8 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, expectToThrow, ok, notOk, isTrue, isFalse, isYes, isNo, isTruthy, isFalsey, ifPredicate, whenPredicate, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, bindTryPropTo, bindTryProp, bindTryTo, bindTry, ifHas, whenHas, ifHasIn, whenHasIn, ifBind, whenBind, cond, condN, condS, guard, guardV, otherwise, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
-ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, id = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, id, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, rJoin, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, expectToThrow, ok, notOk, isTrue, isFalse, isYes, isNo, isTruthy, isFalsey, ifPredicate, whenPredicate, ifPredicateOk, whenPredicateOk, ifPredicate__, ifOk, whenOk, ifNotOk, whenNotOk, ifTrue, whenTrue, ifFalse, whenFalse, ifYes, whenYes, ifTruthy, whenTruthy, ifNo, whenNo, ifFalsey, whenFalsey, bindTryPropTo, bindTryProp, bindTryTo, bindTry, ifHas, whenHas, ifHasIn, whenHasIn, ifBind, whenBind, cond, condN, condS, guard, guardV, otherwise, ifOk__, ifTrue__, ifFalse__, ifYes__, ifNo__, doTests, doTestDoubleArm, doTestSingleArm, slice$ = [].slice;
+ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, id = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow;
-ref$ = require('../index'), ok = ref$.ok, notOk = ref$.notOk, isTrue = ref$.isTrue, isFalse = ref$.isFalse, isYes = ref$.isYes, isNo = ref$.isNo, isTruthy = ref$.isTruthy, isFalsey = ref$.isFalsey, ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, bindTryPropTo = ref$.bindTryPropTo, bindTryProp = ref$.bindTryProp, bindTryTo = ref$.bindTryTo, bindTry = ref$.bindTry, ifHas = ref$.ifHas, whenHas = ref$.whenHas, ifHasIn = ref$.ifHasIn, whenHasIn = ref$.whenHasIn, ifBind = ref$.ifBind, whenBind = ref$.whenBind, cond = ref$.cond, condN = ref$.condN, condS = ref$.condS, guard = ref$.guard, guardV = ref$.guardV, otherwise = ref$.otherwise, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__;
+ref$ = require('../index'), ok = ref$.ok, notOk = ref$.notOk, isTrue = ref$.isTrue, isFalse = ref$.isFalse, isYes = ref$.isYes, isNo = ref$.isNo, isTruthy = ref$.isTruthy, isFalsey = ref$.isFalsey, ifPredicate = ref$.ifPredicate, whenPredicate = ref$.whenPredicate, ifPredicateOk = ref$.ifPredicateOk, whenPredicateOk = ref$.whenPredicateOk, ifPredicate__ = ref$.ifPredicate__, ifOk = ref$.ifOk, whenOk = ref$.whenOk, ifNotOk = ref$.ifNotOk, whenNotOk = ref$.whenNotOk, ifTrue = ref$.ifTrue, whenTrue = ref$.whenTrue, ifFalse = ref$.ifFalse, whenFalse = ref$.whenFalse, ifYes = ref$.ifYes, whenYes = ref$.whenYes, ifTruthy = ref$.ifTruthy, whenTruthy = ref$.whenTruthy, ifNo = ref$.ifNo, whenNo = ref$.whenNo, ifFalsey = ref$.ifFalsey, whenFalsey = ref$.whenFalsey, bindTryPropTo = ref$.bindTryPropTo, bindTryProp = ref$.bindTryProp, bindTryTo = ref$.bindTryTo, bindTry = ref$.bindTry, ifHas = ref$.ifHas, whenHas = ref$.whenHas, ifHasIn = ref$.ifHasIn, whenHasIn = ref$.whenHasIn, ifBind = ref$.ifBind, whenBind = ref$.whenBind, cond = ref$.cond, condN = ref$.condN, condS = ref$.condS, guard = ref$.guard, guardV = ref$.guardV, otherwise = ref$.otherwise, ifOk__ = ref$.ifOk__, ifTrue__ = ref$.ifTrue__, ifFalse__ = ref$.ifFalse__, ifYes__ = ref$.ifYes__, ifNo__ = ref$.ifNo__;
 doTests = curry$(function(describeSpec, tests){
   return each(function(testSpec){
     var numArms, ref$, ref1$, theTest;
@@ -165,8 +165,31 @@ describe('ifPredicate', function(){
     3));
   });
 });
+describe('ifPredicateOk', function(){
+  var x, y, iffer;
+  x = ['eg', 'bert'];
+  y = void 8;
+  iffer = ifPredicateOk(function(n){
+    if (odd(n)) {
+      return x;
+    }
+  }, rJoin('!'), function(){
+    return null;
+  });
+  test(1, function(){
+    return expectToEqual('eg!bert')(
+    iffer(
+    1));
+  });
+  return test(2, function(){
+    return expectToEqual(null)(
+    iffer(
+    2));
+  });
+});
 describe('ifPredicate__', function(){
   var describeSpec, tests, describeSpec2, tests2;
+  return;
   describeSpec = {
     fn: function(){
       var this$ = this;

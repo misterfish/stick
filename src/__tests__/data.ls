@@ -49,6 +49,9 @@
     merge-to-in, merge-in, merge-to-in-m, merge-in-m,
     merge-all-in,
 
+    merge-to-when-m, merge-when-m,
+    merge-to-when, merge-when,
+
     discard-prototype, flatten-prototype,
 
     #map-pairs, map-pairs-in,
@@ -1117,6 +1120,47 @@ describe 'data stuff' ->
                 { res, mut, tgt, }
 
             (expect res).to-equal a: 1 b: 3 c: 4 hidden: 43
+
+    describe 'merge*WhenM' ->
+        base = base-val: 10
+        var tgt
+        var src
+        src-ok = (s, _) -> s?
+        tgt-ok = (_, t) -> t?
+        before-each ->
+            tgt := (Object.create base) <<< a: 1 b: 2 c: null
+            src := (Object.create base) <<< a: 3 b: null c: 4
+        test 1 ->
+            src |> merge-to-when-m src-ok, tgt
+            tgt |> expect-to-equal a: 3 b: 2 c: 4
+        test 2 ->
+            src |> merge-to-when-m tgt-ok, tgt
+            tgt |> expect-to-equal a: 3 b: null c: null
+        test 3 ->
+            tgt |> merge-when-m src-ok, src
+            tgt |> expect-to-equal a: 3 b: 2 c: 4
+        test 4 ->
+            tgt |> merge-when-m tgt-ok, src
+            tgt |> expect-to-equal a: 3 b: null c: null
+
+    describe 'merge*When' ->
+        base = base-val: 10
+        tgt = (Object.create base) <<< a: 1 b: 2 c: null
+        src = (Object.create base) <<< a: 3 b: null c: 4
+        src-ok = (s, _) -> s?
+        tgt-ok = (_, t) -> t?
+        test 1 ->
+            src |> merge-to-when src-ok, tgt
+                |> expect-to-equal a: 3 b: 2 c: 4
+        test 2 ->
+            src |> merge-to-when tgt-ok, tgt
+                |> expect-to-equal a: 3 b: null c: null
+        test 3 ->
+            tgt |> merge-when src-ok, src
+                |> expect-to-equal a: 3 b: 2 c: 4
+        test 4 ->
+            tgt |> merge-when tgt-ok, src
+                |> expect-to-equal a: 3 b: null c: null
 
     describe 'mergeToInM' ->
         fn = merge-to-in-m

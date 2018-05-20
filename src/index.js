@@ -115,6 +115,8 @@ export const isFalsey = isNo
 
 export const ifPredicate   = _recurry (4) (manual.ifPredicate)
 export const whenPredicate = _recurry (3) (manual.whenPredicate)
+export const ifPredicateOk = _recurry (4) (manual.ifPredicateOk)
+export const whenPredicateOk = _recurry (2) (manual.whenPredicateOk)
 
 export const ifOk          = ifPredicate   (ok)
 export const whenOk        = whenPredicate (ok)
@@ -156,6 +158,7 @@ export const ifFunction__ = (x, yes, no = noop) => x | ifFunction (yes) (no)
 export const ifHas__ = (spec, yes, no = noop) => spec | ifHas (yes) (no)
 export const ifHasIn__ = (spec, yes, no = noop) => spec | ifHasIn (yes) (no)
 export const ifBind__ = (spec, yes, no = noop) => spec | ifBind (yes) (no)
+// /---
 
 export const cond = manual.cond
 export const condN = (blocks) => cond (...blocks)
@@ -261,10 +264,10 @@ export const mergeToM = _recurry (2) (manual.mergeToM)
 export const mergeToWithM = _recurry (3) (manual.mergeToWithM)
 export const mergeWithM   = _recurry (3) (manual.mergeWithM)
 
-// @test
-export const mergeToWhenOkM = _recurry (2) (manual.mergeToWhenOkM)
-// @test
-export const mergeWhenOkM   = _recurry (2) (manual.mergeWhenOkM)
+export const mergeToWhenM = _recurry (3) (manual.mergeToWhenM)
+export const mergeWhenM   = _recurry (3) (manual.mergeWhenM)
+export const mergeToWhen  = _recurry (3) (manual.mergeToWhen)
+export const mergeWhen    = _recurry (3) (manual.mergeWhen)
 
 export const mergeToInM = _recurry (2) (manual.mergeToInM)
 export const mergeInM   = _recurry (2) (manual.mergeInM)

@@ -1,5 +1,5 @@
 {
-    assoc: rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map: rMap, filter, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: rEach, complement, isNil,
+    assoc: rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map: rMap, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: rEach, complement, isNil,
     repeat: rRepeat,
     times: r-times,
     join: r-join,
@@ -21,7 +21,8 @@
 } = require './common'
 
 {
-    map, each, each-obj, each-obj-in,
+    map, filter, reject,
+    each, each-obj, each-obj-in,
     keys, keys-in,
     values, values-in,
     map-keys, map-values,
@@ -64,7 +65,7 @@
 sort-alpha = (.sort ())
 sort-num = (.sort ((a, b) -> a - b))
 
-describe 'map, each' ->
+describe 'map, filter, reject, each' ->
     describe 'map' ->
         map-x = map |> add-index
         map-x-c = map |> add-index |> add-collection
@@ -88,6 +89,53 @@ describe 'map, each' ->
             [1 2 3]
             |> map-c-x (x, c, i) -> i * c.length
             |> expect-to-equal [0 3 6]
+    describe 'filter' ->
+        filter-x = filter |> add-index
+        filter-x-c = filter |> add-index |> add-collection
+        filter-c-x = filter |> add-collection |> add-index
+
+        test 1 ->
+            [1 2 3] |> filter (odd) |> expect-to-equal [1 3]
+        test 'capped' ->
+            [1 2 3]
+            |> filter (x, arg2) -> arg2
+            |> expect-to-equal []
+        test 'indexed' ->
+            [1 2 3]
+            |> filter-x (x, idx) -> idx == 2
+            |> expect-to-equal [3]
+        test 'filterXC' ->
+            [1 2 3]
+            |> filter-x-c (x, i, c) -> i * c.length == 3
+            |> expect-to-equal [2]
+        test 'filterCX' ->
+            [1 2 3]
+            |> filter-c-x (x, c, i) -> i * c.length == 3
+            |> expect-to-equal [2]
+
+    describe 'reject' ->
+        reject-x = reject |> add-index
+        reject-x-c = reject |> add-index |> add-collection
+        reject-c-x = reject |> add-collection |> add-index
+
+        test 1 ->
+            [1 2 3] |> reject (even) |> expect-to-equal [1 3]
+        test 'capped' ->
+            [1 2 3]
+            |> reject (x, arg2) -> arg2 == void
+            |> expect-to-equal []
+        test 'indexed' ->
+            [1 2 3]
+            |> reject-x (x, idx) -> idx == 2
+            |> expect-to-equal [1 2]
+        test 'rejectXC' ->
+            [1 2 3]
+            |> reject-x-c (x, i, c) -> i * c.length == 3
+            |> expect-to-equal [1 3]
+        test 'rejectCX' ->
+            [1 2 3]
+            |> reject-c-x (x, c, i) -> i * c.length == 3
+            |> expect-to-equal [1 3]
 
     describe 'each' ->
         each-x = each |> add-index

@@ -1,8 +1,8 @@
-var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, filter, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeToWithM, mergeWithM, mergeToIn, mergeIn, mergeToInM, mergeInM, mergeAllIn, mergeToWhenM, mergeWhenM, mergeToWhen, mergeWhen, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, this$ = this, slice$ = [].slice;
-ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
+var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, filter, reject, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeToWithM, mergeWithM, mergeToIn, mergeIn, mergeToInM, mergeInM, mergeAllIn, mergeToWhenM, mergeWhenM, mergeToWhen, mergeWhen, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, this$ = this, slice$ = [].slice;
+ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), map = ref$.map, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeToWithM = ref$.mergeToWithM, mergeWithM = ref$.mergeWithM, mergeToIn = ref$.mergeToIn, mergeIn = ref$.mergeIn, mergeToInM = ref$.mergeToInM, mergeInM = ref$.mergeInM, mergeAllIn = ref$.mergeAllIn, mergeToWhenM = ref$.mergeToWhenM, mergeWhenM = ref$.mergeWhenM, mergeToWhen = ref$.mergeToWhen, mergeWhen = ref$.mergeWhen, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
+ref$ = require('../index'), map = ref$.map, filter = ref$.filter, reject = ref$.reject, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeToWithM = ref$.mergeToWithM, mergeWithM = ref$.mergeWithM, mergeToIn = ref$.mergeToIn, mergeIn = ref$.mergeIn, mergeToInM = ref$.mergeToInM, mergeInM = ref$.mergeInM, mergeAllIn = ref$.mergeAllIn, mergeToWhenM = ref$.mergeToWhenM, mergeWhenM = ref$.mergeWhenM, mergeToWhen = ref$.mergeToWhen, mergeWhen = ref$.mergeWhen, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
 sortAlpha = function(it){
   return it.sort();
 };
@@ -11,7 +11,7 @@ sortNum = function(it){
     return a - b;
   });
 };
-describe('map, each', function(){
+describe('map, filter, reject, each', function(){
   describe('map', function(){
     var mapX, mapXC, mapCX;
     mapX = addIndex(
@@ -55,6 +55,94 @@ describe('map, each', function(){
       return expectToEqual([0, 3, 6])(
       mapCX(function(x, c, i){
         return i * c.length;
+      })(
+      [1, 2, 3]));
+    });
+  });
+  describe('filter', function(){
+    var filterX, filterXC, filterCX;
+    filterX = addIndex(
+    filter);
+    filterXC = addCollection(
+    addIndex(
+    filter));
+    filterCX = addIndex(
+    addCollection(
+    filter));
+    test(1, function(){
+      return expectToEqual([1, 3])(
+      filter(odd)(
+      [1, 2, 3]));
+    });
+    test('capped', function(){
+      return expectToEqual([])(
+      filter(function(x, arg2){
+        return arg2;
+      })(
+      [1, 2, 3]));
+    });
+    test('indexed', function(){
+      return expectToEqual([3])(
+      filterX(function(x, idx){
+        return idx === 2;
+      })(
+      [1, 2, 3]));
+    });
+    test('filterXC', function(){
+      return expectToEqual([2])(
+      filterXC(function(x, i, c){
+        return i * c.length === 3;
+      })(
+      [1, 2, 3]));
+    });
+    return test('filterCX', function(){
+      return expectToEqual([2])(
+      filterCX(function(x, c, i){
+        return i * c.length === 3;
+      })(
+      [1, 2, 3]));
+    });
+  });
+  describe('reject', function(){
+    var rejectX, rejectXC, rejectCX;
+    rejectX = addIndex(
+    reject);
+    rejectXC = addCollection(
+    addIndex(
+    reject));
+    rejectCX = addIndex(
+    addCollection(
+    reject));
+    test(1, function(){
+      return expectToEqual([1, 3])(
+      reject(even)(
+      [1, 2, 3]));
+    });
+    test('capped', function(){
+      return expectToEqual([])(
+      reject(function(x, arg2){
+        return arg2 === void 8;
+      })(
+      [1, 2, 3]));
+    });
+    test('indexed', function(){
+      return expectToEqual([1, 2])(
+      rejectX(function(x, idx){
+        return idx === 2;
+      })(
+      [1, 2, 3]));
+    });
+    test('rejectXC', function(){
+      return expectToEqual([1, 3])(
+      rejectXC(function(x, i, c){
+        return i * c.length === 3;
+      })(
+      [1, 2, 3]));
+    });
+    return test('rejectCX', function(){
+      return expectToEqual([1, 3])(
+      rejectCX(function(x, c, i){
+        return i * c.length === 3;
       })(
       [1, 2, 3]));
     });

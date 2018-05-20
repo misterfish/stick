@@ -13,19 +13,8 @@ export const compose      = (a, b)    => (...args) => a (b (...args))
 
 import {
     splitAt,
-    always,
-    // --- has = has own (hence paired with hasIn version)
-    isEmpty, tap, has, hasIn, flip as rFlip, fromPairs, toPairs, toPairsIn, assoc as rAssoc, assocPath, head,
-    last, tail, reduceRight, chain, identity as id, reduce, map as rMap, filter, reject,
-    prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
-    splitEvery,
-    forEach as rEach, forEachObjIndexed as rEachObj, complement, times as rTimes,
-    range as rRange, isNil, addIndex as rAddIndex, take, equals, mapAccum,
-    repeat as rRepeat, concat as rConcat, append as rAppend, compose as rCompose,
-    merge as rMerge, mergeAll as rMergeAll,
-    zip,
-    gt as rGt, gte as rGte, lt as rLt, lte as rLte,
-    not,
+    curry,
+    mapAccum,
 } from 'ramda'
 
 import {
@@ -66,8 +55,8 @@ export const recurry = (n) => (f) => (...args) => {
 
 const _recurry = recurry
 
-// --- note that the resulting function is not curried, and does not have a well-defined arity. Use
-// R.uncurryN if this is a problem.
+// --- note that the resulting function is not curried, and does not have a well-defined arity.
+// Consider using R.uncurryN if this latter is a problem, though the resulting function will then be curried (despite the name).
 
 export const roll = (f) => (...args) => {
   let g = f
@@ -76,6 +65,8 @@ export const roll = (f) => (...args) => {
 }
 
 export const noop = () => {}
+// @test
+export const not = f => !f
 
 export const ok    = x => x != null
 export const notOk = x => x == null
@@ -259,10 +250,12 @@ export const mergeToM   = _recurry (2) (manual.mergeToM)
 export const mergeToWithM   = _recurry (3) (manual.mergeToWithM)
 export const mergeFromWithM = _recurry (3) (manual.mergeFromWithM)
 
-export const mergeToWhenOkM = _recurry (2) (manual.mergeToWhenOkM)
+// @test
+export const mergeToWhenOkM   = _recurry (2) (manual.mergeToWhenOkM)
+// @test
 export const mergeFromWhenOkM = _recurry (2) (manual.mergeFromWhenOkM)
 
-export const mergeToInM = _recurry (2) (manual.mergeToInM)
+export const mergeToInM   = _recurry (2) (manual.mergeToInM)
 export const mergeFromInM = _recurry (2) (manual.mergeFromInM)
 
 // --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
@@ -285,12 +278,22 @@ export const mergeAllIn = xs => xs.reduce (
 
 // --- simple dispatches to Array.prototype.map
 
-export const map = _recurry (2) (manual.map)
-export const each = _recurry (2) (manual.each)
+export const map    = _recurry (2) (manual.map)
+export const each   = _recurry (2) (manual.each)
+// @test
+// test addIndex
+export const filter = _recurry (2) (manual.filter)
+// @test
+export const reject = _recurry (2) (manual.reject)
 
-export const addIndex = _recurry (3) (manual.addIndex)
-export const addCollection  = _recurry (3) (manual.addCollection)
+// --- undef on empty array, like ramda
+// @test
+export const last = xs => xs [xs.length - 1]
 
+export const addIndex      = _recurry (3) (manual.addIndex)
+export const addCollection = _recurry (3) (manual.addCollection)
+
+    /*
 // --- returns an object.
 // --- user function f is expected to return pairs: [k, v]
 //
@@ -319,13 +322,13 @@ export const mapPairs = curry ((f, obj) =>
     )
 )
 
-// @todo
 // --- doesn't take array, only obj.
 export const mapPairsIn = curry ((f, obj) => obj
     | toPairsIn
     | map (([k, v]) => f (k, v))
     | fromPairs,
 )
+*/
 
 export const eachObj = _recurry (2) (manual.eachObj)
 export const eachObjIn = _recurry (2) (manual.eachObjIn)
@@ -339,11 +342,20 @@ export const asterisk = _recurry (2) (manual.asterisk)
 
 // --------- laat / let
 
+/*
+ * laat = let* from racket
+ * letN = let* + array
+ * letS = let* + stick (implies N)
+ * let1, let2, etc.: wrapped by laat, but can be called directly too.
+ * letNV = like letV, with array
+ * letV = let with values instead of functions
+ */
+
 // --- last arg must be a function.
 // 1 arg is possible but trivial.
-export const laat = (...xs) => {
+export const letV = (...xs) => {
     const f = xs.pop ()
-    return letN (xs, f)
+    return letNV (xs, f)
 }
 
 /*
@@ -353,36 +365,36 @@ export const laat = (...xs) => {
  * null | defaultToV ('bad news')
 */
 // i like letV fitting the pattern
-// laat -> letV
-// letN -> letNV
-// lets2 -> let2
-// letsN -> letN
-// lets -> laat
-// letsS -> letS
+// laat -> letV x
+// letN -> letNV x
+// lets2 -> let2 x
+// letsN -> letN x
+// lets -> laat x
+// letsS -> letS x
 
-export const letN = _recurry (2) (manual.letN)
+export const letNV = _recurry (2) (manual.letNV)
 
 // --- these can be called directly by speed freaks; `lets` should be good enough for nearly all
 // uses.
-export const lets2 = (f1, f2) => {
+export const let2 = (f1, f2) => {
     const n1 = f1 ()
     return f2 (n1)
 }
 
-export const lets3 = (f1, f2, f3) => {
+export const let3 = (f1, f2, f3) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     return f3 (n1, n2)
 }
 
-export const lets4 = (f1, f2, f3, f4) => {
+export const let4 = (f1, f2, f3, f4) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     const n3 = f3 (n1, n2)
     return f4 (n1, n2, n3)
 }
 
-export const lets5 = (f1, f2, f3, f4, f5) => {
+export const let5 = (f1, f2, f3, f4, f5) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     const n3 = f3 (n1, n2)
@@ -390,7 +402,7 @@ export const lets5 = (f1, f2, f3, f4, f5) => {
     return f5 (n1, n2, n3, n4)
 }
 
-export const lets6 = (f1, f2, f3, f4, f5, f6) => {
+export const let6 = (f1, f2, f3, f4, f5, f6) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     const n3 = f3 (n1, n2)
@@ -399,10 +411,12 @@ export const lets6 = (f1, f2, f3, f4, f5, f6) => {
     return f6 (n1, n2, n3, n4, n5)
 }
 
-export const letsN = (xs) => lets (...xs)
+export const letN = (xs) => laat (...xs)
 
 // --- generic form, for any non-zero number of arguments.
-const _lets = (...xs) => {
+// @ramda
+// mapAccum
+const _laat = (...xs) => {
     const executeStep = prevVals => applyToN (prevVals)
 
     const ys = xs
@@ -410,25 +424,21 @@ const _lets = (...xs) => {
         | mapAccum ((acc, v) => executeStep (acc) (v)
             | (stepVal => [[...acc, stepVal], stepVal])
         ) ([])
-        | rProp (1)
+        | prop (1)
 
     return ys | last
 }
 
-export const lets = (...xs) => {
-    if (xs.length === 2) return lets2 (...xs)
-    if (xs.length === 3) return lets3 (...xs)
-    if (xs.length === 4) return lets4 (...xs)
-    if (xs.length === 5) return lets5 (...xs)
-    if (xs.length === 6) return lets6 (...xs)
-    return _lets (...xs)
+export const laat = (...xs) => {
+    if (xs.length === 2) return let2 (...xs)
+    if (xs.length === 3) return let3 (...xs)
+    if (xs.length === 4) return let4 (...xs)
+    if (xs.length === 5) return let5 (...xs)
+    if (xs.length === 6) return let6 (...xs)
+    return _laat (...xs)
 }
 
-// --- move xxx
-export const letsS = curry ((specAry, tgt) => lets (
-  _ => tgt,
-  ... specAry,
-))
+export const letS = _recurry (2) (manual.letS)
 
 // --- 'call' and 'provide' always mean pass a context.
 // --- 'apply' always means 'apply this function to some params'
@@ -504,9 +514,17 @@ export const timesSide  = _recurry (2) (manual.timesSide)
 
 // ------ types. @test
 
-export const isType = _recurry (2) (manual.isType)
-export const isArray = isType ('Array')
+export const getType = x => oPro
+    .toString.call (x).slice (8, -1)
+export const isType     = _recurry (2) (manual.isType)
+
 export const isFunction = isType ('Function')
+export const isArray    = isType ('Array')
+export const isObject   = isType ('Object')
+export const isNumber   = isType ('Number')
+export const isRegExp   = isType ('RegExp')
+export const isBoolean  = isType ('Boolean')
+export const isString   = isType ('String')
 
 // @test
 // --- assumed to be a Number.
@@ -527,7 +545,7 @@ export const rangeBy = curry ((from, to, by) => {
 })
 
 export const compact = filter (Boolean)
-export const compactOk = reject (isNil)
+export const compactOk = reject (notOk)
 
 // --- turn positional args into a list with those values.
 export const list = (...args) => args
@@ -563,7 +581,7 @@ export const xRegExpFlags = (re, flags) => new RegExp (
 )
 
 // --- input: string, [string].
-export const xRegExpStr = (reStr, flags = '') => letN (
+export const xRegExpStr = (reStr, flags = '') => letNV (
     [
         reStr | removeSpaces,
         flags,
@@ -667,7 +685,7 @@ const mergeMixins = (mixinsPre, proto, mixinsPost) => {
 // note: you are free to put properties in the prototype, though this is probably not a great idea.
 // at the very least, you should ensure that they are never mutated.
 
-const _factory = (proto, mixinsPre = [], mixinsPost = []) => lets (
+const _factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
     _ => mergeMixins (mixinsPre, proto, mixinsPost),
     (protoMixed) => ({
         // --- consider dropping this: Object.getPrototypeOf xxx
@@ -809,8 +827,10 @@ export const modulo = _recurry (2) (manual.modulo)
 export const moduloWholePart = _recurry (2) (manual.moduloWholePart)
 export const toThe = _recurry (2) (manual.toThe)
 
-// --- synonym for always. check impl of always. xxx
+// @test
+//
 export const blush = x => _ => x
+export const always = blush
 
 // @test
 export const T = blush (true)
@@ -1062,3 +1082,10 @@ const mapTuplesInWithFilter = (p) => (f) => (o) => {
 const toUpperCase = dot ('toUpperCase')
 const ifEqualsD = 'd' | eq | ifPredicate
 const mapper = ifEqualsD (_ => null) (toUpperCase)
+
+
+const odd = x => x % 2
+const a = [1,2,3]
+const rejectX = reject | addIndex
+const rejectXC = reject | addIndex | addCollection
+// a | reject ((...args) => (console.log (args), odd)) | log

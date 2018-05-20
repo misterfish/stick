@@ -150,3 +150,23 @@ export const mergeAllIn = xs => xs | reduce (
     (target, source) => source | mergeToInM (target),
     {},
 )
+
+export const isType = curry ((t, x) => x
+    | provideTo ({}.toString)
+    | dot2 ('slice') (8, -1)
+    | equals (t)
+)
+
+export const getType = provideTo ({}.toString)
+    >> dot2 ('slice') (8, -1) (
+)
+
+export const asterisk = curry ((fs, xs) => xs
+    | zip (fs)
+    | map (([f, x]) => f (x))
+)
+
+export const ampersand = (fs) => (x) => fs | letS ([
+    _ => f => f (x),
+    (fs, mapper) => fs | map (mapper),
+])

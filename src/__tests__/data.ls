@@ -52,7 +52,7 @@
 
     discard-prototype, flatten-prototype,
 
-    map-pairs, map-pairs-in,
+    #map-pairs, map-pairs-in,
     ampersand, asterisk,
 
     arg0, arg1, arg2, arg3, arg4, arg5, arg6,
@@ -1244,7 +1244,9 @@ describe 'discard / flatten prototype' ->
         (obj |> flatten-prototype) |> expect-to-equal do
             base-val: 10 feets: 'sometimes' hands: 'mostways' legs: 'noo'
 
+# --- not sure how useful this is.
 describe 'mapPairs' ->
+    return
     test 'obj' ->
         (Object.create how: 'fine'
             ..are = 'thanks'
@@ -1263,7 +1265,9 @@ describe 'mapPairs' ->
             ARE: 'yes, thanks'
             YOU: 'yes, and you?'
 
+# --- not sure how useful this is.
 describe 'mapPairsIn' ->
+    return
     test 1 ->
         ({ how: 'fine' }
         |> Object.create)

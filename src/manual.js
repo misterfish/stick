@@ -3,6 +3,8 @@ import { sprintf, } from 'sprintf-js'
 import {
     ok, notOk, whenOk,
     isFunction, ifYes,
+    laat,
+    getType,
 } from './index'
 
 const noop = _ => {}
@@ -65,10 +67,7 @@ export const whenHasIn = yes => ifHasIn (yes) (noop)
 
 export const bindTo = o => prop => o [prop].bind (o)
 
-export const isType = (t) => (x) => {
-    const str = oPro.toString.call (x)
-    return str.slice (8, -1) === t
-}
+export const isType = t => x => getType (x) === t
 
 // --- beware point-free (circular).
 const whenFunction = (yes, o) => whenPredicate (isFunction) (yes) (o)
@@ -255,6 +254,8 @@ export const mergeFromIn = (src) => (tgt) => mergeToIn (tgt) (src)
 // --- note: capped.
 export const map  = f => ary => ary.map     (x => f (x))
 export const each = f => ary => ary.forEach (x => f (x))
+export const filter = f => ary => ary.filter (x => f (x))
+export const reject = f => ary => ary.filter (x => ! f (x))
 
 // --- returns obj
 export const eachObj = (f) => (o) => {
@@ -295,15 +296,6 @@ export const reduceObjIn = (f) => (acc) => (o) => {
     return curAcc
 }
 
-
-// --- @canonical
-/*
-export const ampersand = (fs) => (x) => fs | letsS ([
-    _ => f => f (x),
-    (fs, mapper) => fs | map (mapper),
-])
-*/
-
 export const ampersand = (fs) => (x) => {
     const mapper = f => f (x)
     return map (mapper) (fs)
@@ -319,16 +311,13 @@ export const asterisk = (fs) => (xs) => {
     return ret
 }
 
-/*
-export const asterisk = curry ((fs, xs) => xs
-    | zip (fs)
-    | map (([f, x]) => f (x))
-)
-*/
-
 // ------ laat / let
 
-export const letN = xs => f => f.apply (null, xs)
+export const letNV = xs => f => f.apply (null, xs)
+export const letS = specAry => tgt => laat (
+	_ => tgt,
+	... specAry,
+)
 
 // ------ call/provide
 
@@ -438,7 +427,7 @@ export default {
     bindTo,
     ifBind, whenBind,
     bindTry,
-    isType,
+    isType, getType,
     condPredicate, cond, condS,
     subtract, subtractFrom,
     add,
@@ -456,10 +445,11 @@ export default {
     mergeToWhenOkM, mergeFromWhenOkM,
     mergeToInM, mergeFromInM, mergeToIn, mergeFromIn,
     addIndex, addCollection,
-    map, each, eachObj, eachObjIn,
+    map, filter, reject,
+    each, eachObj, eachObjIn,
     reduceObj, reduceObjIn,
     ampersand, asterisk,
-    letN,
+    letNV, letS,
     callOn, callOn1, callOn2, callOn3, callOn4, callOn5, callOnN,
     provideTo, provideTo1, provideTo2, provideTo3, provideTo4, provideTo5, provideToN,
     applyTo1, applyTo2, applyTo3, applyTo4, applyTo5, applyToN,

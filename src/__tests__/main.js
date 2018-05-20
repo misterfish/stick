@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, laat, letN, lets, lets2, lets3, lets4, lets5, lets6, letsN, letsS, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, letV, letNV, laat, let2, let3, let4, let5, let6, letN, letS, isType, getType, isFunction, isArray, isObject, isNumber, isRegExp, isBoolean, isString, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow, expectNotToThrow = ref$.expectNotToThrow;
-ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, laat = ref$.laat, letN = ref$.letN, lets = ref$.lets, lets2 = ref$.lets2, lets3 = ref$.lets3, lets4 = ref$.lets4, lets5 = ref$.lets5, lets6 = ref$.lets6, letsN = ref$.letsN, letsS = ref$.letsS, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
+ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, letV = ref$.letV, letNV = ref$.letNV, laat = ref$.laat, let2 = ref$.let2, let3 = ref$.let3, let4 = ref$.let4, let5 = ref$.let5, let6 = ref$.let6, letN = ref$.letN, letS = ref$.letS, isType = ref$.isType, getType = ref$.getType, isFunction = ref$.isFunction, isArray = ref$.isArray, isObject = ref$.isObject, isNumber = ref$.isNumber, isRegExp = ref$.isRegExp, isBoolean = ref$.isBoolean, isString = ref$.isString, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
 sumAll = compose$(list, sum);
 describe('comparisons', function(){
   describe('eq', function(){
@@ -418,38 +418,38 @@ describe('flip', function(){
     });
   });
 });
-describe('laat', function(){
-  describe('laat', function(){
+describe('letV', function(){
+  describe('let-v', function(){
     test(1, function(){
       return expectToEqual(41)(
-      laat(10, 12, 19, sumAll));
+      letV(10, 12, 19, sumAll));
     });
     return test('last arg must be a function', function(){
       expectToThrow(
       function(){
-        return laat(10);
+        return letV(10);
       });
       expectToThrow(
       function(){
-        return laat(10, 12, 19);
+        return letV(10, 12, 19);
       });
       return expectNotToThrow(
       function(){
-        return laat(sumAll);
+        return letV(sumAll);
       });
     });
   });
-  return describe('letN', function(){
+  return describe('letNV', function(){
     return test(1, function(){
       return expectToEqual(41)(
-      letN([10, 12, 19], sumAll));
+      letNV([10, 12, 19], sumAll));
     });
   });
 });
-describe('lets', function(){
+describe('laat', function(){
   test('main', function(){
     return expectToEqual(41)(
-    lets(function(){
+    laat(function(){
       return 10;
     }, function(){
       return 12;
@@ -458,55 +458,55 @@ describe('lets', function(){
     }, sumAll));
   });
   describe('specific versions', function(){
-    test('lets2', function(){
+    test('let2', function(){
       var this$ = this;
       return expectToEqual(11)(
-      lets2(function(){
+      let2(function(){
         return 10;
       }, (function(it){
         return it + 1;
       })));
     });
-    test('lets3', function(){
+    test('let3', function(){
       var this$ = this;
       return expectToEqual(21)(
-      lets3(function(){
+      let3(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll));
     });
-    test('lets4', function(){
+    test('let4', function(){
       var this$ = this;
       return expectToEqual(42)(
-      lets4(function(){
+      let4(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll, sumAll));
     });
-    test('lets5', function(){
+    test('let5', function(){
       var this$ = this;
       return expectToEqual(84)(
-      lets5(function(){
+      let5(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll, sumAll, sumAll));
     });
-    test('lets6', function(){
+    test('let6', function(){
       var this$ = this;
       return expectToEqual(168)(
-      lets6(function(){
+      let6(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll, sumAll, sumAll, sumAll));
     });
-    test('letsN', function(){
+    test('letN', function(){
       var this$ = this;
       return expectToEqual(168)(
-      letsN([
+      letN([
         function(){
           return 10;
         }, (function(it){
@@ -514,9 +514,9 @@ describe('lets', function(){
         }), sumAll, sumAll, sumAll, sumAll
       ]));
     });
-    return test('letsS', function(){
+    return test('letS', function(){
       return expectToEqual(84)(
-      letsS([
+      letS([
         function(t){
           return t + 1;
         }, function(t, f){
@@ -529,37 +529,37 @@ describe('lets', function(){
     });
   });
   describe('generic version', function(){
-    test('lets (2)', function(){
+    test('laat (2)', function(){
       var this$ = this;
       return expectToEqual(11)(
-      lets(function(){
+      laat(function(){
         return 10;
       }, (function(it){
         return it + 1;
       })));
     });
-    test('lets (3)', function(){
+    test('laat (3)', function(){
       var this$ = this;
       return expectToEqual(21)(
-      lets(function(){
+      laat(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll));
     });
-    test('lets (6)', function(){
+    test('laat (6)', function(){
       var this$ = this;
       return expectToEqual(168)(
-      lets(function(){
+      laat(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll, sumAll, sumAll, sumAll));
     });
-    return test('lets (10)', function(){
+    return test('laat (10)', function(){
       var this$ = this;
       return expectToEqual(2688)(
-      lets(function(){
+      laat(function(){
         return 10;
       }, (function(it){
         return it + 1;
@@ -568,7 +568,7 @@ describe('lets', function(){
   });
   test('single function', function(){
     return expectToEqual(11)(
-    lets(function(){
+    laat(function(){
       return 11;
     }));
   });
@@ -598,7 +598,7 @@ describe('lets', function(){
       };
       refs = rRepeat(entry, n + 1);
       args = slice$.call(refs).concat([list]);
-      return lets.apply(null, args);
+      return laat.apply(null, args);
     };
     expect(fibonacci(0)).toEqual([1]);
     expect(fibonacci(1)).toEqual([1, 1]);
@@ -975,6 +975,131 @@ describe('repeat, times', function(){
       return expectToEqual(['thing0', 'thing1', 'thing2'])(
       y.y);
     });
+  });
+});
+describe('types', function(){
+  test('isType', function(){
+    expectToEqual(true)(
+    isType('Number')(
+    3));
+    expectToEqual(false)(
+    isType('Boolean')(
+    3));
+    expectToEqual(false)(
+    isType('String')(
+    3));
+    expectToEqual(false)(
+    isType(Number)(
+    3));
+    expectToEqual(false)(
+    isType(Boolean)(
+    3));
+    return expectToEqual(false)(
+    isType(String)(
+    3));
+  });
+  test('getType', function(){
+    expectToEqual('Number')(
+    getType(
+    3));
+    expectToEqual('Boolean')(
+    getType(
+    true));
+    expectToEqual('String')(
+    getType(
+    '3'));
+    expectToEqual('Undefined')(
+    getType(
+    void 8));
+    return expectToEqual('Null')(
+    getType(
+    null));
+  });
+  test('isFunction', function(){
+    var this$ = this;
+    expectToEqual(true)(
+    isFunction(
+    (function(it){
+      return it + 3;
+    })));
+    expectToEqual(false)(
+    isFunction(
+    3));
+    return expectToEqual(false)(
+    isFunction(
+    '3'));
+  });
+  test('isArray', function(){
+    expectToEqual(true)(
+    isArray(
+    []));
+    expectToEqual(false)(
+    isArray(
+    {}));
+    return expectToEqual(false)(
+    isArray(
+    3));
+  });
+  test('isObject', function(){
+    expectToEqual(true)(
+    isObject(
+    {}));
+    expectToEqual(false)(
+    isObject(
+    []));
+    return expectToEqual(false)(
+    isObject(
+    null));
+  });
+  test('isNumber', function(){
+    expectToEqual(true)(
+    isNumber(
+    3));
+    expectToEqual(true)(
+    isNumber(
+    NaN));
+    expectToEqual(false)(
+    isNumber(
+    '2'));
+    return expectToEqual(false)(
+    isNumber(
+    true));
+  });
+  test('isRegExp', function(){
+    expectToEqual(true)(
+    isRegExp(
+    /abc/));
+    expectToEqual(false)(
+    isRegExp(
+    3));
+    return expectToEqual(false)(
+    isRegExp(
+    null));
+  });
+  test('isBoolean', function(){
+    expectToEqual(true)(
+    isBoolean(
+    true));
+    expectToEqual(true)(
+    isBoolean(
+    false));
+    expectToEqual(false)(
+    isBoolean(
+    0));
+    return expectToEqual(false)(
+    isBoolean(
+    null));
+  });
+  return test('isString', function(){
+    expectToEqual(true)(
+    isString(
+    '3'));
+    expectToEqual(false)(
+    isString(
+    3));
+    return expectToEqual(false)(
+    isString(
+    true));
   });
 });
 function compose$() {

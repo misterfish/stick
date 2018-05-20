@@ -29,9 +29,13 @@
     flip, flip3, flip4, flip5,
     sprintf1, sprintf-n,
 
-    laat, let-n,
-    lets, lets2, lets3, lets4, lets5, lets6,
-    lets-n, lets-s,
+    let-v, let-n-v,
+    laat, let2, let3, let4, let5, let6,
+    let-n, let-s,
+
+    is-type, get-type,
+    is-function, is-array, is-object,
+    is-number, is-reg-exp, is-boolean, is-string,
 
     nieuw, nieuw1, nieuw2, nieuw3, nieuw-n,
 
@@ -277,57 +281,57 @@ describe 'flip' ->
             test 'result is curried part quatre' ->
                 (expect (divide-and-add-four-args-flipped 10) 5 1 2).to-equal 3.5
 
-describe 'laat' ->
-    describe 'laat' ->
+describe 'letV' ->
+    describe 'let-v' ->
         test 1 ->
-            laat 10 12 19, sum-all
+            let-v 10 12 19, sum-all
             |> expect-to-equal 41
         test 'last arg must be a function' ->
-            -> laat 10
+            -> let-v 10
             |> expect-to-throw
-            -> laat 10 12 19
+            -> let-v 10 12 19
             |> expect-to-throw
-            -> laat sum-all
+            -> let-v sum-all
             |> expect-not-to-throw
-    describe 'letN' ->
+    describe 'letNV' ->
         test 1 ->
-            let-n [10 12 19], sum-all
+            let-n-v [10 12 19], sum-all
             |> expect-to-equal 41
 
-describe 'lets' ->
+describe 'laat' ->
     test 'main' ->
-        lets do
+        laat do
             -> 10, -> 12, -> 19, sum-all
         |> expect-to-equal 41
     describe 'specific versions' ->
-        test 'lets2' ->
-            lets2 do
+        test 'let2' ->
+            let2 do
                 -> 10
                 (+ 1)
             |> expect-to-equal 11
-        test 'lets3' ->
-            lets3 do
+        test 'let3' ->
+            let3 do
                 -> 10
                 (+ 1)
                 sum-all # 21
             |> expect-to-equal 21
-        test 'lets4' ->
-            lets4 do
+        test 'let4' ->
+            let4 do
                 -> 10
                 (+ 1)
                 sum-all # 21
                 sum-all # 42
             |> expect-to-equal 42
-        test 'lets5' ->
-            lets5 do
+        test 'let5' ->
+            let5 do
                 -> 10
                 (+ 1)   # 11
                 sum-all # 21
                 sum-all # 42
                 sum-all # 84
             |> expect-to-equal 84
-        test 'lets6' ->
-            lets6 do
+        test 'let6' ->
+            let6 do
                 -> 10
                 (+ 1)
                 sum-all # 21
@@ -335,8 +339,8 @@ describe 'lets' ->
                 sum-all # 84
                 sum-all # 168
             |> expect-to-equal 168
-        test 'letsN' ->
-            lets-n [
+        test 'letN' ->
+            let-n [
                 -> 10
                 (+ 1)
                 sum-all # 21
@@ -345,8 +349,8 @@ describe 'lets' ->
                 sum-all # 168
             ]
             |> expect-to-equal 168
-        test 'letsS' ->
-            3 |> lets-s [
+        test 'letS' ->
+            3 |> let-s [
                 (t) -> t + 1
                 (t, f) -> t + f
                 (t, f, s) -> t * f * s
@@ -354,19 +358,19 @@ describe 'lets' ->
             |> expect-to-equal 84
 
     describe 'generic version' ->
-        test 'lets (2)' ->
-            lets do
+        test 'laat (2)' ->
+            laat do
                 -> 10
                 (+ 1)
             |> expect-to-equal 11
-        test 'lets (3)' ->
-            lets do
+        test 'laat (3)' ->
+            laat do
                 -> 10
                 (+ 1)
                 sum-all # 21
             |> expect-to-equal 21
-        test 'lets (6)' ->
-            lets do
+        test 'laat (6)' ->
+            laat do
                 -> 10
                 (+ 1)
                 sum-all # 21
@@ -374,8 +378,8 @@ describe 'lets' ->
                 sum-all # 84
                 sum-all # 168
             |> expect-to-equal 168
-        test 'lets (10)' ->
-            lets do
+        test 'laat (10)' ->
+            laat do
                 -> 10
                 (+ 1)
                 sum-all # 21
@@ -388,7 +392,7 @@ describe 'lets' ->
                 sum-all # 2688
             |> expect-to-equal 2688
     test 'single function' ->
-        lets do
+        laat do
             -> 11
         |> expect-to-equal 11
     test 'fibonacci' ->
@@ -402,7 +406,7 @@ describe 'lets' ->
                 | otherwise => sum-last-two prev
             refs = r-repeat entry, n + 1
             args = [...refs, list]
-            lets ...args
+            laat ...args
 
         (expect fibonacci 0).to-equal [1]
         (expect fibonacci 1).to-equal [1 1]
@@ -666,4 +670,49 @@ describe 'repeat, times' ->
             |> expect-to-equal void
             y.y |> expect-to-equal ['thing0' 'thing1' 'thing2']
 
+
+describe 'types' ->
+    test 'isType' ->
+        3 |> is-type 'Number' |> expect-to-equal true
+        3 |> is-type 'Boolean' |> expect-to-equal false
+        3 |> is-type 'String' |> expect-to-equal false
+        3 |> is-type Number |> expect-to-equal false
+        3 |> is-type Boolean |> expect-to-equal false
+        3 |> is-type String |> expect-to-equal false
+    test 'getType' ->
+        3    |> get-type |> expect-to-equal 'Number'
+        true |> get-type |> expect-to-equal 'Boolean'
+        '3'  |> get-type |> expect-to-equal 'String'
+        void |> get-type |> expect-to-equal 'Undefined'
+        null |> get-type |> expect-to-equal 'Null'
+    test 'isFunction' ->
+        (+ 3)     |> is-function |> expect-to-equal true
+        3         |> is-function |> expect-to-equal false
+        '3'       |> is-function |> expect-to-equal false
+    test 'isArray' ->
+        []        |> is-array |> expect-to-equal true
+        {}        |> is-array |> expect-to-equal false
+        3         |> is-array |> expect-to-equal false
+    test 'isObject' ->
+        {}        |> is-object |> expect-to-equal true
+        []        |> is-object |> expect-to-equal false
+        null      |> is-object |> expect-to-equal false
+    test 'isNumber' ->
+        3         |> is-number |> expect-to-equal true
+        NaN       |> is-number |> expect-to-equal true
+        '2'       |> is-number |> expect-to-equal false
+        true      |> is-number |> expect-to-equal false
+    test 'isRegExp' ->
+        // abc // |> is-reg-exp |> expect-to-equal true
+        3         |> is-reg-exp |> expect-to-equal false
+        null      |> is-reg-exp |> expect-to-equal false
+    test 'isBoolean' ->
+        true      |> is-boolean |> expect-to-equal true
+        false     |> is-boolean |> expect-to-equal true
+        0         |> is-boolean |> expect-to-equal false
+        null      |> is-boolean |> expect-to-equal false
+    test 'isString' ->
+        '3'       |> is-string |> expect-to-equal true
+        3         |> is-string |> expect-to-equal false
+        true      |> is-string |> expect-to-equal false
 

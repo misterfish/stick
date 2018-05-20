@@ -36,7 +36,7 @@
     if-bind, when-bind,
 
     cond,
-    condo, cond-o, guard, guard-a, otherwise,
+    condo, cond-o, guard, guard-v, otherwise,
 
     # --- @deprecated
     if-ok__, if-true__, if-false__,
@@ -804,15 +804,15 @@ describe 'cond' ->
                 ]
                 |> expect-to-equal 'ok'
     describe 'misc' ->
-        test 'guardA' ->
+        test 'guardV' ->
             32 |> cond-o [
-                (> 30)      |> (guardA 'big')
-                (> 20)      |> (guardA 'medium')
+                (> 30)      |> (guard-v 'big')
+                (> 20)      |> (guard-v 'medium')
             ]
             |> expect-to-equal 'big'
             condo do
-                (-> 21 > 30)      |> (guardA 'big')
-                (-> 21 > 20)      |> (guardA 'medium')
+                (-> 21 > 30)      |> (guard-v 'big')
+                (-> 21 > 20)      |> (guard-v 'medium')
             |> expect-to-equal 'medium'
         test 'alias' ->
             cond |> expect-to-equal cond-o

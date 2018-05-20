@@ -879,7 +879,7 @@ export const condElse = T
 export const condPredicate = _recurry (2) (manual.condPredicate)
 
 export const guard = condPredicate
-export const guardA = blush >> guard
+export const guardV = blush >> guard
 export const otherwise = condElse
 
 export const ifEquals = curry ((test, yes, no, x) => x === test ? yes (x) : no (x))
@@ -900,7 +900,7 @@ const headTail = f => splitAt (1) >> f
 //
 //
 
-export const defaultToA = blush >> defaultTo
+export const defaultToV = blush >> defaultTo
 
 // ditch brackets on cond.
 // a line can still be an array if you want the 'raw' predicate / exec.
@@ -910,7 +910,7 @@ export const defaultToA = blush >> defaultTo
 // or spread2 (length)
 // arrows.
 //
-// be careful with defaultToA ({}) if point-free. ?
+// be careful with defaultToV ({}) if point-free. ?
 //
 
 // const toThe = curry ((exp, base) => Math.pow (base, exp))

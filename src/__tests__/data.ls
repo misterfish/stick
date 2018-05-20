@@ -21,7 +21,7 @@
     add-index, add-collection,
     reduce-obj, reduce-obj-in,
 
-    default-to, default-to__,
+    default-to, default-to-v,
 
     join, split,
     prop,
@@ -175,7 +175,22 @@ describe 'default to' ->
         |> default-to -> 42
         |> expect-to-equal 42
 
+describe 'default to value' ->
+    test 1 ->
+        false
+        |> default-to-v 43
+        |> expect-to-equal false
+    test 2 ->
+        null
+        |> default-to-v 42
+        |> expect-to-equal 42
+    test 3 ->
+        void
+        |> default-to-v 42
+        |> expect-to-equal 42
+
 describe 'default to __' ->
+    return
     test 1 ->
         default-to__ false -> 42
         |> expect-to-equal false

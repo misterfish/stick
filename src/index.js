@@ -7,12 +7,6 @@ defineBinaryOperator ('|',  (...args) => pipe         (...args))
 defineBinaryOperator ('<<', (...args) => compose      (...args))
 defineBinaryOperator ('>>', (...args) => composeRight (...args))
 
-// --- xxx
-const double = x => x | multiply (2)
-const triple = x => x | multiply (3)
-const quadruple = x => x | multiply (4)
-// ---
-
 export const pipe         = (a, b)    => b (a)
 export const composeRight = (a, b)    => (...args) => b (a (...args))
 export const compose      = (a, b)    => (...args) => a (b (...args))
@@ -1088,50 +1082,6 @@ const mapTuplesInWithFilter = (p) => (f) => (o) => {
     return ret
 }
 
-const o = Object.create ({ a: 1, b: 2 }) | mergeFromM ({ c: 3, d: 4 })
-
-    /*
-o | mapAsKeysIn (id)
-  | log
-
-o | valuesIn
-  | log
-
-o | mapValues (double)
-  | log
-
-o | mapTuplesIn (([k, v]) => [k + ',', v + 1])
-  | log
-  */
-
-// const betterMap = mapTuples | withFilter (ok)
-// o | betterMap (([k, v]) => {
-//     const kk = k == 'a' ? null : k
-//     return [k + ',', v + 1]
-// })
-
 const toUpperCase = dot ('toUpperCase')
 const ifEqualsD = 'd' | eq | ifPredicate
 const mapper = ifEqualsD (_ => null) (toUpperCase)
-
-    /*
-o | (mapAsKeys | withFilter (ok)) (mapper)
-  | tap (logWith ('ere'))
-
-const reducer = (acc, [k, v]) => {
-    if (k === 'd') return acc
-    return [...acc, toUpperCase (k)]
-}
-
-o | reduceObj (reducer) ([])
-  | log
-
-
-o | eachObj ((...args) => args | logWith ('eachObj'))
-o | (eachObj | addIndex) ((...args) => args | logWith ('eachObj'))
-o | (eachObj | addCollection) ((...args) => args | logWith ('eachObj'))
-
-10 | ampersand ([double, triple, quadruple]) | log
-; [10, 20] | asterisk ([double, triple]) | log
-
-*/

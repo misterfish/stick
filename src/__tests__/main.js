@@ -842,6 +842,18 @@ describe('ifReplace*', function(){
       target);
     });
   });
+  test('ifReplace succesful, repl is a function', function(){
+    var ref$, re, target, replacement, this$ = this;
+    ref$ = [
+      /s/g, 'sandmishes', function(it){
+        return it.toUpperCase();
+      }
+    ], re = ref$[0], target = ref$[1], replacement = ref$[2];
+    return doTest('SandmiSheS', 3, true, function(ja, nee){
+      return ifReplace(ja, nee, re, replacement)(
+      target);
+    });
+  });
   test('ifReplace not succesful', function(){
     var ref$, re, target, replacement;
     ref$ = [/xxxx/g, 'sandmishes', 't'], re = ref$[0], target = ref$[1], replacement = ref$[2];

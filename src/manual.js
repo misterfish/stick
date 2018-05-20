@@ -2,7 +2,7 @@ import { sprintf, } from 'sprintf-js'
 
 import {
     ok, notOk, whenOk,
-    isFunction,
+    isFunction, ifYes,
 } from './index'
 
 const noop = _ => {}
@@ -417,6 +417,22 @@ export const timesV = (x) => (n) => repeatV (n) (x)
 export const timesF = (f) => (n) => repeatF (n) (f)
 export const timesSide = (n) => (f) => repeatSide (f) (n)
 
+// ------ replace / match
+export const ifReplace = (() => {
+    return (yes) => (no) => (re) => (replArg) => (target) => {
+        let success = 0
+        const repl = typeof replArg === 'function'
+            ? (...args) => (++success, replArg (...args))
+            : _         => (++success, replArg)
+        const out = target.replace (re, repl)
+        return success ? yes (out, success) : no (target)
+    }
+}) ()
+
+
+
+
+
 export default {
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
@@ -460,4 +476,5 @@ export default {
     sprintf1, sprintfN,
     repeatV, repeatF, repeatSide,
     timesV, timesF, timesSide,
+    ifReplace,
 }

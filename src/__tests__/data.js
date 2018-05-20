@@ -1,7 +1,7 @@
-var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, filter, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, map, each, eachObj, eachObjIn, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, precatTo, precatFrom, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, ampersand, asterisk, slice$ = [].slice;
+var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, filter, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, list, test, xtest, expectToEqual, expectToBe, map, each, eachObj, eachObjIn, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, precatTo, precatFrom, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, slice$ = [].slice;
 ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), map = ref$.map, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, precatTo = ref$.precatTo, precatFrom = ref$.precatFrom, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, ampersand = ref$.ampersand, asterisk = ref$.asterisk;
+ref$ = require('../index'), map = ref$.map, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, precatTo = ref$.precatTo, precatFrom = ref$.precatFrom, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
 describe('map, each', function(){
   describe('map', function(){
     var mapX, mapXC, mapCX;
@@ -2034,39 +2034,41 @@ describe('data stuff', function(){
     });
   });
 });
-describe('discardPrototype', function(){
-  var proto1, proto2, obj;
-  proto1 = Object.create({
-    blah: 10
+describe('discard / flatten prototype', function(){
+  describe('discardPrototype', function(){
+    var base, base2, obj;
+    base = {
+      baseVal: 10
+    };
+    base2 = Object.create(base);
+    obj = Object.create(base2);
+    expectToEqual(10)(
+    obj.baseVal);
+    return expectToEqual(void 8)(
+    discardPrototype(
+    obj).baseVal);
   });
-  proto2 = Object.create(proto1);
-  obj = Object.create(proto2);
-  expectToEqual(10)(
-  obj.blah);
-  return expectToEqual(void 8)(
-  discardPrototype(
-  obj).blah);
-});
-describe('flattenPrototype', function(){
-  var x$, proto1, y$, proto2, z$, obj;
-  x$ = proto1 = Object.create({
-    blah: 10
+  return describe('flattenPrototype', function(){
+    var x$, base, y$, base2, z$, obj;
+    x$ = base = Object.create({
+      baseVal: 10
+    });
+    x$.feets = 'sometimes';
+    y$ = base2 = Object.create(base);
+    y$.hands = 'mostways';
+    z$ = obj = Object.create(base2);
+    z$.legs = 'noo';
+    expectToEqual(10)(
+    obj.baseVal);
+    return expectToEqual({
+      baseVal: 10,
+      feets: 'sometimes',
+      hands: 'mostways',
+      legs: 'noo'
+    })(
+    flattenPrototype(
+    obj));
   });
-  x$.feets = 'sometimes';
-  y$ = proto2 = Object.create(proto1);
-  y$.hands = 'mostways';
-  z$ = obj = Object.create(proto2);
-  z$.legs = 'noo';
-  expectToEqual(10)(
-  obj.blah);
-  return expectToEqual({
-    blah: 10,
-    feets: 'sometimes',
-    hands: 'mostways',
-    legs: 'noo'
-  })(
-  flattenPrototype(
-  obj));
 });
 describe('mapPairs', function(){
   test('obj', function(){
@@ -2160,5 +2162,35 @@ describe('ampersand', function(){
       })
     ])(
     10));
+  });
+});
+describe('argx', function(){
+  test('arg0', function(){
+    return expectToEqual(1)(
+    arg0(1));
+  });
+  test('arg1', function(){
+    return expectToEqual(2)(
+    arg1(1, 2));
+  });
+  test('arg2', function(){
+    return expectToEqual(3)(
+    arg2(1, 2, 3));
+  });
+  test('arg3', function(){
+    return expectToEqual(4)(
+    arg3(1, 2, 3, 4));
+  });
+  test('arg4', function(){
+    return expectToEqual(5)(
+    arg4(1, 2, 3, 4, 5));
+  });
+  test('arg5', function(){
+    return expectToEqual(6)(
+    arg5(1, 2, 3, 4, 5, 6));
+  });
+  return test('arg6', function(){
+    return expectToEqual(7)(
+    arg6(1, 2, 3, 4, 5, 6, 7));
   });
 });

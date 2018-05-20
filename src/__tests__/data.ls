@@ -43,6 +43,8 @@
     map-pairs, map-pairs-in,
     ampersand, asterisk,
 
+    arg0, arg1, arg2, arg3, arg4, arg5, arg6,
+
 } = require '../index'
 
 describe 'map, each' ->
@@ -1081,23 +1083,24 @@ describe 'data stuff' ->
             |> expect-to-equal do
                 a: 1 b: 2 c: 3
 
-describe 'discardPrototype' ->
-    proto1 = Object.create blah: 10
-    proto2 = Object.create proto1
-    obj = Object.create proto2
-    obj.blah |> expect-to-equal 10
-    (obj |> discard-prototype).blah |> expect-to-equal void
+describe 'discard / flatten prototype' ->
+    describe 'discardPrototype' ->
+        base = base-val: 10
+        base2 = Object.create base
+        obj = Object.create base2
+        obj.base-val |> expect-to-equal 10
+        (obj |> discard-prototype).base-val |> expect-to-equal void
 
-describe 'flattenPrototype' ->
-    proto1 = Object.create blah: 10
-        ..feets = 'sometimes'
-    proto2 = Object.create proto1
-        ..hands = 'mostways'
-    obj = Object.create proto2
-        ..legs = 'noo'
-    obj.blah |> expect-to-equal 10
-    (obj |> flatten-prototype) |> expect-to-equal do
-        blah: 10 feets: 'sometimes' hands: 'mostways' legs: 'noo'
+    describe 'flattenPrototype' ->
+        base = Object.create base-val: 10
+            ..feets = 'sometimes'
+        base2 = Object.create base
+            ..hands = 'mostways'
+        obj = Object.create base2
+            ..legs = 'noo'
+        obj.base-val |> expect-to-equal 10
+        (obj |> flatten-prototype) |> expect-to-equal do
+            base-val: 10 feets: 'sometimes' hands: 'mostways' legs: 'noo'
 
 describe 'mapPairs' ->
     test 'obj' ->
@@ -1163,3 +1166,26 @@ describe 'ampersand' ->
         10
         |> ampersand [(* 2), ( + 1), (/ 2)]
         |> expect-to-equal [20 11 5]
+
+describe 'argx' ->
+    test 'arg0' ->
+        arg0 1
+        |> expect-to-equal 1
+    test 'arg1' ->
+        arg1 1 2
+        |> expect-to-equal 2
+    test 'arg2' ->
+        arg2 1 2 3
+        |> expect-to-equal 3
+    test 'arg3' ->
+        arg3 1 2 3 4
+        |> expect-to-equal 4
+    test 'arg4' ->
+        arg4 1 2 3 4 5
+        |> expect-to-equal 5
+    test 'arg5' ->
+        arg5 1 2 3 4 5 6
+        |> expect-to-equal 6
+    test 'arg6' ->
+        arg6 1 2 3 4 5 6 7
+        |> expect-to-equal 7

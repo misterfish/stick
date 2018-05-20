@@ -26,6 +26,7 @@ import fishLib, {
 } from 'fish-lib'
 
 import {
+    pipe, compose, composeRight,
     ok, ifOk, ifTrue, ifFalse, ifYes, ifNo, ifPredicate, ifEmpty,
     whenOk, whenTrue, whenFalse, whenYes, whenNo, whenPredicate, whenEmpty,
     dot, dot1, dot2, nieuw, nieuw1, nieuw2,
@@ -295,6 +296,17 @@ const testComposeMine = () => {
     5 | composed
 }
 
+const arg4Rest = (...args) => args [3]
+const arg4Manual = (_1, _2, _3, x) => x
+
+const testComposeArg4Rest = () => {
+    arg4Rest (1,2,3,4,5,6,7)
+}
+
+const testComposeArg4Manual = () => {
+    arg4Manual (1,2,3,4,5,6,7)
+}
+
 // side1, js curry, separate: 1000000 iters, took 54.0 ms (18518.5 iters / ms)
 // side1, js curry, combined: 1000000 iters, took 51.0 ms (19607.8 iters / ms)
 // side1, rd curry: 1000000 iters, took 407.0 ms (2457.0 iters / ms)
@@ -351,12 +363,18 @@ const suiteCompose = [
     _ => bench ('compose, mine', n) (testComposeMine),
 ]
 
+const suiteArg = [
+    _ => bench ('arg4, rest', n * 3) (testComposeArg4Rest),
+    _ => bench ('arg4, manual', n * 4) (testComposeArg4Manual),
+]
+
 const suites = [
 //     suite1,
 //     suite2,
 //     suite3,
 //     suite4,
-    suiteCompose,
+    // suiteCompose,
+    suiteArg,
 ]
 
 suites | map (invoke | each)

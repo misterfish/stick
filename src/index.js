@@ -487,7 +487,7 @@ export const zipAll = (...xss) => {
     return ret
 }
 
-// --------- repeat, side
+// ------ repeat, side
 
 export const repeatV    = _recurry (2) (manual.repeatV)
 export const repeatF    = _recurry (2) (manual.repeatF)
@@ -495,6 +495,16 @@ export const repeatSide = _recurry (2) (manual.repeatSide)
 export const timesV     = _recurry (2) (manual.timesV)
 export const timesF     = _recurry (2) (manual.timesF)
 export const timesSide  = _recurry (2) (manual.timesSide)
+
+// ------ types.
+
+export const isType = _recurry (2) (manual.isType)
+export const isArray = isType ('Array')
+export const isFunction = isType ('Function')
+
+// @test
+// --- assumed to be a Number.
+export const isInteger = x => x === Math.floor (x)
 
 // xxx timesVoid, to not make an array.
 // maybe timesV
@@ -605,15 +615,7 @@ export const xReplaceStrFlags = curry ((reStr, flags, repl, target) =>
     target.replace (xRegExpStr (reStr, flags), repl)
 )
 
-// xxx repl might be a function.
-export const ifReplace = curry ((yes, no, re, repl, target) => {
-    let success = 0
-    const out = target.replace (re, () => {
-        ++success
-        return repl
-    })
-    return success | ifYes (() => yes (out, success), () => no (target))
-})
+export const ifReplace = _recurry (5) (manual.ifReplace)
 
 export const ifXReplace = curry ((yes, no, re, repl, target) =>
     ifReplace (yes, no, re | xRegExp, repl, target)
@@ -630,28 +632,19 @@ export const ifXReplaceStrFlags = curry ((yes, no, reStr, flags, repl, target) =
 // --- returns a copy with prototype vals discarded.
 export const discardPrototype = (o) => ({ ...o })
 
-// --- returns a copy with prototype vals floated.
-export const flattenPrototype = (o) => {
-    const ret = {}
-    for (const i in o) ret[i] = o[i]
-    return ret
-}
+// --- returns a copy with prototype vals surfaced.
+export const flattenPrototype = mergeToInM ({})
 
-// --- check if slower xx
-// const arg0 = (...args) => args [0]
-// const arg1 = (...args) => args [1]
+// --- using rest params to pluck it is about 4 times faster than writing the args out -- but even
+// the latter can do 1e5 iterations per ms.
 
-export const arg0  = (a) => a
-export const arg1  = (_, a) => a
-export const arg2  = (_, _1, a) => a
-export const arg3  = (_, _1, _2, a) => a
-export const arg4  = (_, _1, _2, _3, a) => a
-export const arg5  = (_, _1, _2, _3, _4, a) => a
-export const arg6  = (_, _1, _2, _3, _4, _5, a) => a
-export const arg7  = (_, _1, _2, _3, _4, _5, _6, a) => a
-export const arg8  = (_, _1, _2, _3, _4, _5, _6, _7, a) => a
-export const arg9  = (_, _1, _2, _3, _4, _5, _6, _7, _8, a) => a
-export const arg10 = (_, _1, _2, _3, _4, _5, _6, _7, _8, _9, a) => a
+export const arg0 = (...args) => args [0]
+export const arg1 = (...args) => args [1]
+export const arg2 = (...args) => args [2]
+export const arg3 = (...args) => args [3]
+export const arg4 = (...args) => args [4]
+export const arg5 = (...args) => args [5]
+export const arg6 = (...args) => args [6]
 
 const mergeMixins = (mixinsPre, proto, mixinsPost) => {
     const reduceMixins = reduce ((a, b) => b | mergeTo (a)) ({})
@@ -803,14 +796,6 @@ export const CANONisType = curry ((t, x) => x
     | dot2 ('slice') (8, -1)
     | equals (t)
 )
-
-export const isType = _recurry (2) (manual.isType)
-export const isArray = isType ('Array')
-export const isFunction = isType ('Function')
-
-// @test
-// --- assumed to be a Number.
-export const isInteger = x => x === Math.floor (x)
 
 
 

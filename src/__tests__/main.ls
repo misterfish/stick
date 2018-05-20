@@ -578,6 +578,12 @@ describe 'ifReplace*' ->
         ]
         do-test 'tandmithet' 3 true (ja, nee) ->
             target |> (if-replace ja, nee, re, replacement)
+    test 'ifReplace succesful, repl is a function' ->
+        [re, target, replacement] = [
+            /s/g 'sandmishes' (.to-upper-case())
+        ]
+        do-test 'SandmiSheS' 3 true (ja, nee) ->
+            target |> (if-replace ja, nee, re, replacement)
     test 'ifReplace not succesful' ->
         [re, target, replacement] = [
             /xxxx/g 'sandmishes' 't'

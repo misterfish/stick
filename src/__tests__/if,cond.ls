@@ -35,7 +35,7 @@
     if-has, when-has, if-has-in, when-has-in,
     if-bind, when-bind,
 
-    cond, cond-n, cond-o,
+    cond, cond-n, cond-s,
     guard, guard-v, otherwise,
 
     # --- @deprecated
@@ -798,10 +798,10 @@ describe 'cond' ->
                 ] |> expect-to-equal 'ok'
 
 
-    describe 'condO' ->
+    describe 'condS' ->
         describe 'raw' ->
             test 'truthy' ->
-                3 |> cond-o [
+                3 |> cond-s [
                     [(== 5),       -> 'twilight zone']
                     [(== 4),       -> 'even stranger']
                     [odd,          (+ 2)]
@@ -809,13 +809,13 @@ describe 'cond' ->
                 ]
                 |> expect-to-equal 5
             test 'fallthrough' ->
-                3 |> cond-o [
+                3 |> cond-s [
                     [(== 5),       -> 'twilight zone']
                     [(== 4),       -> 'even stranger']
                 ]
                 |> expect-to-equal void
             test 'null test should throw' ->
-                (-> 3 |> cond-o [
+                (-> 3 |> cond-s [
                     [(-> 3 == 4),     -> 'twilight zone']
                     [(-> 3 == 5),     -> 'even stranger']
                     [null             (+ 5)]
@@ -823,7 +823,7 @@ describe 'cond' ->
                 |> expect-to-throw
         describe 'idiomatic' ->
             test 'truthy' ->
-                3 |> cond-o [
+                3 |> cond-s [
                     (== 4)    |> (guard -> 'twilight zone')
                     (== 5)    |> (guard -> 'even stranger')
                     odd       |> (guard (+ 9))
@@ -831,14 +831,14 @@ describe 'cond' ->
                 ]
                 |> expect-to-equal 12
             test 'fallthrough' ->
-                3 |> cond-o [
+                3 |> cond-s [
                     (== 4)    |> (guard -> 'twilight zone')
                     (== 5)    |> (guard -> 'even stranger')
                     even      |> (guard (+ 9))
                 ]
                 |> expect-to-equal void
             test 'otherwise' ->
-                3 |> cond-o [
+                3 |> cond-s [
                     (== 4)    |> (guard -> 'twilight zone')
                     (== 5)    |> (guard -> 'even stranger')
                     otherwise |> (guard -> 'ok')
@@ -846,7 +846,7 @@ describe 'cond' ->
                 |> expect-to-equal 'ok'
     describe 'misc' ->
         test 'guardV' ->
-            32 |> cond-o [
+            32 |> cond-s [
                 (> 30)      |> (guard-v 'big')
                 (> 20)      |> (guard-v 'medium')
             ]
@@ -857,7 +857,7 @@ describe 'cond' ->
             |> expect-to-equal 'medium'
 
     test 1 ->
-        'lions' |> cond-o [
+        'lions' |> cond-s [
             [
                 (str) -> str === 'lions'
                 -> 'feet'
@@ -873,7 +873,7 @@ describe 'cond' ->
         ]
         |> expect-to-equal 'feet'
     test 2 ->
-        'tigers' |> cond-o [
+        'tigers' |> cond-s [
             [
                 (str) -> str === 'lions'
                 -> 'feet'
@@ -890,7 +890,7 @@ describe 'cond' ->
         |> expect-to-equal 'heads'
     test 'lazy, in order' ->
         mock = jest.fn()
-        'lions' |> cond-o [
+        'lions' |> cond-s [
             [
                 (str) -> str === 'lions'
                 -> 'feet'

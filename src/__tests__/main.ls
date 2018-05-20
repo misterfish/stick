@@ -31,7 +31,7 @@
 
     laat, let-n,
     lets, lets2, lets3, lets4, lets5, lets6,
-    lets-n, lets-o,
+    lets-n, lets-s,
 
     nieuw, nieuw1, nieuw2, nieuw3, nieuw-n,
 
@@ -345,8 +345,8 @@ describe 'lets' ->
                 sum-all # 168
             ]
             |> expect-to-equal 168
-        test 'letsO' ->
-            3 |> lets-o [
+        test 'letsS' ->
+            3 |> lets-s [
                 (t) -> t + 1
                 (t, f) -> t + f
                 (t, f, s) -> t * f * s

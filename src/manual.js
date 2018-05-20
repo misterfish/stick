@@ -126,7 +126,7 @@ export const cond = (...blocks) => {
     }
 }
 
-export const condO = (blocks) => (target) => {
+export const condS = (blocks) => (target) => {
     for (const [test, exec] of blocks) {
         const result = test (target)
         if (result) return exec (target, result)
@@ -298,7 +298,7 @@ export const reduceObjIn = (f) => (acc) => (o) => {
 
 // --- @canonical
 /*
-export const ampersand = (fs) => (x) => fs | letsO ([
+export const ampersand = (fs) => (x) => fs | letsS ([
     _ => f => f (x),
     (fs, mapper) => fs | map (mapper),
 ])
@@ -439,7 +439,7 @@ export default {
     ifBind, whenBind,
     bindTry,
     isType,
-    condPredicate, cond, condO,
+    condPredicate, cond, condS,
     subtract, subtractFrom,
     add,
     multiply, divideBy, divideInto,

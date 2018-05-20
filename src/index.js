@@ -174,8 +174,7 @@ export const ifBind__ = (spec, yes, no = noop) => spec | ifBind (yes) (no)
 
 export const cond = manual.cond
 export const condN = (blocks) => cond (...blocks)
-
-export const condO = _recurry (2) (manual.condO)
+export const condS = _recurry (2) (manual.condS)
 
 // ------ exceptions.
 
@@ -189,15 +188,12 @@ export const tryCatch__ = (whatToTry, howToCatch = noop) => {
 }
 
 export const tryCatch = _recurry (3) (manual.tryCatch)
-
 export const exception = (...args) => new Error (args.join (' '))
-
 export const raise = (e) => { throw e }
-
-// --- die throws an exception, which can of course be caught.
-// it shouldn't be too surprising to JS users that it doesn't halt the runtime.
-
 export const decorateException = _recurry (2) (manual.decorateException)
+
+// --- despite the name, die simply throws an exception, which can of course be caught.
+// it shouldn't be too surprising to JS users that it doesn't halt the runtime.
 
 export const die = exception >> raise
 
@@ -420,7 +416,8 @@ export const lets = (...xs) => {
     return _lets (...xs)
 }
 
-export const letsO = curry ((specAry, tgt) => lets (
+// --- move xxx
+export const letsS = curry ((specAry, tgt) => lets (
   _ => tgt,
   ... specAry,
 ))
@@ -896,10 +893,6 @@ const headTail = f => splitAt (1) >> f
 //
 
 export const defaultToV = blush >> defaultTo
-
-// ditch brackets on cond.
-// a line can still be an array if you want the 'raw' predicate / exec.
-// make an extra one (condN ?) for if programmatic building is required.
 
 // spread. e.g.: csv => [csv, length csv] because spread (identity, length)
 // or spread2 (length)

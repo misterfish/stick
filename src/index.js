@@ -352,6 +352,20 @@ export const laat = (...xs) => {
     return letN (xs, f)
 }
 
+/*
+ * For example, our `defaultTo` takes a function:
+ * null | defaultTo (_ -> 'bad news')
+ * For simple values, defaultToV can be more convenient:
+ * null | defaultToV ('bad news')
+*/
+// i like letV fitting the pattern
+// laat -> letV
+// letN -> letNV
+// lets2 -> let2
+// letsN -> letN
+// lets -> laat
+// letsS -> letS
+
 export const letN = _recurry (2) (manual.letN)
 
 // --- these can be called directly by speed freaks; `lets` should be good enough for nearly all
@@ -494,11 +508,26 @@ export const timesV     = _recurry (2) (manual.timesV)
 export const timesF     = _recurry (2) (manual.timesF)
 export const timesSide  = _recurry (2) (manual.timesSide)
 
-// ------ types.
+// ------ types. @test
 
 export const isType = _recurry (2) (manual.isType)
 export const isArray = isType ('Array')
 export const isFunction = isType ('Function')
+
+    /*
+// --- wants upper case, e.g. output of toString.
+export const CANONisType = curry ((t, x) => x
+    | provideTo ({}.toString)
+    | dot2 ('slice') (8, -1)
+    | equals (t)
+)
+*/
+// xxx getType
+// export const getType = provideTo ({}.toString)
+//    >> dot2 ('slice') (8, -1) (
+//)
+
+
 
 // @test
 // --- assumed to be a Number.
@@ -765,47 +794,6 @@ export const factoryStatics = mergeFromM
 export const factoryMixinPre = curry ((mixin, proto) => factoryMixinPre ([mixin], [], proto))
 export const factoryMixinPost = curry ((mixin, proto) => factoryMixinPre ([], [mixin], proto))
 
-    /*
-// --- note, there is no magic here and nothing spectacular.
-// if you find that you need more flexibility than that this provides (e.g. the second argument of Object.create to assign properties etc.), just
-// reimplement this in your app code.
-// unwieldy name, yes, but calling it 'extend' would probably just add to JS confusion.
-// hopefully this name makes it clear to js programmers what's going on.
-// note, Object.setPrototypeOf would not work here (alters the extension object).
-//
-const oCreateExtendWith = curry ((extend, proto) => proto | Object.create | mergeFromM (extend))
-const oCreateBase = curry ((proto, extend) => oCreateExtendWith (extend, proto))
-
-const Cat = (() => {
-    const proto = {
-        // recommendation: do use arrow functions, despite what they tell you.
-        // it makes it clear that this is a pure function, not dependent on `this`.
-        speak: _ => 'meow' | log,
-    }
-    return proto | oCreateBase (Animal.proto) | factory
-    // --- or
-    // return Animal.proto | oCreateExtendWith (proto) | factory
-    // --- or
-    // return proto | factoryMixinPre (Animal.proto)
-    return proto | factoryMixins ([Animal.proto], [])
-}) ()
-*/
-
-
-// xxx getType
-// export const getType = provideTo ({}.toString)
-//    >> dot2 ('slice') (8, -1) (
-//)
-
-// --- wants upper case, e.g. output of toString.
-export const CANONisType = curry ((t, x) => x
-    | provideTo ({}.toString)
-    | dot2 ('slice') (8, -1)
-    | equals (t)
-)
-
-
-
 // ------ bind
 
 // would be nice to bind with an arg, e.g. exit with a code.
@@ -819,20 +807,24 @@ export const CANONisType = curry ((t, x) => x
 // xxx cursor | bind ('theta')
 // xxx 'theta' | bindOn (cursor)
 
+// xxx preps
 // --- dies if o[prop] is not a function.
-export const bind = _recurry (2) (manual.bind)
+export const bindTo = _recurry (2) (manual.bindTo)
 export const bindTry = _recurry (2) (manual.bindTry)
 
-// --- returns a function representing the 'result' of the bind: doesn't actually try to bind until
-// that function is invoked.
+// bindPropTo
+// 'log'   | bindPropTo (console)
+// console | bindProp   ('log')
+//
+// console.log | bindTo (console)
+// console     | bind   (console.log)
+
+export const bind = bindTo
+
+// --- returns a thunk (function) representing the bind: doesn't actually try to bind until that function is invoked.
 export const bindLate = curry ((o, key) => (...args) => o[key] (...args))
 
 
-
-
-// --- map indexed: not sure about exporting these.
-// export const mapX = rAddIndex (map)
-export const mapAccumX = rAddIndex (mapAccum)
 
 export const subtract = _recurry (2) (manual.subtract)
 export const subtractFrom = _recurry (2) (manual.subtractFrom)
@@ -846,26 +838,12 @@ export const modulo = _recurry (2) (manual.modulo)
 export const moduloWholePart = _recurry (2) (manual.moduloWholePart)
 export const toThe = _recurry (2) (manual.toThe)
 
-const listDat = curry ((fs, n) => fs | map (
-    applyTo1 (n),
-))
-
-// --- or:
-// const listDat2 = (n => map (applyTo1 (n)) | flipC)
-// const listDat3 = flipC (n => map (applyTo1 (n)))
-// // --- >> is higher.
-// const listDat4 = applyTo1 >> map | curry | flipC
-// const listDat6 = applyTo1 >> map | flipC
-// 
-// const listDat5 = flipC (n => n | applyTo1 | map)
-
-// const _$ = {}
-
 // --- synonym for always. check impl of always. xxx
 export const blush = x => _ => x
 
-const T = blush (true)
-const F = blush (false)
+// @test
+export const T = blush (true)
+export const F = blush (false)
 
 export const condElse = T
 export const condPredicate = _recurry (2) (manual.condPredicate)
@@ -874,52 +852,18 @@ export const guard = condPredicate
 export const guardV = blush >> guard
 export const otherwise = condElse
 
-export const ifEquals = curry ((test, yes, no, x) => x === test ? yes (x) : no (x))
-export const whenEquals = curry ((test, yes, x) => x | ifEquals (test) (yes) (noop))
-export const ifEquals__ = (x, test, yes, no = noop) => x | ifEquals (test) (yes) (no)
+// @deprecated
+// export const ifEquals = curry ((test, yes, no, x) => x === test ? yes (x) : no (x))
+// export const whenEquals = curry ((test, yes, x) => x | ifEquals (test) (yes) (noop))
+// export const ifEquals__ = (x, test, yes, no = noop) => x | ifEquals (test) (yes) (no)
 
 const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | passToN (f)
 const headTail = f => splitAt (1) >> f
 
-
-// --- biased towards not using method lookup, but free floating function names.
-// --- exceptions as expressions.
-// --- extended regex.
-//
-// curry2
-// curry3
-// condMultiple
-//
-//
-
 export const defaultToV = blush >> defaultTo
-
-// spread. e.g.: csv => [csv, length csv] because spread (identity, length)
-// or spread2 (length)
-// arrows.
-//
-// be careful with defaultToV ({}) if point-free. ?
-//
-
-// const toThe = curry ((exp, base) => Math.pow (base, exp))
-
-// const deconstruct = curry ((f, x) => f (x, x))
-// destructuring, as a function:
-// const show = deconstruct ((downloadStatus, { completed, }) =>
-//
-// you repeat 'downloadStatus' anyway
-// export const show = deconstruct ((downloadStatus, { completed, }) =>
-// downloadStatus | cata ({
-//
-// so why not:
-//
-// or like this, except that you lose the documentation aspect.
-// this | pluck ('beans', 'bones', 'binds', (dit, beans, bones, binds) => ...)
-// could combine ramda props with apply.
 
 const { log, } = console
 const logWith = header => (...args) => log (... [header, ...args])
-
 
 // a map results in a collection of the same shape: list to list, object to object.
 // the modifier As means the shape will change.
@@ -928,6 +872,7 @@ const logWith = header => (...args) => log (... [header, ...args])
 // map + filter could also be done with reduceObj, of course.
 // filter applies to the mapped value.
 
+// --- @test
 const _withFilter = _ => new Map ()
     .set (mapAsKeys,     mapAsKeysWithFilter)
     .set (mapAsKeysIn,   mapAsKeysInWithFilter)
@@ -940,13 +885,13 @@ const _withFilter = _ => new Map ()
     .set (mapTuples,     mapTuplesWithFilter)
     .set (mapTuplesIn,   mapTuplesInWithFilter)
 
-const withFilter = (p) => (mapper) => _withFilter ()
+export const withFilter = (p) => (mapper) => _withFilter ()
     .get (mapper) | ifOk (
         f => f (p),
         _ => die ('cannot augment mapper'),
     )
 
-const mapAsKeys = (f) => (o) => {
+export const mapAsKeys = (f) => (o) => {
     const ret = []
     for (const k in o) if (hasOwn.call (o, k)) ret.push (f (k))
     return ret
@@ -961,7 +906,7 @@ const mapAsKeysWithFilter = (p) => (f) => (o) => {
     return ret
 }
 
-const mapAsKeysIn = (f) => (o) => {
+export const mapAsKeysIn = (f) => (o) => {
     const ret = []
     for (const k in o) ret.push (f (k))
     return ret
@@ -980,19 +925,19 @@ const mapAsKeysInWithFilter = (p) => (f) => (o) => {
 // const keys = mapAsKeys (id)
 // const keysIn = mapAsKeysIn (id)
 
-const keys = (o) => {
+export const keys = (o) => {
     const ret = []
     for (const k in o) if (hasOwn.call (o, k)) ret.push (k)
     return ret
 }
 
-const keysIn = (o) => {
+export const keysIn = (o) => {
     const ret = []
     for (const k in o) ret.push (k)
     return ret
 }
 
-const mapAsValues = (f) => (o) => {
+export const mapAsValues = (f) => (o) => {
     const ret = []
     for (const k in o) if (hasOwn.call (o, k)) ret.push (f (o [k]))
     return ret
@@ -1007,7 +952,7 @@ const mapAsValuesWithFilter = (p) => (f) => (o) => {
     return ret
 }
 
-const mapAsValuesIn = (f) => (o) => {
+export const mapAsValuesIn = (f) => (o) => {
     const ret = []
     for (const k in o) ret.push (f (o [k]))
     return ret
@@ -1026,19 +971,19 @@ const mapAsValuesInWithFilter = (p) => (f) => (o) => {
 // const values = mapAsValues (id)
 // const valuesIn = mapAsValuesIn (id)
 
-const values = (o) => {
+export const values = (o) => {
     const ret = []
     for (const k in o) if (hasOwn.call (o, k)) ret.push (o [k])
     return ret
 }
 
-const valuesIn = (o) => {
+export const valuesIn = (o) => {
     const ret = []
     for (const k in o) ret.push (o [k])
     return ret
 }
 
-const mapKeys = (f) => (o) => {
+export const mapKeys = (f) => (o) => {
     const ret = {}
     for (const k in o) if (hasOwn.call (o, k)) ret [f (k)] = o [k]
     return ret
@@ -1053,7 +998,7 @@ const mapKeysWithFilter = (p) => (f) => (o) => {
     return ret
 }
 
-const mapValues = (f) => (o) => {
+export const mapValues = (f) => (o) => {
     const ret = {}
     for (const k in o) if (hasOwn.call (o, k)) ret [k] = f (o [k])
     return ret
@@ -1068,7 +1013,7 @@ const mapValuesWithFilter = (p) => (f) => (o) => {
     return ret
 }
 
-const mapKeysIn = (f) => (o) => {
+export const mapKeysIn = (f) => (o) => {
     const ret = {}
     for (const k in o) ret [f (k)] = o [k]
     return ret
@@ -1083,7 +1028,7 @@ const mapKeysInWithFilter = (p) => (f) => (o) => {
     return ret
 }
 
-const mapValuesIn = (f) => (o) => {
+export const mapValuesIn = (f) => (o) => {
     const ret = {}
     for (const k in o) ret [k] = f (o [k])
     return ret

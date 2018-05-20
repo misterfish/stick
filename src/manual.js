@@ -63,7 +63,7 @@ export const whenHas = yes => ifHas (yes) (noop)
 export const ifHasIn = yes => no => ([o, k]) => hasIn (k) (o) ? yes (o [k], o, k) : no (o, k)
 export const whenHasIn = yes => ifHasIn (yes) (noop)
 
-export const bind = o => prop => o [prop].bind (o)
+export const bindTo = o => prop => o [prop].bind (o)
 
 export const isType = (t) => (x) => {
     const str = oPro.toString.call (x)
@@ -75,7 +75,7 @@ const whenFunction = (yes, o) => whenPredicate (isFunction) (yes) (o)
 
 // --- returns undefined if o[prop] is not a function.
 export const bindTry = o => prop => whenFunction (
-    _ => bind (o) (prop),
+    _ => bindTo (o) (prop),
     o [prop],
 )
 
@@ -435,7 +435,7 @@ export default {
     has, hasIn,
     ifHas, ifHasIn,
     whenHas, whenHasIn,
-    bind,
+    bindTo,
     ifBind, whenBind,
     bindTry,
     isType,

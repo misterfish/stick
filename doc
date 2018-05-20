@@ -390,3 +390,26 @@ const dateToMinutesUTC  = dateToMinutesX ('getUTCHours', 'getUTCMinutes')
 // bool => tap (stdin => 'setRawMode' | bindTry (stdin) | whenFunction (applyTo1 (bool))),
 // @todo whenBind? whenCan?
 
+// spread. e.g.: csv => [csv, length csv] because spread (identity, length)
+// or spread2 (length)
+// arrows.
+//
+// be careful with defaultToV ({}) if point-free. ?
+//
+
+// const toThe = curry ((exp, base) => Math.pow (base, exp))
+
+// const deconstruct = curry ((f, x) => f (x, x))
+// destructuring, as a function:
+// const show = deconstruct ((downloadStatus, { completed, }) =>
+//
+// you repeat 'downloadStatus' anyway
+// export const show = deconstruct ((downloadStatus, { completed, }) =>
+// downloadStatus | cata ({
+//
+// so why not:
+//
+// or like this, except that you lose the documentation aspect.
+// this | pluck ('beans', 'bones', 'binds', (dit, beans, bones, binds) => ...)
+// could combine ramda props with apply.
+

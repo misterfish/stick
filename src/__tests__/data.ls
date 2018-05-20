@@ -11,6 +11,10 @@
 } = require 'ramda'
 
 {
+    odd, even,
+} = require 'prelude-ls'
+
+{
     list,
     test, xtest,
     expect-to-equal, expect-to-be,
@@ -18,6 +22,13 @@
 
 {
     map, each, each-obj, each-obj-in,
+    keys, keys-in,
+    values, values-in,
+    map-keys, map-values,
+    map-keys-in, map-values-in,
+    map-as-keys, map-as-keys-in,
+    map-as-values, map-as-values-in,
+    with-filter,
     add-index, add-collection,
     reduce-obj, reduce-obj-in,
 
@@ -46,6 +57,9 @@
     arg0, arg1, arg2, arg3, arg4, arg5, arg6,
 
 } = require '../index'
+
+sort-alpha = (.sort ())
+sort-num = (.sort ((a, b) -> a - b))
 
 describe 'map, each' ->
     describe 'map' ->
@@ -152,6 +166,93 @@ describe 'reduceObj' ->
             |> expect-to-equal 1
             (JSON.parse json).base-val
             |> expect-to-equal 15
+
+describe 'keys, values' ->
+    base = base-val: 10
+    o = (Object.create base) <<< one: 1 two: 2
+    sort-alpha = (.sort ())
+    sort-num = (.sort ((a, b) -> a - b))
+    test 'keys' ->
+        o |> keys
+          |> sort-alpha
+          |> expect-to-equal <[ one two ]>
+    test 'keysIn' ->
+        o |> keys-in
+          |> sort-alpha
+          |> expect-to-equal <[ baseVal one two ]>
+    test 'values' ->
+        o |> values
+          |> sort-num
+          |> expect-to-equal [1 2]
+    test 'valuesIn' ->
+        o |> values-in
+          |> sort-num
+          |> expect-to-equal [1 2 10]
+
+describe 'map keys/values' ->
+    base = base-val: 10
+    o = (Object.create base) <<< one: 1 two: 2
+    test 'mapKeys' ->
+        o |> map-keys (.to-upper-case ())
+          |> expect-to-equal do
+              TWO: 2
+              ONE: 1
+    test 'mapValues' ->
+        o |> map-values (* 10)
+          |> expect-to-equal do
+              one: 10
+              two: 20
+    test 'mapKeysIn' ->
+        o |> map-keys-in (.to-upper-case ())
+          |> expect-to-equal do
+              TWO: 2
+              BASEVAL: 10
+              ONE: 1
+    test 'mapValuesIn' ->
+        o |> map-values-in (* 10)
+          |> expect-to-equal do
+              base-val: 100
+              two: 20
+              one: 10
+
+describe 'map as' ->
+    base = base-val: 10
+    o = (Object.create base) <<< one: 1 two: 2
+    describe 'mapAsKeys' ->
+        o |> map-as-keys (.to-upper-case ())
+          |> expect-to-equal ['ONE' 'TWO']
+    describe 'mapAsKeysIn' ->
+        o |> map-as-keys-in (.to-upper-case ())
+          |> expect-to-equal ['ONE' 'TWO' 'BASEVAL']
+    describe 'mapAsValues' ->
+        o |> map-as-values (* 10)
+          |> sort-num
+          |> expect-to-equal [10 20]
+    describe 'mapAsValuesIn' ->
+        o |> map-as-values-in (* 10)
+          |> expect-to-equal [10 20 100]
+
+describe 'map as + with filter' ->
+    base = base-val: 10
+    o = (Object.create base) <<< one: 1 two: 2
+    map-k-reject-starts-with-O = map-as-keys |> with-filter (.0 != 'O')
+    map-k-in-reject-starts-with-O = map-as-keys-in |> with-filter (.0 != 'O')
+    map-v-odd = map-as-values |> with-filter odd
+    map-v-in-odd = map-as-values-in |> with-filter odd
+    describe 'mapAsKeysWithFilter' ->
+        o |> map-k-reject-starts-with-O (.to-upper-case ())
+          |> expect-to-equal <[ TWO ]>
+    describe 'mapAsKeysInWithFilter' ->
+        o |> map-k-in-reject-starts-with-O (.to-upper-case ())
+          |> sort-alpha
+          |> expect-to-equal <[ BASEVAL TWO ]>
+    describe 'mapAsValuesWithFilter' ->
+        o |> map-v-odd (+ 1)
+          |> expect-to-equal [3]
+    describe 'mapAsValuesInWithFilter' ->
+        o |> map-v-in-odd (+ 1)
+          |> sort-num
+          |> expect-to-equal [3 11]
 
 describe 'join, split' ->
     describe 'join' ->

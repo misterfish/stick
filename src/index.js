@@ -34,8 +34,6 @@ import {
     not,
 } from 'ramda'
 
-import sprintf from 'sprintf'
-
 import {
     bitwiseAnd, bitwiseOr, bitwiseXor, bitwiseNot,
     bitwiseLeft, bitwiseRight, bitwiseRightZeroFill,
@@ -489,11 +487,14 @@ export const zipAll = (...xss) => {
     return ret
 }
 
-// --------- list.
+// --------- repeat, side
 
-// multiple versions with preps ??
-export const repeat = rFlip (rRepeat)
-export const times = rFlip (rTimes)
+export const repeatV    = _recurry (2) (manual.repeatV)
+export const repeatF    = _recurry (2) (manual.repeatF)
+export const repeatSide = _recurry (2) (manual.repeatSide)
+export const timesV     = _recurry (2) (manual.timesV)
+export const timesF     = _recurry (2) (manual.timesF)
+export const timesSide  = _recurry (2) (manual.timesSide)
 
 // xxx timesVoid, to not make an array.
 // maybe timesV

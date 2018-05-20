@@ -47,6 +47,9 @@
     modulo, modulo-whole-part,
     to-the,
 
+    repeat-v, repeat-f, repeat-side,
+    times-v, times-f, times-side,
+
 } = main = require '../index'
 
 sum-all = list >> sum
@@ -619,3 +622,42 @@ describe 'ifReplace*' ->
         ]
         do-test 'sandmishes' 0 false (ja, nee) ->
             target |> (if-x-replace-str-flags ja, nee, re-str, 'g', replacement)
+
+describe 'repeat, times' ->
+    y = y: void
+    ping = (x) -> y.y.push (x)
+    before-each -> y.y = []
+    describe 'repeatV' ->
+        test 1 ->
+            5
+            |> repeat-v 'thing'
+            |> expect-to-equal ['thing'] * 5
+    describe 'repeatF' ->
+        test 1 ->
+            3
+            |> repeat-f (n) -> "thing#n"
+            |> expect-to-equal ['thing0' 'thing1' 'thing2']
+    describe 'repeatSide' ->
+        test 1 ->
+            3
+            |> repeat-side (n) -> ping "thing#n"
+            |> expect-to-equal void
+            y.y |> expect-to-equal ['thing0' 'thing1' 'thing2']
+    describe 'timesV' ->
+        test 1 ->
+            'thing'
+            |> times-v 5
+            |> expect-to-equal ['thing'] * 5
+    describe 'timesF' ->
+        test 1 ->
+            (n) -> "thing#n"
+            |> times-f 3
+            |> expect-to-equal ['thing0' 'thing1' 'thing2']
+    describe 'timesSide' ->
+        test 1 ->
+            (n) -> ping "thing#n"
+            |> times-side 3
+            |> expect-to-equal void
+            y.y |> expect-to-equal ['thing0' 'thing1' 'thing2']
+
+

@@ -15,26 +15,13 @@
 } = require './common'
 
 {
-    array, repeat, times, compact, compact-ok, join-ok,
+    array, compact, compact-ok, join-ok,
 } = require '../index'
 
 describe 'array' ->
     test 1 ->
         [3 4 5]
         |> expect-to-equal [3 to 5]
-
-describe 'repeat' ->
-    test 1 ->
-        'thing'
-        |> repeat 5
-        |> expect-to-equal ['thing'] * 5
-
-describe 'times' ->
-    thing = (i) -> i
-    test 1 ->
-        thing
-        |> times 5
-        |> expect-to-equal [0 to 4]
 
 describe 'compact*' ->
     mixed = [1 '' 0 '0' void false true 2]

@@ -398,6 +398,25 @@ export const flip5 = f => a => b => c => d => e =>
 export const sprintf1 = str => a  => sprintf (str, a)
 export const sprintfN = str => xs => sprintf.apply (null, [str, ...xs])
 
+// ------ repeat, times
+export const repeatV = (x) => (n) => {
+    const ret = []
+    for (let i = 0; i < n; i++) ret.push (x)
+    return ret
+}
+export const repeatF = (f) => (n) => {
+    const ret = []
+    for (let i = 0; i < n; i++) ret.push (f (i))
+    return ret
+}
+export const repeatSide = (f) => (n) => {
+    for (let i = 0; i < n; i++) f (i)
+}
+
+export const timesV = (x) => (n) => repeatV (n) (x)
+export const timesF = (f) => (n) => repeatF (n) (f)
+export const timesSide = (n) => (f) => repeatSide (f) (n)
+
 export default {
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
@@ -439,4 +458,6 @@ export default {
     prop,
     flip, flip3, flip4, flip5,
     sprintf1, sprintfN,
+    repeatV, repeatF, repeatSide,
+    timesV, timesF, timesSide,
 }

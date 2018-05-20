@@ -170,3 +170,7 @@ export const ampersand = (fs) => (x) => fs | letS ([
     _ => f => f (x),
     (fs, mapper) => fs | map (mapper),
 ])
+
+const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | passToN (f)
+const headTail = f => splitAt (1) >> f
+

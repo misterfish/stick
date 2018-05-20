@@ -12,7 +12,6 @@ export const composeRight = (a, b)    => (...args) => b (a (...args))
 export const compose      = (a, b)    => (...args) => a (b (...args))
 
 import {
-    splitAt,
     curry,
     mapAccum,
 } from 'ramda'
@@ -548,12 +547,6 @@ export const isString   = isType ('String')
 // --- assumed to be a Number.
 export const isInteger = x => x === Math.floor (x)
 
-// @todo
-// export const rangeBy = curry ((from, to, by, f) => {
-//     for (let i = from; i <= to; i += by) f (i)
-// })
-// export const range = curry ((from, to, f) => rangeBy (from, to, 1, f))
-
 // --- excl, so it's like ramda.
 // --- note that `by` should be negative to count down.
 
@@ -616,45 +609,20 @@ export const match = _recurry (2) (manual.match)
 // @todo make xMatch incur only a compile-time cost.
 
 // --- input: regex.
-export const xMatch = curry ((re, target) =>
-    xRegExp (re) | dot1 ('edfec', target)
-)
-
-export const xMatchGlobal = _recurry (3) (manual.xMatchGlobal)
-
+export const xMatch             = _recurry (2) (manual.xMatch)
+export const xMatchGlobal       = _recurry (3) (manual.xMatchGlobal)
 // --- input: string.
-export const xMatchStr = curry ((reStr, target) => target
-    | xMatch (new RegExp (reStr)))
-
+export const xMatchStr          = _recurry (2) (manual.xMatchStr)
 // --- input: string, string.
-export const xMatchStrFlags = curry ((reStr, flags, target) => target
-    | xMatch (new RegExp (reStr, flags)))
+export const xMatchStrFlags     = _recurry (3) (manual.xMatchStrFlags)
+export const xReplace           = _recurry (3) (manual.xReplace)
+export const xReplaceStr        = _recurry (3) (manual.xReplaceStr)
+export const xReplaceStrFlags   = _recurry (4) (manual.xReplaceStrFlags)
 
-export const xReplace = curry ((re, repl, target) =>
-    target.replace (xRegExp (re), repl)
-)
-
-export const xReplaceStr = curry ((reStr, repl, target) =>
-    target.replace (xRegExpStr (reStr), repl)
-)
-
-export const xReplaceStrFlags = curry ((reStr, flags, repl, target) =>
-    target.replace (xRegExpStr (reStr, flags), repl)
-)
-
-export const ifReplace = _recurry (5) (manual.ifReplace)
-
-export const ifXReplace = curry ((yes, no, re, repl, target) =>
-    ifReplace (yes, no, re | xRegExp, repl, target)
-)
-
-export const ifXReplaceStr = curry ((yes, no, reStr, repl, target) =>
-    ifReplace (yes, no, xRegExpStr (reStr), repl, target)
-)
-
-export const ifXReplaceStrFlags = curry ((yes, no, reStr, flags, repl, target) =>
-    ifReplace (yes, no, xRegExpStr (reStr, flags), repl, target)
-)
+export const ifReplace          = _recurry (5) (manual.ifReplace)
+export const ifXReplace         = _recurry (5) (manual.ifXReplace)
+export const ifXReplaceStr      = _recurry (5) (manual.ifXReplaceStr)
+export const ifXReplaceStrFlags = _recurry (6) (manual.ifXReplaceStrFlags)
 
 // --- returns a copy with prototype vals discarded.
 export const discardPrototype = (o) => ({ ...o })
@@ -849,9 +817,6 @@ export const otherwise = condElse
 // export const ifEquals = curry ((test, yes, no, x) => x === test ? yes (x) : no (x))
 // export const whenEquals = curry ((test, yes, x) => x | ifEquals (test) (yes) (noop))
 // export const ifEquals__ = (x, test, yes, no = noop) => x | ifEquals (test) (yes) (no)
-
-const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | passToN (f)
-const headTail = f => splitAt (1) >> f
 
 export const defaultToV = blush >> defaultTo
 

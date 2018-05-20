@@ -5,7 +5,7 @@ import {
     isFunction, ifYes,
     laat,
     getType,
-    xRegExpFlags,
+    xRegExp, xRegExpFlags, xRegExpStr,
 } from './index'
 
 const noop = _ => {}
@@ -510,6 +510,23 @@ export const xMatchGlobal = (re) => (mapper) => (target) => {
 	return out
 }
 
+export const xMatch = re => target => xRegExp (re).exec (target)
+export const xMatchStr = reStr => target => xMatch (new RegExp (reStr)) (target)
+export const xMatchStrFlags = reStr => flags => target =>
+    xMatch (new RegExp (reStr, flags)) (target)
+export const xReplace = re => repl => target =>
+    target.replace (xRegExp (re), repl)
+export const xReplaceStr = reStr => repl => target =>
+    target.replace (xRegExpStr (reStr), repl)
+export const xReplaceStrFlags = reStr => flags => repl => target =>
+    target.replace (xRegExpStr (reStr, flags), repl)
+export const ifXReplace = yes => no => re => repl => target =>
+    ifReplace (yes) (no) (xRegExp (re)) (repl) (target)
+export const ifXReplaceStr = yes => no => reStr => repl => target =>
+    ifReplace (yes) (no) (xRegExpStr (reStr)) (repl) (target)
+export const ifXReplaceStrFlags = yes => no => reStr => flags => repl => target =>
+    ifReplace (yes) (no) (xRegExpStr (reStr, flags)) (repl) (target)
+
 export default {
     roll, recurry,
     eq, ne, gt, gte, lt, lte,
@@ -563,4 +580,7 @@ export default {
     rangeFromByAsc, rangeFromByDesc,
     neu1, neu2, neu3, neu4, neu5, neuN,
     match, xMatchGlobal,
+    xMatch, xMatchStr, xMatchStrFlags,
+    xReplace, xReplaceStr, xReplaceStrFlags,
+    ifXReplace, ifXReplaceStr, ifXReplaceStrFlags,
 }

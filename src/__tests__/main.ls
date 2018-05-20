@@ -20,14 +20,11 @@
 } = require './common'
 
 {
-    zip-all,
-
     eq, ne, gt, gte, lt, lte,
 
     bind-prop-to, bind-prop, bind-to, bind,
     bind-try-prop-to, bind-try-prop, bind-try-to, bind-try,
 
-    bind-late-prop-to, bind-late-prop,
     cascade,
     flip, flip3, flip4, flip5,
     sprintf1, sprintf-n,
@@ -35,6 +32,8 @@
     let-v, let-n-v,
     laat, let2, let3, let4, let5, let6,
     let-n, let-s,
+
+    zip-all,
 
     is-type, get-type,
     is-function, is-array, is-object,
@@ -54,6 +53,9 @@
     x-replace, x-replace-str, x-replace-str-flags,
 
     if-replace, if-x-replace, if-x-replace-str, if-x-replace-str-flags,
+
+    blush, always, T, F,
+    bind-late-prop-to, bind-late-prop,
 
     subtract-from, subtract, minus,
     add, plus,
@@ -185,6 +187,28 @@ describe 'bind*' ->
         test 'dies' ->
             -> dog |> bind null
             |> expect-to-throw
+
+    describe 'blush, always, T, F' ->
+        test 'blush' ->
+            f = 42 |> blush
+            f 1 |> expect-to-equal 42
+            f null |> expect-to-equal 42
+            f 1 2 3 |> expect-to-equal 42
+            f [1 2 3] |> expect-to-equal 42
+        test 'always' ->
+            blush |> expect-to-equal always
+        test 'T' ->
+            f = T
+            f 1 |> expect-to-equal true
+            f null |> expect-to-equal true
+            f 1 2 3 |> expect-to-equal true
+            f [1 2 3] |> expect-to-equal true
+        test 'F' ->
+            f = F
+            f 1 |> expect-to-equal false
+            f null |> expect-to-equal false
+            f 1 2 3 |> expect-to-equal false
+            f [1 2 3] |> expect-to-equal false
 
     describe 'bind late' ->
         test 'prop to' ->

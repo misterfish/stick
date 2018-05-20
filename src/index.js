@@ -812,7 +812,7 @@ export const bindLatePropTo = _recurry (2) (manual.bindLatePropTo)
 export const bindLateProp   = _recurry (2) (manual.bindLateProp)
 
 
-a
+
 export const subtract = _recurry (2) (manual.subtract)
 export const subtractFrom = _recurry (2) (manual.subtractFrom)
 export const minus = subtract
@@ -825,12 +825,9 @@ export const modulo = _recurry (2) (manual.modulo)
 export const moduloWholePart = _recurry (2) (manual.moduloWholePart)
 export const toThe = _recurry (2) (manual.toThe)
 
-// @test
-//
 export const blush = x => _ => x
 export const always = blush
 
-// @test
 export const T = blush (true)
 export const F = blush (false)
 
@@ -851,9 +848,6 @@ const headTail = f => splitAt (1) >> f
 
 export const defaultToV = blush >> defaultTo
 
-const { log, } = console
-const logWith = header => (...args) => log (... [header, ...args])
-
 // a map results in a collection of the same shape: list to list, object to object.
 // the modifier As means the shape will change.
 
@@ -861,7 +855,6 @@ const logWith = header => (...args) => log (... [header, ...args])
 // map + filter could also be done with reduceObj, of course.
 // filter applies to the mapped value.
 
-// --- @test
 const _withFilter = _ => new Map ()
     .set (mapAsKeys,     mapAsKeysWithFilter)
     .set (mapAsKeysIn,   mapAsKeysInWithFilter)
@@ -1076,14 +1069,3 @@ const mapTuplesInWithFilter = (p) => (f) => (o) => {
 
     return ret
 }
-
-const toUpperCase = dot ('toUpperCase')
-const ifEqualsD = 'd' | eq | ifPredicate
-const mapper = ifEqualsD (_ => null) (toUpperCase)
-
-
-const odd = x => x % 2
-const a = [1,2,3]
-const rejectX = reject | addIndex
-const rejectXC = reject | addIndex | addCollection
-// a | reject ((...args) => (console.log (args), odd)) | log

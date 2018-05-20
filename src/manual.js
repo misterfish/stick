@@ -74,6 +74,9 @@ export const whenHas = yes => ifHas (yes) (noop)
 export const ifHasIn = yes => no => ([o, k]) => hasIn (k) (o) ? yes (o [k], o, k) : no (o, k)
 export const whenHasIn = yes => ifHasIn (yes) (noop)
 
+export const bindLatePropTo = o => prop => (...args) => o [prop] (...args)
+export const bindLateProp   = prop => o => (...args) => o [prop] (...args)
+
 export const bindPropTo = o => prop => o [prop].bind (o)
 export const bindProp   = prop => o => o [prop].bind (o)
 export const bindTo     = o => f => f.bind (o)
@@ -81,9 +84,7 @@ export const bind       = f => o => f.bind (o)
 
 export const isType = t => x => getType (x) === t
 
-// --- consider bind* | tryBind ?
-
-// --- bindTry* returns undefined if o[prop] is not a function.
+// --- bindTry* returns `null` if o[prop] is not a function.
 export const bindTryPropTo = o => prop => typeof o [prop] === 'function'
     ? bindPropTo (o) (prop)
     : null
@@ -491,6 +492,7 @@ export default {
     has, hasIn,
     ifHas, ifHasIn,
     whenHas, whenHasIn,
+    bindLatePropTo, bindLateProp,
     bindPropTo, bindProp, bindTo, bind,
     bindTryPropTo, bindTryProp, bindTryTo, bindTry,
     ifBind, whenBind,

@@ -27,7 +27,7 @@
     bind-prop-to, bind-prop, bind-to, bind,
     bind-try-prop-to, bind-try-prop, bind-try-to, bind-try,
 
-    bind-late,
+    bind-late-prop-to, bind-late-prop,
     cascade,
     flip, flip3, flip4, flip5,
     sprintf1, sprintf-n,
@@ -187,12 +187,19 @@ describe 'bind*' ->
             |> expect-to-throw
 
     describe 'bind late' ->
-        test '1' ->
+        test 'prop to' ->
             obj2 = {}
-            bound = 'speak' |> bind-late obj2
+            bound = 'speak' |> bind-late-prop-to obj2
             (expect -> bound()).to-throw TypeError
             obj2.speak = -> 'spoke'
             (expect bound()).to-equal 'spoke'
+        test 'prop from' ->
+            obj2 = {}
+            bound = obj2 |> bind-late-prop 'speak'
+            (expect -> bound()).to-throw TypeError
+            obj2.speak = -> 'spoke'
+            (expect bound()).to-equal 'spoke'
+
     describe 'bind try *' ->
         describe 'bind try prop to' ->
             test 1 ->
@@ -222,9 +229,6 @@ describe 'bind*' ->
             test 'returns null on bad bind' ->
                 f = dog |> bind-try null
                 f |> expect-to-equal null
-    describe 'forms' ->
-        xtest '1' ->
-            bindTry(dog, 'speak') |> if-ok
 
 describe 'flip' ->
     describe 'target manually curried' ->

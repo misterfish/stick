@@ -808,10 +808,11 @@ export const bindTo = _recurry (2) (manual.bindTo)
 export const bind = _recurry (2) (manual.bind)
 
 // --- returns a thunk (function) representing the bind: doesn't actually try to bind until that function is invoked.
-export const bindLate = curry ((o, key) => (...args) => o[key] (...args))
+export const bindLatePropTo = _recurry (2) (manual.bindLatePropTo)
+export const bindLateProp   = _recurry (2) (manual.bindLateProp)
 
 
-
+a
 export const subtract = _recurry (2) (manual.subtract)
 export const subtractFrom = _recurry (2) (manual.subtractFrom)
 export const minus = subtract

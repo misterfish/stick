@@ -15,7 +15,7 @@
 } = require './common'
 
 {
-    array, compact, compact-ok, join-ok,
+    array, compact, compact-ok,
 } = require '../index'
 
 describe 'array' ->
@@ -60,9 +60,3 @@ describe 'compact*' ->
             truthy
             |> compact-ok
             |> expect-to-equal truthy
-
-describe 'joinOk' ->
-    test 1 ->
-        [1 2 false null 3 true void 5]
-        |> join-ok ' '
-        |> expect-to-equal '1 2 false 3 true 5'

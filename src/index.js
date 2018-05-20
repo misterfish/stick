@@ -508,27 +508,9 @@ export const isType = _recurry (2) (manual.isType)
 export const isArray = isType ('Array')
 export const isFunction = isType ('Function')
 
-    /*
-// --- wants upper case, e.g. output of toString.
-export const CANONisType = curry ((t, x) => x
-    | provideTo ({}.toString)
-    | dot2 ('slice') (8, -1)
-    | equals (t)
-)
-*/
-// xxx getType
-// export const getType = provideTo ({}.toString)
-//    >> dot2 ('slice') (8, -1) (
-//)
-
-
-
 // @test
 // --- assumed to be a Number.
 export const isInteger = x => x === Math.floor (x)
-
-// xxx timesVoid, to not make an array.
-// maybe timesV
 
 // @todo
 // export const rangeBy = curry ((from, to, by, f) => {
@@ -549,11 +531,6 @@ export const compactOk = reject (isNil)
 
 // --- turn positional args into a list with those values.
 export const list = (...args) => args
-
-export const joinOk = curry ((j, xs) => xs
-    | compactOk
-    | join (j)
-)
 
 // --------- new.
 // xxx german aliases

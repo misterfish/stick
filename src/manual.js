@@ -68,20 +68,33 @@ export const whenHasIn = yes => ifHasIn (yes) (noop)
 
 export const bindPropTo = o => prop => o [prop].bind (o)
 export const bindProp   = prop => o => o [prop].bind (o)
+export const bindTo     = o => f => f.bind (o)
+export const bind       = f => o => f.bind (o)
 
 export const isType = t => x => getType (x) === t
 
 // --- beware point-free (circular).
-const whenFunction = (yes, o) => whenPredicate (isFunction) (yes) (o)
+// const whenFunction = (yes, o) => whenPredicate (isFunction) (yes) (o)
 
-// --- returns undefined if o[prop] is not a function.
-export const bindTry = o => prop => whenFunction (
-    _ => bindPropTo (o) (prop),
-    o [prop],
-)
+// --- bindTry* returns undefined if o[prop] is not a function.
+export const bindTryPropTo = o => prop => typeof o [prop] === 'function'
+    ? bindPropTo (o) (prop)
+    : null
 
-export const ifBind = yes => no => ([o, k]) => {
-    const bound = bindTry (o) (k)
+export const bindTryProp   = prop => o => typeof o [prop] === 'function'
+    ? bindPropTo (o) (prop)
+    : null
+
+export const bindTryTo     = o => f =>    typeof f        === 'function'
+    ? bindTo (o) (f)
+    : null
+
+export const bindTry       = f => o =>    typeof f        === 'function'
+    ? bindTo (o) (f)
+    : null
+
+export const ifBind = yes => no => ([o, prop]) => {
+    const bound = bindTryPropTo (o) (prop)
     return ok (bound) ? yes (bound) : no ()
 }
 
@@ -475,9 +488,9 @@ export default {
     has, hasIn,
     ifHas, ifHasIn,
     whenHas, whenHasIn,
-    bindPropTo, bindProp,
+    bindPropTo, bindProp, bindTo, bind,
+    bindTryPropTo, bindTryProp, bindTryTo, bindTry,
     ifBind, whenBind,
-    bindTry,
     isType, getType,
     condPredicate, cond, condS,
     subtract, subtractFrom,

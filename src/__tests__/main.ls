@@ -24,8 +24,10 @@
 
     eq, ne, gt, gte, lt, lte,
 
-    bind-prop-to, bind-prop,
-    bind-late, bind-try,
+    bind-prop-to, bind-prop, bind-to, bind,
+    bind-try-prop-to, bind-try-prop, bind-try-to, bind-try,
+
+    bind-late,
     cascade,
     flip, flip3, flip4, flip5,
     sprintf1, sprintf-n,
@@ -137,6 +139,8 @@ describe 'bind*' ->
         name: 'dog'
         speak: -> 'my name is ' + @name
         garble: (...args) -> r-join '!' args
+    dog-speak = dog.speak
+    dog-garble = dog.garble
 
     describe 'bind prop to' ->
         test 2 ->
@@ -160,9 +164,28 @@ describe 'bind*' ->
             -> dog |> bind-prop 'nothing'
             |> expect-to-throw
 
-    describe 'bind hard' ->
-        test 'fails on undefined function' ->
-            (expect -> dog.squeak()).to-throw TypeError
+    describe 'bind func to' ->
+        test 2 ->
+            f = dog-speak |> bind-to dog
+            f () |> expect-to-equal 'my name is dog'
+        test 'passes args' ->
+            garble = dog-garble |> bind-to dog
+            garble 'a' 1 'c' |> expect-to-equal 'a!1!c'
+        test 'dies' ->
+            -> null |> bind-to dog
+            |> expect-to-throw
+
+    describe 'bind func from' ->
+        test 2 ->
+            f = dog |> bind dog-speak
+            f () |> expect-to-equal 'my name is dog'
+        test 'passes args' ->
+            garble = dog |> bind dog-garble
+            garble 'a' 1 'c' |> expect-to-equal 'a!1!c'
+        test 'dies' ->
+            -> dog |> bind null
+            |> expect-to-throw
+
     describe 'bind late' ->
         test '1' ->
             obj2 = {}
@@ -170,10 +193,35 @@ describe 'bind*' ->
             (expect -> bound()).to-throw TypeError
             obj2.speak = -> 'spoke'
             (expect bound()).to-equal 'spoke'
-    describe 'bind try' ->
-        test 'returns undefined on bad bind' ->
-            bind-try dog, 'squeqk'
-            |> expect-to-equal void
+    describe 'bind try *' ->
+        describe 'bind try prop to' ->
+            test 1 ->
+                f = 'speak' |> bind-try-prop-to dog
+                f () |> expect-to-equal 'my name is dog'
+            test 'returns null on bad bind' ->
+                f = 'bleak' |> bind-try-prop-to dog
+                f |> expect-to-equal null
+        describe 'bind try prop' ->
+            test 1 ->
+                f = dog |> bind-try-prop 'speak'
+                f () |> expect-to-equal 'my name is dog'
+            test 'returns null on bad bind' ->
+                f = dog |> bind-try-prop 'bleak'
+                f |> expect-to-equal null
+        describe 'bind try func to' ->
+            test 1 ->
+                f = dog-speak |> bind-try-to dog
+                f () |> expect-to-equal 'my name is dog'
+            test 'returns null on bad bind' ->
+                f = null |> bind-try-to dog
+                f |> expect-to-equal null
+        describe 'bind try func' ->
+            test 1 ->
+                f = dog |> bind-try dog-speak
+                f () |> expect-to-equal 'my name is dog'
+            test 'returns null on bad bind' ->
+                f = dog |> bind-try null
+                f |> expect-to-equal null
     describe 'forms' ->
         xtest '1' ->
             bindTry(dog, 'speak') |> if-ok

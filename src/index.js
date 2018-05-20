@@ -209,23 +209,21 @@ export const assocM = _recurry (3) (manual.assocM)
 // ------ append.
 
 // --- 4 | appendTo ([1, 2, 3])
-// --- ([1, 2, 3]) | appendFrom (4)
 // --- ([1, 2, 3]) | append (4)
 
-export const append   = _recurry (2) (manual.append)
-export const appendTo     = _recurry (2) (manual.appendTo)
-export const appendM  = _recurry (2) (manual.appendM)
-export const appendToM    = _recurry (2) (manual.appendToM)
+export const append    = _recurry (2) (manual.append)
+export const appendTo  = _recurry (2) (manual.appendTo)
+export const appendM   = _recurry (2) (manual.appendM)
+export const appendToM = _recurry (2) (manual.appendToM)
 
 // ------ prepend.
 
 // --- 1 | prependTo ([2, 3, 4])
-// --- ([2, 3, 4]) | prependFrom (1)
 // --- ([2, 3, 4]) | prepend (1)
-export const prependTo    = _recurry (2) (manual.prependTo)
-export const prepend  = _recurry (2) (manual.prepend)
-export const prependM = _recurry (2) (manual.prependM)
-export const prependToM   = _recurry (2) (manual.prependToM)
+export const prependTo  = _recurry (2) (manual.prependTo)
+export const prepend    = _recurry (2) (manual.prepend)
+export const prependM   = _recurry (2) (manual.prependM)
+export const prependToM = _recurry (2) (manual.prependToM)
 
 // --- arrays or strings
 // --- ramda's concat does more type checking and also allows fantasy land semigroups.
@@ -233,13 +231,13 @@ export const prependToM   = _recurry (2) (manual.prependToM)
 // --- [1, 2, 3] | concat ([4])
 // --- [1, 2, 3] | concat ([4])
 export const concatTo = _recurry (2) (manual.concatTo)
-export const concat = _recurry (2) (manual.concat)
-export const precatTo   = concat
-export const precat = concatTo
+export const concat   = _recurry (2) (manual.concat)
+export const precatTo = concat
+export const precat   = concatTo
 
 // --- only arrays (strings will throw)
 export const concatToM = _recurry (2) (manual.concatToM)
-export const concatM = _recurry (2) (manual.concatM)
+export const concatM   = _recurry (2) (manual.concatM)
 
 // --- own properties, including null/undefined.
 // --- 2x faster than Object.assign.
@@ -248,10 +246,10 @@ export const concatM = _recurry (2) (manual.concatM)
 // --- { b: 2 } | mergeTo ({ a: 1, b: null })
 // --- ({ a: 1, b: null }) | merge ({ b: 2 })
 // --- ({ a: 1, b: null }) | merge     ({ b: 2 })
-export const mergeTo    = _recurry (2) (manual.mergeTo)
-export const merge  = _recurry (2) (manual.merge)
-export const mergeM = _recurry (2) (manual.mergeM)
-export const mergeToM   = _recurry (2) (manual.mergeToM)
+export const mergeTo  = _recurry (2) (manual.mergeTo)
+export const merge    = _recurry (2) (manual.merge)
+export const mergeM   = _recurry (2) (manual.mergeM)
+export const mergeToM = _recurry (2) (manual.mergeToM)
 
 // --- copies enumerable own properties from src into tgt, mut.
 ////// --- uses collision function if key exists in the target, anywhere in target's prototype chain.
@@ -260,16 +258,16 @@ export const mergeToM   = _recurry (2) (manual.mergeToM)
 // --- to avoid non-intuitive behavior, only own properties are checked on the target.
 ////// --- if a collision occurs in the target's prototype chain, the value will surface, regardless of whether src or tgt version is chosen.
 
-export const mergeToWithM   = _recurry (3) (manual.mergeToWithM)
-export const mergeWithM = _recurry (3) (manual.mergeWithM)
+export const mergeToWithM = _recurry (3) (manual.mergeToWithM)
+export const mergeWithM   = _recurry (3) (manual.mergeWithM)
 
 // @test
-export const mergeToWhenOkM   = _recurry (2) (manual.mergeToWhenOkM)
+export const mergeToWhenOkM = _recurry (2) (manual.mergeToWhenOkM)
 // @test
-export const mergeWhenOkM = _recurry (2) (manual.mergeWhenOkM)
+export const mergeWhenOkM   = _recurry (2) (manual.mergeWhenOkM)
 
-export const mergeToInM   = _recurry (2) (manual.mergeToInM)
-export const mergeInM = _recurry (2) (manual.mergeInM)
+export const mergeToInM = _recurry (2) (manual.mergeToInM)
+export const mergeInM   = _recurry (2) (manual.mergeInM)
 
 // --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
 // object.
@@ -289,14 +287,13 @@ export const mergeAllIn = xs => xs.reduce (
 
 // ------ map.
 
-// --- simple dispatches to Array.prototype.map
+// --- simple dispatches to Array.prototype functions, but capped.
 
 export const map    = _recurry (2) (manual.map)
 export const each   = _recurry (2) (manual.each)
+
 // @test
-// test addIndex
 export const filter = _recurry (2) (manual.filter)
-// @test
 export const reject = _recurry (2) (manual.reject)
 
 // --- undef on empty array, like ramda
@@ -797,10 +794,17 @@ export const factoryMixinPost = curry ((mixin, proto) => factoryMixinPre ([], [m
 // --- dies if o[prop] is not a function.
 export const bindPropTo = _recurry (2) (manual.bindPropTo)
 export const bindProp   = _recurry (2) (manual.bindProp)
-export const bindTry    = _recurry (2) (manual.bindTry)
+
+export const bindTryPropTo = _recurry (2) (manual.bindTryPropTo)
+export const bindTryProp   = _recurry (2) (manual.bindTryProp)
+export const bindTryTo     = _recurry (2) (manual.bindTryTo)
+export const bindTry       = _recurry (2) (manual.bindTry)
 
 // console.log | bindTo (console)
 // console     | bind   (console.log)
+
+export const bindTo = _recurry (2) (manual.bindTo)
+export const bind = _recurry (2) (manual.bind)
 
 // --- returns a thunk (function) representing the bind: doesn't actually try to bind until that function is invoked.
 export const bindLate = curry ((o, key) => (...args) => o[key] (...args))

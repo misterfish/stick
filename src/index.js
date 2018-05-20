@@ -83,6 +83,8 @@ export const roll = (f) => (...args) => {
   return g
 }
 
+export const noop = () => {}
+
 export const ok    = x => x != null
 export const notOk = x => x == null
 
@@ -474,8 +476,6 @@ export const flip5 = _recurry (6) (manual.flip5)
 
 export const sprintf1 = curry ((str, a) => sprintf (str, a))
 export const sprintfN = curry ((str, xs) => sprintf.apply (null, [str, ...xs]))
-
-export const noop = () => {}
 
 // --- R.zip only takes two.
 export const zipAll = (...xss) => {

@@ -32,6 +32,8 @@
     if-no, when-no,
     if-falsey, when-falsey,
 
+    bind-try-prop-to, bind-try-prop, bind-try-to, bind-try,
+
     if-has, when-has, if-has-in, when-has-in,
     if-bind, when-bind,
 
@@ -1065,32 +1067,35 @@ describe 'ifBind, whenBind' ->
         douse: (level) -> @water + "ness level #level"
     extended = (Object.create base) <<<
         baby: 'feet'
-    describe 'ifBind' ->
-        test 'base' ->
-            [base, 'douse'] |> if-bind do
-                (bound) -> bound 10
-                -> 42
-            |> expect-to-equal 'wetness level 10'
-        test 'extended' ->
-            [extended, 'douse'] |> if-bind do
-                (bound) -> bound 10
-                -> 42
-            |> expect-to-equal 'wetness level 10'
-        test 'no' ->
-            [base, 'nothing'] |> if-bind do
-                -> 41
-                -> 42
-            |> expect-to-equal 42
-    describe 'whenBind' ->
-        test 'base' ->
-            [base, 'douse'] |> when-bind do
-                (bound) -> bound 10
-            |> expect-to-equal 'wetness level 10'
-        test 'extended' ->
-            [extended, 'douse'] |> when-bind do
-                (bound) -> bound 10
-            |> expect-to-equal 'wetness level 10'
-        test 'no' ->
-            [base, 'nothing'] |> when-bind do
-                -> 41
-            |> expect-to-equal void
+    describe 'if bind try prop to' ->
+        describe 'ifBind' ->
+            if-bind-f = if-bind bind-try-prop-to
+            test 'base' ->
+                [base, 'douse'] |> if-bind-f do
+                    (bound) -> bound 10
+                    -> 42
+                |> expect-to-equal 'wetness level 10'
+            test 'extended' ->
+                [extended, 'douse'] |> if-bind-f do
+                    (bound) -> bound 10
+                    -> 42
+                |> expect-to-equal 'wetness level 10'
+            test 'no' ->
+                [base, 'nothing'] |> if-bind-f do
+                    -> 41
+                    -> 42
+                |> expect-to-equal 42
+        describe 'whenBind' ->
+            when-bind-f = when-bind bind-try-prop-to
+            test 'base' ->
+                [base, 'douse'] |> when-bind-f do
+                    (bound) -> bound 10
+                |> expect-to-equal 'wetness level 10'
+            test 'extended' ->
+                [extended, 'douse'] |> when-bind-f do
+                    (bound) -> bound 10
+                |> expect-to-equal 'wetness level 10'
+            test 'no' ->
+                [base, 'nothing'] |> when-bind-f do
+                    -> 41
+                |> expect-to-equal void

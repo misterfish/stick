@@ -59,6 +59,14 @@ export const sideN = prop => vs =>
 export const ifPredicate = f => yes => no => x => f (x) === true ? yes (x) : no (x)
 export const whenPredicate = f => yes => ifPredicate (f) (yes) (noop)
 
+// @test
+// --- passes the *result* of the predicate test to the yes/no functions instead of passing `x`.
+export const ifPredicateOk = f => yes => no => x => {
+    const p = f (x)
+    return ok (p) ? yes (p) : no (p)
+}
+export const whenPredicateOk = f => yes => ifPredicate (f) (yes) (noop)
+
 export const has = k => o => hasOwn.call (o, k)
 export const hasIn = k => o => k in o
 export const ifHas = yes => no => ([o, k]) => has (k) (o) ? yes (o [k], o, k) : no (o, k)
@@ -73,8 +81,7 @@ export const bind       = f => o => f.bind (o)
 
 export const isType = t => x => getType (x) === t
 
-// --- beware point-free (circular).
-// const whenFunction = (yes, o) => whenPredicate (isFunction) (yes) (o)
+// --- consider bind* | tryBind ?
 
 // --- bindTry* returns undefined if o[prop] is not a function.
 export const bindTryPropTo = o => prop => typeof o [prop] === 'function'
@@ -93,12 +100,8 @@ export const bindTry       = f => o =>    typeof f        === 'function'
     ? bindTo (o) (f)
     : null
 
-export const ifBind = yes => no => ([o, prop]) => {
-    const bound = bindTryPropTo (o) (prop)
-    return ok (bound) ? yes (bound) : no ()
-}
-
-export const whenBind = yes => ifBind (yes) (noop)
+export const ifBind = trier => ifPredicateOk (([o, prop]) => trier (o) (prop))
+export const whenBind = trier => yes => ifBind (trier) (yes) (noop)
 
 // ------ cond
 

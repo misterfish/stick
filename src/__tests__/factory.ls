@@ -16,49 +16,166 @@
 } = require './common'
 
 {
-    factory,
+    factory, factory-init, factory-props, factory-statics,
 } = require '../index'
 
 num-keys = keys >> (.length)
 
 describe 'factory ' ->
-    var animal-proto
+#     var prehistoric-proto
+#     var animal-proto
+#     var dog-proto
+# 
+#     init = ->
+#         prehistoric-proto :=
+#             ooze: -> 'ooze'
+#             breathe: -> throw new Error 'not implemented'
+#             speak: -> throw new Error 'not implemented'
+# 
+#         animal-proto := (Object.create prehistoric-proto) <<<
+#             breathe: -> 'wooo'
+#             speak: -> throw new Error 'not implemented'
+#         dog-proto := (Object.create animal-proto) <<<
 
-    init = ->
-        prehistoric-proto =
-            ooze: -> 'ooze'
+    # --- so we can test for alterations.
+    dog-speak = -> if @loud then 'WOOF' else 'woof'
+    get-dog-proto = -> speak: dog-speak
+    # /---
 
-        animal-proto := (Object.create prehistoric-proto) <<<
-            walk: -> 'walk'
-            confess: -> 'I am ' + @color
+    dog-proto = get-dog-proto ()
+    # --- only for doc
+    dog-props = loud: void
 
-    # todo
-    test-proto-unaltered = ->
-        return
-        animal-proto.walk() |> expect-to-equal 'walk'
-        (typeof! animal-proto.confess) |> expect-to-equal 'Function'
-        animal-proto.ooze() |> expect-to-equal 'ooze'
-        animal-proto |> num-keys |> expect-to-equal 2
+    describe 'factoryInit' ->
+        describe 'noop init' ->
+            dog-factory = dog-proto |> factory-init ->
+            dog = dog-factory.create()
+            before-each -> dog.loud = false
+            test 1 ->
+                dog.speak () |> expect-to-equal 'woof'
+                dog.loud = true
+                dog.speak () |> expect-to-equal 'WOOF'
+            test 2 ->
+                pug = (dog-factory.proto |> factory-init ->).create()
+                pug.speak () |> expect-to-equal 'woof'
+        describe 'init' ->
+            init = (o, props) -> o.loud = props.loud
+            dog-factory = dog-proto |> factory-init init
+            test 1 ->
+                dog1 = dog-factory.create loud: false
+                dog1.speak () |> expect-to-equal 'woof'
+                dog2 = dog-factory.create loud: true
+                dog2.speak () |> expect-to-equal 'WOOF'
+            test 'factory proto prop' ->
+                dog-factory.proto |> expect-to-equal dog-proto
+            test 'manual extend' ->
+                pug-proto = {} <<< dog-proto <<< is-pug: -> true
+                pug = (pug-proto |> factory-init init).create loud: true
+                pug.speak () |> expect-to-equal 'WOOF'
+                pug.is-pug () |> expect-to-equal true
+            test 'instance spec not altered' ->
+                spec = loud: true
+                dog1 = dog-factory.create spec
+                dog1.speak () |> expect-to-equal 'WOOF'
+                spec |> expect-to-equal loud: true
+            test 'proto not altered' ->
+                dog1 = dog-factory.create loud: true
+                dog1.speak () |> expect-to-equal 'WOOF'
+                dog-factory.proto |> expect-to-equal get-dog-proto()
 
-    describe 1 ->
-        var proto, create
-        before-each ->
-            init()
-            fact = factory animal-proto
-            proto := fact.proto
-            create := fact.create
-
-        after-each -> test-proto-unaltered()
-
-        xtest 'main' ->
-            red-animal = create color: 'red'
-            blue-animal = create color: 'blue'
-
-            red-animal.confess()
-            |> expect-to-equal 'I am red'
-
-            blue-animal.confess()
-            |> expect-to-equal 'I am blue'
+    describe 'factory' ->
+        describe 'factory' ->
+            dog-factory = dog-proto |> factory
+            test 1 ->
+                dog1 = dog-factory.create loud: false
+                dog1.speak () |> expect-to-equal 'woof'
+                dog2 = dog-factory.create loud: true
+                dog2.speak () |> expect-to-equal 'WOOF'
+            test 'factory proto prop' ->
+                dog-factory.proto |> expect-to-equal dog-proto
+            test 'manual extend' ->
+                pug-proto = {} <<< dog-proto <<< is-pug: -> true
+                pug = (pug-proto |> factory).create loud: true
+                pug.speak () |> expect-to-equal 'WOOF'
+                pug.is-pug () |> expect-to-equal true
+            test 'null/undef props' ->
+                dog1 = dog-factory.create null
+                dog1.speak () |> expect-to-equal 'woof'
+                dog2 = dog-factory.create void
+                dog2.speak () |> expect-to-equal 'woof'
+                dog3 = dog-factory.create ()
+                dog3.speak () |> expect-to-equal 'woof'
+            test 'props: only own get copied' ->
+                props-base = base-val: 15
+                props = (Object.create props-base)
+                    ..loud = true
+                dog = dog-factory.create props
+                dog.speak () |> expect-to-equal 'WOOF'
+                dog.loud |> expect-to-equal true
+                dog.base-val |> expect-to-equal void
+            test 'proto not altered' ->
+                props = loud: true
+                dog = dog-factory.create props
+                dog.speak () |> expect-to-equal 'WOOF'
+                dog-factory.proto |> expect-to-equal dog-proto
+            test 'props not altered' ->
+                props = loud: true
+                dog = dog-factory.create props
+                dog.speak () |> expect-to-equal 'WOOF'
+                props |> expect-to-equal loud: true
+        describe 'factoryProps' ->
+            base = base-val: 10
+            props-loud = (Object.create base)
+                ..loud = true
+            props-soft-x = (Object.create loud: false)
+            dog-factory = dog-proto |> factory |> factory-props props-loud
+            test 'no props in create' ->
+                dog1 = dog-factory.create ()
+                dog1.speak () |> expect-to-equal 'WOOF'
+            test 'null/undef props in create' ->
+                dog1 = dog-factory.create null
+                dog1.speak () |> expect-to-equal 'WOOF'
+                dog2 = dog-factory.create void
+                dog2.speak () |> expect-to-equal 'WOOF'
+            test 'only own props in factory props get copied' ->
+                dog1 = dog-factory.create ()
+                dog1.speak () |> expect-to-equal 'WOOF'
+                dog1.base-val |> expect-to-equal void
+            test 'props in create override props in factoryProps' ->
+                dog = dog-factory.create loud: false
+                dog.speak () |> expect-to-equal 'woof'
+            test '... but only own props in the create props' ->
+                dog = dog-factory.create props-soft-x
+                dog.speak () |> expect-to-equal 'WOOF'
+            test '... and only if they are not null/undef' ->
+                dog = dog-factory.create loud: null
+                dog.speak () |> expect-to-equal 'WOOF'
+            test 'proto not altered' ->
+                props = loud: true
+                dog = dog-factory.create props
+                dog.speak () |> expect-to-equal 'WOOF'
+                dog-factory.proto |> expect-to-equal dog-proto
+            test 'neither props object altered' ->
+                props = loud: true
+                dog = dog-factory.create props
+                dog.speak () |> expect-to-equal 'WOOF'
+                props |> expect-to-equal loud: true
+                props-loud |> expect-to-equal loud: true
+                props-loud.base-val |> expect-to-equal 10
+        describe 'factoryStatics' ->
+            base = base-val: 10
+            statics = (Object.create base)
+                ..num-legs = -> 4
+            dog-factory = dog-proto |> factory |> factory-statics statics
+            test 1 ->
+                dog = dog-factory.create ()
+                dog.speak () |> expect-to-equal 'woof'
+                dog-factory.num-legs () |> expect-to-equal 4
+            test 'only own properties in the statics object' ->
+                dog = dog-factory.create ()
+                dog.speak () |> expect-to-equal 'woof'
+                dog-factory.num-legs () |> expect-to-equal 4
+                dog-factory.base-val |> expect-to-equal void
 
         xtest 'proto' ->
             typeof! proto.ooze

@@ -1,61 +1,322 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, keys, zip, list, test, xtest, expectToEqual, expectToBe, factory, numKeys, this$ = this, toString$ = {}.toString;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, reverse, tap, flip, keys, zip, list, test, xtest, expectToEqual, expectToBe, factory, factoryInit, factoryProps, factoryStatics, numKeys, this$ = this, toString$ = {}.toString;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, join = ref$.join, split = ref$.split, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, keys = ref$.keys, zip = ref$.zip;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-factory = require('../index').factory;
+ref$ = require('../index'), factory = ref$.factory, factoryInit = ref$.factoryInit, factoryProps = ref$.factoryProps, factoryStatics = ref$.factoryStatics;
 numKeys = compose$(keys, function(it){
   return it.length;
 });
 describe('factory ', function(){
-  var animalProto, init, testProtoUnaltered;
-  init = function(){
-    var prehistoricProto, ref$;
-    prehistoricProto = {
-      ooze: function(){
-        return 'ooze';
-      }
+  var dogSpeak, getDogProto, dogProto, dogProps;
+  dogSpeak = function(){
+    if (this.loud) {
+      return 'WOOF';
+    } else {
+      return 'woof';
+    }
+  };
+  getDogProto = function(){
+    return {
+      speak: dogSpeak
     };
-    return animalProto = (ref$ = Object.create(prehistoricProto), ref$.walk = function(){
-      return 'walk';
-    }, ref$.confess = function(){
-      return 'I am ' + this.color;
-    }, ref$);
   };
-  testProtoUnaltered = function(){
-    return;
-    expectToEqual('walk')(
-    animalProto.walk());
-    expectToEqual('Function')(
-    toString$.call(animalProto.confess).slice(8, -1));
-    expectToEqual('ooze')(
-    animalProto.ooze());
-    return expectToEqual(2)(
-    numKeys(
-    animalProto));
+  dogProto = getDogProto();
+  dogProps = {
+    loud: void 8
   };
-  describe(1, function(){
-    var proto, create;
-    beforeEach(function(){
-      var fact;
-      init();
-      fact = factory(animalProto);
-      proto = fact.proto;
-      return create = fact.create;
-    });
-    afterEach(function(){
-      return testProtoUnaltered();
-    });
-    xtest('main', function(){
-      var redAnimal, blueAnimal;
-      redAnimal = create({
-        color: 'red'
+  describe('factoryInit', function(){
+    describe('noop init', function(){
+      var dogFactory, dog;
+      dogFactory = factoryInit(function(){})(
+      dogProto);
+      dog = dogFactory.create();
+      beforeEach(function(){
+        return dog.loud = false;
       });
-      blueAnimal = create({
-        color: 'blue'
+      test(1, function(){
+        expectToEqual('woof')(
+        dog.speak());
+        dog.loud = true;
+        return expectToEqual('WOOF')(
+        dog.speak());
       });
-      expectToEqual('I am red')(
-      redAnimal.confess());
-      return expectToEqual('I am blue')(
-      blueAnimal.confess());
+      return test(2, function(){
+        var pug;
+        pug = factoryInit(function(){})(
+        dogFactory.proto).create();
+        return expectToEqual('woof')(
+        pug.speak());
+      });
+    });
+    return describe('init', function(){
+      var init, dogFactory;
+      init = function(o, props){
+        return o.loud = props.loud;
+      };
+      dogFactory = factoryInit(init)(
+      dogProto);
+      test(1, function(){
+        var dog1, dog2;
+        dog1 = dogFactory.create({
+          loud: false
+        });
+        expectToEqual('woof')(
+        dog1.speak());
+        dog2 = dogFactory.create({
+          loud: true
+        });
+        return expectToEqual('WOOF')(
+        dog2.speak());
+      });
+      test('factory proto prop', function(){
+        return expectToEqual(dogProto)(
+        dogFactory.proto);
+      });
+      test('manual extend', function(){
+        var pugProto, ref$, pug;
+        pugProto = (ref$ = import$({}, dogProto), ref$.isPug = function(){
+          return true;
+        }, ref$);
+        pug = factoryInit(init)(
+        pugProto).create({
+          loud: true
+        });
+        expectToEqual('WOOF')(
+        pug.speak());
+        return expectToEqual(true)(
+        pug.isPug());
+      });
+      test('instance spec not altered', function(){
+        var spec, dog1;
+        spec = {
+          loud: true
+        };
+        dog1 = dogFactory.create(spec);
+        expectToEqual('WOOF')(
+        dog1.speak());
+        return expectToEqual({
+          loud: true
+        })(
+        spec);
+      });
+      return test('proto not altered', function(){
+        var dog1;
+        dog1 = dogFactory.create({
+          loud: true
+        });
+        expectToEqual('WOOF')(
+        dog1.speak());
+        return expectToEqual(getDogProto())(
+        dogFactory.proto);
+      });
+    });
+  });
+  describe('factory', function(){
+    describe('factory', function(){
+      var dogFactory;
+      dogFactory = factory(
+      dogProto);
+      test(1, function(){
+        var dog1, dog2;
+        dog1 = dogFactory.create({
+          loud: false
+        });
+        expectToEqual('woof')(
+        dog1.speak());
+        dog2 = dogFactory.create({
+          loud: true
+        });
+        return expectToEqual('WOOF')(
+        dog2.speak());
+      });
+      test('factory proto prop', function(){
+        return expectToEqual(dogProto)(
+        dogFactory.proto);
+      });
+      test('manual extend', function(){
+        var pugProto, ref$, pug;
+        pugProto = (ref$ = import$({}, dogProto), ref$.isPug = function(){
+          return true;
+        }, ref$);
+        pug = factory(
+        pugProto).create({
+          loud: true
+        });
+        expectToEqual('WOOF')(
+        pug.speak());
+        return expectToEqual(true)(
+        pug.isPug());
+      });
+      test('null/undef props', function(){
+        var dog1, dog2, dog3;
+        dog1 = dogFactory.create(null);
+        expectToEqual('woof')(
+        dog1.speak());
+        dog2 = dogFactory.create(void 8);
+        expectToEqual('woof')(
+        dog2.speak());
+        dog3 = dogFactory.create();
+        return expectToEqual('woof')(
+        dog3.speak());
+      });
+      test('props: only own get copied', function(){
+        var propsBase, x$, props, dog;
+        propsBase = {
+          baseVal: 15
+        };
+        x$ = props = Object.create(propsBase);
+        x$.loud = true;
+        dog = dogFactory.create(props);
+        expectToEqual('WOOF')(
+        dog.speak());
+        expectToEqual(true)(
+        dog.loud);
+        return expectToEqual(void 8)(
+        dog.baseVal);
+      });
+      test('proto not altered', function(){
+        var props, dog;
+        props = {
+          loud: true
+        };
+        dog = dogFactory.create(props);
+        expectToEqual('WOOF')(
+        dog.speak());
+        return expectToEqual(dogProto)(
+        dogFactory.proto);
+      });
+      return test('props not altered', function(){
+        var props, dog;
+        props = {
+          loud: true
+        };
+        dog = dogFactory.create(props);
+        expectToEqual('WOOF')(
+        dog.speak());
+        return expectToEqual({
+          loud: true
+        })(
+        props);
+      });
+    });
+    describe('factoryProps', function(){
+      var base, x$, propsLoud, propsSoftX, dogFactory;
+      base = {
+        baseVal: 10
+      };
+      x$ = propsLoud = Object.create(base);
+      x$.loud = true;
+      propsSoftX = Object.create({
+        loud: false
+      });
+      dogFactory = factoryProps(propsLoud)(
+      factory(
+      dogProto));
+      test('no props in create', function(){
+        var dog1;
+        dog1 = dogFactory.create();
+        return expectToEqual('WOOF')(
+        dog1.speak());
+      });
+      test('null/undef props in create', function(){
+        var dog1, dog2;
+        dog1 = dogFactory.create(null);
+        expectToEqual('WOOF')(
+        dog1.speak());
+        dog2 = dogFactory.create(void 8);
+        return expectToEqual('WOOF')(
+        dog2.speak());
+      });
+      test('only own props in factory props get copied', function(){
+        var dog1;
+        dog1 = dogFactory.create();
+        expectToEqual('WOOF')(
+        dog1.speak());
+        return expectToEqual(void 8)(
+        dog1.baseVal);
+      });
+      test('props in create override props in factoryProps', function(){
+        var dog;
+        dog = dogFactory.create({
+          loud: false
+        });
+        return expectToEqual('woof')(
+        dog.speak());
+      });
+      test('... but only own props in the create props', function(){
+        var dog;
+        dog = dogFactory.create(propsSoftX);
+        return expectToEqual('WOOF')(
+        dog.speak());
+      });
+      test('... and only if they are not null/undef', function(){
+        var dog;
+        dog = dogFactory.create({
+          loud: null
+        });
+        return expectToEqual('WOOF')(
+        dog.speak());
+      });
+      test('proto not altered', function(){
+        var props, dog;
+        props = {
+          loud: true
+        };
+        dog = dogFactory.create(props);
+        expectToEqual('WOOF')(
+        dog.speak());
+        return expectToEqual(dogProto)(
+        dogFactory.proto);
+      });
+      return test('neither props object altered', function(){
+        var props, dog;
+        props = {
+          loud: true
+        };
+        dog = dogFactory.create(props);
+        expectToEqual('WOOF')(
+        dog.speak());
+        expectToEqual({
+          loud: true
+        })(
+        props);
+        expectToEqual({
+          loud: true
+        })(
+        propsLoud);
+        return expectToEqual(10)(
+        propsLoud.baseVal);
+      });
+    });
+    describe('factoryStatics', function(){
+      var base, x$, statics, dogFactory;
+      base = {
+        baseVal: 10
+      };
+      x$ = statics = Object.create(base);
+      x$.numLegs = function(){
+        return 4;
+      };
+      dogFactory = factoryStatics(statics)(
+      factory(
+      dogProto));
+      test(1, function(){
+        var dog;
+        dog = dogFactory.create();
+        expectToEqual('woof')(
+        dog.speak());
+        return expectToEqual(4)(
+        dogFactory.numLegs());
+      });
+      return test('only own properties in the statics object', function(){
+        var dog;
+        dog = dogFactory.create();
+        expectToEqual('woof')(
+        dog.speak());
+        expectToEqual(4)(
+        dogFactory.numLegs());
+        return expectToEqual(void 8)(
+        dogFactory.baseVal);
+      });
     });
     xtest('proto', function(){
       expectToEqual('Function')(
@@ -277,4 +538,9 @@ function compose$() {
     }
     return result;
   };
+}
+function import$(obj, src){
+  var own = {}.hasOwnProperty;
+  for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+  return obj;
 }

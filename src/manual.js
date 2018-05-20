@@ -418,20 +418,14 @@ export const timesF = (f) => (n) => repeatF (n) (f)
 export const timesSide = (n) => (f) => repeatSide (f) (n)
 
 // ------ replace / match
-export const ifReplace = (() => {
-    return (yes) => (no) => (re) => (replArg) => (target) => {
-        let success = 0
-        const repl = typeof replArg === 'function'
-            ? (...args) => (++success, replArg (...args))
-            : _         => (++success, replArg)
-        const out = target.replace (re, repl)
-        return success ? yes (out, success) : no (target)
-    }
-}) ()
-
-
-
-
+export const ifReplace = (yes) => (no) => (re) => (replArg) => (target) => {
+    let success = 0
+    const repl = typeof replArg === 'function'
+        ? (...args) => (++success, replArg (...args))
+        : _         => (++success, replArg)
+    const out = target.replace (re, repl)
+    return success ? yes (out, success) : no (target)
+}
 
 export default {
     eq, ne, gt, gte, lt, lte,

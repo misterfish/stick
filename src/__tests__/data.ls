@@ -1,7 +1,9 @@
 {
-    assoc: rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map: rMap, filter, join, split, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: rEach, complement, isNil,
+    assoc: rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map: rMap, filter, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: rEach, complement, isNil,
     repeat: rRepeat,
     times: r-times,
+    join: r-join,
+    split: r-split,
     reverse,
     tap,
     flip,
@@ -21,7 +23,10 @@
 
     default-to, default-to__,
 
-    assoc, assoc-m, prop,
+    join, split,
+    prop,
+
+    assoc, assoc-m,
     append-to, append-to-m, append-from, append-from-m,
     prepend-from, prepend-from-m, prepend-to, prepend-to-m,
     concat-to, concat-to-m, concat-from, concat-from-m,
@@ -128,7 +133,7 @@ describe 'reduceObj' ->
             f = (acc, [k, v]) -> [...acc, "\"#k\": #v"]
             reduced = o |> reduce-obj f, []
             json = reduced
-                |> join ', '
+                |> r-join ', '
                 |> (x) -> "{#x}"
             (JSON.parse json).a
             |> expect-to-equal 1
@@ -139,12 +144,22 @@ describe 'reduceObj' ->
             f = (acc, [k, v]) -> [...acc, "\"#k\": #v"]
             reduced = o |> reduce-obj-in f, []
             json = reduced
-                |> join ', '
+                |> r-join ', '
                 |> (x) -> "{#x}"
             (JSON.parse json).a
             |> expect-to-equal 1
             (JSON.parse json).base-val
             |> expect-to-equal 15
+
+describe 'join, split' ->
+    describe 'join' ->
+        test 1 ->
+            [1 to 4] |> join ','
+            |> expect-to-equal '1,2,3,4'
+    describe 'split' ->
+        test 1 ->
+            '1,2,3,4' |> split ',' |> map Number
+            |> expect-to-equal [1 to 4]
 
 describe 'default to' ->
     test 1 ->
@@ -173,7 +188,7 @@ describe 'default to __' ->
         |> default-to -> 42
         |> expect-to-equal 42
 
-describe 'data transforms' ->
+describe 'data stuff' ->
     # --- vals always get loaded from src into target (direction of pipe is
     # changed).
 

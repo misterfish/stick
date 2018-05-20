@@ -1,3 +1,5 @@
+import { sprintf, } from 'sprintf-js'
+
 import {
     ok, notOk, whenOk,
     isFunction,
@@ -250,6 +252,7 @@ export const mergeToIn = (tgt) => (src) => {
 }
 export const mergeFromIn = (src) => (tgt) => mergeToIn (tgt) (src)
 
+// --- note: capped.
 export const map  = f => ary => ary.map     (x => f (x))
 export const each = f => ary => ary.forEach (x => f (x))
 
@@ -375,6 +378,10 @@ export const applyToN = vs =>
 export const passTo = f => val => f (val)
 export const passToN = f => vs => f.apply (null, vs)
 
+// ------ join, split etc.
+export const join = dot1 ('join')
+export const split = dot1 ('split')
+
 export const prop = p => o => o [p]
 
 export const flip  = f => a => b =>
@@ -385,6 +392,11 @@ export const flip4 = f => a => b => c => d =>
     f (b) (a) (c) (d)
 export const flip5 = f => a => b => c => d => e =>
     f (b) (a) (c) (d) (e)
+
+// ------ sprintf
+
+export const sprintf1 = str => a  => sprintf (str, a)
+export const sprintfN = str => xs => sprintf.apply (null, [str, ...xs])
 
 export default {
     eq, ne, gt, gte, lt, lte,
@@ -423,6 +435,8 @@ export default {
     provideTo, provideTo1, provideTo2, provideTo3, provideTo4, provideTo5, provideToN,
     applyTo1, applyTo2, applyTo3, applyTo4, applyTo5, applyToN,
     passTo, passToN,
+    join, split,
     prop,
     flip, flip3, flip4, flip5,
+    sprintf1, sprintfN,
 }

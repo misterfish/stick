@@ -13,7 +13,7 @@
     "livescript": "^1.5.0",
     "prelude-ls": "^1.1.2",
     "ramda": "^0.24.1",
-    "sprintf": "^0.1.5"
+    "sprintf-js": "^1.1.1"
   },
   "devDependencies": {
     "fish-lib": "^0.9.10"

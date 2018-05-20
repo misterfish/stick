@@ -22,8 +22,8 @@ import {
     always,
     // --- has = has own (hence paired with hasIn version)
     isEmpty, tap, has, hasIn, flip as rFlip, fromPairs, toPairs, toPairsIn, assoc as rAssoc, assocPath, head,
-    last, tail, reduceRight, chain, identity as id, reduce, map as rMap, filter, reject, join,
-    split, prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
+    last, tail, reduceRight, chain, identity as id, reduce, map as rMap, filter, reject,
+    prop as rProp, path as rPath, defaultTo as rDefaultTo, curry, curryN,
     splitEvery,
     forEach as rEach, forEachObjIndexed as rEachObj, complement, times as rTimes,
     range as rRange, isNil, addIndex as rAddIndex, take, equals, mapAccum,
@@ -216,8 +216,13 @@ export const defaultTo = _recurry (2) (manual.defaultTo)
 // --- @deprecated
 export const defaultTo__ = (x, f) => x | defaultTo (f)
 
-// ------ assoc.
+// ------ join, split etc.
+export const split  = _recurry (2) (manual.split)
+export const join   = _recurry (2) (manual.join)
 
+// ------ object manipulation.
+
+export const prop   = _recurry (2) (manual.prop)
 export const assoc  = _recurry (3) (manual.assoc)
 export const assocM = _recurry (3) (manual.assocM)
 
@@ -465,17 +470,14 @@ export const passToN = _recurry (2) (manual.passToN)
 // and for manually curried functions, unlike R.flip.
 // --- does not work with non-curried functions.
 
-export const prop = _recurry (2) (manual.prop)
-
 export const flip  = _recurry (3) (manual.flip)
 export const flip3 = _recurry (4) (manual.flip3)
 export const flip4 = _recurry (5) (manual.flip4)
 export const flip5 = _recurry (6) (manual.flip5)
 
 // ------ sprintf
-
-export const sprintf1 = curry ((str, a) => sprintf (str, a))
-export const sprintfN = curry ((str, xs) => sprintf.apply (null, [str, ...xs]))
+export const sprintf1 = _recurry (2) (manual.sprintf1)
+export const sprintfN = _recurry (2) (manual.sprintfN)
 
 // --- R.zip only takes two.
 export const zipAll = (...xss) => {

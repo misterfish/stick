@@ -1,7 +1,9 @@
 {
-    assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, join, split, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: each, complement, isNil,
+    assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: each, complement, isNil,
     repeat: rRepeat,
     times: r-times,
+    join: r-join,
+    split: r-split,
     reverse,
     tap,
     zip,
@@ -33,7 +35,6 @@
 
     nieuw, nieuw1, nieuw2, nieuw3, nieuw-n,
 
-    prop,
     x-reg-exp, x-reg-exp-str,
     x-match, x-match-str, x-match-str-flags, #match
     x-replace, x-replace-str, x-replace-str-flags,
@@ -120,7 +121,7 @@ describe 'bind*' ->
     obj =
         name: 'dog'
         speak: -> 'my name is ' + @name
-        garble: (...args) -> join '!' args
+        garble: (...args) -> r-join '!' args
 
     # --- common to all.
     zip [bind, bind-late, bind-try] <[ bind bindLate bindTry ]>
@@ -455,7 +456,7 @@ describe 'zip-all' ->
 describe 'new' ->
     class C
         (...args) -> @nums = args
-        speak: -> join ' ' [
+        speak: -> r-join ' ' [
             'hulu'
             ...@nums
         ]

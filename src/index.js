@@ -1044,7 +1044,7 @@ const mapValuesInWithFilter = (p) => (f) => (o) => {
 }
 
 // --- note: it is up to you to ensure that the resulting keys don't clash
-const mapTuples = (f) => (o) => {
+export const mapTuples = (f) => (o) => {
     const ret = {}
     for (const k in o) if (hasOwn.call (o, k)) {
         const [kk, vv] = f ([k, o [k]])
@@ -1066,7 +1066,7 @@ const mapTuplesWithFilter = (p) => (f) => (o) => {
     return ret
 }
 
-const mapTuplesIn = (f) => (o) => {
+export const mapTuplesIn = (f) => (o) => {
     const ret = {}
     for (const k in o) {
         const [kk, vv] = f ([k, o [k]])

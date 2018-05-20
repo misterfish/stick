@@ -26,6 +26,7 @@
     values, values-in,
     map-keys, map-values,
     map-keys-in, map-values-in,
+    map-tuples, map-tuples-in,
     map-as-keys, map-as-keys-in,
     map-as-values, map-as-values-in,
     with-filter,
@@ -189,7 +190,7 @@ describe 'keys, values' ->
           |> sort-num
           |> expect-to-equal [1 2 10]
 
-describe 'map keys/values' ->
+describe 'map keys/values/tuples' ->
     base = base-val: 10
     o = (Object.create base) <<< one: 1 two: 2
     test 'mapKeys' ->
@@ -214,6 +215,17 @@ describe 'map keys/values' ->
               base-val: 100
               two: 20
               one: 10
+    test 'mapTuples' ->
+        o |> map-tuples ([k, v]) -> [k.to-upper-case (), v + 1]
+          |> expect-to-equal do
+              TWO: 3
+              ONE: 2
+    test 'mapTuplesIn' ->
+        o |> map-tuples-in ([k, v]) -> [k.to-upper-case (), v + 1]
+          |> expect-to-equal do
+              BASEVAL: 11
+              TWO: 3
+              ONE: 2
 
 describe 'map as' ->
     base = base-val: 10
@@ -239,20 +251,49 @@ describe 'map as + with filter' ->
     map-k-in-reject-starts-with-O = map-as-keys-in |> with-filter (.0 != 'O')
     map-v-odd = map-as-values |> with-filter odd
     map-v-in-odd = map-as-values-in |> with-filter odd
-    describe 'mapAsKeysWithFilter' ->
+    test 'mapAsKeysWithFilter' ->
         o |> map-k-reject-starts-with-O (.to-upper-case ())
           |> expect-to-equal <[ TWO ]>
-    describe 'mapAsKeysInWithFilter' ->
+    test 'mapAsKeysInWithFilter' ->
         o |> map-k-in-reject-starts-with-O (.to-upper-case ())
           |> sort-alpha
           |> expect-to-equal <[ BASEVAL TWO ]>
-    describe 'mapAsValuesWithFilter' ->
+    test 'mapAsValuesWithFilter' ->
         o |> map-v-odd (+ 1)
           |> expect-to-equal [3]
-    describe 'mapAsValuesInWithFilter' ->
+    test 'mapAsValuesInWithFilter' ->
         o |> map-v-in-odd (+ 1)
           |> sort-num
           |> expect-to-equal [3 11]
+
+describe 'map + with filter' ->
+    base = base-val: 10
+    o = (Object.create base) <<< one: 1 two: 2
+    map-k-reject-starts-with-O = map-keys |> with-filter (.0 != 'O')
+    map-k-in-reject-starts-with-O = map-keys-in |> with-filter (.0 != 'O')
+    map-v-odd = map-values |> with-filter odd
+    map-v-in-odd = map-values-in |> with-filter odd
+    map-tuples-v-odd = map-tuples |> with-filter ([k, v]) -> odd v
+    map-tuples-v-in-odd = map-tuples-in |> with-filter ([k, v]) -> odd v
+    test 'mapKeysWithFilter' ->
+        o |> map-k-reject-starts-with-O (.to-upper-case ())
+          |> expect-to-equal TWO: 2
+    test 'mapKeysInWithFilter' ->
+        o |> map-k-in-reject-starts-with-O (.to-upper-case ())
+          |> expect-to-equal TWO: 2 BASEVAL: 10
+    test 'mapValuesWithFilter' ->
+        o |> map-v-odd (+ 1)
+          |> expect-to-equal two: 3
+    test 'mapValuesInWithFilter' ->
+        o |> map-v-in-odd (+ 1)
+          |> expect-to-equal two: 3 baseVal: 11
+    test 'mapTuplesWithFilter' ->
+        o |> map-tuples-v-odd ([k, v]) -> [k.to-upper-case (), v + 1]
+          |> expect-to-equal TWO: 3
+    test 'mapTuplesInWithFilter' ->
+        o |> map-tuples-v-in-odd ([k, v]) -> [k.to-upper-case (), v + 1]
+          |> expect-to-equal TWO: 3 BASEVAL: 11
+
 
 describe 'join, split' ->
     describe 'join' ->

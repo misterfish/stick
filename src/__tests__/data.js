@@ -1,8 +1,8 @@
-var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, filter, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, precatTo, precatFrom, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, this$ = this, slice$ = [].slice;
+var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, filter, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, appendFrom, appendFromM, prependFrom, prependFromM, prependTo, prependToM, concatTo, concatToM, concatFrom, concatFromM, precatTo, precatFrom, mergeTo, mergeFrom, mergeToM, mergeFromM, mergeToWithM, mergeFromWithM, mergeToIn, mergeFromIn, mergeToInM, mergeFromInM, mergeAllIn, injectToM, injectFromM, discardPrototype, flattenPrototype, mapPairs, mapPairsIn, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, this$ = this, slice$ = [].slice;
 ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), map = ref$.map, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, precatTo = ref$.precatTo, precatFrom = ref$.precatFrom, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
+ref$ = require('../index'), map = ref$.map, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, appendFrom = ref$.appendFrom, appendFromM = ref$.appendFromM, prependFrom = ref$.prependFrom, prependFromM = ref$.prependFromM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concatFrom = ref$.concatFrom, concatFromM = ref$.concatFromM, precatTo = ref$.precatTo, precatFrom = ref$.precatFrom, mergeTo = ref$.mergeTo, mergeFrom = ref$.mergeFrom, mergeToM = ref$.mergeToM, mergeFromM = ref$.mergeFromM, mergeToWithM = ref$.mergeToWithM, mergeFromWithM = ref$.mergeFromWithM, mergeToIn = ref$.mergeToIn, mergeFromIn = ref$.mergeFromIn, mergeToInM = ref$.mergeToInM, mergeFromInM = ref$.mergeFromInM, mergeAllIn = ref$.mergeAllIn, injectToM = ref$.injectToM, injectFromM = ref$.injectFromM, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, mapPairs = ref$.mapPairs, mapPairsIn = ref$.mapPairsIn, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
 sortAlpha = function(it){
   return it.sort();
 };
@@ -294,7 +294,7 @@ describe('keys, values', function(){
     o)));
   });
 });
-describe('map keys/values', function(){
+describe('map keys/values/tuples', function(){
   var base, o, ref$;
   base = {
     baseVal: 10
@@ -334,7 +334,7 @@ describe('map keys/values', function(){
     })(
     o));
   });
-  return test('mapValuesIn', function(){
+  test('mapValuesIn', function(){
     var this$ = this;
     return expectToEqual({
       baseVal: 100,
@@ -344,6 +344,31 @@ describe('map keys/values', function(){
     mapValuesIn((function(it){
       return it * 10;
     }))(
+    o));
+  });
+  test('mapTuples', function(){
+    return expectToEqual({
+      TWO: 3,
+      ONE: 2
+    })(
+    mapTuples(function(arg$){
+      var k, v;
+      k = arg$[0], v = arg$[1];
+      return [k.toUpperCase(), v + 1];
+    })(
+    o));
+  });
+  return test('mapTuplesIn', function(){
+    return expectToEqual({
+      BASEVAL: 11,
+      TWO: 3,
+      ONE: 2
+    })(
+    mapTuplesIn(function(arg$){
+      var k, v;
+      k = arg$[0], v = arg$[1];
+      return [k.toUpperCase(), v + 1];
+    })(
     o));
   });
 });
@@ -405,7 +430,7 @@ describe('map as + with filter', function(){
   mapAsValues);
   mapVInOdd = withFilter(odd)(
   mapAsValuesIn);
-  describe('mapAsKeysWithFilter', function(){
+  test('mapAsKeysWithFilter', function(){
     var this$ = this;
     return expectToEqual(['TWO'])(
     mapKRejectStartsWithO(function(it){
@@ -413,7 +438,7 @@ describe('map as + with filter', function(){
     })(
     o));
   });
-  describe('mapAsKeysInWithFilter', function(){
+  test('mapAsKeysInWithFilter', function(){
     var this$ = this;
     return expectToEqual(['BASEVAL', 'TWO'])(
     sortAlpha(
@@ -422,7 +447,7 @@ describe('map as + with filter', function(){
     })(
     o)));
   });
-  describe('mapAsValuesWithFilter', function(){
+  test('mapAsValuesWithFilter', function(){
     var this$ = this;
     return expectToEqual([3])(
     mapVOdd((function(it){
@@ -430,7 +455,7 @@ describe('map as + with filter', function(){
     }))(
     o));
   });
-  return describe('mapAsValuesInWithFilter', function(){
+  return test('mapAsValuesInWithFilter', function(){
     var this$ = this;
     return expectToEqual([3, 11])(
     sortNum(
@@ -438,6 +463,102 @@ describe('map as + with filter', function(){
       return it + 1;
     }))(
     o)));
+  });
+});
+describe('map + with filter', function(){
+  var base, o, ref$, mapKRejectStartsWithO, mapKInRejectStartsWithO, mapVOdd, mapVInOdd, mapTuplesVOdd, mapTuplesVInOdd, this$ = this;
+  base = {
+    baseVal: 10
+  };
+  o = (ref$ = Object.create(base), ref$.one = 1, ref$.two = 2, ref$);
+  mapKRejectStartsWithO = withFilter(function(it){
+    return it[0] !== 'O';
+  })(
+  mapKeys);
+  mapKInRejectStartsWithO = withFilter(function(it){
+    return it[0] !== 'O';
+  })(
+  mapKeysIn);
+  mapVOdd = withFilter(odd)(
+  mapValues);
+  mapVInOdd = withFilter(odd)(
+  mapValuesIn);
+  mapTuplesVOdd = withFilter(function(arg$){
+    var k, v;
+    k = arg$[0], v = arg$[1];
+    return odd(v);
+  })(
+  mapTuples);
+  mapTuplesVInOdd = withFilter(function(arg$){
+    var k, v;
+    k = arg$[0], v = arg$[1];
+    return odd(v);
+  })(
+  mapTuplesIn);
+  test('mapKeysWithFilter', function(){
+    var this$ = this;
+    return expectToEqual({
+      TWO: 2
+    })(
+    mapKRejectStartsWithO(function(it){
+      return it.toUpperCase();
+    })(
+    o));
+  });
+  test('mapKeysInWithFilter', function(){
+    var this$ = this;
+    return expectToEqual({
+      TWO: 2,
+      BASEVAL: 10
+    })(
+    mapKInRejectStartsWithO(function(it){
+      return it.toUpperCase();
+    })(
+    o));
+  });
+  test('mapValuesWithFilter', function(){
+    var this$ = this;
+    return expectToEqual({
+      two: 3
+    })(
+    mapVOdd((function(it){
+      return it + 1;
+    }))(
+    o));
+  });
+  test('mapValuesInWithFilter', function(){
+    var this$ = this;
+    return expectToEqual({
+      two: 3,
+      baseVal: 11
+    })(
+    mapVInOdd((function(it){
+      return it + 1;
+    }))(
+    o));
+  });
+  test('mapTuplesWithFilter', function(){
+    return expectToEqual({
+      TWO: 3
+    })(
+    mapTuplesVOdd(function(arg$){
+      var k, v;
+      k = arg$[0], v = arg$[1];
+      return [k.toUpperCase(), v + 1];
+    })(
+    o));
+  });
+  return test('mapTuplesInWithFilter', function(){
+    return expectToEqual({
+      TWO: 3,
+      BASEVAL: 11
+    })(
+    mapTuplesVInOdd(function(arg$){
+      var k, v;
+      k = arg$[0], v = arg$[1];
+      return [k.toUpperCase(), v + 1];
+    })(
+    o));
   });
 });
 describe('join, split', function(){

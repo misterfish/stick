@@ -12,7 +12,6 @@ export const composeRight = (a, b)    => (...args) => b (a (...args))
 export const compose      = (a, b)    => (...args) => a (b (...args))
 
 import {
-    curry,
     mapAccum,
 } from 'ramda'
 
@@ -685,7 +684,8 @@ const _factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
 
 // --- convenience.
 // note that this will *alter* the prototype.
-export const factoryMixins = curry ((mixinsPre, mixinsPost, proto) =>
+
+export const factoryMixins = noop ((mixinsPre, mixinsPost, proto) =>
     _factory (proto, mixinsPre, mixinsPost)
 )
 
@@ -703,30 +703,9 @@ export const factoryMixins = curry ((mixinsPre, mixinsPost, proto) =>
 // This is a good place to document the properties: put them in the instance{} even if they're
 // undefined.
 // props is altered.
-export const factoryProps = curry ((props, factory) => {
-    const orig = (...args) => factory.create (...args)
-    return {
-        ... factory,
-        create (args) {
-            const o = orig (props)
-            const [src, tgt] = [args, o]
-            for (const i in args)
-                if (hasOwn.call (src, i) && ok (src [i]))
-                    tgt [i] = src [i]
-            return tgt
-        },
-    }
-})
 
-export const factoryInit = (init) => (proto) => ({
-    proto,
-    create: (props) => {
-        const o = Object.create (proto)
-        init (o, props)
-        return o
-    },
-})
-
+export const factoryProps = _recurry (2) (manual.factoryProps)
+export const factoryInit = _recurry (2) (manual.factoryInit)
 export const factory = factoryInit ((o, props) => {
     if (props == null) return
     for (const i in props) if (oPro.hasOwnProperty.call (props, i))
@@ -759,8 +738,8 @@ export const factoryStatics = mergeM
 // --- don't really like this.
 // proto gets altered.
 // order difficult.
-export const factoryMixinPre = curry ((mixin, proto) => factoryMixinPre ([mixin], [], proto))
-export const factoryMixinPost = curry ((mixin, proto) => factoryMixinPre ([], [mixin], proto))
+export const factoryMixinPre = noop ((mixin, proto) => factoryMixinPre ([mixin], [], proto))
+export const factoryMixinPost = noop ((mixin, proto) => factoryMixinPre ([], [mixin], proto))
 
 // ------ bind
 

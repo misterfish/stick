@@ -527,6 +527,30 @@ export const ifXReplaceStr = yes => no => reStr => repl => target =>
 export const ifXReplaceStrFlags = yes => no => reStr => flags => repl => target =>
     ifReplace (yes) (no) (xRegExpStr (reStr, flags)) (repl) (target)
 
+export const factoryProps = (props) => (factory) => {
+	const orig = (...args) => factory.create (...args)
+	return {
+		... factory,
+		create (args) {
+			const o = orig (props)
+			const [src, tgt] = [args, o]
+			for (const i in args)
+				if (hasOwn.call (src, i) && ok (src [i]))
+					tgt [i] = src [i]
+			return tgt
+		},
+	}
+}
+
+export const factoryInit = (init) => (proto) => ({
+    proto,
+    create: (props) => {
+        const o = Object.create (proto)
+        init (o, props)
+        return o
+    },
+})
+
 export default {
     roll, recurry,
     eq, ne, gt, gte, lt, lte,
@@ -583,4 +607,5 @@ export default {
     xMatch, xMatchStr, xMatchStrFlags,
     xReplace, xReplaceStr, xReplaceStrFlags,
     ifXReplace, ifXReplaceStr, ifXReplaceStrFlags,
+    factoryProps, factoryInit,
 }

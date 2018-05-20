@@ -1,5 +1,7 @@
 import { curry, } from 'ramda'
 
+// --- @todo test, make manual
+
 export const bitwiseAnd = curry ((a, b) => a & b)
 export const bitwiseOr = curry ((a, b) => a | b)
 export const bitwiseXor = curry ((a, b) => a ^ b)

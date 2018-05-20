@@ -172,9 +172,10 @@ export const ifHas__ = (spec, yes, no = noop) => spec | ifHas (yes) (no)
 export const ifHasIn__ = (spec, yes, no = noop) => spec | ifHasIn (yes) (no)
 export const ifBind__ = (spec, yes, no = noop) => spec | ifBind (yes) (no)
 
-export const condo = manual.condo
+export const cond = manual.cond
+export const condN = (blocks) => cond (...blocks)
+
 export const condO = _recurry (2) (manual.condO)
-export const cond = condO
 
 // ------ exceptions.
 

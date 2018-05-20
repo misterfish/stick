@@ -95,7 +95,7 @@ export const whenBind = yes => ifBind (yes) (noop)
 
 /*
 
-condo (
+cond (
   [_ => 3 == 4, _ => 'twilight zone'],
   [_ => 3 == 5, _ => 'even stranger'],
   [null, _ => 'ok'],
@@ -103,7 +103,7 @@ condo (
 
 or with a native idiom:
 
-condo (
+cond (
   (_ => 3 == 4) | guard (_ => 'twilight zone'),
   (_ => 3 == 5) | guard (_ => 'even stranger'),
   otherwise     | guard (_ => 'ok'),
@@ -119,7 +119,7 @@ export const condPredicate = exec => pred => [pred, exec]
 // --- we test on truthiness, not strict.
 // --- this feels more natural -- like how if works, and also cond in ramda.
 // trivial to convert to strict.
-export const condo = (...blocks) => {
+export const cond = (...blocks) => {
     for (const [test, exec] of blocks) {
         const result = test ()
         if (result) return exec (result)
@@ -439,7 +439,7 @@ export default {
     ifBind, whenBind,
     bindTry,
     isType,
-    condPredicate, condo, condO,
+    condPredicate, cond, condO,
     subtract, subtractFrom,
     add,
     multiply, divideBy, divideInto,

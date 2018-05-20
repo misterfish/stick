@@ -36,6 +36,10 @@
     is-type, get-type,
     is-function, is-array, is-object,
     is-number, is-reg-exp, is-boolean, is-string,
+    is-integer,
+
+    range-from-by, range-to-by,
+    range-from-by-asc, range-from-by-desc,
 
     nieuw, nieuw1, nieuw2, nieuw3, nieuw-n,
 
@@ -685,6 +689,7 @@ describe 'types' ->
         '3'  |> get-type |> expect-to-equal 'String'
         void |> get-type |> expect-to-equal 'Undefined'
         null |> get-type |> expect-to-equal 'Null'
+
     test 'isFunction' ->
         (+ 3)     |> is-function |> expect-to-equal true
         3         |> is-function |> expect-to-equal false
@@ -715,4 +720,29 @@ describe 'types' ->
         '3'       |> is-string |> expect-to-equal true
         3         |> is-string |> expect-to-equal false
         true      |> is-string |> expect-to-equal false
+    test 'isInteger' ->
+        '3.2'     |> is-integer |> expect-to-equal false
+        '3'       |> is-integer |> expect-to-equal false
+        3.2       |> is-integer |> expect-to-equal false
+        -3.2      |> is-integer |> expect-to-equal false
+        3         |> is-integer |> expect-to-equal true
+        0         |> is-integer |> expect-to-equal true
+        -0        |> is-integer |> expect-to-equal true
+        -3        |> is-integer |> expect-to-equal true
 
+describe 'range, compact' ->
+    describe 'rangeFromBy' ->
+        test 1 ->
+            range-from-by 2 0 10 |> expect-to-equal [0 to 9 by 2]
+        test 3 ->
+            range-from-by -2 10 0 |> expect-to-equal [10 to 1 by -2]
+    describe 'rangeFromBy specific' ->
+        test 1 ->
+            range-from-by-asc 2 0 10 |> expect-to-equal [0 to 9 by 2]
+        test 3 ->
+            range-from-by-desc -2 10 0 |> expect-to-equal [10 to 1 by -2]
+    describe 'rangeToBy' ->
+        test 1 ->
+            range-to-by 2 10 0 |> expect-to-equal [0 to 9 by 2]
+        test 3 ->
+            range-to-by -2 0 10 |> expect-to-equal [10 to 1 by -2]

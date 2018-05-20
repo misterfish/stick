@@ -526,7 +526,6 @@ export const isRegExp   = isType ('RegExp')
 export const isBoolean  = isType ('Boolean')
 export const isString   = isType ('String')
 
-// @test
 // --- assumed to be a Number.
 export const isInteger = x => x === Math.floor (x)
 
@@ -538,11 +537,18 @@ export const isInteger = x => x === Math.floor (x)
 
 // excl, so it's like ramda.
 // they already provide range.
-export const rangeBy = curry ((from, to, by) => {
-    const coll = []
-    for (let i = from; i < to; i += by) coll.push (i)
-    return coll
-})
+
+// --- note that `by` should be negative to count down.
+
+export const rangeFromBy     = _recurry (3) (manual.rangeFromBy)
+export const rangeFromByAsc  = _recurry (3) (manual.rangeFromByAsc)
+export const rangeFromByDesc = _recurry (3) (manual.rangeFromByDesc)
+export const rangeToBy       = _recurry (3) (manual.rangeToBy)
+export const rangeToByAsc    = _recurry (3) (manual.rangeToByAsc)
+export const rangeToByDesc   = _recurry (3) (manual.rangeToByDesc)
+
+export const rangeTo         = rangeToBy (1)
+export const rangeFrom       = rangeFromBy (1)
 
 export const compact = filter (Boolean)
 export const compactOk = reject (notOk)

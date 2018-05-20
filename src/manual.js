@@ -416,6 +416,31 @@ export const ifReplace = (yes) => (no) => (re) => (replArg) => (target) => {
     return success ? yes (out, success) : no (target)
 }
 
+// --- by should be negative to count down.
+export const rangeFromBy = (by) => (from) => (to) =>
+    from < to ? rangeFromByAsc  (by) (from) (to) :
+    from > to ? rangeFromByDesc (by) (from) (to) :
+    []
+
+// --- no corresponding to version.
+export const rangeFromByAsc = (by) => (from) => (to) => {
+    const ret = []
+    for (let i = from; i < to; i += by) ret.push (i)
+    return ret
+}
+
+// --- no corresponding to version.
+export const rangeFromByDesc = (by) => (from) => (to) => {
+    const ret = []
+    for (let i = from; i > to; i += by) ret.push (i)
+    return ret
+}
+
+export const rangeToBy = (by) => (to) => (from) =>
+    from < to ? rangeFromByAsc  (by) (from) (to) :
+    from > to ? rangeFromByDesc (by) (from) (to) :
+    []
+
 export default {
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
@@ -461,4 +486,6 @@ export default {
     repeatV, repeatF, repeatSide,
     timesV, timesF, timesSide,
     ifReplace,
+    rangeFromBy, rangeToBy,
+    rangeFromByAsc, rangeFromByDesc,
 }

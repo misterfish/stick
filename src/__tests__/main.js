@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, letV, letNV, laat, let2, let3, let4, let5, let6, letN, letS, isType, getType, isFunction, isArray, isObject, isNumber, isRegExp, isBoolean, isString, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, curry, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, zip, sum, rEquals, rIdentical, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, main, zipAll, eq, ne, gt, gte, lt, lte, bind, bindLate, bindTry, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, letV, letNV, laat, let2, let3, let4, let5, let6, letN, letS, isType, getType, isFunction, isArray, isObject, isNumber, isRegExp, isBoolean, isString, isInteger, rangeFromBy, rangeToBy, rangeFromByAsc, rangeFromByDesc, nieuw, nieuw1, nieuw2, nieuw3, nieuwN, xRegExp, xRegExpStr, xMatch, xMatchStr, xMatchStrFlags, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow, expectNotToThrow = ref$.expectNotToThrow;
-ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, letV = ref$.letV, letNV = ref$.letNV, laat = ref$.laat, let2 = ref$.let2, let3 = ref$.let3, let4 = ref$.let4, let5 = ref$.let5, let6 = ref$.let6, letN = ref$.letN, letS = ref$.letS, isType = ref$.isType, getType = ref$.getType, isFunction = ref$.isFunction, isArray = ref$.isArray, isObject = ref$.isObject, isNumber = ref$.isNumber, isRegExp = ref$.isRegExp, isBoolean = ref$.isBoolean, isString = ref$.isString, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
+ref$ = main = require('../index'), zipAll = ref$.zipAll, eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bind = ref$.bind, bindLate = ref$.bindLate, bindTry = ref$.bindTry, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, letV = ref$.letV, letNV = ref$.letNV, laat = ref$.laat, let2 = ref$.let2, let3 = ref$.let3, let4 = ref$.let4, let5 = ref$.let5, let6 = ref$.let6, letN = ref$.letN, letS = ref$.letS, isType = ref$.isType, getType = ref$.getType, isFunction = ref$.isFunction, isArray = ref$.isArray, isObject = ref$.isObject, isNumber = ref$.isNumber, isRegExp = ref$.isRegExp, isBoolean = ref$.isBoolean, isString = ref$.isString, isInteger = ref$.isInteger, rangeFromBy = ref$.rangeFromBy, rangeToBy = ref$.rangeToBy, rangeFromByAsc = ref$.rangeFromByAsc, rangeFromByDesc = ref$.rangeFromByDesc, nieuw = ref$.nieuw, nieuw1 = ref$.nieuw1, nieuw2 = ref$.nieuw2, nieuw3 = ref$.nieuw3, nieuwN = ref$.nieuwN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
 sumAll = compose$(list, sum);
 describe('comparisons', function(){
   describe('eq', function(){
@@ -1090,7 +1090,7 @@ describe('types', function(){
     isBoolean(
     null));
   });
-  return test('isString', function(){
+  test('isString', function(){
     expectToEqual(true)(
     isString(
     '3'));
@@ -1100,6 +1100,64 @@ describe('types', function(){
     return expectToEqual(false)(
     isString(
     true));
+  });
+  return test('isInteger', function(){
+    expectToEqual(false)(
+    isInteger(
+    '3.2'));
+    expectToEqual(false)(
+    isInteger(
+    '3'));
+    expectToEqual(false)(
+    isInteger(
+    3.2));
+    expectToEqual(false)(
+    isInteger(
+    -3.2));
+    expectToEqual(true)(
+    isInteger(
+    3));
+    expectToEqual(true)(
+    isInteger(
+    0));
+    expectToEqual(true)(
+    isInteger(
+    -0));
+    return expectToEqual(true)(
+    isInteger(
+    -3));
+  });
+});
+describe('range, compact', function(){
+  describe('rangeFromBy', function(){
+    test(1, function(){
+      return expectToEqual([0, 2, 4, 6, 8])(
+      rangeFromBy(2, 0, 10));
+    });
+    return test(3, function(){
+      return expectToEqual([10, 8, 6, 4, 2])(
+      rangeFromBy(-2, 10, 0));
+    });
+  });
+  describe('rangeFromBy specific', function(){
+    test(1, function(){
+      return expectToEqual([0, 2, 4, 6, 8])(
+      rangeFromByAsc(2, 0, 10));
+    });
+    return test(3, function(){
+      return expectToEqual([10, 8, 6, 4, 2])(
+      rangeFromByDesc(-2, 10, 0));
+    });
+  });
+  return describe('rangeToBy', function(){
+    test(1, function(){
+      return expectToEqual([0, 2, 4, 6, 8])(
+      rangeToBy(2, 10, 0));
+    });
+    return test(3, function(){
+      return expectToEqual([10, 8, 6, 4, 2])(
+      rangeToBy(-2, 0, 10));
+    });
   });
 });
 function compose$() {

@@ -22,12 +22,40 @@ export const roll = (f) => (...args) => {
     return g
 }
 
+// temp
+// const rollStick = (f) => (...args) => {
+//     let g = f
+//     for (const i of args) {
+//         const { $$stick, } = g
+//         g = g (i)
+//         g.$$stick = $$stick
+//         console.log ('g.$$stick', g.$$stick)
+//     }
+//     return g
+// }
+
 export const recurry = (n) => (f) => (...args) => {
     const rolled = roll (f) (...args)
     const dn = n - args.length
     return dn <= 1 ? rolled
                    : recurry (dn) (rolled)
 }
+
+// temp
+// export const recurryStick = (n) => (f) => {
+//     const recurried = (...args) => {
+//         const rolled = rollStick (f) (...args)
+//         const dn = n - args.length
+//         const { $$stick, } = rolled
+//         console.log ('rolled, $stick', $$stick)
+//         if (dn <= 1) return rolled
+//         const recurried = recurry (dn) (rolled)
+//         recurried.$$stick = $$stick
+//         return recurried
+//     }
+//     recurried.$$stick = f.$$stick
+//     return recurried
+// }
 
 export const eq = x => y => x === y
 export const ne = x => y => x !== y
@@ -612,6 +640,7 @@ const mergeMixinPostM = (mixin) => (proto) => {
 
 export default {
     roll, recurry,
+// recurryStick,
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,

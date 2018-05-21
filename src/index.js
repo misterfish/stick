@@ -65,6 +65,7 @@ export const roll = manual.roll
 export const recurry = manual.recurry
 
 const _recurry = recurry
+// const _recurryStick = manual.recurryStick
 
 export const noop = () => {}
 export const not = f => !f
@@ -256,7 +257,12 @@ export const concatM   = _recurry (2) (manual.concatM)
 // possible.
 export const mergeTo  = _recurry (2) (manual.mergeTo)
 export const merge    = _recurry (2) (manual.merge)
+
 export const mergeM   = _recurry (2) (manual.mergeM)
+
+// manual.mergeM.$$stick = { merge: { to: false, mut: true, own: true, }}
+// export const mergeM   = _recurryStick (2) (manual.mergeM)
+
 export const mergeToM = _recurry (2) (manual.mergeToM)
 
 // --- all enumerable properties (non-own and own) on the src will be copied to the tgt.
@@ -290,14 +296,12 @@ mergeToIn.$$stick  = manual.mergeToIn.$$stick =
 mergeIn.$$stick    = manual.mergeIn.$$stick =
     { merge: { to: false, mut: false, own: false, }}
 
-
-
-// @todo: make 'when' decoratable, like 'with'.
-//
 // --- 'when' forms run the predicate on both the src and tgt, testing for truthiness.
 export const mergeWhen    = _recurry (3) (manual.mergeWhen)
 
-// `own` refers to both tgt & src -- not possible to mix and match.
+// --- the 'own'-ness ('in') of the merge function will take effect on both tgt & src
+// -- not possible to mix and match.
+// export const mergeWith = _recurryStick (4) (manual.mergeWith)
 export const mergeWith = _recurry (4) (manual.mergeWith)
 
 // --- like R.mergeAll but also use prototype vals.

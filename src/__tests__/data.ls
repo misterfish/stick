@@ -1008,6 +1008,31 @@ describe 'data stuff' ->
                 src |> merge-to-in-with-noop tgt
                     |> expect-to-equal (src |> merge-to-in tgt)
 
+        # --- testing all possible combinations is overkill.
+        # suffice it to show that they can be composed with an arbitrary merge function and in an
+        # various orders.
+        describe 'with + when' ->
+            var tgt, src
+            src-odd = (a, b) -> odd a
+            before-each ->
+                tgt := Object.create hidden: 43
+                    ..a = 20
+                    ..b = 21
+                src := Object.create hidden: 42
+                    ..b = 11
+                    ..c = 12
+            xtest 'with then when NOT WORKING' ->
+                merger = merge-m |> merge-with choose-src |> merge-when src-odd
+                # console.log 'merger' merger
+                # console.log 'merger.$$stick' merger.$$stick
+                tgt |> merger src
+                tgt |> expect-to-equal do
+                    a: 20
+                    b: 11
+                    c: 12
+
+
+
         describe 'collisions' ->
             var tgt, src
             before-each ->

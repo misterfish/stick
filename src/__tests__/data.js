@@ -1936,6 +1936,40 @@ describe('data stuff', function(){
         src));
       });
     });
+    describe('with + when', function(){
+      var tgt, src, srcOdd;
+      srcOdd = function(a, b){
+        return odd(a);
+      };
+      beforeEach(function(){
+        var x$, y$;
+        x$ = tgt = Object.create({
+          hidden: 43
+        });
+        x$.a = 20;
+        x$.b = 21;
+        y$ = src = Object.create({
+          hidden: 42
+        });
+        y$.b = 11;
+        y$.c = 12;
+        return y$;
+      });
+      return xtest('with then when NOT WORKING', function(){
+        var merger;
+        merger = mergeWhen(srcOdd)(
+        mergeWith(chooseSrc)(
+        mergeM));
+        merger(src)(
+        tgt);
+        return expectToEqual({
+          a: 20,
+          b: 11,
+          c: 12
+        })(
+        tgt);
+      });
+    });
     describe('collisions', function(){
       var tgt, src;
       beforeEach(function(){

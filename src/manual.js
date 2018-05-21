@@ -285,10 +285,15 @@ const mergeXWith = (collision) => (own) => (src) => (tgt) => {
 	return tgt
 }
 
-const getInfo = (merger) => merger === mergeToM ? ['to', true, true]
+// --- [dir, mutable, own]
+const getInfo = (merger) => merger === mergeToM       ? ['to', true, true]
                           : merger === stick.mergeToM ? ['to', true, true]
-                          : merger === mergeM   ? ['from', true, true]
+                          : merger === mergeM         ? ['from', true, true]
                           : merger === stick.mergeM   ? ['from', true, true]
+                          : merger === mergeTo        ? ['to', false, true]
+                          : merger === stick.mergeTo  ? ['to', false, true]
+                          : merger === merge          ? ['from', false, true]
+                          : merger === stick.merge    ? ['from', false, true]
                           : die ('Unrecognised merge function')
 
 export const mergeWith = (collision) => (merger) => (a) => (b) => {

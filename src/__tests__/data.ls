@@ -65,6 +65,28 @@
 sort-alpha = (.sort ())
 sort-num = (.sort ((a, b) -> a - b))
 
+noop = ->
+choose-src = (a, b) -> a
+choose-tgt = (a, b) -> b
+
+merge-to-choose-tgt-m = merge-to-m |> merge-with choose-tgt
+merge-to-choose-tgt   = merge-to |> merge-with choose-tgt
+merge-to-choose-src-m = merge-to-m |> merge-with choose-src
+merge-to-choose-src   = merge-to |> merge-with choose-src
+merge-to-with-null-m  = merge-to-m |> merge-with null
+merge-to-with-null    = merge-to |> merge-with null
+merge-to-with-noop-m  = merge-to-m |> merge-with noop
+merge-to-with-noop    = merge-to |> merge-with noop
+
+merge-choose-tgt-m    = merge-m |> merge-with choose-tgt
+merge-choose-tgt      = merge   |> merge-with choose-tgt
+merge-choose-src-m    = merge-m |> merge-with choose-src
+merge-choose-src      = merge   |> merge-with choose-src
+merge-with-null-m     = merge-m |> merge-with null
+merge-with-null       = merge   |> merge-with null
+merge-with-noop-m = merge-m |> merge-with noop
+merge-with-noop    = merge-to |> merge-with noop
+
 describe 'map, filter, reject, each' ->
     describe 'map' ->
         map-x = map |> add-index
@@ -931,28 +953,30 @@ describe 'data stuff' ->
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
 
-    describe 'mergeToWithM' ->
+    describe 'mergeToWith' ->
         var tgt, src
         noop = ->
-        choose-src = (a, b) -> a
-        choose-tgt = (a, b) -> b
-        merge-to-with-noop-m = merge-to-m |> merge-with noop
         describe 'main' ->
-            test 'when no collisions, acts like mergeToM' ->
-                tgt = Object.create hidden1: 42
+            var src, tgt
+            before-each ->
+                tgt := Object.create hidden1: 42
                     ..a = 1
                     ..b = 2
-                src = Object.create hidden2: 42
+                src := Object.create hidden2: 42
                     ..c = 3
                     ..d = 4
+            test 'when no collisions, acts like mergeToM' ->
                 src
                 |> merge-to-with-noop-m tgt
                 |> expect-to-equal (src |> merge-to-m tgt)
 
+            test 'when no collisions, acts like mergeTo' ->
+                src
+                |> merge-to-with-noop tgt
+                |> expect-to-equal (src |> merge-to tgt)
+
         describe 'collide with own of target' ->
             var tgt, src
-            merge-to-choose-tgt-m = merge-to-m |> merge-with choose-tgt
-            merge-to-choose-src-m = merge-to-m |> merge-with choose-src
             before-each ->
                 tgt := Object.create hidden: 42
                     ..a = 'target a'
@@ -961,18 +985,30 @@ describe 'data stuff' ->
                 src :=
                     b: 'source b'
                     c: 'source c'
-            test 'choose target' ->
+            test 'choose target M' ->
                 src |> merge-to-choose-tgt-m tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
                     c: 'source c'
-            test 'choose source' ->
+            test 'choose source M' ->
                 src |> merge-to-choose-src-m tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
                     c: 'source c'
+            test 'choose target' ->
+                src |> merge-to-choose-tgt tgt
+                    |> expect-to-equal do
+                        a: 'target a'
+                        b: 'target b'
+                        c: 'source c'
+            test 'choose source' ->
+                src |> merge-to-choose-src tgt
+                    |> expect-to-equal do
+                        a: 'target a'
+                        b: 'source b'
+                        c: 'source c'
 
         describe 'collide with in of target' ->
             var tgt, src
@@ -985,8 +1021,7 @@ describe 'data stuff' ->
                     c: 'source c'
                     hidden: 'source hidden'
 
-            merge-to-with-null-m = merge-to-m |> merge-with null
-            test 'proto chain of target is not checked' ->
+            test 'proto chain of target is not checked M' ->
                 src |> merge-to-with-null-m tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
@@ -994,25 +1029,31 @@ describe 'data stuff' ->
                     c: 'source c'
                     hidden: 'source hidden'
 
-    describe 'mergeWithM' ->
+            test 'proto chain of target is not checked' ->
+                src |> merge-to-with-null tgt
+                    |> expect-to-equal do
+                        a: 'target a'
+                        b: 'target b'
+                        c: 'source c'
+                        hidden: 'source hidden'
+
+    describe 'mergeWith' ->
         var tgt, src
         noop = ->
-        choose-src = (a, b) -> a
-        choose-tgt = (a, b) -> b
-        merge-with-noop-m = merge-m |> merge-with noop
-        merge-choose-tgt-m = merge-m |> merge-with choose-tgt
-        merge-choose-src-m = merge-m |> merge-with choose-src
         describe 'main' ->
-            test 'when no collisions, acts like mergeM' ->
+            before-each ->
                 tgt = Object.create hidden1: 42
                     ..a = 1
                     ..b = 2
                 src = Object.create hidden2: 42
                     ..c = 3
                     ..d = 4
-                tgt
-                |> merge-with-noop-m src
-                |> expect-to-equal (tgt |> merge-m src)
+            test 'when no collisions, acts like mergeM' ->
+                tgt |> merge-with-noop-m src
+                    |> expect-to-equal (tgt |> merge-m src)
+            test 'when no collisions, acts like merge' ->
+                tgt |> merge-with-noop src
+                    |> expect-to-equal (tgt |> merge src)
 
         describe 'collide with own of target' ->
             var tgt, src
@@ -1024,24 +1065,33 @@ describe 'data stuff' ->
                 src :=
                     b: 'source b'
                     c: 'source c'
-            test 'choose target' ->
+            test 'choose target M' ->
                 tgt |> merge-choose-tgt-m src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
                     c: 'source c'
-            test 'choose source' ->
+            test 'choose source M' ->
                 tgt |> merge-choose-src-m src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
                     c: 'source c'
+            test 'choose target' ->
+                tgt |> merge-choose-tgt src
+                    |> expect-to-equal do
+                        a: 'target a'
+                        b: 'target b'
+                        c: 'source c'
+            test 'choose source' ->
+                tgt |> merge-choose-src src
+                    |> expect-to-equal do
+                        a: 'target a'
+                        b: 'source b'
+                        c: 'source c'
 
         describe 'collide with in of target' ->
             var tgt, src
-            merge-with-null-m = merge-m |> merge-with null
-            merge-choose-tgt-m = merge-m |> merge-with choose-tgt
-            merge-choose-src-m = merge-m |> merge-with choose-src
             before-each ->
                 tgt := Object.create hidden: 'target hidden'
                     ..a = 'target a'
@@ -1050,13 +1100,20 @@ describe 'data stuff' ->
                     b: 'source b'
                     c: 'source c'
                     hidden: 'source hidden'
-            test 'proto chain of target is not checked' ->
+            test 'proto chain of target is not checked M' ->
                 tgt |> merge-with-null-m src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
                     c: 'source c'
                     hidden: 'source hidden'
+            test 'proto chain of target is not checked' ->
+                tgt |> merge-with-null src
+                    |> expect-to-equal do
+                        a: 'target a'
+                        b: 'source b'
+                        c: 'source c'
+                        hidden: 'source hidden'
 
     describe 'mergeToIn' ->
         fn = merge-to-in

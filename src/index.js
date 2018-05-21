@@ -1004,4 +1004,5 @@ const mapTuplesInWithFilter = (p) => (f) => (o) => {
 
 export default {
     mergeToM, mergeM,
+    mergeTo, merge,
 }

@@ -48,7 +48,8 @@
     merge-to, merge, merge-to-m, merge-m,
     merge-to-in, merge-in, merge-to-in-m, merge-in-m,
     merge-all-in,
-    merge-with, merge-when,
+    #merge-with,
+    #merge-when,
 
     discard-prototype, flatten-prototype,
 
@@ -58,6 +59,11 @@
     arg0, arg1, arg2, arg3, arg4, arg5, arg6,
 
 } = require '../index'
+
+{
+    merge-with,
+    merge-when,
+} = require '../manual'
 
 sort-alpha = (.sort ())
 sort-num = (.sort ((a, b) -> a - b))
@@ -1014,22 +1020,140 @@ describe 'data stuff' ->
         describe 'with + when' ->
             var tgt, src
             src-odd = (a, b) -> odd a
-            before-each ->
-                tgt := Object.create hidden: 43
-                    ..a = 20
-                    ..b = 21
-                src := Object.create hidden: 42
-                    ..b = 11
-                    ..c = 12
-            xtest 'with then when NOT WORKING' ->
-                merger = merge-m |> merge-with choose-src |> merge-when src-odd
-                tgt |> merger src
-                tgt |> expect-to-equal do
-                    a: 20
-                    b: 11
-                    c: 12
-
-
+            src-even = (a, b) -> even a
+            tgt-odd = (a, b) -> odd b
+            tgt-even = (a, b) -> even b
+            # --- need to understand behavior of this xxx
+            describe 'with then when' ->
+                return
+                before-each ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 20
+                    src := Object.create hidden: 42
+                        ..b = 11
+                        ..c = 12
+                test 'with then when' ->
+                    merger = merge-m |> merge-with choose-src |> merge-when src-odd
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 11
+                test 'when test is applied before with test' ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 21
+                    src := Object.create hidden: 42
+                        ..b = 10
+                        ..c = 12
+                    merger = merge-m |> merge-with choose-src |> merge-when src-odd
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 21
+                test 'when test is applied before with test, 2' ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 20
+                    src := Object.create hidden: 42
+                        ..b = 10
+                        ..c = 12
+                    merger = merge-m |> merge-with choose-src |> merge-when src-even
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 10
+                        c: 12
+                test 'when test is applied before with test, 3' ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 21
+                    src := Object.create hidden: 42
+                        ..b = 10
+                        ..c = 12
+                    merger = merge-m |> merge-with choose-src |> merge-when src-odd
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 21
+                test 'when test is applied before with test, 4' ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 20
+                    src := Object.create hidden: 42
+                        ..b = 11
+                        ..c = 12
+                    merger = merge-m |> merge-with choose-src |> merge-when src-even
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 20
+                        c: 12
+            # --- need to understand behavior of this xxx
+            describe 'when then with' ->
+                return
+                test 'with then when' ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 20
+                    src := Object.create hidden: 42
+                        ..b = 11
+                        ..c = 12
+                    merger = merge-m |> merge-when src-odd |> merge-with choose-src
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 11
+                test 'when test is applied before with test' ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 21
+                    src := Object.create hidden: 42
+                        ..b = 10
+                        ..c = 12
+                    merger = merge-m |> merge-when src-odd |> merge-with choose-src
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 21
+                test 'when test is applied before with test, 2' ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 20
+                    src := Object.create hidden: 42
+                        ..b = 10
+                        ..c = 12
+                    merger = merge-m |> merge-when src-even |> merge-with choose-src
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 10
+                        c: 12
+                test 'when test is applied before with test, 3' ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 21
+                    src := Object.create hidden: 42
+                        ..b = 10
+                        ..c = 12
+                    merger = merge-m |> merge-when src-odd |> merge-with choose-src
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 21
+                test 'when test is applied before with test, 4' ->
+                    tgt := Object.create hidden: 43
+                        ..a = 20
+                        ..b = 20
+                    src := Object.create hidden: 42
+                        ..b = 11
+                        ..c = 12
+                    merger = merge-m |> merge-when tgt-even |> merge-with choose-src
+                    tgt |> merger src
+                    tgt |> expect-to-equal do
+                        a: 20
+                        b: 20
+                        c: 12
 
         describe 'collisions' ->
             var tgt, src

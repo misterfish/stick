@@ -326,13 +326,17 @@ const oldGetInfo1 = (merger) => merger === mergeToM         ? [true, true, true]
                           : merger === stick.mergeIn    ? [false, false, false]
                           : die ('Unrecognised merge function')
 
-export const mergeWith = (collision) => (merger) => (a) => (b) => {
-    const { to, mut, own, } = getInfo (merger)
-    const [src, tgt] = to ? [b, a] : [a, b]
-    const tgtM = mut ? tgt : (
-        to ? merger ({}) (tgt) : merger (tgt) ({})
-    )
-    return mergeXWith (collision) (own) (src) (tgtM)
+export const mergeWith = (collision) => (merger) => {
+    const decorated = (a) => (b) => {
+        const { to, mut, own, } = getInfo (merger)
+        const [src, tgt] = to ? [b, a] : [a, b]
+        const tgtM = mut ? tgt : (
+            to ? merger ({}) (tgt) : merger (tgt) ({})
+        )
+        return mergeXWith (collision) (own) (src) (tgtM)
+    }
+    decorated.$$stick = merger.$$stick
+    return decorated
 }
 
 // --- like with 'with', mut and direction have already been arranged, and `tgt` will be mutated.
@@ -345,16 +349,20 @@ const mergeXWhen = (p) => (own) => (src) => (tgt) => {
     return tgt
 }
 
-export const mergeWhen = (p) => (merger) => (a) => (b) => {
-    const { to, mut, own, } = getInfo (merger)
-    const [src, tgt] = to ? [b, a] : [a, b]
-    const tgtM = mut ? tgt : (
-        to ? merger ({}) (tgt) : merger (tgt) ({})
-    )
-    return mergeXWhen (p) (own) (src) (tgtM)
+// xxx mergeXWhen and mergeXWith should be one function. that way a double call can work.
+
+export const mergeWhen = (p) => (merger) => {
+    const decorated = (a) => (b) => {
+        const { to, mut, own, } = getInfo (merger)
+        const [src, tgt] = to ? [b, a] : [a, b]
+        const tgtM = mut ? tgt : (
+            to ? merger ({}) (tgt) : merger (tgt) ({})
+        )
+        return mergeXWhen (p) (own) (src) (tgtM)
+    }
+    decorated.$$stick = merger.$$stick
+    return decorated
 }
-
-
 
 
 export const mergeToInM = (tgt) => (src) => {

@@ -1,8 +1,9 @@
-var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, filter, reject, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeToIn, mergeIn, mergeToInM, mergeInM, mergeAllIn, mergeWith, mergeWhen, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, noop, chooseSrc, chooseTgt, mergeToChooseTgtM, mergeToChooseTgt, mergeToChooseSrcM, mergeToChooseSrc, mergeToWithNullM, mergeToWithNull, mergeToWithNoopM, mergeToWithNoop, mergeToInChooseTgtM, mergeToInChooseTgt, mergeToInChooseSrcM, mergeToInChooseSrc, mergeToInWithNoopM, mergeToInWithNoop, mergeChooseTgtM, mergeChooseTgt, mergeChooseSrcM, mergeChooseSrc, mergeWithNullM, mergeWithNull, mergeWithNoopM, mergeWithNoop, mergeInChooseTgtM, mergeInChooseTgt, mergeInChooseSrcM, mergeInChooseSrc, mergeInWithNullM, mergeInWithNull, mergeInWithNoopM, mergeInWithNoop, srcOk, tgtOk, mergeToWhenSrcOkM, mergeToWhenSrcOk, mergeToWhenTgtOkM, mergeToWhenTgtOk, mergeWhenSrcOkM, mergeWhenSrcOk, mergeWhenTgtOkM, mergeWhenTgtOk, this$ = this, slice$ = [].slice;
+var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, filter, reject, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeToIn, mergeIn, mergeToInM, mergeInM, mergeAllIn, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, mergeWith, mergeWhen, sortAlpha, sortNum, noop, chooseSrc, chooseTgt, mergeToChooseTgtM, mergeToChooseTgt, mergeToChooseSrcM, mergeToChooseSrc, mergeToWithNullM, mergeToWithNull, mergeToWithNoopM, mergeToWithNoop, mergeToInChooseTgtM, mergeToInChooseTgt, mergeToInChooseSrcM, mergeToInChooseSrc, mergeToInWithNoopM, mergeToInWithNoop, mergeChooseTgtM, mergeChooseTgt, mergeChooseSrcM, mergeChooseSrc, mergeWithNullM, mergeWithNull, mergeWithNoopM, mergeWithNoop, mergeInChooseTgtM, mergeInChooseTgt, mergeInChooseSrcM, mergeInChooseSrc, mergeInWithNullM, mergeInWithNull, mergeInWithNoopM, mergeInWithNoop, srcOk, tgtOk, mergeToWhenSrcOkM, mergeToWhenSrcOk, mergeToWhenTgtOkM, mergeToWhenTgtOk, mergeWhenSrcOkM, mergeWhenSrcOk, mergeWhenTgtOkM, mergeWhenTgtOk, this$ = this, slice$ = [].slice;
 ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), map = ref$.map, filter = ref$.filter, reject = ref$.reject, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeToIn = ref$.mergeToIn, mergeIn = ref$.mergeIn, mergeToInM = ref$.mergeToInM, mergeInM = ref$.mergeInM, mergeAllIn = ref$.mergeAllIn, mergeWith = ref$.mergeWith, mergeWhen = ref$.mergeWhen, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
+ref$ = require('../index'), map = ref$.map, filter = ref$.filter, reject = ref$.reject, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeToIn = ref$.mergeToIn, mergeIn = ref$.mergeIn, mergeToInM = ref$.mergeToInM, mergeInM = ref$.mergeInM, mergeAllIn = ref$.mergeAllIn, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
+ref$ = require('../manual'), mergeWith = ref$.mergeWith, mergeWhen = ref$.mergeWhen;
 sortAlpha = function(it){
   return it.sort();
 };
@@ -1937,37 +1938,262 @@ describe('data stuff', function(){
       });
     });
     describe('with + when', function(){
-      var tgt, src, srcOdd;
+      var tgt, src, srcOdd, srcEven, tgtOdd, tgtEven;
       srcOdd = function(a, b){
         return odd(a);
       };
-      beforeEach(function(){
-        var x$, y$;
-        x$ = tgt = Object.create({
-          hidden: 43
+      srcEven = function(a, b){
+        return even(a);
+      };
+      tgtOdd = function(a, b){
+        return odd(b);
+      };
+      tgtEven = function(a, b){
+        return even(b);
+      };
+      describe('with then when', function(){
+        return;
+        beforeEach(function(){
+          var x$, y$;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 20;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 11;
+          y$.c = 12;
+          return y$;
         });
-        x$.a = 20;
-        x$.b = 21;
-        y$ = src = Object.create({
-          hidden: 42
+        test('with then when', function(){
+          var merger;
+          merger = mergeWhen(srcOdd)(
+          mergeWith(chooseSrc)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 11
+          })(
+          tgt);
         });
-        y$.b = 11;
-        y$.c = 12;
-        return y$;
+        test('when test is applied before with test', function(){
+          var x$, y$, merger;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 21;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 10;
+          y$.c = 12;
+          merger = mergeWhen(srcOdd)(
+          mergeWith(chooseSrc)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 21
+          })(
+          tgt);
+        });
+        test('when test is applied before with test, 2', function(){
+          var x$, y$, merger;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 20;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 10;
+          y$.c = 12;
+          merger = mergeWhen(srcEven)(
+          mergeWith(chooseSrc)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 10,
+            c: 12
+          })(
+          tgt);
+        });
+        test('when test is applied before with test, 3', function(){
+          var x$, y$, merger;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 21;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 10;
+          y$.c = 12;
+          merger = mergeWhen(srcOdd)(
+          mergeWith(chooseSrc)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 21
+          })(
+          tgt);
+        });
+        return test('when test is applied before with test, 4', function(){
+          var x$, y$, merger;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 20;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 11;
+          y$.c = 12;
+          merger = mergeWhen(srcEven)(
+          mergeWith(chooseSrc)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 20,
+            c: 12
+          })(
+          tgt);
+        });
       });
-      return xtest('with then when NOT WORKING', function(){
-        var merger;
-        merger = mergeWhen(srcOdd)(
-        mergeWith(chooseSrc)(
-        mergeM));
-        merger(src)(
-        tgt);
-        return expectToEqual({
-          a: 20,
-          b: 11,
-          c: 12
-        })(
-        tgt);
+      return describe('when then with', function(){
+        return;
+        test('with then when', function(){
+          var x$, y$, merger;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 20;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 11;
+          y$.c = 12;
+          merger = mergeWith(chooseSrc)(
+          mergeWhen(srcOdd)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 11
+          })(
+          tgt);
+        });
+        test('when test is applied before with test', function(){
+          var x$, y$, merger;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 21;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 10;
+          y$.c = 12;
+          merger = mergeWith(chooseSrc)(
+          mergeWhen(srcOdd)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 21
+          })(
+          tgt);
+        });
+        test('when test is applied before with test, 2', function(){
+          var x$, y$, merger;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 20;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 10;
+          y$.c = 12;
+          merger = mergeWith(chooseSrc)(
+          mergeWhen(srcEven)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 10,
+            c: 12
+          })(
+          tgt);
+        });
+        test('when test is applied before with test, 3', function(){
+          var x$, y$, merger;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 21;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 10;
+          y$.c = 12;
+          merger = mergeWith(chooseSrc)(
+          mergeWhen(srcOdd)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 21
+          })(
+          tgt);
+        });
+        return test('when test is applied before with test, 4', function(){
+          var x$, y$, merger;
+          x$ = tgt = Object.create({
+            hidden: 43
+          });
+          x$.a = 20;
+          x$.b = 20;
+          y$ = src = Object.create({
+            hidden: 42
+          });
+          y$.b = 11;
+          y$.c = 12;
+          merger = mergeWith(chooseSrc)(
+          mergeWhen(tgtEven)(
+          mergeM));
+          merger(src)(
+          tgt);
+          return expectToEqual({
+            a: 20,
+            b: 20,
+            c: 12
+          })(
+          tgt);
+        });
       });
     });
     describe('collisions', function(){

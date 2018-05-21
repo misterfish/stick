@@ -551,6 +551,7 @@ export const isNumber   = isType ('Number')
 export const isRegExp   = isType ('RegExp')
 export const isBoolean  = isType ('Boolean')
 export const isString   = isType ('String')
+export const isSymbol   = isType ('Symbol')
 
 // --- assumed to be a Number.
 export const isInteger = x => x === Math.floor (x)

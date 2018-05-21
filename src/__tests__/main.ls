@@ -42,8 +42,8 @@
     zip-all,
 
     is-type, get-type,
-    is-function, is-array, is-object,
-    is-number, is-reg-exp, is-boolean, is-string,
+    is-function, is-array, is-object, is-number,
+    is-reg-exp, is-boolean, is-string, is-symbol,
     is-integer,
 
     range-from, range-to,
@@ -900,6 +900,10 @@ describe 'types' ->
         '3'       |> is-string |> expect-to-equal true
         3         |> is-string |> expect-to-equal false
         true      |> is-string |> expect-to-equal false
+    test 'isSymbol' ->
+        Symbol()  |> is-symbol |> expect-to-equal true
+        3         |> is-symbol |> expect-to-equal false
+        true      |> is-symbol |> expect-to-equal false
     test 'isInteger' ->
         '3.2'     |> is-integer |> expect-to-equal false
         '3'       |> is-integer |> expect-to-equal false

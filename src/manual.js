@@ -300,12 +300,14 @@ const mergeXWith = (collision) => (own) => (src) => (tgt) => {
 
 // @test
 // @export
-export const path = xs => o => {
+export const path = (xs) => (o) => {
     let j = o
     for (const i of xs) if (!ok (j)) return j
                         else j = j [i]
     return j
 }
+
+export const tap = (f) => (o) => (f (o), o)
 
 const getInfo = merger => path (['$$stick', 'merge']) (merger)
                        || die ('Unrecognised merge function')

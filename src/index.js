@@ -12,10 +12,6 @@ export const composeRight = (a, b)    => (...args) => b (a (...args))
 export const compose      = (a, b)    => (...args) => a (b (...args))
 
 import {
-    mapAccum,
-} from 'ramda'
-
-import {
     bitwiseAnd, bitwiseOr, bitwiseXor, bitwiseNot,
     bitwiseLeft, bitwiseRight, bitwiseRightZeroFill,
     bitwiseLeftBy, bitwiseRightBy, bitwiseRightZeroFillBy,
@@ -390,6 +386,9 @@ export const letV = (...xs) => {
 
 export const letNV = _recurry (2) (manual.letNV)
 
+// --- trivial form.
+export const let1 = f => invoke (f)
+
 // --- these can be called directly by speed freaks; `lets` should be good enough for nearly all
 // uses.
 export const let2 = (f1, f2) => {
@@ -429,29 +428,18 @@ export const let6 = (f1, f2, f3, f4, f5, f6) => {
 
 export const letN = (xs) => laat (...xs)
 
-// --- generic form, for any non-zero number of arguments.
-// @ramda
-// mapAccum
-const _laat = (...xs) => {
-    const executeStep = prevVals => applyToN (prevVals)
-
-    const ys = xs
-        // --- acc contains running output array, up to the previous item.
-        | mapAccum ((acc, v) => executeStep (acc) (v)
-            | (stepVal => [[...acc, stepVal], stepVal])
-        ) ([])
-        | prop (1)
-
-    return ys | last
-}
-
+// --- throws an error if more than 6 arguments are given.
+// --- this ought to be enough for normal usage.
+// --- there is a generic functional form (see canonical.js), but it depends on mapAccum, for which
+// we depend on Ramda.
 export const laat = (...xs) => {
+    if (xs.length === 1) return let1 (...xs)
     if (xs.length === 2) return let2 (...xs)
     if (xs.length === 3) return let3 (...xs)
     if (xs.length === 4) return let4 (...xs)
     if (xs.length === 5) return let5 (...xs)
     if (xs.length === 6) return let6 (...xs)
-    return _laat (...xs)
+    throw new Error ('laat: too many arguments (max = 6)')
 }
 
 export const letS = _recurry (2) (manual.letS)

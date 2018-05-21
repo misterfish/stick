@@ -174,3 +174,17 @@ export const ampersand = (fs) => (x) => fs | letS ([
 const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | passToN (f)
 const headTail = f => splitAt (1) >> f
 
+// --- generic form, for any non-zero number of arguments.
+export const _laat = (...xs) => {
+    const executeStep = prevVals => applyToN (prevVals)
+
+    const ys = xs
+        // --- acc contains running output array, up to the previous item.
+        | mapAccum ((acc, v) => executeStep (acc) (v)
+            | (stepVal => [[...acc, stepVal], stepVal])
+        ) ([])
+        | prop (1)
+
+    return ys | last
+}
+

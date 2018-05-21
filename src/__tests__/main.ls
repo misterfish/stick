@@ -118,7 +118,7 @@ describe 'recurry, roll' ->
     describe 'recurry a manually curried function' ->
         r = (recurry 6) f
         test 'manual style' ->
-            (((r 3 4 5) 6) 7) 8 |> expect-to-equal 33
+            (((((r 3) 4) 5) 6) 7) 8 |> expect-to-equal 33
         test 'normal style' ->
             (r 3 4 5) 6 7 8 |> expect-to-equal 33
             ((r 3 4 5) 6 7) 8 |> expect-to-equal 33

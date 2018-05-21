@@ -101,7 +101,7 @@ describe('recurry, roll', function(){
     r = recurry(6)(f);
     test('manual style', function(){
       return expectToEqual(33)(
-      r(3, 4, 5)(6)(7)(8));
+      r(3)(4)(5)(6)(7)(8));
     });
     test('normal style', function(){
       expectToEqual(33)(

@@ -8,6 +8,9 @@ import {
     xRegExp, xRegExpFlags, xRegExpStr,
     die,
     T,
+
+    mergeToMSym, mergeToSym, mergeMSym, mergeSym,
+    mergeInToMSym, mergeInToSym, mergeInMSym, mergeInSym,
 } from './index'
 
 import stick from './index'
@@ -21,40 +24,12 @@ export const roll = (f) => (...args) => {
     return g
 }
 
-// temp
-// const rollStick = (f) => (...args) => {
-//     let g = f
-//     for (const i of args) {
-//         const { $$stick, } = g
-//         g = g (i)
-//         g.$$stick = $$stick
-//         console.log ('g.$$stick', g.$$stick)
-//     }
-//     return g
-// }
-
 export const recurry = (n) => (f) => (...args) => {
     const rolled = roll (f) (...args)
     const dn = n - args.length
     return dn <= 1 ? rolled
                    : recurry (dn) (rolled)
 }
-
-// temp
-// export const recurryStick = (n) => (f) => {
-//     const recurried = (...args) => {
-//         const rolled = rollStick (f) (...args)
-//         const dn = n - args.length
-//         const { $$stick, } = rolled
-//         console.log ('rolled, $stick', $$stick)
-//         if (dn <= 1) return rolled
-//         const recurried = recurry (dn) (rolled)
-//         recurried.$$stick = $$stick
-//         return recurried
-//     }
-//     recurried.$$stick = f.$$stick
-//     return recurried
-// }
 
 export const eq = x => y => x === y
 export const ne = x => y => x !== y
@@ -63,20 +38,20 @@ export const gte = m => n => n >= m
 export const lt = m => n => n < m
 export const lte = m => n => n <= m
 
-export const dot  = prop => o => o[prop] ()
+export const dot  = prop => o => o [prop] ()
 
 export const dot1 = prop => val =>
-    o => o[prop] (val)
+    o => o [prop] (val)
 export const dot2 = prop => val1 => val2 =>
-    o => o[prop] (val1, val2)
+    o => o [prop] (val1, val2)
 export const dot3 = prop => val1 => val2 => val3 =>
-    o => o[prop] (val1, val2, val3)
+    o => o [prop] (val1, val2, val3)
 export const dot4 = prop => val1 => val2 => val3 => val4 =>
-    o => o[prop] (val1, val2, val3, val4)
+    o => o [prop] (val1, val2, val3, val4)
 export const dot5 = prop => val1 => val2 => val3 => val4 => val5 =>
-    o => o[prop] (val1, val2, val3, val4, val5)
+    o => o [prop] (val1, val2, val3, val4, val5)
 export const dotN = prop => vs =>
-    o => o[prop] (...vs)
+    o => o [prop] (...vs)
 
 export const side = prop =>
     o => (dot (prop)
@@ -252,15 +227,6 @@ export const concat  = src => tgt => tgt.concat (src)
 export const concatToM   = tgt => src => (tgt.push (...src), tgt)
 export const concatM = src => tgt => (tgt.push (...src), tgt)
 
-export const mergeToMSym = Symbol ('mergeToM')
-export const mergeToSym = Symbol ('mergeTo')
-export const mergeMSym = Symbol ('mergeM')
-export const mergeSym = Symbol ('merge')
-export const mergeInToMSym = Symbol ('mergeInToM')
-export const mergeInToSym = Symbol ('mergeInTo')
-export const mergeInMSym = Symbol ('mergeInM')
-export const mergeInSym = Symbol ('mergeIn')
-
 // --- these seem to be much faster than Object.assign.
 // @profile
 
@@ -299,18 +265,65 @@ export const mergeInTo = (tgt) => (src) => {
 }
 export const mergeIn = (src) => (tgt) => mergeInTo (tgt) (src)
 
-const mergeFunctions = {
-    [mergeToMSym]: mergeToM,
-    [mergeToSym]: mergeTo,
-    [mergeMSym]: mergeM,
-    [mergeSym]: merge,
-    [mergeInToMSym]: mergeInToM,
-    [mergeInToSym]: mergeInTo,
-    [mergeInMSym]: mergeInM,
-    [mergeInSym]: mergeIn,
-}
+const getMergeX = pluck => mergerSym => ifOk (
+    pluck)
+    (_ => die (sprintf ('No merge function for symbol "%s"')))
+    (merges () [mergerSym])
 
+// --- throw on failure.
+const getMergeFunction = getMergeX (({ f, }) => f)
+const getMergeInfo     = getMergeX (({ to, mut, own, }) => ({ to, mut, own, }))
 
+const merges = _ => ({
+    [mergeToMSym]:   {
+        f: mergeToM,
+        to: true,
+        mut: true,
+        own: true,
+    },
+    [mergeToSym]:    {
+        f: mergeTo,
+        to: true,
+        mut: false,
+        own: true,
+    },
+    [mergeMSym]:     {
+        f: mergeM,
+        to: false,
+        mut: true,
+        own: true,
+    },
+    [mergeSym]:      {
+        f: merge,
+        to: false,
+        mut: false,
+        own: true,
+    },
+    [mergeInToMSym]: {
+        f: mergeInToM,
+        to: true,
+        mut: true,
+        own: false,
+    },
+    [mergeInToSym]:  {
+        f: mergeInTo,
+        to: true,
+        mut: false,
+        own: false,
+    },
+    [mergeInMSym]:   {
+        f: mergeInM,
+        to: false,
+        mut: true,
+        own: false,
+    },
+    [mergeInSym]:    {
+        f: mergeIn,
+        to: false,
+        mut: false,
+        own: false,
+    },
+})
 
 // --- tgt will be altered.
 // only `own` needs to be passed: direction and mutability have already been decided.
@@ -334,7 +347,6 @@ const mergeXWith = (collision) => (own) => (src) => (tgt) => {
 }
 
 // @test
-// @export
 export const path = (xs) => (o) => {
     let j = o
     for (const i of xs) if (!ok (j)) return j
@@ -342,40 +354,20 @@ export const path = (xs) => (o) => {
     return j
 }
 
+// @test
 export const tap = (f) => (o) => (f (o), o)
 
-const getInfo = merger => path (['$$stick', 'merge']) (merger)
-                       || die ('Unrecognised merge function')
-
-const oldGetInfo1 = (merger) => merger === mergeToM         ? [true, true, true]
-                          : merger === stick.mergeToM   ? [true, true, true]
-                          : merger === mergeM           ? [false, true, true]
-                          : merger === stick.mergeM     ? [false, true, true]
-                          : merger === mergeTo          ? [true, false, true]
-                          : merger === stick.mergeTo    ? [true, false, true]
-                          : merger === merge            ? [false, false, true]
-                          : merger === stick.merge      ? [false, false, true]
-                          : merger === mergeInToM       ? [true, true, false]
-                          : merger === stick.mergeInToM ? [true, true, false]
-                          : merger === mergeInM         ? [false, true, false]
-                          : merger === stick.mergeInM   ? [false, true, false]
-                          : merger === mergeInTo        ? [true, false, false]
-                          : merger === stick.mergeInTo  ? [true, false, false]
-                          : merger === mergeIn          ? [false, false, false]
-                          : merger === stick.mergeIn    ? [false, false, false]
-                          : die ('Unrecognised merge function')
-
-export const mergeWith = (collision) => (merger) => {
-    const decorated = (a) => (b) => {
-        const { to, mut, own, } = getInfo (merger)
+export const mergeWith = (collision) => (mergerSym) => {
+    // --- fail early instead of continuing with curry (throws)
+    const merger = getMergeFunction (mergerSym)
+    return (a) => (b) => {
+        const { to, mut, own, } = getMergeInfo (mergerSym)
         const [src, tgt] = to ? [b, a] : [a, b]
         const tgtM = mut ? tgt : (
             to ? merger ({}) (tgt) : merger (tgt) ({})
         )
         return mergeXWith (collision) (own) (src) (tgtM)
     }
-    decorated.$$stick = merger.$$stick
-    return decorated
 }
 
 // --- like with 'with', mut and direction have already been arranged, and `tgt` will be mutated.
@@ -390,17 +382,17 @@ const mergeXWhen = (p) => (own) => (src) => (tgt) => {
 
 // xxx mergeXWhen and mergeXWith should be one function. that way a double call can work.
 
-export const mergeWhen = (p) => (merger) => {
-    const decorated = (a) => (b) => {
-        const { to, mut, own, } = getInfo (merger)
+export const mergeWhen = (p) => (mergerSym) => {
+    // --- fail early instead of continuing with curry (throws)
+    const merger = getMergeFunction (mergerSym)
+    return (a) => (b) => {
+        const { to, mut, own, } = getMergeInfo (mergerSym)
         const [src, tgt] = to ? [b, a] : [a, b]
         const tgtM = mut ? tgt : (
             to ? merger ({}) (tgt) : merger (tgt) ({})
         )
         return mergeXWhen (p) (own) (src) (tgtM)
     }
-    decorated.$$stick = merger.$$stick
-    return decorated
 }
 
 
@@ -690,12 +682,11 @@ const mergeMixinPostM = (mixin) => (proto) => {
 }
 
 export default {
-stuff: Symbol ('stuff'),
     roll, recurry,
-// recurryStick,
     eq, ne, gt, gte, lt, lte,
     dot, dot1, dot2, dot3, dot4, dot5, dotN,
     side, side1, side2, side3, side4, side5, sideN,
+    path, tap,
     ifPredicate, whenPredicate,
     ifPredicateOk, whenPredicateOk,
     has, hasIn,

@@ -59,7 +59,6 @@ export const roll = manual.roll
 export const recurry = manual.recurry
 
 const _recurry = recurry
-// const _recurryStick = manual.recurryStick
 
 export const noop = () => {}
 export const not = f => !f
@@ -254,10 +253,6 @@ export const mergeTo  = _recurry (2) (manual.mergeTo)
 export const merge    = _recurry (2) (manual.merge)
 
 export const mergeM   = _recurry (2) (manual.mergeM)
-
-// manual.mergeM.$$stick = { merge: { to: false, mut: true, own: true, }}
-// export const mergeM   = _recurryStick (2) (manual.mergeM)
-
 export const mergeToM = _recurry (2) (manual.mergeToM)
 
 // --- all enumerable properties (non-own and own) on the src will be copied to the tgt.
@@ -277,29 +272,21 @@ export const mergeInTo = _recurry (2) (manual.mergeInTo)
 // --- xxx adding a property to a function can lead to gotchas.
 // use symbols.
 
-mergeToM.$$stick = manual.mergeToM.$$stick =
-    { merge: { to: true,  mut: true, own: true, }}
-mergeM.$$stick     = manual.mergeM.$$stick =
-    { merge: { to: false, mut: true, own: true, }}
-mergeTo.$$stick    = manual.mergeTo.$$stick =
-    { merge: { to: true,  mut: false, own: true, }}
-merge.$$stick      = manual.merge.$$stick =
-    { merge: { to: false, mut: false, own: true, }}
-mergeInToM.$$stick = manual.mergeInToM.$$stick =
-    { merge: { to: true,  mut: true, own: false, }}
-mergeInM.$$stick   = manual.mergeInM.$$stick =
-    { merge: { to: false, mut: true, own: false, }}
-mergeInTo.$$stick  = manual.mergeInTo.$$stick =
-    { merge: { to: true,  mut: false, own: false, }}
-mergeIn.$$stick    = manual.mergeIn.$$stick =
-    { merge: { to: false, mut: false, own: false, }}
+
+export const mergeToMSym   = Symbol ('mergeToM')
+export const mergeToSym    = Symbol ('mergeTo')
+export const mergeMSym     = Symbol ('mergeM')
+export const mergeSym      = Symbol ('merge')
+export const mergeInToMSym = Symbol ('mergeInToM')
+export const mergeInToSym  = Symbol ('mergeInTo')
+export const mergeInMSym   = Symbol ('mergeInM')
+export const mergeInSym    = Symbol ('mergeIn')
 
 // --- 'when' forms run the predicate on both the src and tgt, testing for truthiness.
 export const mergeWhen    = _recurry (3) (manual.mergeWhen)
 
 // --- the 'own'-ness ('in') of the merge function will take effect on both tgt & src
 // -- not possible to mix and match.
-// export const mergeWith = _recurryStick (4) (manual.mergeWith)
 export const mergeWith = _recurry (4) (manual.mergeWith)
 
 // --- like R.mergeAll but also use prototype vals.
@@ -308,7 +295,6 @@ export const mergeAllIn = xs => xs.reduce (
     (tgt, src) => mergeInToM (tgt) (src),
     {},
 )
-
 
 // ------ map.
 

@@ -1,9 +1,8 @@
-var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, filter, reject, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeInTo, mergeIn, mergeInToM, mergeInM, mergeAllIn, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, mergeWith, mergeWhen, sortAlpha, sortNum, noop, chooseSrc, chooseTgt, mergeToChooseTgtM, mergeToChooseTgt, mergeToChooseSrcM, mergeToChooseSrc, mergeToWithNullM, mergeToWithNull, mergeToWithNoopM, mergeToWithNoop, mergeInToChooseTgtM, mergeInToChooseTgt, mergeInToChooseSrcM, mergeInToChooseSrc, mergeInToWithNoopM, mergeInToWithNoop, mergeChooseTgtM, mergeChooseTgt, mergeChooseSrcM, mergeChooseSrc, mergeWithNullM, mergeWithNull, mergeWithNoopM, mergeWithNoop, mergeInChooseTgtM, mergeInChooseTgt, mergeInChooseSrcM, mergeInChooseSrc, mergeInWithNullM, mergeInWithNull, mergeInWithNoopM, mergeInWithNoop, srcOk, tgtOk, mergeToWhenSrcOkM, mergeToWhenSrcOk, mergeToWhenTgtOkM, mergeToWhenTgtOk, mergeWhenSrcOkM, mergeWhenSrcOk, mergeWhenTgtOkM, mergeWhenTgtOk, this$ = this, slice$ = [].slice;
+var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, filter, reject, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeInTo, mergeIn, mergeInToM, mergeInM, mergeToSym, mergeSym, mergeToMSym, mergeMSym, mergeInToSym, mergeInSym, mergeInToMSym, mergeInMSym, mergeAllIn, mergeWith, mergeWhen, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, noop, chooseSrc, chooseTgt, mergeToChooseTgtM, mergeToChooseTgt, mergeToChooseSrcM, mergeToChooseSrc, mergeToWithNullM, mergeToWithNull, mergeToWithNoopM, mergeToWithNoop, mergeInToChooseTgtM, mergeInToChooseTgt, mergeInToChooseSrcM, mergeInToChooseSrc, mergeInToWithNoopM, mergeInToWithNoop, mergeChooseTgtM, mergeChooseTgt, mergeChooseSrcM, mergeChooseSrc, mergeWithNullM, mergeWithNull, mergeWithNoopM, mergeWithNoop, mergeInChooseTgtM, mergeInChooseTgt, mergeInChooseSrcM, mergeInChooseSrc, mergeInWithNullM, mergeInWithNull, mergeInWithNoopM, mergeInWithNoop, srcOk, tgtOk, mergeToWhenSrcOkM, mergeToWhenSrcOk, mergeToWhenTgtOkM, mergeToWhenTgtOk, mergeWhenSrcOkM, mergeWhenSrcOk, mergeWhenTgtOkM, mergeWhenTgtOk, this$ = this, slice$ = [].slice;
 ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), map = ref$.map, filter = ref$.filter, reject = ref$.reject, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeInTo = ref$.mergeInTo, mergeIn = ref$.mergeIn, mergeInToM = ref$.mergeInToM, mergeInM = ref$.mergeInM, mergeAllIn = ref$.mergeAllIn, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
-ref$ = require('../manual'), mergeWith = ref$.mergeWith, mergeWhen = ref$.mergeWhen;
+ref$ = require('../index'), map = ref$.map, filter = ref$.filter, reject = ref$.reject, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeInTo = ref$.mergeInTo, mergeIn = ref$.mergeIn, mergeInToM = ref$.mergeInToM, mergeInM = ref$.mergeInM, mergeToSym = ref$.mergeToSym, mergeSym = ref$.mergeSym, mergeToMSym = ref$.mergeToMSym, mergeMSym = ref$.mergeMSym, mergeInToSym = ref$.mergeInToSym, mergeInSym = ref$.mergeInSym, mergeInToMSym = ref$.mergeInToMSym, mergeInMSym = ref$.mergeInMSym, mergeAllIn = ref$.mergeAllIn, mergeWith = ref$.mergeWith, mergeWhen = ref$.mergeWhen, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
 sortAlpha = function(it){
   return it.sort();
 };
@@ -20,65 +19,65 @@ chooseTgt = function(a, b){
   return b;
 };
 mergeToChooseTgtM = mergeWith(chooseTgt)(
-mergeToM);
+mergeToMSym);
 mergeToChooseTgt = mergeWith(chooseTgt)(
-mergeTo);
+mergeToSym);
 mergeToChooseSrcM = mergeWith(chooseSrc)(
-mergeToM);
+mergeToMSym);
 mergeToChooseSrc = mergeWith(chooseSrc)(
-mergeTo);
+mergeToSym);
 mergeToWithNullM = mergeWith(null)(
-mergeToM);
+mergeToMSym);
 mergeToWithNull = mergeWith(null)(
-mergeTo);
+mergeToSym);
 mergeToWithNoopM = mergeWith(noop)(
-mergeToM);
+mergeToMSym);
 mergeToWithNoop = mergeWith(noop)(
-mergeTo);
+mergeToSym);
 mergeInToChooseTgtM = mergeWith(chooseTgt)(
-mergeInToM);
+mergeInToMSym);
 mergeInToChooseTgt = mergeWith(chooseTgt)(
-mergeInTo);
+mergeInToSym);
 mergeInToChooseSrcM = mergeWith(chooseSrc)(
-mergeInToM);
+mergeInToMSym);
 mergeInToChooseSrc = mergeWith(chooseSrc)(
-mergeInTo);
+mergeInToSym);
 mergeInToWithNoopM = mergeWith(noop)(
-mergeInToM);
+mergeInToMSym);
 mergeInToWithNoop = mergeWith(noop)(
-mergeInTo);
+mergeInToSym);
 mergeChooseTgtM = mergeWith(chooseTgt)(
-mergeM);
+mergeMSym);
 mergeChooseTgt = mergeWith(chooseTgt)(
-merge);
+mergeSym);
 mergeChooseSrcM = mergeWith(chooseSrc)(
-mergeM);
+mergeMSym);
 mergeChooseSrc = mergeWith(chooseSrc)(
-merge);
+mergeSym);
 mergeWithNullM = mergeWith(null)(
-mergeM);
+mergeMSym);
 mergeWithNull = mergeWith(null)(
-merge);
+mergeSym);
 mergeWithNoopM = mergeWith(noop)(
-mergeM);
+mergeMSym);
 mergeWithNoop = mergeWith(noop)(
-merge);
+mergeSym);
 mergeInChooseTgtM = mergeWith(chooseTgt)(
-mergeInM);
+mergeInMSym);
 mergeInChooseTgt = mergeWith(chooseTgt)(
-mergeIn);
+mergeInSym);
 mergeInChooseSrcM = mergeWith(chooseSrc)(
-mergeInM);
+mergeInMSym);
 mergeInChooseSrc = mergeWith(chooseSrc)(
-mergeIn);
+mergeInSym);
 mergeInWithNullM = mergeWith(null)(
-mergeInM);
+mergeInMSym);
 mergeInWithNull = mergeWith(null)(
-mergeIn);
+mergeInSym);
 mergeInWithNoopM = mergeWith(noop)(
-mergeInM);
+mergeInMSym);
 mergeInWithNoop = mergeWith(noop)(
-mergeIn);
+mergeInSym);
 srcOk = function(s, _){
   return s != null;
 };
@@ -86,21 +85,21 @@ tgtOk = function(_, t){
   return t != null;
 };
 mergeToWhenSrcOkM = mergeWhen(srcOk)(
-mergeToM);
+mergeToMSym);
 mergeToWhenSrcOk = mergeWhen(srcOk)(
-mergeTo);
+mergeToSym);
 mergeToWhenTgtOkM = mergeWhen(tgtOk)(
-mergeToM);
+mergeToMSym);
 mergeToWhenTgtOk = mergeWhen(tgtOk)(
-mergeTo);
+mergeToSym);
 mergeWhenSrcOkM = mergeWhen(srcOk)(
-mergeM);
+mergeMSym);
 mergeWhenSrcOk = mergeWhen(srcOk)(
-merge);
+mergeSym);
 mergeWhenTgtOkM = mergeWhen(tgtOk)(
-mergeM);
+mergeMSym);
 mergeWhenTgtOk = mergeWhen(tgtOk)(
-merge);
+mergeSym);
 describe('map, filter, reject, each', function(){
   describe('map', function(){
     var mapX, mapXC, mapCX;

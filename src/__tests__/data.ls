@@ -47,9 +47,13 @@
 
     merge-to, merge, merge-to-m, merge-m,
     merge-in-to, merge-in, merge-in-to-m, merge-in-m,
+
+    merge-to-sym, merge-sym, merge-to-m-sym, merge-m-sym,
+    merge-in-to-sym, merge-in-sym, merge-in-to-m-sym, merge-in-m-sym,
+
     merge-all-in,
-    #merge-with,
-    #merge-when,
+    merge-with,
+    merge-when,
 
     discard-prototype, flatten-prototype,
 
@@ -60,10 +64,7 @@
 
 } = require '../index'
 
-{
-    merge-with,
-    merge-when,
-} = require '../manual'
+# { } = require '../manual'
 
 sort-alpha = (.sort ())
 sort-num = (.sort ((a, b) -> a - b))
@@ -74,51 +75,51 @@ choose-tgt = (a, b) -> b
 
 # --- the -null versions are to prove that the collision function is not called in certain cases.
 
-merge-to-choose-tgt-m = merge-to-m |> merge-with choose-tgt
-merge-to-choose-tgt   = merge-to   |> merge-with choose-tgt
-merge-to-choose-src-m = merge-to-m |> merge-with choose-src
-merge-to-choose-src   = merge-to   |> merge-with choose-src
-merge-to-with-null-m  = merge-to-m |> merge-with null
-merge-to-with-null    = merge-to   |> merge-with null
-merge-to-with-noop-m  = merge-to-m |> merge-with noop
-merge-to-with-noop    = merge-to   |> merge-with noop
+merge-to-choose-tgt-m = merge-to-m-sym |> merge-with choose-tgt
+merge-to-choose-tgt   = merge-to-sym   |> merge-with choose-tgt
+merge-to-choose-src-m = merge-to-m-sym |> merge-with choose-src
+merge-to-choose-src   = merge-to-sym   |> merge-with choose-src
+merge-to-with-null-m  = merge-to-m-sym |> merge-with null
+merge-to-with-null    = merge-to-sym   |> merge-with null
+merge-to-with-noop-m  = merge-to-m-sym |> merge-with noop
+merge-to-with-noop    = merge-to-sym   |> merge-with noop
 
-merge-in-to-choose-tgt-m = merge-in-to-m |> merge-with choose-tgt
-merge-in-to-choose-tgt   = merge-in-to   |> merge-with choose-tgt
-merge-in-to-choose-src-m = merge-in-to-m |> merge-with choose-src
-merge-in-to-choose-src   = merge-in-to   |> merge-with choose-src
-merge-in-to-with-noop-m  = merge-in-to-m |> merge-with noop
-merge-in-to-with-noop    = merge-in-to   |> merge-with noop
+merge-in-to-choose-tgt-m = merge-in-to-m-sym |> merge-with choose-tgt
+merge-in-to-choose-tgt   = merge-in-to-sym   |> merge-with choose-tgt
+merge-in-to-choose-src-m = merge-in-to-m-sym |> merge-with choose-src
+merge-in-to-choose-src   = merge-in-to-sym   |> merge-with choose-src
+merge-in-to-with-noop-m  = merge-in-to-m-sym |> merge-with noop
+merge-in-to-with-noop    = merge-in-to-sym   |> merge-with noop
 
-merge-choose-tgt-m    = merge-m    |> merge-with choose-tgt
-merge-choose-tgt      = merge      |> merge-with choose-tgt
-merge-choose-src-m    = merge-m    |> merge-with choose-src
-merge-choose-src      = merge      |> merge-with choose-src
-merge-with-null-m     = merge-m    |> merge-with null
-merge-with-null       = merge      |> merge-with null
-merge-with-noop-m     = merge-m    |> merge-with noop
-merge-with-noop       = merge      |> merge-with noop
+merge-choose-tgt-m    = merge-m-sym    |> merge-with choose-tgt
+merge-choose-tgt      = merge-sym      |> merge-with choose-tgt
+merge-choose-src-m    = merge-m-sym    |> merge-with choose-src
+merge-choose-src      = merge-sym      |> merge-with choose-src
+merge-with-null-m     = merge-m-sym    |> merge-with null
+merge-with-null       = merge-sym      |> merge-with null
+merge-with-noop-m     = merge-m-sym    |> merge-with noop
+merge-with-noop       = merge-sym      |> merge-with noop
 
-merge-in-choose-tgt-m    = merge-in-m    |> merge-with choose-tgt
-merge-in-choose-tgt      = merge-in      |> merge-with choose-tgt
-merge-in-choose-src-m    = merge-in-m    |> merge-with choose-src
-merge-in-choose-src      = merge-in      |> merge-with choose-src
-merge-in-with-null-m     = merge-in-m    |> merge-with null
-merge-in-with-null       = merge-in      |> merge-with null
-merge-in-with-noop-m     = merge-in-m    |> merge-with noop
-merge-in-with-noop       = merge-in      |> merge-with noop
+merge-in-choose-tgt-m    = merge-in-m-sym    |> merge-with choose-tgt
+merge-in-choose-tgt      = merge-in-sym      |> merge-with choose-tgt
+merge-in-choose-src-m    = merge-in-m-sym    |> merge-with choose-src
+merge-in-choose-src      = merge-in-sym      |> merge-with choose-src
+merge-in-with-null-m     = merge-in-m-sym    |> merge-with null
+merge-in-with-null       = merge-in-sym      |> merge-with null
+merge-in-with-noop-m     = merge-in-m-sym    |> merge-with noop
+merge-in-with-noop       = merge-in-sym      |> merge-with noop
 
 src-ok = (s, _) -> s?
 tgt-ok = (_, t) -> t?
 
-merge-to-when-src-ok-m = merge-to-m |> merge-when src-ok
-merge-to-when-src-ok   = merge-to   |> merge-when src-ok
-merge-to-when-tgt-ok-m = merge-to-m |> merge-when tgt-ok
-merge-to-when-tgt-ok   = merge-to   |> merge-when tgt-ok
-merge-when-src-ok-m = merge-m |> merge-when src-ok
-merge-when-src-ok   = merge   |> merge-when src-ok
-merge-when-tgt-ok-m = merge-m |> merge-when tgt-ok
-merge-when-tgt-ok   = merge   |> merge-when tgt-ok
+merge-to-when-src-ok-m = merge-to-m-sym |> merge-when src-ok
+merge-to-when-src-ok   = merge-to-sym   |> merge-when src-ok
+merge-to-when-tgt-ok-m = merge-to-m-sym |> merge-when tgt-ok
+merge-to-when-tgt-ok   = merge-to-sym   |> merge-when tgt-ok
+merge-when-src-ok-m = merge-m-sym |> merge-when src-ok
+merge-when-src-ok   = merge-sym   |> merge-when src-ok
+merge-when-tgt-ok-m = merge-m-sym |> merge-when tgt-ok
+merge-when-tgt-ok   = merge-sym   |> merge-when tgt-ok
 
 describe 'map, filter, reject, each' ->
     describe 'map' ->

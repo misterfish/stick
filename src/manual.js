@@ -13,8 +13,7 @@ import {
 import stick from './index'
 
 const noop = _ => {}
-const oPro = Object.prototype
-const hasOwn = oPro.hasOwnProperty
+const { hasOwnProperty: hasOwn, } = {}
 
 export const roll = (f) => (...args) => {
     let g = f
@@ -253,16 +252,26 @@ export const concat  = src => tgt => tgt.concat (src)
 export const concatToM   = tgt => src => (tgt.push (...src), tgt)
 export const concatM = src => tgt => (tgt.push (...src), tgt)
 
-// --- these seem to be much faster than Object.assign -- why?
+export const mergeToMSym = Symbol ('mergeToM')
+export const mergeToSym = Symbol ('mergeTo')
+export const mergeMSym = Symbol ('mergeM')
+export const mergeSym = Symbol ('merge')
+export const mergeInToMSym = Symbol ('mergeInToM')
+export const mergeInToSym = Symbol ('mergeInTo')
+export const mergeInMSym = Symbol ('mergeInM')
+export const mergeInSym = Symbol ('mergeIn')
+
+// --- these seem to be much faster than Object.assign.
 // @profile
+
 export const mergeToM = (tgt) => (src) => {
-    for (const i in src) if (oPro.hasOwnProperty.call (src, i))
+    for (const i in src) if (hasOwn.call (src, i))
         tgt[i] = src[i]
     return tgt
 }
 
 export const mergeM = (src) => (tgt) => {
-    for (const i in src) if (oPro.hasOwnProperty.call (src, i))
+    for (const i in src) if (hasOwn.call (src, i))
         tgt[i] = src[i]
     return tgt
 }
@@ -276,6 +285,32 @@ export const merge = (src) => (tgt) => {
     const a = mergeToM ({}) (tgt)
     return mergeToM (a) (src)
 }
+
+export const mergeInToM = (tgt) => (src) => {
+    for (const i in src) tgt[i] = src[i]
+    return tgt
+}
+
+export const mergeInM = (src) => (tgt) => mergeInToM (tgt) (src)
+
+export const mergeInTo = (tgt) => (src) => {
+    const a = mergeInToM ({}) (tgt)
+    return mergeInToM (a) (src)
+}
+export const mergeIn = (src) => (tgt) => mergeInTo (tgt) (src)
+
+const mergeFunctions = {
+    [mergeToMSym]: mergeToM,
+    [mergeToSym]: mergeTo,
+    [mergeMSym]: mergeM,
+    [mergeSym]: merge,
+    [mergeInToMSym]: mergeInToM,
+    [mergeInToSym]: mergeInTo,
+    [mergeInMSym]: mergeInM,
+    [mergeInSym]: mergeIn,
+}
+
+
 
 // --- tgt will be altered.
 // only `own` needs to be passed: direction and mutability have already been decided.
@@ -320,12 +355,12 @@ const oldGetInfo1 = (merger) => merger === mergeToM         ? [true, true, true]
                           : merger === stick.mergeTo    ? [true, false, true]
                           : merger === merge            ? [false, false, true]
                           : merger === stick.merge      ? [false, false, true]
-                          : merger === mergeToInM       ? [true, true, false]
-                          : merger === stick.mergeToInM ? [true, true, false]
+                          : merger === mergeInToM       ? [true, true, false]
+                          : merger === stick.mergeInToM ? [true, true, false]
                           : merger === mergeInM         ? [false, true, false]
                           : merger === stick.mergeInM   ? [false, true, false]
-                          : merger === mergeToIn        ? [true, false, false]
-                          : merger === stick.mergeToIn  ? [true, false, false]
+                          : merger === mergeInTo        ? [true, false, false]
+                          : merger === stick.mergeInTo  ? [true, false, false]
                           : merger === mergeIn          ? [false, false, false]
                           : merger === stick.mergeIn    ? [false, false, false]
                           : die ('Unrecognised merge function')
@@ -368,19 +403,6 @@ export const mergeWhen = (p) => (merger) => {
     return decorated
 }
 
-
-export const mergeToInM = (tgt) => (src) => {
-    for (const i in src) tgt[i] = src[i]
-    return tgt
-}
-
-export const mergeInM = (src) => (tgt) => mergeToInM (tgt) (src)
-
-export const mergeToIn = (tgt) => (src) => {
-    const a = mergeToInM ({}) (tgt)
-    return mergeToInM (a) (src)
-}
-export const mergeIn = (src) => (tgt) => mergeToIn (tgt) (src)
 
 // --- note: capped.
 export const map  = f => ary => ary.map     (x => f (x))
@@ -668,6 +690,7 @@ const mergeMixinPostM = (mixin) => (proto) => {
 }
 
 export default {
+stuff: Symbol ('stuff'),
     roll, recurry,
 // recurryStick,
     eq, ne, gt, gte, lt, lte,
@@ -696,7 +719,7 @@ export default {
     prependTo, prepend, prependToM, prependM,
     concatTo, concat, concatToM, concatM,
     mergeTo, merge, mergeToM, mergeM,
-    mergeToInM, mergeInM, mergeToIn, mergeIn,
+    mergeInToM, mergeInM, mergeInTo, mergeIn,
     mergeWith, mergeWhen,
     addIndex, addCollection,
     map, filter, reject,

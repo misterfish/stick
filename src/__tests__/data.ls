@@ -46,7 +46,7 @@
     precat-to, precat,
 
     merge-to, merge, merge-to-m, merge-m,
-    merge-to-in, merge-in, merge-to-in-m, merge-in-m,
+    merge-in-to, merge-in, merge-in-to-m, merge-in-m,
     merge-all-in,
     #merge-with,
     #merge-when,
@@ -83,12 +83,12 @@ merge-to-with-null    = merge-to   |> merge-with null
 merge-to-with-noop-m  = merge-to-m |> merge-with noop
 merge-to-with-noop    = merge-to   |> merge-with noop
 
-merge-to-in-choose-tgt-m = merge-to-in-m |> merge-with choose-tgt
-merge-to-in-choose-tgt   = merge-to-in   |> merge-with choose-tgt
-merge-to-in-choose-src-m = merge-to-in-m |> merge-with choose-src
-merge-to-in-choose-src   = merge-to-in   |> merge-with choose-src
-merge-to-in-with-noop-m  = merge-to-in-m |> merge-with noop
-merge-to-in-with-noop    = merge-to-in   |> merge-with noop
+merge-in-to-choose-tgt-m = merge-in-to-m |> merge-with choose-tgt
+merge-in-to-choose-tgt   = merge-in-to   |> merge-with choose-tgt
+merge-in-to-choose-src-m = merge-in-to-m |> merge-with choose-src
+merge-in-to-choose-src   = merge-in-to   |> merge-with choose-src
+merge-in-to-with-noop-m  = merge-in-to-m |> merge-with noop
+merge-in-to-with-noop    = merge-in-to   |> merge-with noop
 
 merge-choose-tgt-m    = merge-m    |> merge-with choose-tgt
 merge-choose-tgt      = merge      |> merge-with choose-tgt
@@ -1003,16 +1003,16 @@ describe 'data stuff' ->
                     |> expect-to-equal (src |> merge-to-m tgt)
 
             test 'when no collisions, acts like mergeTo M in' ->
-                src |> merge-to-in-with-noop-m tgt
-                    |> expect-to-equal (src |> merge-to-in-m tgt)
+                src |> merge-in-to-with-noop-m tgt
+                    |> expect-to-equal (src |> merge-in-to-m tgt)
 
             test 'when no collisions, acts like mergeTo' ->
                 src |> merge-to-with-noop tgt
                     |> expect-to-equal (src |> merge-to tgt)
 
             test 'when no collisions, acts like mergeTo in' ->
-                src |> merge-to-in-with-noop tgt
-                    |> expect-to-equal (src |> merge-to-in tgt)
+                src |> merge-in-to-with-noop tgt
+                    |> expect-to-equal (src |> merge-in-to tgt)
 
         # --- testing all possible combinations is overkill.
         # suffice it to show that they can be composed with an arbitrary merge function and in an
@@ -1191,28 +1191,28 @@ describe 'data stuff' ->
 
 
             test 'choose target M in' ->
-                src |> merge-to-in-choose-tgt-m tgt
+                src |> merge-in-to-choose-tgt-m tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
                     c: 'source c'
                     hidden: 43
             test 'choose source M in' ->
-                src |> merge-to-in-choose-src-m tgt
+                src |> merge-in-to-choose-src-m tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
                     c: 'source c'
                     hidden: 42
             test 'choose target in' ->
-                src |> merge-to-in-choose-tgt tgt
+                src |> merge-in-to-choose-tgt tgt
                     |> expect-to-equal do
                         a: 'target a'
                         b: 'target b'
                         c: 'source c'
                         hidden: 43
             test 'choose source in' ->
-                src |> merge-to-in-choose-src tgt
+                src |> merge-in-to-choose-src tgt
                     |> expect-to-equal do
                         a: 'target a'
                         b: 'source b'
@@ -1357,7 +1357,7 @@ describe 'data stuff' ->
                         hidden: 'source hidden'
 
     describe 'mergeToIn' ->
-        fn = merge-to-in
+        fn = merge-in-to
         dir = 'to'
         mut = false
         test 1 ->
@@ -1484,7 +1484,7 @@ describe 'data stuff' ->
                 |> expect-to-equal a: 3 b: null c: null
 
     describe 'mergeToInM' ->
-        fn = merge-to-in-m
+        fn = merge-in-to-m
         dir = 'to'
         mut = true
         test 1 ->

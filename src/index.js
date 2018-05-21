@@ -25,8 +25,7 @@ export {
 
 import manual from './manual'
 
-const hasOwn = Object.prototype.hasOwnProperty
-const oStr   = Object.prototype.toString
+const { hasOwnProperty: hasOwn, toString: oStr, } = {}
 
 // --- takes a manually curried function like
 // f = a => b => c => d => { body }
@@ -262,14 +261,14 @@ export const mergeM   = _recurry (2) (manual.mergeM)
 export const mergeToM = _recurry (2) (manual.mergeToM)
 
 // --- all enumerable properties (non-own and own) on the src will be copied to the tgt.
-export const mergeToInM = _recurry (2) (manual.mergeToInM)
+export const mergeInToM = _recurry (2) (manual.mergeInToM)
 export const mergeInM   = _recurry (2) (manual.mergeInM)
 // /---
 
 // --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
 // object.
 export const mergeIn = _recurry (2) (manual.mergeIn)
-export const mergeToIn = _recurry (2) (manual.mergeToIn)
+export const mergeInTo = _recurry (2) (manual.mergeInTo)
 // /---
 
 // /---- basis
@@ -286,11 +285,11 @@ mergeTo.$$stick    = manual.mergeTo.$$stick =
     { merge: { to: true,  mut: false, own: true, }}
 merge.$$stick      = manual.merge.$$stick =
     { merge: { to: false, mut: false, own: true, }}
-mergeToInM.$$stick = manual.mergeToInM.$$stick =
+mergeInToM.$$stick = manual.mergeInToM.$$stick =
     { merge: { to: true,  mut: true, own: false, }}
 mergeInM.$$stick   = manual.mergeInM.$$stick =
     { merge: { to: false, mut: true, own: false, }}
-mergeToIn.$$stick  = manual.mergeToIn.$$stick =
+mergeInTo.$$stick  = manual.mergeInTo.$$stick =
     { merge: { to: true,  mut: false, own: false, }}
 mergeIn.$$stick    = manual.mergeIn.$$stick =
     { merge: { to: false, mut: false, own: false, }}
@@ -306,7 +305,7 @@ export const mergeWith = _recurry (4) (manual.mergeWith)
 // --- like R.mergeAll but also use prototype vals.
 // --- to and from not applicable, also not curried or meant to be used piped.
 export const mergeAllIn = xs => xs.reduce (
-    (tgt, src) => mergeToInM (tgt) (src),
+    (tgt, src) => mergeInToM (tgt) (src),
     {},
 )
 
@@ -637,7 +636,7 @@ export const ifXReplaceStrFlags = _recurry (6) (manual.ifXReplaceStrFlags)
 export const discardPrototype = (o) => ({ ...o })
 
 // --- returns a copy with prototype vals surfaced.
-export const flattenPrototype = mergeToInM ({})
+export const flattenPrototype = mergeInToM ({})
 
 // --- using rest params to pluck it is about 4 times faster than writing the args out -- but even
 // the latter can do 1e5 iterations per ms.
@@ -1003,6 +1002,6 @@ const mapTuplesInWithFilter = (p) => (f) => (o) => {
 export default {
     mergeToM, mergeM,
     mergeTo, merge,
-    mergeToInM, mergeInM,
-    mergeToIn, mergeIn,
+    mergeInToM, mergeInM,
+    mergeInTo, mergeIn,
 }

@@ -1023,8 +1023,6 @@ describe 'data stuff' ->
                     ..c = 12
             xtest 'with then when NOT WORKING' ->
                 merger = merge-m |> merge-with choose-src |> merge-when src-odd
-                # console.log 'merger' merger
-                # console.log 'merger.$$stick' merger.$$stick
                 tgt |> merger src
                 tgt |> expect-to-equal do
                     a: 20

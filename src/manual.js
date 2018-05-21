@@ -248,31 +248,15 @@ export const merge = (src) => (tgt) => {
     return mergeToM (a) (src)
 }
 
-// export const oldmergeToWithM = (collision) => (tgt) => (src) => {
-//     for (const i in src) whenHas (
-//         (v, o, k) => ifHas (
-// 			(v, o, k) => tgt [i] = collision (src [i], tgt [i]))
-// 			((o, k) => tgt [i] = src [i])
-//             ([tgt, i])
-//         )
-//         ([src, i])
-// 	return tgt
-// }
-
-// export const oldmergeWithM = (collision) => (src) => (tgt) => mergeToWithM (collision) (tgt) (src)
-
-const makeMutable = (merger) => merger === merge ? mergeM
-                              : merger === mergeTo ? mergeToM
-                            : merger === merge
-
 // --- tgt will be altered.
 // only `own` needs to be passed: direction and mutability have already been decided.
-
+//
 // in the M case tgt is just the tgt;
 // in the non-M case it has been prepared to be a new copy.
 //
 // `own` refers to both tgt & src -- not possible to mix and match.
 
+// --- a performance hit is acceptable here.
 const mergeXWith = (collision) => (own) => (src) => (tgt) => {
     const [_whenHas, _ifHas] = own ? [whenHas, ifHas] : [whenHasIn, ifHasIn]
     for (const i in src) _whenHas (
@@ -294,6 +278,14 @@ const getInfo = (merger) => merger === mergeToM       ? ['to', true, true]
                           : merger === stick.mergeTo  ? ['to', false, true]
                           : merger === merge          ? ['from', false, true]
                           : merger === stick.merge    ? ['from', false, true]
+                          : merger === mergeToInM       ? ['to', true, false]
+                          : merger === stick.mergeToInM ? ['to', true, false]
+                          : merger === mergeInM         ? ['from', true, false]
+                          : merger === stick.mergeInM   ? ['from', true, false]
+                          : merger === mergeToIn        ? ['to', false, false]
+                          : merger === stick.mergeToIn  ? ['to', false, false]
+                          : merger === mergeIn          ? ['from', false, false]
+                          : merger === stick.mergeIn    ? ['from', false, false]
                           : die ('Unrecognised merge function')
 
 export const mergeWith = (collision) => (merger) => (a) => (b) => {

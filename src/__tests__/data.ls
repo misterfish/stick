@@ -48,10 +48,7 @@
     merge-to, merge, merge-to-m, merge-m,
     merge-to-in, merge-in, merge-to-in-m, merge-in-m,
     merge-all-in,
-    merge-with,
-
-    merge-to-when-m, merge-when-m,
-    merge-to-when, merge-when,
+    merge-with, merge-when,
 
     discard-prototype, flatten-prototype,
 
@@ -104,6 +101,18 @@ merge-in-with-null-m     = merge-in-m    |> merge-with null
 merge-in-with-null       = merge-in      |> merge-with null
 merge-in-with-noop-m     = merge-in-m    |> merge-with noop
 merge-in-with-noop       = merge-in      |> merge-with noop
+
+src-ok = (s, _) -> s?
+tgt-ok = (_, t) -> t?
+
+merge-to-when-src-ok-m = merge-to-m |> merge-when src-ok
+merge-to-when-src-ok   = merge-to   |> merge-when src-ok
+merge-to-when-tgt-ok-m = merge-to-m |> merge-when tgt-ok
+merge-to-when-tgt-ok   = merge-to   |> merge-when tgt-ok
+merge-when-src-ok-m = merge-m |> merge-when src-ok
+merge-when-src-ok   = merge   |> merge-when src-ok
+merge-when-tgt-ok-m = merge-m |> merge-when tgt-ok
+merge-when-tgt-ok   = merge   |> merge-when tgt-ok
 
 describe 'map, filter, reject, each' ->
     describe 'map' ->
@@ -1298,35 +1307,33 @@ describe 'data stuff' ->
             tgt := (Object.create base) <<< a: 1 b: 2 c: null
             src := (Object.create base) <<< a: 3 b: null c: 4
         test 1 ->
-            src |> merge-to-when-m src-ok, tgt
+            src |> merge-to-when-src-ok-m tgt
             tgt |> expect-to-equal a: 3 b: 2 c: 4
         test 2 ->
-            src |> merge-to-when-m tgt-ok, tgt
+            src |> merge-to-when-tgt-ok-m tgt
             tgt |> expect-to-equal a: 3 b: null c: null
         test 3 ->
-            tgt |> merge-when-m src-ok, src
+            tgt |> merge-when-src-ok-m src
             tgt |> expect-to-equal a: 3 b: 2 c: 4
         test 4 ->
-            tgt |> merge-when-m tgt-ok, src
+            tgt |> merge-when-tgt-ok-m src
             tgt |> expect-to-equal a: 3 b: null c: null
 
     describe 'merge*When' ->
         base = base-val: 10
         tgt = (Object.create base) <<< a: 1 b: 2 c: null
         src = (Object.create base) <<< a: 3 b: null c: 4
-        src-ok = (s, _) -> s?
-        tgt-ok = (_, t) -> t?
         test 1 ->
-            src |> merge-to-when src-ok, tgt
+            src |> merge-to-when-src-ok tgt
                 |> expect-to-equal a: 3 b: 2 c: 4
         test 2 ->
-            src |> merge-to-when tgt-ok, tgt
+            src |> merge-to-when-tgt-ok tgt
                 |> expect-to-equal a: 3 b: null c: null
         test 3 ->
-            tgt |> merge-when src-ok, src
+            tgt |> merge-when-src-ok src
                 |> expect-to-equal a: 3 b: 2 c: 4
         test 4 ->
-            tgt |> merge-when tgt-ok, src
+            tgt |> merge-when-tgt-ok src
                 |> expect-to-equal a: 3 b: null c: null
 
     describe 'mergeToInM' ->

@@ -7,6 +7,7 @@ import {
     getType,
     xRegExp, xRegExpFlags, xRegExpStr,
     die,
+    T,
 } from './index'
 
 import stick from './index'
@@ -306,29 +307,27 @@ export const mergeWith = (collision) => (merger) => (a) => (b) => {
     return mergeXWith (collision) (own) (src) (tgtM)
 }
 
-// --- we don't (currently) have `in`, and `with` forms for the `when` form.
-// --- tests `f` for truthiness.
-export const mergeToWhenM = (f) => (tgt) => (src) => {
+// --- like with 'with', mut and direction have already been arranged, and `tgt` will be mutated.
+// --- tests `p` for truthiness.
+const mergeXWhen = (p) => (own) => (src) => (tgt) => {
+    const checkHas = own ? hasOwn : T
     for (const i in src)
-        if (hasOwn.call (src, i) && f (src [i], tgt [i]))
-            tgt[i] = src[i]
+        if (checkHas.call (src, i) && p (src [i], tgt [i]))
+            tgt [i] = src [i]
     return tgt
 }
 
-// --- tests `f` for truthiness.
-export const mergeToWhen = (f) => (tgt) => (src) => {
-    const a = mergeToM ({}) (tgt)
-    return mergeToWhenM (f) (a) (src)
+export const mergeWhen = (p) => (merger) => (a) => (b) => {
+    const { to, mut, own, } = getInfo (merger)
+    const [src, tgt] = to ? [b, a] : [a, b]
+    const tgtM = mut ? tgt : (
+        to ? merger ({}) (tgt) : merger (tgt) ({})
+    )
+    return mergeXWhen (p) (own) (src) (tgtM)
 }
 
-// --- tests `f` for truthiness.
-export const mergeWhenM = f => src => tgt => mergeToWhenM (f) (tgt) (src)
 
-// --- tests `f` for truthiness.
-export const mergeWhen = (f) => (src) => (tgt) => {
-    const a = mergeToM ({}) (tgt)
-    return mergeToWhenM (f) (a) (src)
-}
+
 
 export const mergeToInM = (tgt) => (src) => {
     for (const i in src) tgt[i] = src[i]
@@ -639,10 +638,8 @@ export default {
     prependTo, prepend, prependToM, prependM,
     concatTo, concat, concatToM, concatM,
     mergeTo, merge, mergeToM, mergeM,
-    mergeToWhenM, mergeWhenM,
-    mergeToWhen, mergeWhen,
     mergeToInM, mergeInM, mergeToIn, mergeIn,
-    mergeWith,
+    mergeWith, mergeWhen,
     addIndex, addCollection,
     map, filter, reject,
     each, eachObj, eachObjIn,

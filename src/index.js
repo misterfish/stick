@@ -295,9 +295,6 @@ mergeIn.$$stick    = manual.mergeIn.$$stick =
 // @todo: make 'when' decoratable, like 'with'.
 //
 // --- 'when' forms run the predicate on both the src and tgt, testing for truthiness.
-export const mergeToWhenM = _recurry (3) (manual.mergeToWhenM)
-export const mergeWhenM   = _recurry (3) (manual.mergeWhenM)
-export const mergeToWhen  = _recurry (3) (manual.mergeToWhen)
 export const mergeWhen    = _recurry (3) (manual.mergeWhen)
 
 // `own` refers to both tgt & src -- not possible to mix and match.

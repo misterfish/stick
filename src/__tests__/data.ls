@@ -46,9 +46,9 @@
     precat-to, precat,
 
     merge-to, merge, merge-to-m, merge-m,
-    merge-to-with-m, merge-with-m,
     merge-to-in, merge-in, merge-to-in-m, merge-in-m,
     merge-all-in,
+    merge-with,
 
     merge-to-when-m, merge-when-m,
     merge-to-when, merge-when,
@@ -731,8 +731,8 @@ describe 'data stuff' ->
                 { fn, src, tgt, dir, }
             # --- = JS `in`
             ('d' of res) |> expect-to-be true
-        test 'discards non-own vals 1' ->
-            tgt = Object.create hidden: 42
+        test 'discards non-own vals on src' ->
+            tgt = Object.create
                 ..a = 1
                 ..b = 2
             src = Object.create hidden: 43
@@ -745,7 +745,7 @@ describe 'data stuff' ->
 
             (expect res).to-equal a: 1 b: 3 c: 4
             (expect res.hidden).to-equal void
-        test 'discards non-own vals 2' ->
+        test 'discards non-own vals on tgt' ->
             tgt = Object.create hidden: 42
                 ..a = 1
                 ..b = 2
@@ -786,8 +786,8 @@ describe 'data stuff' ->
             test-m do
                 { res, mut, tgt, }
             (expect res).to-equal a: 1 b: 3 c: 4
-        test 'discards non-own vals 1' ->
-            tgt = Object.create hidden: 42
+        test 'discards non-own vals on src' ->
+            tgt = Object.create
                 ..a = 1
                 ..b = 2
             src = Object.create hidden: 43
@@ -800,7 +800,7 @@ describe 'data stuff' ->
 
             (expect res).to-equal a: 1 b: 3 c: 4
             (expect res.hidden).to-equal void
-        test 'discards non-own vals 2' ->
+        test 'discards non-own vals on tgt' ->
             tgt = Object.create hidden: 42
                 ..a = 1
                 ..b = 2
@@ -934,8 +934,9 @@ describe 'data stuff' ->
     describe 'mergeToWithM' ->
         var tgt, src
         noop = ->
-        choose-left = (a, b) -> a
-        choose-right = (a, b) -> b
+        choose-src = (a, b) -> a
+        choose-tgt = (a, b) -> b
+        merge-to-with-noop-m = merge-to-m |> merge-with noop
         describe 'main' ->
             test 'when no collisions, acts like mergeToM' ->
                 tgt = Object.create hidden1: 42
@@ -945,11 +946,13 @@ describe 'data stuff' ->
                     ..c = 3
                     ..d = 4
                 src
-                |> merge-to-with-m noop, tgt
+                |> merge-to-with-noop-m tgt
                 |> expect-to-equal (src |> merge-to-m tgt)
 
         describe 'collide with own of target' ->
             var tgt, src
+            merge-to-choose-tgt-m = merge-to-m |> merge-with choose-tgt
+            merge-to-choose-src-m = merge-to-m |> merge-with choose-src
             before-each ->
                 tgt := Object.create hidden: 42
                     ..a = 'target a'
@@ -959,13 +962,13 @@ describe 'data stuff' ->
                     b: 'source b'
                     c: 'source c'
             test 'choose target' ->
-                src |> merge-to-with-m choose-left, tgt
+                src |> merge-to-choose-tgt-m tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
                     c: 'source c'
             test 'choose source' ->
-                src |> merge-to-with-m choose-right, tgt
+                src |> merge-to-choose-src-m tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
@@ -982,36 +985,23 @@ describe 'data stuff' ->
                     c: 'source c'
                     hidden: 'source hidden'
 
+            merge-to-with-null-m = merge-to-m |> merge-with null
             test 'proto chain of target is not checked' ->
-                src |> merge-to-with-m null tgt
+                src |> merge-to-with-null-m tgt
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
-                    c: 'source c'
-                    hidden: 'source hidden'
-
-            # --- old behaviors.
-            xtest 'choose target, hidden val floats' ->
-                src |> merge-to-with-m choose-left, tgt
-                tgt |> expect-to-equal do
-                    a: 'target a'
-                    b: 'target b'
-                    c: 'source c'
-                    hidden: 'target hidden'
-                tgt.hidden |> expect-to-equal 'target hidden'
-            xtest 'choose source, hidden val floats' ->
-                src |> merge-to-with-m choose-right, tgt
-                tgt |> expect-to-equal do
-                    a: 'target a'
-                    b: 'source b'
                     c: 'source c'
                     hidden: 'source hidden'
 
     describe 'mergeWithM' ->
         var tgt, src
         noop = ->
-        choose-left = (a, b) -> a
-        choose-right = (a, b) -> b
+        choose-src = (a, b) -> a
+        choose-tgt = (a, b) -> b
+        merge-with-noop-m = merge-m |> merge-with noop
+        merge-choose-tgt-m = merge-m |> merge-with choose-tgt
+        merge-choose-src-m = merge-m |> merge-with choose-src
         describe 'main' ->
             test 'when no collisions, acts like mergeM' ->
                 tgt = Object.create hidden1: 42
@@ -1021,7 +1011,7 @@ describe 'data stuff' ->
                     ..c = 3
                     ..d = 4
                 tgt
-                |> merge-with-m noop, src
+                |> merge-with-noop-m src
                 |> expect-to-equal (tgt |> merge-m src)
 
         describe 'collide with own of target' ->
@@ -1035,13 +1025,13 @@ describe 'data stuff' ->
                     b: 'source b'
                     c: 'source c'
             test 'choose target' ->
-                tgt |> merge-with-m choose-left, src
+                tgt |> merge-choose-tgt-m src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'target b'
                     c: 'source c'
             test 'choose source' ->
-                tgt |> merge-with-m choose-right, src
+                tgt |> merge-choose-src-m src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'
@@ -1049,6 +1039,9 @@ describe 'data stuff' ->
 
         describe 'collide with in of target' ->
             var tgt, src
+            merge-with-null-m = merge-m |> merge-with null
+            merge-choose-tgt-m = merge-m |> merge-with choose-tgt
+            merge-choose-src-m = merge-m |> merge-with choose-src
             before-each ->
                 tgt := Object.create hidden: 'target hidden'
                     ..a = 'target a'
@@ -1058,23 +1051,7 @@ describe 'data stuff' ->
                     c: 'source c'
                     hidden: 'source hidden'
             test 'proto chain of target is not checked' ->
-                tgt |> merge-with-m null src
-                tgt |> expect-to-equal do
-                    a: 'target a'
-                    b: 'source b'
-                    c: 'source c'
-                    hidden: 'source hidden'
-            # --- old behaviors.
-            xtest 'choose target, hidden val floats' ->
-                tgt |> merge-with-m choose-left, src
-                tgt |> expect-to-equal do
-                    a: 'target a'
-                    b: 'target b'
-                    c: 'source c'
-                    hidden: 'target hidden'
-                tgt.hidden |> expect-to-equal 'target hidden'
-            xtest 'choose source, hidden val floats' ->
-                tgt |> merge-with-m choose-right, src
+                tgt |> merge-with-null-m src
                 tgt |> expect-to-equal do
                     a: 'target a'
                     b: 'source b'

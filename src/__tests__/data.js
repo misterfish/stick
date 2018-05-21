@@ -1,8 +1,8 @@
-var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, filter, reject, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeToWithM, mergeWithM, mergeToIn, mergeIn, mergeToInM, mergeInM, mergeAllIn, mergeToWhenM, mergeWhenM, mergeToWhen, mergeWhen, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, this$ = this, slice$ = [].slice;
+var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, map, filter, reject, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeToIn, mergeIn, mergeToInM, mergeInM, mergeAllIn, mergeWith, mergeToWhenM, mergeWhenM, mergeToWhen, mergeWhen, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, this$ = this, slice$ = [].slice;
 ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe;
-ref$ = require('../index'), map = ref$.map, filter = ref$.filter, reject = ref$.reject, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeToWithM = ref$.mergeToWithM, mergeWithM = ref$.mergeWithM, mergeToIn = ref$.mergeToIn, mergeIn = ref$.mergeIn, mergeToInM = ref$.mergeToInM, mergeInM = ref$.mergeInM, mergeAllIn = ref$.mergeAllIn, mergeToWhenM = ref$.mergeToWhenM, mergeWhenM = ref$.mergeWhenM, mergeToWhen = ref$.mergeToWhen, mergeWhen = ref$.mergeWhen, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
+ref$ = require('../index'), map = ref$.map, filter = ref$.filter, reject = ref$.reject, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeToIn = ref$.mergeToIn, mergeIn = ref$.mergeIn, mergeToInM = ref$.mergeToInM, mergeInM = ref$.mergeInM, mergeAllIn = ref$.mergeAllIn, mergeWith = ref$.mergeWith, mergeToWhenM = ref$.mergeToWhenM, mergeWhenM = ref$.mergeWhenM, mergeToWhen = ref$.mergeToWhen, mergeWhen = ref$.mergeWhen, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
 sortAlpha = function(it){
   return it.sort();
 };
@@ -1365,11 +1365,9 @@ describe('data stuff', function(){
       return expectToBe(true)(
       'd' in res);
     });
-    test('discards non-own vals 1', function(){
+    test('discards non-own vals on src', function(){
       var x$, tgt, y$, src, res;
-      x$ = tgt = Object.create({
-        hidden: 42
-      });
+      x$ = tgt = Object.create;
       x$.a = 1;
       x$.b = 2;
       y$ = src = Object.create({
@@ -1395,7 +1393,7 @@ describe('data stuff', function(){
       });
       return expect(res.hidden).toEqual(void 8);
     });
-    test('discards non-own vals 2', function(){
+    test('discards non-own vals on tgt', function(){
       var x$, tgt, y$, src, res;
       x$ = tgt = Object.create({
         hidden: 42
@@ -1484,11 +1482,9 @@ describe('data stuff', function(){
         c: 4
       });
     });
-    test('discards non-own vals 1', function(){
+    test('discards non-own vals on src', function(){
       var x$, tgt, y$, src, res;
-      x$ = tgt = Object.create({
-        hidden: 42
-      });
+      x$ = tgt = Object.create;
       x$.a = 1;
       x$.b = 2;
       y$ = src = Object.create({
@@ -1514,7 +1510,7 @@ describe('data stuff', function(){
       });
       return expect(res.hidden).toEqual(void 8);
     });
-    test('discards non-own vals 2', function(){
+    test('discards non-own vals on tgt', function(){
       var x$, tgt, y$, src, res;
       x$ = tgt = Object.create({
         hidden: 42
@@ -1808,14 +1804,16 @@ describe('data stuff', function(){
     });
   });
   describe('mergeToWithM', function(){
-    var tgt, src, noop, chooseLeft, chooseRight;
+    var tgt, src, noop, chooseSrc, chooseTgt, mergeToWithNoopM;
     noop = function(){};
-    chooseLeft = function(a, b){
+    chooseSrc = function(a, b){
       return a;
     };
-    chooseRight = function(a, b){
+    chooseTgt = function(a, b){
       return b;
     };
+    mergeToWithNoopM = mergeWith(noop)(
+    mergeToM);
     describe('main', function(){
       return test('when no collisions, acts like mergeToM', function(){
         var x$, tgt, y$, src;
@@ -1831,12 +1829,16 @@ describe('data stuff', function(){
         y$.d = 4;
         return expectToEqual(mergeToM(tgt)(
         src))(
-        mergeToWithM(noop, tgt)(
+        mergeToWithNoopM(tgt)(
         src));
       });
     });
     describe('collide with own of target', function(){
-      var tgt, src;
+      var tgt, src, mergeToChooseTgtM, mergeToChooseSrcM;
+      mergeToChooseTgtM = mergeWith(chooseTgt)(
+      mergeToM);
+      mergeToChooseSrcM = mergeWith(chooseSrc)(
+      mergeToM);
       beforeEach(function(){
         var x$;
         x$ = tgt = Object.create({
@@ -1850,7 +1852,7 @@ describe('data stuff', function(){
         };
       });
       test('choose target', function(){
-        mergeToWithM(chooseLeft, tgt)(
+        mergeToChooseTgtM(tgt)(
         src);
         return expectToEqual({
           a: 'target a',
@@ -1860,7 +1862,7 @@ describe('data stuff', function(){
         tgt);
       });
       return test('choose source', function(){
-        mergeToWithM(chooseRight, tgt)(
+        mergeToChooseSrcM(tgt)(
         src);
         return expectToEqual({
           a: 'target a',
@@ -1871,7 +1873,7 @@ describe('data stuff', function(){
       });
     });
     return describe('collide with in of target', function(){
-      var tgt, src;
+      var tgt, src, mergeToWithNullM;
       beforeEach(function(){
         var x$;
         x$ = tgt = Object.create({
@@ -1884,36 +1886,14 @@ describe('data stuff', function(){
           hidden: 'source hidden'
         };
       });
-      test('proto chain of target is not checked', function(){
-        mergeToWithM(null, tgt)(
+      mergeToWithNullM = mergeWith(null)(
+      mergeToM);
+      return test('proto chain of target is not checked', function(){
+        mergeToWithNullM(tgt)(
         src);
         return expectToEqual({
           a: 'target a',
           b: 'target b',
-          c: 'source c',
-          hidden: 'source hidden'
-        })(
-        tgt);
-      });
-      xtest('choose target, hidden val floats', function(){
-        mergeToWithM(chooseLeft, tgt)(
-        src);
-        expectToEqual({
-          a: 'target a',
-          b: 'target b',
-          c: 'source c',
-          hidden: 'target hidden'
-        })(
-        tgt);
-        return expectToEqual('target hidden')(
-        tgt.hidden);
-      });
-      return xtest('choose source, hidden val floats', function(){
-        mergeToWithM(chooseRight, tgt)(
-        src);
-        return expectToEqual({
-          a: 'target a',
-          b: 'source b',
           c: 'source c',
           hidden: 'source hidden'
         })(
@@ -1922,14 +1902,20 @@ describe('data stuff', function(){
     });
   });
   describe('mergeWithM', function(){
-    var tgt, src, noop, chooseLeft, chooseRight;
+    var tgt, src, noop, chooseSrc, chooseTgt, mergeWithNoopM, mergeChooseTgtM, mergeChooseSrcM;
     noop = function(){};
-    chooseLeft = function(a, b){
+    chooseSrc = function(a, b){
       return a;
     };
-    chooseRight = function(a, b){
+    chooseTgt = function(a, b){
       return b;
     };
+    mergeWithNoopM = mergeWith(noop)(
+    mergeM);
+    mergeChooseTgtM = mergeWith(chooseTgt)(
+    mergeM);
+    mergeChooseSrcM = mergeWith(chooseSrc)(
+    mergeM);
     describe('main', function(){
       return test('when no collisions, acts like mergeM', function(){
         var x$, tgt, y$, src;
@@ -1945,7 +1931,7 @@ describe('data stuff', function(){
         y$.d = 4;
         return expectToEqual(mergeM(src)(
         tgt))(
-        mergeWithM(noop, src)(
+        mergeWithNoopM(src)(
         tgt));
       });
     });
@@ -1964,7 +1950,7 @@ describe('data stuff', function(){
         };
       });
       test('choose target', function(){
-        mergeWithM(chooseLeft, src)(
+        mergeChooseTgtM(src)(
         tgt);
         return expectToEqual({
           a: 'target a',
@@ -1974,7 +1960,7 @@ describe('data stuff', function(){
         tgt);
       });
       return test('choose source', function(){
-        mergeWithM(chooseRight, src)(
+        mergeChooseSrcM(src)(
         tgt);
         return expectToEqual({
           a: 'target a',
@@ -1985,7 +1971,13 @@ describe('data stuff', function(){
       });
     });
     return describe('collide with in of target', function(){
-      var tgt, src;
+      var tgt, src, mergeWithNullM, mergeChooseTgtM, mergeChooseSrcM;
+      mergeWithNullM = mergeWith(null)(
+      mergeM);
+      mergeChooseTgtM = mergeWith(chooseTgt)(
+      mergeM);
+      mergeChooseSrcM = mergeWith(chooseSrc)(
+      mergeM);
       beforeEach(function(){
         var x$;
         x$ = tgt = Object.create({
@@ -1998,32 +1990,8 @@ describe('data stuff', function(){
           hidden: 'source hidden'
         };
       });
-      test('proto chain of target is not checked', function(){
-        mergeWithM(null, src)(
-        tgt);
-        return expectToEqual({
-          a: 'target a',
-          b: 'source b',
-          c: 'source c',
-          hidden: 'source hidden'
-        })(
-        tgt);
-      });
-      xtest('choose target, hidden val floats', function(){
-        mergeWithM(chooseLeft, src)(
-        tgt);
-        expectToEqual({
-          a: 'target a',
-          b: 'target b',
-          c: 'source c',
-          hidden: 'target hidden'
-        })(
-        tgt);
-        return expectToEqual('target hidden')(
-        tgt.hidden);
-      });
-      return xtest('choose source, hidden val floats', function(){
-        mergeWithM(chooseRight, src)(
+      return test('proto chain of target is not checked', function(){
+        mergeWithNullM(src)(
         tgt);
         return expectToEqual({
           a: 'target a',

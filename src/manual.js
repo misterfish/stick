@@ -6,7 +6,10 @@ import {
     laat,
     getType,
     xRegExp, xRegExpFlags, xRegExpStr,
+    die,
 } from './index'
+
+import stick from './index'
 
 const noop = _ => {}
 const oPro = Object.prototype
@@ -245,19 +248,59 @@ export const merge = (src) => (tgt) => {
     return mergeToM (a) (src)
 }
 
-export const mergeToWithM = (collision) => (tgt) => (src) => {
-	const ret = tgt
-    for (const i in src) whenHas (
-        (v, o, k) => ifHas (
-			(v, o, k) => ret[i] = collision (ret[i], src[i]))
-			((o, k) => ret[i] = src[i])
-            ([ret, i])
+// export const oldmergeToWithM = (collision) => (tgt) => (src) => {
+//     for (const i in src) whenHas (
+//         (v, o, k) => ifHas (
+// 			(v, o, k) => tgt [i] = collision (src [i], tgt [i]))
+// 			((o, k) => tgt [i] = src [i])
+//             ([tgt, i])
+//         )
+//         ([src, i])
+// 	return tgt
+// }
+
+// export const oldmergeWithM = (collision) => (src) => (tgt) => mergeToWithM (collision) (tgt) (src)
+
+const makeMutable = (merger) => merger === merge ? mergeM
+                              : merger === mergeTo ? mergeToM
+                            : merger === merge
+
+// --- tgt will be altered.
+// only `own` needs to be passed: direction and mutability have already been decided.
+
+// in the M case tgt is just the tgt;
+// in the non-M case it has been prepared to be a new copy.
+//
+// `own` refers to both tgt & src -- not possible to mix and match.
+
+const mergeXWith = (collision) => (own) => (src) => (tgt) => {
+    const [_whenHas, _ifHas] = own ? [whenHas, ifHas] : [whenHasIn, ifHasIn]
+    for (const i in src) _whenHas (
+        (v, o, k) => _ifHas (
+			(v, o, k) => tgt [i] = collision (src [i], tgt [i]))
+			((o, k) => tgt [i] = src [i])
+            ([tgt, i])
         )
         ([src, i])
-	return ret
+	return tgt
 }
 
-export const mergeWithM = (collision) => (src) => (tgt) => mergeToWithM (collision) (tgt) (src)
+const getInfo = (merger) => merger === mergeToM ? ['to', true, true]
+                          : merger === stick.mergeToM ? ['to', true, true]
+                          : merger === mergeM   ? ['from', true, true]
+                          : merger === stick.mergeM   ? ['from', true, true]
+                          : die ('Unrecognised merge function')
+
+export const mergeWith = (collision) => (merger) => (a) => (b) => {
+    const [dir, mutable, own] = getInfo (merger)
+    const [src, tgt] = dir === 'to' ? [b, a] : [a, b]
+    const tgtM = mutable ? tgt : (
+        dir === 'to' ? merger ({}) (tgt) : merger (tgt) ({})
+    )
+    return mergeXWith (collision) (own) (src) (tgtM)
+}
+
+// *acht!ng allow both merger, the stick version, and the manual version ***
 
 // --- we don't (currently) have `in`, and `with` forms for the `when` form.
 // --- tests `f` for truthiness.
@@ -551,6 +594,19 @@ export const factoryInit = (init) => (proto) => ({
     },
 })
 
+// --- alters the prototype by merging in the mixins.
+// --- if a key exists in the proto and is not nil, then it is not overwritten.
+const mergeMixinPreM = (mixin) => (proto) => {
+    const chooseTarget = (src, tgt) => ok (tgt) ? tgt : src
+    mixin | mergeToWithM (chooseTarget) (proto)
+}
+
+// --- alters the prototype by merging in the mixins.
+const mergeMixinPostM = (mixin) => (proto) => {
+    const chooseTarget = (src, tgt) => ok (tgt) ? tgt : src
+    mixin | mergeToM (proto)
+}
+
 export default {
     roll, recurry,
     eq, ne, gt, gte, lt, lte,
@@ -579,10 +635,10 @@ export default {
     prependTo, prepend, prependToM, prependM,
     concatTo, concat, concatToM, concatM,
     mergeTo, merge, mergeToM, mergeM,
-    mergeToWithM, mergeWithM,
     mergeToWhenM, mergeWhenM,
     mergeToWhen, mergeWhen,
     mergeToInM, mergeInM, mergeToIn, mergeIn,
+    mergeWith,
     addIndex, addCollection,
     map, filter, reject,
     each, eachObj, eachObjIn,

@@ -262,9 +262,6 @@ export const mergeToM = _recurry (2) (manual.mergeToM)
 // --- to avoid non-intuitive behavior, only own properties are checked on the target.
 ////// --- if a collision occurs in the target's prototype chain, the value will surface, regardless of whether src or tgt version is chosen.
 
-export const mergeToWithM = _recurry (3) (manual.mergeToWithM)
-export const mergeWithM   = _recurry (3) (manual.mergeWithM)
-
 export const mergeToWhenM = _recurry (3) (manual.mergeToWhenM)
 export const mergeWhenM   = _recurry (3) (manual.mergeWhenM)
 export const mergeToWhen  = _recurry (3) (manual.mergeToWhen)
@@ -272,6 +269,8 @@ export const mergeWhen    = _recurry (3) (manual.mergeWhen)
 
 export const mergeToInM = _recurry (2) (manual.mergeToInM)
 export const mergeInM   = _recurry (2) (manual.mergeInM)
+
+export const mergeWith = _recurry (4) (manual.mergeWith)
 
 // --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
 // object.
@@ -894,6 +893,10 @@ export const valuesIn = (o) => {
     return ret
 }
 
+// --- note: in all functions which map keys or tuples, it's up to you to ensure that the keys don't
+// clash.
+// clashing keys will lead to unpredictable behavior between runtimes.
+
 export const mapKeys = (f) => (o) => {
     const ret = {}
     for (const k in o) if (hasOwn.call (o, k)) ret [f (k)] = o [k]
@@ -997,4 +1000,8 @@ const mapTuplesInWithFilter = (p) => (f) => (o) => {
     }
 
     return ret
+}
+
+export default {
+    mergeToM, mergeM,
 }

@@ -104,8 +104,12 @@ describe('recurry, roll', function(){
       r(3, 4, 5)(6)(7)(8));
     });
     test('normal style', function(){
-      return expectToEqual(33)(
+      expectToEqual(33)(
       r(3, 4, 5)(6, 7, 8));
+      expectToEqual(33)(
+      r(3, 4, 5)(6, 7)(8));
+      return expectToEqual(33)(
+      r(3)(4, 5)(6)(7, 8));
     });
     return test('arity is 0 (not well-defined)', function(){
       return expectToEqual(0)(

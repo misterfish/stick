@@ -121,6 +121,8 @@ describe 'recurry, roll' ->
             (((r 3 4 5) 6) 7) 8 |> expect-to-equal 33
         test 'normal style' ->
             (r 3 4 5) 6 7 8 |> expect-to-equal 33
+            ((r 3 4 5) 6 7) 8 |> expect-to-equal 33
+            (((r 3) 4 5) 6) 7 8 |> expect-to-equal 33
         test 'arity is 0 (not well-defined)' ->
             r.length |> expect-to-equal 0
 

@@ -1,7 +1,7 @@
 import { sprintf, } from 'sprintf-js'
 
 import {
-    ok, notOk, whenOk,
+    ok, notOk, whenOk, ifOk,
     isFunction, ifYes,
     laat,
     getType,
@@ -269,35 +269,42 @@ const mergeXWith = (collision) => (own) => (src) => (tgt) => {
 	return tgt
 }
 
-// --- [dir, mutable, own]
-const getInfo = (merger) => merger === mergeToM       ? ['to', true, true]
-                          : merger === stick.mergeToM ? ['to', true, true]
-                          : merger === mergeM         ? ['from', true, true]
-                          : merger === stick.mergeM   ? ['from', true, true]
-                          : merger === mergeTo        ? ['to', false, true]
-                          : merger === stick.mergeTo  ? ['to', false, true]
-                          : merger === merge          ? ['from', false, true]
-                          : merger === stick.merge    ? ['from', false, true]
-                          : merger === mergeToInM       ? ['to', true, false]
-                          : merger === stick.mergeToInM ? ['to', true, false]
-                          : merger === mergeInM         ? ['from', true, false]
-                          : merger === stick.mergeInM   ? ['from', true, false]
-                          : merger === mergeToIn        ? ['to', false, false]
-                          : merger === stick.mergeToIn  ? ['to', false, false]
-                          : merger === mergeIn          ? ['from', false, false]
-                          : merger === stick.mergeIn    ? ['from', false, false]
+export const path = xs => o => {
+    let j = o
+    for (const i of xs) if (!ok (j)) return j
+                        else j = j [i]
+    return j
+}
+
+const getInfo = merger => path (['$$stick', 'merge']) (merger)
+                       || die ('Unrecognised merge function')
+
+const oldGetInfo1 = (merger) => merger === mergeToM         ? [true, true, true]
+                          : merger === stick.mergeToM   ? [true, true, true]
+                          : merger === mergeM           ? [false, true, true]
+                          : merger === stick.mergeM     ? [false, true, true]
+                          : merger === mergeTo          ? [true, false, true]
+                          : merger === stick.mergeTo    ? [true, false, true]
+                          : merger === merge            ? [false, false, true]
+                          : merger === stick.merge      ? [false, false, true]
+                          : merger === mergeToInM       ? [true, true, false]
+                          : merger === stick.mergeToInM ? [true, true, false]
+                          : merger === mergeInM         ? [false, true, false]
+                          : merger === stick.mergeInM   ? [false, true, false]
+                          : merger === mergeToIn        ? [true, false, false]
+                          : merger === stick.mergeToIn  ? [true, false, false]
+                          : merger === mergeIn          ? [false, false, false]
+                          : merger === stick.mergeIn    ? [false, false, false]
                           : die ('Unrecognised merge function')
 
 export const mergeWith = (collision) => (merger) => (a) => (b) => {
-    const [dir, mutable, own] = getInfo (merger)
-    const [src, tgt] = dir === 'to' ? [b, a] : [a, b]
-    const tgtM = mutable ? tgt : (
-        dir === 'to' ? merger ({}) (tgt) : merger (tgt) ({})
+    const { to, mut, own, } = getInfo (merger)
+    const [src, tgt] = to ? [b, a] : [a, b]
+    const tgtM = mut ? tgt : (
+        to ? merger ({}) (tgt) : merger (tgt) ({})
     )
     return mergeXWith (collision) (own) (src) (tgtM)
 }
-
-// *acht!ng allow both merger, the stick version, and the manual version ***
 
 // --- we don't (currently) have `in`, and `with` forms for the `when` form.
 // --- tests `f` for truthiness.

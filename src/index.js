@@ -250,35 +250,58 @@ export const concatM   = _recurry (2) (manual.concatM)
 // --- { b: 2 } | mergeTo ({ a: 1, b: null })
 // --- ({ a: 1, b: null }) | merge ({ b: 2 })
 // --- ({ a: 1, b: null }) | merge     ({ b: 2 })
+
+// ---- these are the eight basis functions.
+// they are not composed using our 'decorator' pattern, and the implementation is as fast (and ugly)
+// possible.
 export const mergeTo  = _recurry (2) (manual.mergeTo)
 export const merge    = _recurry (2) (manual.merge)
 export const mergeM   = _recurry (2) (manual.mergeM)
 export const mergeToM = _recurry (2) (manual.mergeToM)
 
-// --- copies enumerable own properties from src into tgt, mut.
-////// --- uses collision function if key exists in the target, anywhere in target's prototype chain.
-// --- 'with' refers to collision
-// --- 'to' refers to tgt
-// --- to avoid non-intuitive behavior, only own properties are checked on the target.
-////// --- if a collision occurs in the target's prototype chain, the value will surface, regardless of whether src or tgt version is chosen.
+// --- all enumerable properties (non-own and own) on the src will be copied to the tgt.
+export const mergeToInM = _recurry (2) (manual.mergeToInM)
+export const mergeInM   = _recurry (2) (manual.mergeInM)
+// /---
 
+// --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
+// object.
+export const mergeIn = _recurry (2) (manual.mergeIn)
+export const mergeToIn = _recurry (2) (manual.mergeToIn)
+// /---
+
+// /---- basis
+
+
+mergeToM.$$stick = manual.mergeToM.$$stick =
+    { merge: { to: true,  mut: true, own: true, }}
+mergeM.$$stick     = manual.mergeM.$$stick =
+    { merge: { to: false, mut: true, own: true, }}
+mergeTo.$$stick    = manual.mergeTo.$$stick =
+    { merge: { to: true,  mut: false, own: true, }}
+merge.$$stick      = manual.merge.$$stick =
+    { merge: { to: false, mut: false, own: true, }}
+mergeToInM.$$stick = manual.mergeToInM.$$stick =
+    { merge: { to: true,  mut: true, own: false, }}
+mergeInM.$$stick   = manual.mergeInM.$$stick =
+    { merge: { to: false, mut: true, own: false, }}
+mergeToIn.$$stick  = manual.mergeToIn.$$stick =
+    { merge: { to: true,  mut: false, own: false, }}
+mergeIn.$$stick    = manual.mergeIn.$$stick =
+    { merge: { to: false, mut: false, own: false, }}
+
+
+
+// @todo: make 'when' decoratable, like 'with'.
+//
+// --- 'when' forms run the predicate on both the src and tgt, testing for truthiness.
 export const mergeToWhenM = _recurry (3) (manual.mergeToWhenM)
 export const mergeWhenM   = _recurry (3) (manual.mergeWhenM)
 export const mergeToWhen  = _recurry (3) (manual.mergeToWhen)
 export const mergeWhen    = _recurry (3) (manual.mergeWhen)
 
-export const mergeToInM = _recurry (2) (manual.mergeToInM)
-export const mergeInM   = _recurry (2) (manual.mergeInM)
-
+// `own` refers to both tgt & src -- not possible to mix and match.
 export const mergeWith = _recurry (4) (manual.mergeWith)
-
-// --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
-// object.
-export const mergeIn = _recurry (2) (manual.mergeIn)
-
-// --- all enumerable properties (non-own and own) on both the src and tgt will be copied to the new
-// object.
-export const mergeToIn = _recurry (2) (manual.mergeToIn)
 
 // --- like R.mergeAll but also use prototype vals.
 // --- to and from not applicable, also not curried or meant to be used piped.

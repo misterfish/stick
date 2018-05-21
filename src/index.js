@@ -30,8 +30,8 @@ export {
 
 import manual from './manual'
 
-const oPro = Object.prototype
-const hasOwn = oPro.hasOwnProperty
+const hasOwn = Object.prototype.hasOwnProperty
+const oStr   = Object.prototype.toString
 
 // --- takes a manually curried function like
 // f = a => b => c => d => { body }
@@ -519,8 +519,7 @@ export const timesSide  = _recurry (2) (manual.timesSide)
 
 // ------ types.
 
-export const getType = x => oPro
-    .toString.call (x).slice (8, -1)
+export const getType    = x => oStr.call (x).slice (8, -1)
 export const isType     = _recurry (2) (manual.isType)
 
 export const isFunction = isType ('Function')
@@ -696,7 +695,7 @@ export const factoryProps = _recurry (2) (manual.factoryProps)
 export const factoryInit = _recurry (2) (manual.factoryInit)
 export const factory = factoryInit ((o, props) => {
     if (props == null) return
-    for (const i in props) if (oPro.hasOwnProperty.call (props, i))
+    for (const i in props) if (hasOwn.call (props, i))
         o[i] = props[i]
 })
 
@@ -749,11 +748,10 @@ export const bindTry       = _recurry (2) (manual.bindTry)
 export const bindTo = _recurry (2) (manual.bindTo)
 export const bind = _recurry (2) (manual.bind)
 
-// --- returns a thunk (function) representing the bind: doesn't actually try to bind until that function is invoked.
+// --- returns a thunk representing the bind:
+// doesn't actually try to bind until that function is invoked.
 export const bindLatePropTo = _recurry (2) (manual.bindLatePropTo)
 export const bindLateProp   = _recurry (2) (manual.bindLateProp)
-
-
 
 export const subtract = _recurry (2) (manual.subtract)
 export const subtractFrom = _recurry (2) (manual.subtractFrom)
@@ -842,10 +840,6 @@ const mapAsKeysInWithFilter = (p) => (f) => (o) => {
     return ret
 }
 
-// @canonical
-// const keys = mapAsKeys (id)
-// const keysIn = mapAsKeysIn (id)
-
 export const keys = (o) => {
     const ret = []
     for (const k in o) if (hasOwn.call (o, k)) ret.push (k)
@@ -887,10 +881,6 @@ const mapAsValuesInWithFilter = (p) => (f) => (o) => {
     }
     return ret
 }
-
-// @canonical
-// const values = mapAsValues (id)
-// const valuesIn = mapAsValuesIn (id)
 
 export const values = (o) => {
     const ret = []

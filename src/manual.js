@@ -298,6 +298,8 @@ const mergeXWith = (collision) => (own) => (src) => (tgt) => {
 	return tgt
 }
 
+// @test
+// @export
 export const path = xs => o => {
     let j = o
     for (const i of xs) if (!ok (j)) return j

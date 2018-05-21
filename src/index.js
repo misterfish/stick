@@ -1,8 +1,3 @@
-// ramda map works on objs: keys same, values altered.
-// could make an object mapper which lets you return pairs.
-//
-// Object.assign and {...} drop proto vals.
-
 defineBinaryOperator ('|',  (...args) => pipe         (...args))
 defineBinaryOperator ('<<', (...args) => compose      (...args))
 defineBinaryOperator ('>>', (...args) => composeRight (...args))
@@ -247,6 +242,7 @@ export const concatM   = _recurry (2) (manual.concatM)
 // --- own properties, including null/undefined.
 // --- 2x faster than Object.assign.
 // --- @todo: why is it so much faster?
+// --- reminder: Object.assign and {...} only take own values.
 
 // --- { b: 2 } | mergeTo ({ a: 1, b: null })
 // --- ({ a: 1, b: null }) | merge ({ b: 2 })
@@ -278,6 +274,9 @@ export const mergeToIn = _recurry (2) (manual.mergeToIn)
 
 // /---- basis
 
+
+// --- xxx adding a property to a function can lead to gotchas.
+// use symbols.
 
 mergeToM.$$stick = manual.mergeToM.$$stick =
     { merge: { to: true,  mut: true, own: true, }}
@@ -651,19 +650,30 @@ export const arg5 = (...args) => args [5]
 export const arg6 = (...args) => args [6]
 
 // --- usage:
-// const dogProps = { name: 'defaultname', age: undefined, ... }
+// const dogProto = {
+//     // --- you almost always need an `init`. The pattern 'Dog.create ().init ()' should become
+//     really familiar.
+//     init () { },
+//     speak () { return this.loud ? 'WOOF' : 'woof' },
+// }
+// const dogProps = {
+//     loud: undefined,
+//     ...
+// }
 // const Dog = dogProto | factory | factoryProps (dogProps)
+//
 // or
+//
 // const dogFactory = factory >> factoryProps (dogProps)
 // const Dog = dogProto | dogFactory
 //
-// const dog = Dog.create ({ age: 10 )
+// const dog = Dog.create ({ loud: true, })
+// dog.speak () // WOOF
 //
-// This is where you can put your instance properties initialisation. Totally optional -- also
-// without this, you will get an instance!
-// This is a good place to document the properties: put them in the instance{} even if they're
-// undefined.
-// props is altered.
+// The props object is where you put your properties. It is optional -- just leave off the
+// `factoryProps` part if you don't want it and everything will still work. But it is recommended as a good place to document the properties. (You're
+// not putting your properties in the prototype, are you?) Do use `undefined`, not `false` or
+// `null`. Use `void 8` or your very own favorite number to impress ... no one.
 
 export const factoryProps = _recurry (2) (manual.factoryProps)
 export const factoryInit = _recurry (2) (manual.factoryInit)
@@ -673,6 +683,21 @@ export const factory = factoryInit ((o, props) => {
         o[i] = props[i]
 })
 
+// --- to use mixins:
+// Imagine some orthogonal functionality, e.g:
+// const cheaterProto = {
+//     cheat: howMuch => 'I cheat ' + howMuch,
+// }
+//
+// (an arrow function is fine here, because we're not referring to other methods or properties or
+// mentioning `this`.
+// Properties would be a bit unusual, but not impossible. All methods are callable, including those
+// of other mixins and those of the dog.)
+//
+// const Dog = dogProto | factoryMixin (cheaterProto) | factory
+// const dog = Dog.create ()
+// dog.cheat ()
+// dog.speak ()
 
 // --- e.g.:
 // const theFactory = proto | factory | factoryStatics (statics) | factoryInit (init)
@@ -693,14 +718,11 @@ export const factory = factoryInit ((o, props) => {
 // const dogFactory = dogProto | factory
 // const dog = dogFactory.create ()
 // dog.numLegs () // 4
+//
+// If for some reason you need access to your newly minted object before `create` is called, you can
+// use `factoryInit` instead of `factory`. This is how `factoryProps` is implemented internally.
 
 export const factoryStatics = mergeM
-
-// --- don't really like this.
-// proto gets altered.
-// order difficult.
-export const factoryMixinPre = noop ((mixin, proto) => factoryMixinPre ([mixin], [], proto))
-export const factoryMixinPost = noop ((mixin, proto) => factoryMixinPre ([], [mixin], proto))
 
 // ------ bind
 
@@ -723,7 +745,7 @@ export const bindTo = _recurry (2) (manual.bindTo)
 export const bind = _recurry (2) (manual.bind)
 
 // --- returns a thunk representing the bind:
-// doesn't actually try to bind until that function is invoked.
+//     doesn't actually try to bind until that function is invoked.
 export const bindLatePropTo = _recurry (2) (manual.bindLatePropTo)
 export const bindLateProp   = _recurry (2) (manual.bindLateProp)
 

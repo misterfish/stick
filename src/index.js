@@ -650,55 +650,6 @@ export const arg4 = (...args) => args [4]
 export const arg5 = (...args) => args [5]
 export const arg6 = (...args) => args [6]
 
-const mergeMixins = (mixinsPre, proto, mixinsPost) => {
-    const reduceMixins = reduce ((a, b) => b | mergeTo (a)) ({})
-    const pre = mixinsPre | reduceMixins
-    const post = mixinsPost | reduceMixins
-    const chooseTarget = arg0
-
-    pre | mergeToWithM (chooseTarget) (proto)
-    post | mergeToM (proto)
-
-    return proto
-}
-
-// --- providing mixins will *alter* proto -- this is to avoid doing a clone or flattening the
-// prototype chain.
-// --- you can avoid this by passing Object.create (proto) instead of proto.
-// --- probably if you are working with mixins you don't mind if the proto is altered, just saying.
-
-// --- multiple instanceExtensions can be given: will be merged right-to-left using R.mergeAll,
-// meaning prototypes will be discarded.
-
-// note: you are free to put properties in the prototype, though this is probably not a great idea.
-// at the very least, you should ensure that they are never mutated.
-
-const _factory = (proto, mixinsPre = [], mixinsPost = []) => laat (
-    _ => mergeMixins (mixinsPre, proto, mixinsPost),
-    (protoMixed) => ({
-        // --- consider dropping this: Object.getPrototypeOf xxx
-        proto: protoMixed,
-        create: (...instanceExtension) => protoMixed
-            | Object.create
-            | mergeM (instanceExtension | rMergeAll),
-    })
-)
-
-// --- xxx maybe a factoryMixinsM and non-m version?
-// would be nice to not have it fuck with the prototype.
-// the non-m version will make a clone, possibly only with owns?
-// or another flag for owns and not-owns? I?
-// --- xxx change all In to I?
-//
-// --- xxx think about which maps return lists and which return the same kind of thing being mapped.
-
-// --- convenience.
-// note that this will *alter* the prototype.
-
-export const factoryMixins = noop ((mixinsPre, mixinsPost, proto) =>
-    _factory (proto, mixinsPre, mixinsPost)
-)
-
 // --- usage:
 // const dogProps = { name: 'defaultname', age: undefined, ... }
 // const Dog = dogProto | factory | factoryProps (dogProps)

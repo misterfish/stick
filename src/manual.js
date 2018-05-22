@@ -659,8 +659,8 @@ export const factoryInit = (init) => (proto) => ({
 
 export const mixinPreM = (mixin) => (proto) => {
     const chooseTgtWhenOk = (src, tgt) => ok (tgt) ? tgt : src
-    const mergeToChooseTgtWhenOkM = mergeWith (chooseTgtWhenOk) (mergeToMSym)
-    return mergeToChooseTgtWhenOkM (proto) (mixin)
+    const mergeInToChooseTgtWhenOkM = mergeWith (chooseTgtWhenOk) (mergeInToMSym)
+    return mergeInToChooseTgtWhenOkM (proto) (mixin)
 }
 
 // --- alters the prototype by merging in the mixins.
@@ -668,8 +668,8 @@ export const mixinPreM = (mixin) => (proto) => {
 //     mixin is nil.
 export const mixinM = (mixin) => (proto) => {
     const srcOk = (src, _) => ok (src)
-    const mergeToWhenSrcOkM = mergeWhen (srcOk) (mergeToMSym)
-    return mergeToWhenSrcOkM (proto) (mixin)
+    const mergeInToWhenSrcOkM = mergeWhen (srcOk) (mergeInToMSym)
+    return mergeInToWhenSrcOkM (proto) (mixin)
 }
 
 export const mixinPreNM = (ms) => (proto) => ms.reduce (

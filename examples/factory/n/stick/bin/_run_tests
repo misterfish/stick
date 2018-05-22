@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -e
+
+bindir=$(realpath "$(dirname "$0")")
+
+. "$bindir"/vars
+. "$bindir"/functions.bash
+
+USAGE="Usage: $0 [-w / --watch]"
+
+watch=
+
+while getopts hw-: arg; do
+    case $arg in
+        h) warn "$USAGE"; exit 0 ;;
+        w) watch=yes;;
+        -) LONG_OPTARG="${OPTARG#*=}"
+            case $OPTARG in
+                help)  warn "$USAGE"; exit 0 ;;
+                watch)  watch=yes;;
+                '')    break ;;
+                *)     error "Illegal option --$OPTARG" ;;
+                esac
+        ;;
+    esac
+done
+shift $((OPTIND-1))
+
+declare argslist
+if [ "$watch" ]; then push argslist --watch; fi
+
+args=$(join argslist)
+
+cmd "$nodemodulesdir"/.bin/jest --testRegex src/__tests__/.+ $args "$@"

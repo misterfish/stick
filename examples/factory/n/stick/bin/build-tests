@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+bindir=$(realpath "$(dirname "$0")")
+
+. "$bindir"/vars
+. "$bindir"/functions.bash
+
+cmd "$lsccmd" -w -bck --no-header \
+    "$tstdir"/*.ls \
+    "$@"

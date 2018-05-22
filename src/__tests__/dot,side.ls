@@ -3,7 +3,6 @@
     repeat: rRepeat,
     times: r-times,
     reverse,
-    tap,
     flip,
     zip,
 } = require 'ramda'
@@ -14,8 +13,6 @@
 } = require './common'
 
 {
-    zip-all,
-
     dot, dot1, dot2, dot3, dot4, dot5, dot-n,
     side, side1, side2, side3, side4, side5, side-n,
 } = require '../index'

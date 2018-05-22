@@ -20,7 +20,7 @@
 {
     ok, not-ok,
     is-true, is-false,
-    is-yes, is-no, is-truthy, is-falsey,
+    is-yes, is-no, is-truthy, is-falsy,
 
     if-predicate, when-predicate,
     if-predicate-ok, when-predicate-ok,
@@ -35,7 +35,7 @@
     if-yes, when-yes,
     if-truthy, when-truthy,
     if-no, when-no,
-    if-falsey, when-falsey,
+    if-falsy, when-falsy,
 
     bind-try-prop-to, bind-try-prop, bind-try-to, bind-try,
 
@@ -667,8 +667,8 @@ describe 'whenNo' ->
 
     do-tests describe-spec, tests
 
-    test 'alias whenFalsey' ->
-        when-no |> expect-to-equal when-falsey
+    test 'alias whenFalsy' ->
+        when-no |> expect-to-equal when-falsy
 
 describe 'ifNo' ->
     describe-spec =
@@ -699,8 +699,8 @@ describe 'ifNo' ->
 
     do-tests describe-spec, tests
 
-    test 'alias ifFalsey' ->
-        if-no |> expect-to-equal if-falsey
+    test 'alias ifFalsy' ->
+        if-no |> expect-to-equal if-falsy
 
 describe 'ifNo__' ->
     describe-spec =
@@ -976,7 +976,7 @@ describe 'is/isNot' ->
         void |> is-no |> expect-to-equal true
         null |> is-no |> expect-to-equal true
     test 'aliases' ->
-        is-no |> expect-to-equal is-falsey
+        is-no |> expect-to-equal is-falsy
         is-yes |> expect-to-equal is-truthy
 
 describe 'if/when has/hasIn' ->

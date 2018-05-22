@@ -5,7 +5,6 @@
     join: r-join,
     split: r-split,
     reverse,
-    tap,
     zip,
     sum,
     equals: r-equals,
@@ -30,6 +29,8 @@
     noop,
     not: stick-not,
     roll, recurry,
+
+    tap,
 
     cascade,
     flip, flip3, flip4, flip5,
@@ -126,6 +127,17 @@ describe 'recurry, roll' ->
         test 'arity is 0 (not well-defined)' ->
             r.length |> expect-to-equal 0
 
+describe 'tap' ->
+    y = y: []
+    f = y.y~push
+    2 |> (* 2)
+      |> (+ 2)
+      |> tap f
+      |> (* 3)
+      |> tap f
+      |> (- 1)
+      |> expect-to-equal 17
+    y.y |> expect-to-equal [6 18]
 describe 'comparisons' ->
     describe 'eq' ->
         test 1 ->

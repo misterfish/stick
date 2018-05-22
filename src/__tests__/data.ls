@@ -18,6 +18,10 @@
     list,
     test, xtest,
     expect-to-equal, expect-to-be,
+    expect-predicate,
+    expect-to-be-truthy, expect-to-be-falsy,
+    expect-to-have-typeof, expect-to-have-type-of,
+    expect-to-contain-object,
 } = require './common'
 
 {
@@ -37,7 +41,7 @@
     default-to, default-to-v,
 
     join, split,
-    prop,
+    prop, path,
 
     assoc, assoc-m,
     append-to, append-to-m, append, append-m,
@@ -486,12 +490,53 @@ describe 'data stuff' ->
             (expect nieuw).to-be orig
             (expect nieuw).to-equal a: 1 b: 3
 
-    describe 'prop' ->
+    describe 'prop, path' ->
+        o =
+            a: 1 b: 2
+            c:
+               w: null
+               x: void
+               y: 3
+               z:
+                   zz: 10
+                   yy: 11
+
         test 'prop' ->
-            (a: 1
-            b: 2)
-            |> prop 'b'
-            |> expect-to-equal 2
+            o |> prop 'b'
+              |> expect-to-equal 2
+
+        describe 'path' ->
+            test 'path 1' ->
+                o |> path <[ a ]>
+                  |> expect-to-equal 1
+            test 'path 2' ->
+                o |> path <[ c ]>
+                  |> expect-to-contain-object w: null x: void
+            test 'path 3' ->
+                o |> path <[ c w ]>
+                  |> expect-to-be null
+            test 'path 4' ->
+                o |> path <[ c x ]>
+                  |> expect-to-be void
+            test 'path 5' ->
+                o |> path <[ c a ]>
+                  |> expect-to-be void
+            test 'path 6' ->
+                o |> path <[ c y ]>
+                  |> expect-to-be 3
+            test 'path 6.1' ->
+                o |> path <[ c y y ]>
+                  |> expect-to-be void
+            test 'path 6.2' ->
+                o |> path <[ c y y y y y y ]>
+                  |> expect-to-be void
+            test 'path 7' ->
+                o |> path <[ c z zz ]>
+                  |> expect-to-be 10
+            test 'path 8' ->
+                o |> path <[ c z zz zz zz ]>
+                  |> expect-to-be void
+
 
     describe 'appendTo' ->
         fn = append-to

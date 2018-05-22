@@ -19,6 +19,8 @@ to-be = (v, o) --> o.to-be v
 to-throw = (o) -> o.to-throw()
 to-throw-a = (v, o) --> o.to-throw v
 
+# --- to-be is reference equality; to-equal matches identical objects.
+
 expect-to-equal = (expected, received) -->
     received |> expect |> to-equal expected
 expect-to-be = (expected, received) -->
@@ -38,6 +40,21 @@ expect-to-be-instance-of = (expected, received) -->
 # --- checks constructor.name.
 expect-constructor-name-to-be = (expected, received) -->
     received.constructor.name |> expect-to-be expected
+
+# --- tests on truthy
+expect-predicate = (p, received) --> p received |> expect-to-be-truthy
+
+expect-to-be-truthy = (received) -> (expect received).to-be-truthy ()
+expect-to-be-falsy  = (received) -> (expect received).to-be-falsy ()
+
+expect-to-have-typeof = (expected, received) -->
+    typeof received |> expect-to-be expected
+expect-to-have-type-of = (expected, received) -->
+    typeof! received |> expect-to-be expected
+
+# --- true if expected is a subset of received
+expect-to-contain-object = (expected, received) -->
+    (expect received).to-equal expect.object-containing expected
 
 # --- expect-to-reject is dangerous, prefer expect-to-reject-with.
 expect-to-reject = (fn) ->
@@ -100,3 +117,9 @@ export
 
     expect-to-be-instance-of,
     expect-constructor-name-to-be,
+
+    expect-predicate,
+    expect-to-be-truthy, expect-to-be-falsy,
+    expect-to-have-typeof, expect-to-have-type-of,
+    expect-to-contain-object,
+

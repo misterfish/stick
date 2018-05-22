@@ -1,4 +1,4 @@
-var fs, map, list, test, xtest, beforeAll, beforeEach, toEqual, toBe, toThrow, toThrowA, expectToEqual, expectToBe, expectNotToEqual, expectNotToBe, expectOk, expectToMatchRegex, expectToBeInstanceOf, expectConstructorNameToBe, expectToReject, expectToRejectWith, expectToThrow, expectToThrowA, expectNotToThrow, zipAll, rmIfExists, out$ = typeof exports != 'undefined' && exports || this;
+var fs, map, list, test, xtest, beforeAll, beforeEach, toEqual, toBe, toThrow, toThrowA, expectToEqual, expectToBe, expectNotToEqual, expectNotToBe, expectOk, expectToMatchRegex, expectToBeInstanceOf, expectConstructorNameToBe, expectPredicate, expectToBeTruthy, expectToBeFalsy, expectToHaveTypeof, expectToHaveTypeOf, expectToContainObject, expectToReject, expectToRejectWith, expectToThrow, expectToThrowA, expectNotToThrow, zipAll, rmIfExists, toString$ = {}.toString, out$ = typeof exports != 'undefined' && exports || this;
 fs = require('fs');
 map = require('ramda').map;
 list = function(){
@@ -57,6 +57,27 @@ expectToBeInstanceOf = curry$(function(expected, received){
 expectConstructorNameToBe = curry$(function(expected, received){
   return expectToBe(expected)(
   received.constructor.name);
+});
+expectPredicate = curry$(function(p, received){
+  return expectToBeTruthy(
+  p(received));
+});
+expectToBeTruthy = function(received){
+  return expect(received).toBeTruthy();
+};
+expectToBeFalsy = function(received){
+  return expect(received).toBeFalsy();
+};
+expectToHaveTypeof = curry$(function(expected, received){
+  return expectToBe(expected)(
+  typeof received);
+});
+expectToHaveTypeOf = curry$(function(expected, received){
+  return expectToBe(expected)(
+  toString$.call(received).slice(8, -1));
+});
+expectToContainObject = curry$(function(expected, received){
+  return expect(received).toEqual(expect.objectContaining(expected));
 });
 expectToReject = function(fn){
   var res;
@@ -144,6 +165,12 @@ out$.expectToThrowA = expectToThrowA;
 out$.expectNotToThrow = expectNotToThrow;
 out$.expectToBeInstanceOf = expectToBeInstanceOf;
 out$.expectConstructorNameToBe = expectConstructorNameToBe;
+out$.expectPredicate = expectPredicate;
+out$.expectToBeTruthy = expectToBeTruthy;
+out$.expectToBeFalsy = expectToBeFalsy;
+out$.expectToHaveTypeof = expectToHaveTypeof;
+out$.expectToHaveTypeOf = expectToHaveTypeOf;
+out$.expectToContainObject = expectToContainObject;
 function curry$(f, bound){
   var context,
   _curry = function(args) {

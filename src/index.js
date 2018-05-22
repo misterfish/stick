@@ -72,12 +72,14 @@ export const notOk = x => x == null
 // --- literally just wraps ===.
 // rationale: must be able to confidently refactor working code which uses ===
 
-export const eq = _recurry (2) (manual.eq)
-export const ne = _recurry (2) (manual.ne)
-export const gt = _recurry (2) (manual.gt)
+export const eq  = _recurry (2) (manual.eq)
+export const ne  = _recurry (2) (manual.ne)
+export const gt  = _recurry (2) (manual.gt)
 export const gte = _recurry (2) (manual.gte)
-export const lt = _recurry (2) (manual.lt)
+export const lt  = _recurry (2) (manual.lt)
 export const lte = _recurry (2) (manual.lte)
+
+export const tap = _recurry (2) (manual.tap)
 
 export const dot  = _recurry (2) (manual.dot)
 export const dot1 = _recurry (3) (manual.dot1)
@@ -97,7 +99,7 @@ export const sideN = _recurry (3) (manual.sideN)
 
 // whenEmpty, whenFunction, ifNotPredicate: -> user-space.
 // also, ifNotPredicate would be confusing:
-//  should ifNotPredicate match falsey or false? If falsey, it breaks symmetry with ifPredicate; if
+//  should ifNotPredicate match falsy or false? If falsy, it breaks symmetry with ifPredicate; if
 // false, it behaves differently than ifPredicate (pred >> not), which is also confusing.
 //
 
@@ -106,7 +108,7 @@ export const isFalse  = false | eq // --- exactly false.
 export const isYes    = Boolean
 export const isNo     = isYes >> not
 export const isTruthy = isYes
-export const isFalsey = isNo
+export const isFalsy  = isNo
 
 export const ifPredicate   = _recurry (4) (manual.ifPredicate)
 export const whenPredicate = _recurry (3) (manual.whenPredicate)
@@ -127,8 +129,8 @@ export const ifNo          = ifPredicate   (isNo)
 export const whenNo        = whenPredicate (isNo)
 export const ifTruthy      = ifYes
 export const whenTruthy    = whenYes
-export const ifFalsey      = ifNo
-export const whenFalsey    = whenNo
+export const ifFalsy       = ifNo
+export const whenFalsy     = whenNo
 
 // --- these have a different calling convention, so their names are a bit misleading based on the
 // above pattern.
@@ -201,8 +203,10 @@ export const join   = _recurry (2) (manual.join)
 // ------ object manipulation.
 
 export const prop   = _recurry (2) (manual.prop)
+export const path   = _recurry (2) (manual.path)
 export const assoc  = _recurry (3) (manual.assoc)
 export const assocM = _recurry (3) (manual.assocM)
+
 
 // ------ append.
 

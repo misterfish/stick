@@ -1,3 +1,6 @@
+// --- as a general guideline we try to keep the functions here as fast as possible.
+//     this means a lot of inlining and duplication, but stopping before it gets unmaintainable.
+
 import { sprintf, } from 'sprintf-js'
 
 import {
@@ -37,6 +40,8 @@ export const gt = m => n => n > m
 export const gte = m => n => n >= m
 export const lt = m => n => n < m
 export const lte = m => n => n <= m
+
+export const tap = f => o => (f (o), o)
 
 export const dot  = prop => o => o [prop] ()
 
@@ -204,6 +209,17 @@ export const decorateException = (prefix) => (e) => {
 
 export const defaultTo = f => x => ok (x) ? x : f ()
 
+// --- object stuff.
+
+export const prop = p => o => o [p]
+
+export const path = (xs) => (o) => {
+    let j = o
+    for (const i of xs) if (!ok (j)) return j
+                        else j = j [i]
+    return j
+}
+
 export const assoc = (prop) => (val) => (o) => {
     const oo = mergeInM (o) ({})
     oo [prop] = val
@@ -211,6 +227,20 @@ export const assoc = (prop) => (val) => (o) => {
 }
 
 export const assocM = prop => val => o => (o[prop] = val, o)
+export const assocPath = (xs) => (o) => {
+    let j = o
+    for (const i of xs) if (!ok (j)) return j
+                        else j = j [i]
+    return j
+}
+
+// --- no 'in' forms: always flatten, like assoc.
+export const updateM = prop => f => o => (o [prop] = f (o [prop]), o)
+export const update  = (prop) => (f) => (o) => {
+    const oo = merge (o) ({})
+    oo [prop] = f (o [prop])
+    return oo
+}
 
 export const append = elem => ary => [...ary, elem]
 export const appendTo   = ary => elem => [...ary, elem]
@@ -345,17 +375,6 @@ const mergeXWith = (collision) => (own) => (src) => (tgt) => {
         ([src, i])
 	return tgt
 }
-
-// @test
-export const path = (xs) => (o) => {
-    let j = o
-    for (const i of xs) if (!ok (j)) return j
-                        else j = j [i]
-    return j
-}
-
-// @test
-export const tap = (f) => (o) => (f (o), o)
 
 export const mergeWith = (collision) => (mergerSym) => {
     // --- fail early instead of continuing with curry (throws)
@@ -515,8 +534,6 @@ export const passToN = f => vs => f.apply (null, vs)
 // ------ join, split etc.
 export const join = dot1 ('join')
 export const split = dot1 ('split')
-
-export const prop = p => o => o [p]
 
 export const flip  = f => a => b =>
     f (b) (a)

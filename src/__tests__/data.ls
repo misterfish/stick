@@ -47,6 +47,7 @@
 
     assoc, assoc-m,
     assoc-path, assoc-path-m,
+    update-m, update, update-path-m, update-path,
     append-to, append-to-m, append, append-m,
     prepend, prepend-m, prepend-to, prepend-to-m,
     concat-to, concat-to-m, concat, concat-m,
@@ -571,8 +572,46 @@ describe 'data stuff' ->
             o.q |> expect-to-contain-object a: 1 c: d: 2
         test 'non-m flattens proto' ->
             o.o |> assoc-path <[ c ]> 1
-                expect-to-contain-object base-val: 10 c: 1
+                |> expect-to-contain-object base-val: 10 c: 1
 
+    describe 'update' ->
+        o = {}
+        before-each ->
+            base = base-val: 10
+            o.o = (Object.create base) <<<
+                a: 1 b: 2
+                c:
+                   w: null
+                   x: void
+                   y: 3
+                   z:
+                       zz: 10
+                       yy: 11
+            o.p =
+                a: 1 b: 2
+                c: [10 11 [a: 1]]
+            o.q =
+                a: 1 b: 2
+                c: new Date
+                d: new Error
+
+        # --- assume routes through path and assocPath
+        describe 'updatePath' ->
+            test 1 ->
+                o.o |> update-path-m <[ c y ]> (* 10)
+                o.o.c.y |> expect-to-equal 30
+            test 'vivify M' ->
+                o.o |> update-path-m <[ non existent ]> (* 10)
+                o.o.non.existent |> expect-to-equal NaN
+            test 2 ->
+                o.o |> update-path   <[ c y ]> (* 10)
+                    |> r-tap expect-predicate ({ c: { y } }) -> y == 30
+                    |> expect-not-to-be o.o
+            test 'vivify' ->
+                o.o |> update-path   <[ non existent ]> (* 10)
+                    |> r-tap expect-predicate do
+                        ({ non: { existent } }) -> isNaN existent
+                    |> expect-not-to-be o.o
 
     describe 'prop, path' ->
         o =

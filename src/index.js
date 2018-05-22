@@ -79,6 +79,7 @@ export const gte = _recurry (2) (manual.gte)
 export const lt  = _recurry (2) (manual.lt)
 export const lte = _recurry (2) (manual.lte)
 
+export const id  = x => x
 export const tap = _recurry (2) (manual.tap)
 
 export const dot  = _recurry (2) (manual.dot)
@@ -200,7 +201,11 @@ export const defaultTo__ = (x, f) => x | defaultTo (f)
 export const split  = _recurry (2) (manual.split)
 export const join   = _recurry (2) (manual.join)
 
-// ------ object manipulation.
+// ------ objects.
+
+// xxx @test
+export const has = _recurry (2) (manual.has)
+export const hasIn = _recurry (2) (manual.hasIn)
 
 export const prop   = _recurry (2) (manual.prop)
 // --- only traverses "typeof = 'object'" nodes; thinks like Date result in undefined.
@@ -210,6 +215,10 @@ export const assocM = _recurry (3) (manual.assocM)
 export const assocPath = _recurry (3) (manual.assocPath)
 export const assocPathM = _recurry (3) (manual.assocPathM)
 
+export const updateM = _recurry (3) (manual.updateM)
+export const update = _recurry (3) (manual.update)
+export const updatePathM = _recurry (3) (manual.updatePathM)
+export const updatePath = _recurry (3) (manual.updatePath)
 
 // ------ append.
 
@@ -370,6 +379,7 @@ export const asterisk = _recurry (2) (manual.asterisk)
 
 /*
  * laat = let* from racket
+ * why not lets for laat
  * letN = let* + array
  * letS = let* + stick (implies N)
  * let1, let2, etc.: wrapped by laat, but can be called directly too.
@@ -630,6 +640,8 @@ export const discardPrototype = (o) => ({ ...o })
 
 // --- returns a copy with prototype vals surfaced.
 export const flattenPrototype = mergeInToM ({})
+
+// xxx reduceRight
 
 // --- using rest params to pluck it is about 4 times faster than writing the args out -- but even
 // the latter can do 1e5 iterations per ms.

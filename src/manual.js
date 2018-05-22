@@ -242,7 +242,7 @@ export const assocPathM = (xs) => (x) => (o) => {
     }
     const [ptr, pat] = xs.reduce (
         ([p, s], x) => reducer (p, s, x),
-        [o, null]
+        [o, null],
     )
     ptr [pat] = x
     return o
@@ -254,6 +254,18 @@ export const update  = (prop) => (f) => (o) => {
     const oo = merge (o) ({})
     oo [prop] = f (o [prop])
     return oo
+}
+
+// --- if at some point these no longer route through path and assocPath/M, then unit tests need to
+// be fleshed out.
+export const updatePathM = (xs) => (f) => (o) => {
+    const x = path (xs) (o)
+    return assocPathM (xs) (f (x)) (o)
+}
+
+export const updatePath = (xs) => (f) => (o) => {
+    const x = path (xs) (o)
+    return assocPath (xs) (f (x)) (o)
 }
 
 export const append = elem => ary => [...ary, elem]
@@ -738,6 +750,7 @@ export default {
     tryCatch, decorateException,
     defaultTo,
     assoc, assocM, assocPath, assocPathM,
+    updateM, update, updatePathM, updatePath,
     append, appendTo, appendToM, appendM,
     prependTo, prepend, prependToM, prependM,
     concatTo, concat, concatToM, concatM,

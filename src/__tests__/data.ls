@@ -1,11 +1,11 @@
 {
-    assoc: rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map: rMap, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: rEach, complement, isNil,
+    assoc: rAssoc, head, tail, reduceRight, chain, identity, reduce, map: rMap, prop: rProp, path: rPath, defaultTo: rDefaultTo, curry, forEach: rEach, complement, isNil,
     repeat: rRepeat,
     times: r-times,
     join: r-join,
     split: r-split,
     reverse,
-    tap,
+    tap: r-tap,
     flip,
     zip,
 } = require 'ramda'
@@ -22,6 +22,8 @@
     expect-to-be-truthy, expect-to-be-falsy,
     expect-to-have-typeof, expect-to-have-type-of,
     expect-to-contain-object,
+    expect-not-to-equal,
+    expect-not-to-be,
 } = require './common'
 
 {
@@ -44,6 +46,7 @@
     prop, path,
 
     assoc, assoc-m,
+    assoc-path, assoc-path-m,
     append-to, append-to-m, append, append-m,
     prepend, prepend-m, prepend-to, prepend-to-m,
     concat-to, concat-to-m, concat, concat-m,
@@ -490,6 +493,87 @@ describe 'data stuff' ->
             (expect nieuw).to-be orig
             (expect nieuw).to-equal a: 1 b: 3
 
+    describe 'assocPath' ->
+        o = o: void
+        before-each ->
+            base = base-val: 10
+            o.o = (Object.create base) <<<
+                a: 1 b: 2
+                c:
+                   w: null
+                   x: void
+                   y: 3
+                   z:
+                       zz: 10
+                       yy: 11
+            o.p =
+                a: 1 b: 2
+                c: [10 11 [a: 1]]
+            o.q =
+                a: 1 b: 2
+                c: new Date
+                d: new Error
+
+        # --- spot-check non-mutable version.
+        test 1 ->
+            o.o |> assoc-path-m <[ a ]> 2
+            o.o |> expect-to-contain-object a: 2 b: 2
+
+            o.o |> assoc-path <[ a ]> 2
+                |> r-tap expect-to-contain-object a: 2 b: 2
+                |> expect-not-to-be o.o
+        test 2 ->
+            o.o |> assoc-path-m <[ d ]> 2
+            o.o |> expect-to-contain-object a: 1 b: 2 d: 2
+        test 3 ->
+            o.o |> assoc-path-m <[ a c ]> 3
+            o.o |> expect-to-contain-object b: 2 a: c: 3
+        test 4 ->
+            o.o |> assoc-path-m <[ d a ]> 3
+            o.o |> expect-to-contain-object a:1 d: a: 3
+        test 5 ->
+            o.o |> assoc-path-m <[ a d ]> 3
+            o.o |> expect-to-contain-object do
+                b: 2 a: d: 3
+        test 6 ->
+            o.o |> assoc-path-m <[ c w ]> void
+            o.o.c.w |> expect-to-equal void
+        test 7 ->
+            o.o |> assoc-path-m <[ c w ]> 10
+            o.o.c.w |> expect-to-equal 10
+        test 8 ->
+            o.o |> assoc-path-m <[ c w ]> null
+            o.o.c.w |> expect-to-equal null
+        test 9 ->
+            o.p |> assoc-path-m <[ c 1 ]> 1
+            o.p |> expect-to-equal do
+                a: 1 b: 2 c: [10 1 [a: 1]]
+
+            o.p |> assoc-path <[ c 1 ]> 1
+                |> r-tap expect-to-equal do
+                    a: 1 b: 2 c: [10 1 [a: 1]]
+                |> expect-not-to-be o.p
+        test 10 ->
+            # --- number will work, though it relies on coercion.
+            o.p |> assoc-path-m ['c' 1] 1
+            o.p |> expect-to-equal do
+                a: 1 b: 2 c: [10 1 [a: 1]]
+        test 11 ->
+            o.p |> assoc-path-m ['c' '2' '0' 'a'] 2
+            o.p |> expect-to-equal do
+                a: 1 b: 2 c: [10 11 [a: 2]]
+        test 11 ->
+            o.p |> assoc-path-m ['c' '2' '0' 'a'] 2
+            o.p |> expect-to-equal do
+                a: 1 b: 2 c: [10 11 [a: 2]]
+        test 12 ->
+            o.q |> assoc-path-m <[ c d ]> 2
+            o.q |> expect-to-contain-object a: 1 c: d: 2
+        test 'non-m flattens proto' ->
+            o.o |> assoc-path <[ c ]> 1
+                expect-to-contain-object base-val: 10 c: 1
+
+
     describe 'prop, path' ->
         o =
             a: 1 b: 2
@@ -500,6 +584,13 @@ describe 'data stuff' ->
                z:
                    zz: 10
                    yy: 11
+        p =
+            a: 1 b: 2
+            c: [10 11 [a: 1]]
+        q =
+            a: 1 b: 2
+            c: new Date
+            d: new Error
 
         test 'prop' ->
             o |> prop 'b'
@@ -536,7 +627,20 @@ describe 'data stuff' ->
             test 'path 8' ->
                 o |> path <[ c z zz zz zz ]>
                   |> expect-to-be void
-
+            test 'path 9' ->
+                p |> path <[ c 1 ]>
+                  |> expect-to-equal 11
+            test 'path 10' ->
+                # --- number will work, though it relies on coercion.
+                p |> path ['c' 1]
+                  |> expect-to-equal 11
+            test 'path 11' ->
+                p |> path ['c' '2' '0' 'a']
+                  |> expect-to-equal 1
+            # --- undefined, like ramda.
+            test 'path 12' ->
+                p |> path <[ c date ]>
+                  |> expect-to-equal void
 
     describe 'appendTo' ->
         fn = append-to

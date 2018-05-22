@@ -203,9 +203,12 @@ export const join   = _recurry (2) (manual.join)
 // ------ object manipulation.
 
 export const prop   = _recurry (2) (manual.prop)
+// --- only traverses "typeof = 'object'" nodes; thinks like Date result in undefined.
 export const path   = _recurry (2) (manual.path)
 export const assoc  = _recurry (3) (manual.assoc)
 export const assocM = _recurry (3) (manual.assocM)
+export const assocPath = _recurry (3) (manual.assocPath)
+export const assocPathM = _recurry (3) (manual.assocPathM)
 
 
 // ------ append.

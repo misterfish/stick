@@ -14,6 +14,8 @@ import {
 
     mergeToMSym, mergeToSym, mergeMSym, mergeSym,
     mergeInToMSym, mergeInToSym, mergeInMSym, mergeInSym,
+
+    isArray, isObject,
 } from './index'
 
 import stick from './index'
@@ -227,11 +229,23 @@ export const assoc = (prop) => (val) => (o) => {
 }
 
 export const assocM = prop => val => o => (o[prop] = val, o)
-export const assocPath = (xs) => (o) => {
-    let j = o
-    for (const i of xs) if (!ok (j)) return j
-                        else j = j [i]
-    return j
+
+export const assocPath = (xs) => (x) => (o) =>
+    assocPathM (xs) (x) (mergeInM (o) ({}))
+
+export const assocPathM = (xs) => (x) => (o) => {
+    const reducer = (ptr, pat, el) => {
+       if (!ok (pat)) return [ptr, el]
+       const pp = ptr [pat]
+       const ppp = (isArray (pp) || isObject (pp)) ? pp : (ptr [pat] = {})
+       return [ppp, el]
+    }
+    const [ptr, pat] = xs.reduce (
+        ([p, s], x) => reducer (p, s, x),
+        [o, null]
+    )
+    ptr [pat] = x
+    return o
 }
 
 // --- no 'in' forms: always flatten, like assoc.
@@ -723,7 +737,7 @@ export default {
     toThe,
     tryCatch, decorateException,
     defaultTo,
-    assoc, assocM,
+    assoc, assocM, assocPath, assocPathM,
     append, appendTo, appendToM, appendM,
     prependTo, prepend, prependToM, prependM,
     concatTo, concat, concatToM, concatM,

@@ -1,8 +1,8 @@
-var ref$, rAssoc, assocPath, head, tail, reduceRight, chain, identity, reduce, rMap, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, tap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, expectPredicate, expectToBeTruthy, expectToBeFalsy, expectToHaveTypeof, expectToHaveTypeOf, expectToContainObject, map, filter, reject, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, path, assoc, assocM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeInTo, mergeIn, mergeInToM, mergeInM, mergeToSym, mergeSym, mergeToMSym, mergeMSym, mergeInToSym, mergeInSym, mergeInToMSym, mergeInMSym, mergeAllIn, mergeWith, mergeWhen, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, noop, chooseSrc, chooseTgt, mergeToChooseTgtM, mergeToChooseTgt, mergeToChooseSrcM, mergeToChooseSrc, mergeToWithNullM, mergeToWithNull, mergeToWithNoopM, mergeToWithNoop, mergeInToChooseTgtM, mergeInToChooseTgt, mergeInToChooseSrcM, mergeInToChooseSrc, mergeInToWithNoopM, mergeInToWithNoop, mergeChooseTgtM, mergeChooseTgt, mergeChooseSrcM, mergeChooseSrc, mergeWithNullM, mergeWithNull, mergeWithNoopM, mergeWithNoop, mergeInChooseTgtM, mergeInChooseTgt, mergeInChooseSrcM, mergeInChooseSrc, mergeInWithNullM, mergeInWithNull, mergeInWithNoopM, mergeInWithNoop, srcOk, tgtOk, mergeToWhenSrcOkM, mergeToWhenSrcOk, mergeToWhenTgtOkM, mergeToWhenTgtOk, mergeWhenSrcOkM, mergeWhenSrcOk, mergeWhenTgtOkM, mergeWhenTgtOk, this$ = this, slice$ = [].slice;
-ref$ = require('ramda'), rAssoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, tap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
+var ref$, rAssoc, head, tail, reduceRight, chain, identity, reduce, rMap, rProp, rPath, rDefaultTo, curry, rEach, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, rTap, flip, zip, odd, even, list, test, xtest, expectToEqual, expectToBe, expectPredicate, expectToBeTruthy, expectToBeFalsy, expectToHaveTypeof, expectToHaveTypeOf, expectToContainObject, expectNotToEqual, expectNotToBe, map, filter, reject, each, eachObj, eachObjIn, keys, keysIn, values, valuesIn, mapKeys, mapValues, mapKeysIn, mapValuesIn, mapTuples, mapTuplesIn, mapAsKeys, mapAsKeysIn, mapAsValues, mapAsValuesIn, withFilter, addIndex, addCollection, reduceObj, reduceObjIn, defaultTo, defaultToV, join, split, prop, path, assoc, assocM, assocPath, assocPathM, appendTo, appendToM, append, appendM, prepend, prependM, prependTo, prependToM, concatTo, concatToM, concat, concatM, precatTo, precat, mergeTo, merge, mergeToM, mergeM, mergeInTo, mergeIn, mergeInToM, mergeInM, mergeToSym, mergeSym, mergeToMSym, mergeMSym, mergeInToSym, mergeInSym, mergeInToMSym, mergeInMSym, mergeAllIn, mergeWith, mergeWhen, discardPrototype, flattenPrototype, ampersand, asterisk, arg0, arg1, arg2, arg3, arg4, arg5, arg6, sortAlpha, sortNum, noop, chooseSrc, chooseTgt, mergeToChooseTgtM, mergeToChooseTgt, mergeToChooseSrcM, mergeToChooseSrc, mergeToWithNullM, mergeToWithNull, mergeToWithNoopM, mergeToWithNoop, mergeInToChooseTgtM, mergeInToChooseTgt, mergeInToChooseSrcM, mergeInToChooseSrc, mergeInToWithNoopM, mergeInToWithNoop, mergeChooseTgtM, mergeChooseTgt, mergeChooseSrcM, mergeChooseSrc, mergeWithNullM, mergeWithNull, mergeWithNoopM, mergeWithNoop, mergeInChooseTgtM, mergeInChooseTgt, mergeInChooseSrcM, mergeInChooseSrc, mergeInWithNullM, mergeInWithNull, mergeInWithNoopM, mergeInWithNoop, srcOk, tgtOk, mergeToWhenSrcOkM, mergeToWhenSrcOk, mergeToWhenTgtOkM, mergeToWhenTgtOk, mergeWhenSrcOkM, mergeWhenSrcOk, mergeWhenTgtOkM, mergeWhenTgtOk, this$ = this, slice$ = [].slice;
+ref$ = require('ramda'), rAssoc = ref$.assoc, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, rMap = ref$.map, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, curry = ref$.curry, rEach = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, rTap = ref$.tap, flip = ref$.flip, zip = ref$.zip;
 ref$ = require('prelude-ls'), odd = ref$.odd, even = ref$.even;
-ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectPredicate = ref$.expectPredicate, expectToBeTruthy = ref$.expectToBeTruthy, expectToBeFalsy = ref$.expectToBeFalsy, expectToHaveTypeof = ref$.expectToHaveTypeof, expectToHaveTypeOf = ref$.expectToHaveTypeOf, expectToContainObject = ref$.expectToContainObject;
-ref$ = require('../index'), map = ref$.map, filter = ref$.filter, reject = ref$.reject, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, path = ref$.path, assoc = ref$.assoc, assocM = ref$.assocM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeInTo = ref$.mergeInTo, mergeIn = ref$.mergeIn, mergeInToM = ref$.mergeInToM, mergeInM = ref$.mergeInM, mergeToSym = ref$.mergeToSym, mergeSym = ref$.mergeSym, mergeToMSym = ref$.mergeToMSym, mergeMSym = ref$.mergeMSym, mergeInToSym = ref$.mergeInToSym, mergeInSym = ref$.mergeInSym, mergeInToMSym = ref$.mergeInToMSym, mergeInMSym = ref$.mergeInMSym, mergeAllIn = ref$.mergeAllIn, mergeWith = ref$.mergeWith, mergeWhen = ref$.mergeWhen, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
+ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectPredicate = ref$.expectPredicate, expectToBeTruthy = ref$.expectToBeTruthy, expectToBeFalsy = ref$.expectToBeFalsy, expectToHaveTypeof = ref$.expectToHaveTypeof, expectToHaveTypeOf = ref$.expectToHaveTypeOf, expectToContainObject = ref$.expectToContainObject, expectNotToEqual = ref$.expectNotToEqual, expectNotToBe = ref$.expectNotToBe;
+ref$ = require('../index'), map = ref$.map, filter = ref$.filter, reject = ref$.reject, each = ref$.each, eachObj = ref$.eachObj, eachObjIn = ref$.eachObjIn, keys = ref$.keys, keysIn = ref$.keysIn, values = ref$.values, valuesIn = ref$.valuesIn, mapKeys = ref$.mapKeys, mapValues = ref$.mapValues, mapKeysIn = ref$.mapKeysIn, mapValuesIn = ref$.mapValuesIn, mapTuples = ref$.mapTuples, mapTuplesIn = ref$.mapTuplesIn, mapAsKeys = ref$.mapAsKeys, mapAsKeysIn = ref$.mapAsKeysIn, mapAsValues = ref$.mapAsValues, mapAsValuesIn = ref$.mapAsValuesIn, withFilter = ref$.withFilter, addIndex = ref$.addIndex, addCollection = ref$.addCollection, reduceObj = ref$.reduceObj, reduceObjIn = ref$.reduceObjIn, defaultTo = ref$.defaultTo, defaultToV = ref$.defaultToV, join = ref$.join, split = ref$.split, prop = ref$.prop, path = ref$.path, assoc = ref$.assoc, assocM = ref$.assocM, assocPath = ref$.assocPath, assocPathM = ref$.assocPathM, appendTo = ref$.appendTo, appendToM = ref$.appendToM, append = ref$.append, appendM = ref$.appendM, prepend = ref$.prepend, prependM = ref$.prependM, prependTo = ref$.prependTo, prependToM = ref$.prependToM, concatTo = ref$.concatTo, concatToM = ref$.concatToM, concat = ref$.concat, concatM = ref$.concatM, precatTo = ref$.precatTo, precat = ref$.precat, mergeTo = ref$.mergeTo, merge = ref$.merge, mergeToM = ref$.mergeToM, mergeM = ref$.mergeM, mergeInTo = ref$.mergeInTo, mergeIn = ref$.mergeIn, mergeInToM = ref$.mergeInToM, mergeInM = ref$.mergeInM, mergeToSym = ref$.mergeToSym, mergeSym = ref$.mergeSym, mergeToMSym = ref$.mergeToMSym, mergeMSym = ref$.mergeMSym, mergeInToSym = ref$.mergeInToSym, mergeInSym = ref$.mergeInSym, mergeInToMSym = ref$.mergeInToMSym, mergeInMSym = ref$.mergeInMSym, mergeAllIn = ref$.mergeAllIn, mergeWith = ref$.mergeWith, mergeWhen = ref$.mergeWhen, discardPrototype = ref$.discardPrototype, flattenPrototype = ref$.flattenPrototype, ampersand = ref$.ampersand, asterisk = ref$.asterisk, arg0 = ref$.arg0, arg1 = ref$.arg1, arg2 = ref$.arg2, arg3 = ref$.arg3, arg4 = ref$.arg4, arg5 = ref$.arg5, arg6 = ref$.arg6;
 sortAlpha = function(it){
   return it.sort();
 };
@@ -880,8 +880,206 @@ describe('data stuff', function(){
       });
     });
   });
-  describe('prop, path', function(){
+  describe('assocPath', function(){
     var o;
+    o = {
+      o: void 8
+    };
+    beforeEach(function(){
+      var base, ref$;
+      base = {
+        baseVal: 10
+      };
+      o.o = (ref$ = Object.create(base), ref$.a = 1, ref$.b = 2, ref$.c = {
+        w: null,
+        x: void 8,
+        y: 3,
+        z: {
+          zz: 10,
+          yy: 11
+        }
+      }, ref$);
+      o.p = {
+        a: 1,
+        b: 2,
+        c: [
+          10, 11, [{
+            a: 1
+          }]
+        ]
+      };
+      return o.q = {
+        a: 1,
+        b: 2,
+        c: new Date,
+        d: new Error
+      };
+    });
+    test(1, function(){
+      assocPathM(['a'], 2)(
+      o.o);
+      expectToContainObject({
+        a: 2,
+        b: 2
+      })(
+      o.o);
+      return expectNotToBe(o.o)(
+      rTap(expectToContainObject({
+        a: 2,
+        b: 2
+      }))(
+      assocPath(['a'], 2)(
+      o.o)));
+    });
+    test(2, function(){
+      assocPathM(['d'], 2)(
+      o.o);
+      return expectToContainObject({
+        a: 1,
+        b: 2,
+        d: 2
+      })(
+      o.o);
+    });
+    test(3, function(){
+      assocPathM(['a', 'c'], 3)(
+      o.o);
+      return expectToContainObject({
+        b: 2,
+        a: {
+          c: 3
+        }
+      })(
+      o.o);
+    });
+    test(4, function(){
+      assocPathM(['d', 'a'], 3)(
+      o.o);
+      return expectToContainObject({
+        a: 1,
+        d: {
+          a: 3
+        }
+      })(
+      o.o);
+    });
+    test(5, function(){
+      assocPathM(['a', 'd'], 3)(
+      o.o);
+      return expectToContainObject({
+        b: 2,
+        a: {
+          d: 3
+        }
+      })(
+      o.o);
+    });
+    test(6, function(){
+      assocPathM(['c', 'w'], void 8)(
+      o.o);
+      return expectToEqual(void 8)(
+      o.o.c.w);
+    });
+    test(7, function(){
+      assocPathM(['c', 'w'], 10)(
+      o.o);
+      return expectToEqual(10)(
+      o.o.c.w);
+    });
+    test(8, function(){
+      assocPathM(['c', 'w'], null)(
+      o.o);
+      return expectToEqual(null)(
+      o.o.c.w);
+    });
+    test(9, function(){
+      assocPathM(['c', '1'], 1)(
+      o.p);
+      expectToEqual({
+        a: 1,
+        b: 2,
+        c: [
+          10, 1, [{
+            a: 1
+          }]
+        ]
+      })(
+      o.p);
+      return expectNotToBe(o.p)(
+      rTap(expectToEqual({
+        a: 1,
+        b: 2,
+        c: [
+          10, 1, [{
+            a: 1
+          }]
+        ]
+      }))(
+      assocPath(['c', '1'], 1)(
+      o.p)));
+    });
+    test(10, function(){
+      assocPathM(['c', 1], 1)(
+      o.p);
+      return expectToEqual({
+        a: 1,
+        b: 2,
+        c: [
+          10, 1, [{
+            a: 1
+          }]
+        ]
+      })(
+      o.p);
+    });
+    test(11, function(){
+      assocPathM(['c', '2', '0', 'a'], 2)(
+      o.p);
+      return expectToEqual({
+        a: 1,
+        b: 2,
+        c: [
+          10, 11, [{
+            a: 2
+          }]
+        ]
+      })(
+      o.p);
+    });
+    test(11, function(){
+      assocPathM(['c', '2', '0', 'a'], 2)(
+      o.p);
+      return expectToEqual({
+        a: 1,
+        b: 2,
+        c: [
+          10, 11, [{
+            a: 2
+          }]
+        ]
+      })(
+      o.p);
+    });
+    test(12, function(){
+      assocPathM(['c', 'd'], 2)(
+      o.q);
+      return expectToContainObject({
+        a: 1,
+        c: {
+          d: 2
+        }
+      })(
+      o.q);
+    });
+    return test('non-m flattens proto', function(){
+      return expectToContainObject({
+        baseVal: 10
+      })(
+      o.o);
+    });
+  });
+  describe('prop, path', function(){
+    var o, p, q;
     o = {
       a: 1,
       b: 2,
@@ -894,6 +1092,21 @@ describe('data stuff', function(){
           yy: 11
         }
       }
+    };
+    p = {
+      a: 1,
+      b: 2,
+      c: [
+        10, 11, [{
+          a: 1
+        }]
+      ]
+    };
+    q = {
+      a: 1,
+      b: 2,
+      c: new Date,
+      d: new Error
     };
     test('prop', function(){
       return expectToEqual(2)(
@@ -949,10 +1162,30 @@ describe('data stuff', function(){
         path(['c', 'z', 'zz'])(
         o));
       });
-      return test('path 8', function(){
+      test('path 8', function(){
         return expectToBe(void 8)(
         path(['c', 'z', 'zz', 'zz', 'zz'])(
         o));
+      });
+      test('path 9', function(){
+        return expectToEqual(11)(
+        path(['c', '1'])(
+        p));
+      });
+      test('path 10', function(){
+        return expectToEqual(11)(
+        path(['c', 1])(
+        p));
+      });
+      test('path 11', function(){
+        return expectToEqual(1)(
+        path(['c', '2', '0', 'a'])(
+        p));
+      });
+      return test('path 12', function(){
+        return expectToEqual(void 8)(
+        path(['c', 'date'])(
+        p));
       });
     });
   });

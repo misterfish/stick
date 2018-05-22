@@ -1113,6 +1113,56 @@ describe('data stuff', function(){
         d: new Error
       };
     });
+    describe('update', function(){
+      test(1, function(){
+        var this$ = this;
+        updateM('a', (function(it){
+          return it * 51;
+        }))(
+        o.o);
+        return expectToContainObject({
+          a: 51,
+          b: 2
+        })(
+        o.o);
+      });
+      test('vivify m', function(){
+        var this$ = this;
+        updateM('nonexistent', (function(it){
+          return it * 51;
+        }))(
+        o.o);
+        return expectToContainObject({
+          b: 2,
+          nonexistent: NaN
+        })(
+        o.o);
+      });
+      test(2, function(){
+        var this$ = this;
+        return expectNotToBe(o.o)(
+        rTap(expectToContainObject({
+          a: 51,
+          b: 2
+        }))(
+        update('a', (function(it){
+          return it * 51;
+        }))(
+        o.o)));
+      });
+      return test('vivify', function(){
+        var this$ = this;
+        return expectNotToBe(o.o)(
+        rTap(expectToContainObject({
+          b: 2,
+          nonexistent: NaN
+        }))(
+        update('nonexistent', (function(it){
+          return it * 51;
+        }))(
+        o.o)));
+      });
+    });
     return describe('updatePath', function(){
       test(1, function(){
         var this$ = this;

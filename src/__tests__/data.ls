@@ -595,6 +595,22 @@ describe 'data stuff' ->
                 c: new Date
                 d: new Error
 
+        describe 'update' ->
+            test 1 ->
+                o.o |> update-m 'a' (* 51)
+                o.o |> expect-to-contain-object a: 51 b:2
+            test 'vivify m' ->
+                o.o |> update-m 'nonexistent' (* 51)
+                o.o |> expect-to-contain-object b: 2 nonexistent: NaN
+            test 2 ->
+                o.o |> update   'a' (* 51)
+                    |> r-tap expect-to-contain-object a: 51 b:2
+                    |> expect-not-to-be o.o
+            test 'vivify' ->
+                o.o |> update   'nonexistent' (* 51)
+                    |> r-tap expect-to-contain-object b: 2 nonexistent: NaN
+                    |> expect-not-to-be o.o
+
         # --- assume routes through path and assocPath
         describe 'updatePath' ->
             test 1 ->

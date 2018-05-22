@@ -659,7 +659,7 @@ export const factoryInit = (init) => (proto) => ({
 
 export const mixinPreM = (mixin) => (proto) => {
     const chooseTgtWhenOk = (src, tgt) => ok (tgt) ? tgt : src
-    const mergeToChooseTgtWhenOkM = mergeWith (chooseTgtWhenOk) (mergeToM)
+    const mergeToChooseTgtWhenOkM = mergeWith (chooseTgtWhenOk) (mergeToMSym)
     return mergeToChooseTgtWhenOkM (proto) (mixin)
 }
 
@@ -668,7 +668,7 @@ export const mixinPreM = (mixin) => (proto) => {
 //     mixin is nil.
 export const mixinM = (mixin) => (proto) => {
     const srcOk = (src, _) => ok (src)
-    const mergeToWhenSrcOkM = mergeWhen (srcOk) (mergeToM)
+    const mergeToWhenSrcOkM = mergeWhen (srcOk) (mergeToMSym)
     return mergeToWhenSrcOkM (proto) (mixin)
 }
 

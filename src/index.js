@@ -661,8 +661,14 @@ export const arg6 = (...args) => args [6]
 // not putting your properties in the prototype, are you?) Do use `undefined`, not `false` or
 // `null`. Use `void 8` or your very own favorite number to impress ... no one.
 
+export const mixinPreM    = _recurry (2) (manual.mixinPreM )
+export const mixinM       = _recurry (2) (manual.mixinM    )
+export const mixinPreNM   = _recurry (2) (manual.mixinPreNM)
+export const mixinNM      = _recurry (2) (manual.mixinNM   )
+
 export const factoryProps = _recurry (2) (manual.factoryProps)
-export const factoryInit = _recurry (2) (manual.factoryInit)
+export const factoryInit  = _recurry (2) (manual.factoryInit)
+
 export const factory = factoryInit ((o, props) => {
     if (props == null) return
     for (const i in props) if (hasOwn.call (props, i))
@@ -680,10 +686,29 @@ export const factory = factoryInit ((o, props) => {
 // Properties would be a bit unusual, but not impossible. All methods are callable, including those
 // of other mixins and those of the dog.)
 //
-// const Dog = dogProto | factoryMixin (cheaterProto) | factory
+// const Dog = dogProto | mixinM (cheaterProto) | factory
 // const dog = Dog.create ()
 // dog.cheat ()
 // dog.speak ()
+//
+// The tricky thing with mixins is the inevitable name clashes. To deal with this we offer 'pre'
+// mixins and 'post' mixins. The `mixinM` function above is for 'post' mixins: the mixin will be
+// copied into the prototype. If a key exists, it will be overwritten, unless the corresponding
+// value from the mixin is nil. You can use `mixinPreM` for 'pre' mixins: the mixin values will be
+// copied into the prototype, but they won't overwrite existing keys unless the prototype value
+// corresponding to that key is nil.
+//
+// --- we do not provide non-M versions of the mixin functions.
+//     the reason is that it would result in flattening the prototype the way all other objects are
+//     flattened when using them immutably, which might be confusing.
+// --- if it really is what you want, just do it yourself before passing it to the mixin functions:
+//     const flattened = proto | flattenPrototype | mixin ...
+// --- if you do not want your prototype altered, and also don't want to flatten it, just do
+//     Object.create first:
+//     const cloned = proto | Object.create | mixin ...
+//
+// There are also 'N' versions, which take arrays: `mixinNM` and `mixinPreNM`.
+
 
 // --- e.g.:
 // const theFactory = proto | factory | factoryStatics (statics) | factoryInit (init)

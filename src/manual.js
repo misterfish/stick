@@ -651,22 +651,13 @@ export const factoryInit = (init) => (proto) => ({
     },
 })
 
-// --- we do not provide non-M versions of the mixin functions.
-//     the reason is that it would result in flattening the prototype the way all other objects are
-//     flattened when using them immutably, which is probably not what you want.
-// --- if it is what you want, just do it yourself before passing it to the mixin functions:
-//     const flattened = proto | flattenPrototype
-// --- if you do not want your prototype altered, and also don't want to flatten it, just do
-//     Object.create first:
-//     const cloned = proto | Object.create
-
 // --- alters the prototype by merging in the mixins.
 // --- if a key exists in the proto and its value is not nil, then it is not overwritten.
 // --- the result is as if you had merged the proto into the mixin, keeping the proto's own
 // prototype chain intact, then called that result the proto; except that the proto is altered in
 // place of course because of the M.
 
-const mergeMixinPreM = (mixin) => (proto) => {
+export const mixinPreM = (mixin) => (proto) => {
     const chooseTgtWhenOk = (src, tgt) => ok (tgt) ? tgt : src
     const mergeToChooseTgtWhenOkM = mergeWith (chooseTgtWhenOk) (mergeToM)
     return mergeToChooseTgtWhenOkM (proto) (mixin)
@@ -675,11 +666,21 @@ const mergeMixinPreM = (mixin) => (proto) => {
 // --- alters the prototype by merging in the mixins.
 // --- if a key exists in the proto then it is overwritten, unless the corresponding value from the
 //     mixin is nil.
-const mergeMixinPostM = (mixin) => (proto) => {
+export const mixinM = (mixin) => (proto) => {
     const srcOk = (src, _) => ok (src)
     const mergeToWhenSrcOkM = mergeWhen (srcOk) (mergeToM)
     return mergeToWhenSrcOkM (proto) (mixin)
 }
+
+export const mixinPreNM = (ms) => (proto) => ms.reduce (
+    (protoAcc, mixin) => mixinPreM (mixin) (protoAcc),
+    proto,
+)
+
+export const mixinNM = (ms) => (proto) => ms.reduce (
+    (protoAcc, mixin) => mixinM (mixin) (protoAcc),
+    proto,
+)
 
 export default {
     roll, recurry,
@@ -737,4 +738,6 @@ export default {
     xReplace, xReplaceStr, xReplaceStrFlags,
     ifXReplace, ifXReplaceStr, ifXReplaceStrFlags,
     factoryProps, factoryInit,
+    mixinM, mixinPreM,
+    mixinNM, mixinPreNM,
 }

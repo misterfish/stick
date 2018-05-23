@@ -6,7 +6,7 @@ import { sprintf, } from 'sprintf-js'
 import {
     ok, notOk, whenOk, ifOk,
     isFunction, ifYes,
-    laat,
+    lets,
     getType,
     xRegExp, xRegExpFlags, xRegExpStr,
     die,
@@ -501,10 +501,10 @@ export const asterisk = (fs) => (xs) => {
     return ret
 }
 
-// ------ laat / let
+// ------ lets / let
 
 export const letNV = xs => f => f.apply (null, xs)
-export const letS = specAry => tgt => laat (
+export const letS = specAry => tgt => lets (
 	_ => tgt,
 	... specAry,
 )

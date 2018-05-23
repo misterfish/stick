@@ -1,7 +1,7 @@
-var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, zip, sum, rEquals, rIdentical, curry, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, expectToBeInstanceOf, main, eq, ne, gt, gte, lt, lte, bindPropTo, bindProp, bindTo, bind, bindTryPropTo, bindTryProp, bindTryTo, bindTry, noop, stickNot, roll, recurry, tap, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, letV, letNV, laat, let2, let3, let4, let5, let6, letN, letS, zipAll, isType, getType, isFunction, isArray, isObject, isNumber, isRegExp, isBoolean, isString, isSymbol, isInteger, rangeFrom, rangeTo, rangeFromBy, rangeToBy, rangeFromByAsc, rangeFromByDesc, neu, neu1, neu2, neu3, neu4, neu5, neuN, xRegExp, xRegExpStr, xRegExpFlags, xMatch, xMatchStr, xMatchStrFlags, stickMatch, xMatchGlobal, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, blush, always, T, F, bindLatePropTo, bindLateProp, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
+var ref$, assoc, assocPath, head, tail, reduceRight, chain, identity, reduce, map, filter, rProp, rPath, rDefaultTo, each, complement, isNil, rRepeat, rTimes, rJoin, rSplit, reverse, zip, sum, rEquals, rIdentical, curry, list, test, xtest, expectToEqual, expectToBe, expectToThrow, expectNotToThrow, expectToBeInstanceOf, main, eq, ne, gt, gte, lt, lte, bindPropTo, bindProp, bindTo, bind, bindTryPropTo, bindTryProp, bindTryTo, bindTry, noop, stickNot, roll, recurry, tap, cascade, flip, flip3, flip4, flip5, sprintf1, sprintfN, letV, letNV, lets, lets2, lets3, lets4, lets5, lets6, letN, letS, zipAll, isType, getType, isFunction, isArray, isObject, isNumber, isRegExp, isBoolean, isString, isSymbol, isInteger, rangeFrom, rangeTo, rangeFromBy, rangeToBy, rangeFromByAsc, rangeFromByDesc, neu, neu1, neu2, neu3, neu4, neu5, neuN, xRegExp, xRegExpStr, xRegExpFlags, xMatch, xMatchStr, xMatchStrFlags, stickMatch, xMatchGlobal, xReplace, xReplaceStr, xReplaceStrFlags, ifReplace, ifXReplace, ifXReplaceStr, ifXReplaceStrFlags, blush, always, T, F, bindLatePropTo, bindLateProp, subtractFrom, subtract, minus, add, plus, multiply, divideBy, divideInto, modulo, moduloWholePart, toThe, repeatV, repeatF, repeatSide, timesV, timesF, timesSide, sumAll, slice$ = [].slice;
 ref$ = require('ramda'), assoc = ref$.assoc, assocPath = ref$.assocPath, head = ref$.head, tail = ref$.tail, reduceRight = ref$.reduceRight, chain = ref$.chain, identity = ref$.identity, reduce = ref$.reduce, map = ref$.map, filter = ref$.filter, rProp = ref$.prop, rPath = ref$.path, rDefaultTo = ref$.defaultTo, each = ref$.forEach, complement = ref$.complement, isNil = ref$.isNil, rRepeat = ref$.repeat, rTimes = ref$.times, rJoin = ref$.join, rSplit = ref$.split, reverse = ref$.reverse, zip = ref$.zip, sum = ref$.sum, rEquals = ref$.equals, rIdentical = ref$.identical, curry = ref$.curry;
 ref$ = require('./common'), list = ref$.list, test = ref$.test, xtest = ref$.xtest, expectToEqual = ref$.expectToEqual, expectToBe = ref$.expectToBe, expectToThrow = ref$.expectToThrow, expectNotToThrow = ref$.expectNotToThrow, expectToBeInstanceOf = ref$.expectToBeInstanceOf;
-ref$ = main = require('../index'), eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bindPropTo = ref$.bindPropTo, bindProp = ref$.bindProp, bindTo = ref$.bindTo, bind = ref$.bind, bindTryPropTo = ref$.bindTryPropTo, bindTryProp = ref$.bindTryProp, bindTryTo = ref$.bindTryTo, bindTry = ref$.bindTry, noop = ref$.noop, stickNot = ref$.not, roll = ref$.roll, recurry = ref$.recurry, tap = ref$.tap, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, letV = ref$.letV, letNV = ref$.letNV, laat = ref$.laat, let2 = ref$.let2, let3 = ref$.let3, let4 = ref$.let4, let5 = ref$.let5, let6 = ref$.let6, letN = ref$.letN, letS = ref$.letS, zipAll = ref$.zipAll, isType = ref$.isType, getType = ref$.getType, isFunction = ref$.isFunction, isArray = ref$.isArray, isObject = ref$.isObject, isNumber = ref$.isNumber, isRegExp = ref$.isRegExp, isBoolean = ref$.isBoolean, isString = ref$.isString, isSymbol = ref$.isSymbol, isInteger = ref$.isInteger, rangeFrom = ref$.rangeFrom, rangeTo = ref$.rangeTo, rangeFromBy = ref$.rangeFromBy, rangeToBy = ref$.rangeToBy, rangeFromByAsc = ref$.rangeFromByAsc, rangeFromByDesc = ref$.rangeFromByDesc, neu = ref$.neu, neu1 = ref$.neu1, neu2 = ref$.neu2, neu3 = ref$.neu3, neu4 = ref$.neu4, neu5 = ref$.neu5, neuN = ref$.neuN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xRegExpFlags = ref$.xRegExpFlags, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, stickMatch = ref$.match, xMatchGlobal = ref$.xMatchGlobal, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, blush = ref$.blush, always = ref$.always, T = ref$.T, F = ref$.F, bindLatePropTo = ref$.bindLatePropTo, bindLateProp = ref$.bindLateProp, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
+ref$ = main = require('../index'), eq = ref$.eq, ne = ref$.ne, gt = ref$.gt, gte = ref$.gte, lt = ref$.lt, lte = ref$.lte, bindPropTo = ref$.bindPropTo, bindProp = ref$.bindProp, bindTo = ref$.bindTo, bind = ref$.bind, bindTryPropTo = ref$.bindTryPropTo, bindTryProp = ref$.bindTryProp, bindTryTo = ref$.bindTryTo, bindTry = ref$.bindTry, noop = ref$.noop, stickNot = ref$.not, roll = ref$.roll, recurry = ref$.recurry, tap = ref$.tap, cascade = ref$.cascade, flip = ref$.flip, flip3 = ref$.flip3, flip4 = ref$.flip4, flip5 = ref$.flip5, sprintf1 = ref$.sprintf1, sprintfN = ref$.sprintfN, letV = ref$.letV, letNV = ref$.letNV, lets = ref$.lets, lets2 = ref$.lets2, lets3 = ref$.lets3, lets4 = ref$.lets4, lets5 = ref$.lets5, lets6 = ref$.lets6, letN = ref$.letN, letS = ref$.letS, zipAll = ref$.zipAll, isType = ref$.isType, getType = ref$.getType, isFunction = ref$.isFunction, isArray = ref$.isArray, isObject = ref$.isObject, isNumber = ref$.isNumber, isRegExp = ref$.isRegExp, isBoolean = ref$.isBoolean, isString = ref$.isString, isSymbol = ref$.isSymbol, isInteger = ref$.isInteger, rangeFrom = ref$.rangeFrom, rangeTo = ref$.rangeTo, rangeFromBy = ref$.rangeFromBy, rangeToBy = ref$.rangeToBy, rangeFromByAsc = ref$.rangeFromByAsc, rangeFromByDesc = ref$.rangeFromByDesc, neu = ref$.neu, neu1 = ref$.neu1, neu2 = ref$.neu2, neu3 = ref$.neu3, neu4 = ref$.neu4, neu5 = ref$.neu5, neuN = ref$.neuN, xRegExp = ref$.xRegExp, xRegExpStr = ref$.xRegExpStr, xRegExpFlags = ref$.xRegExpFlags, xMatch = ref$.xMatch, xMatchStr = ref$.xMatchStr, xMatchStrFlags = ref$.xMatchStrFlags, stickMatch = ref$.match, xMatchGlobal = ref$.xMatchGlobal, xReplace = ref$.xReplace, xReplaceStr = ref$.xReplaceStr, xReplaceStrFlags = ref$.xReplaceStrFlags, ifReplace = ref$.ifReplace, ifXReplace = ref$.ifXReplace, ifXReplaceStr = ref$.ifXReplaceStr, ifXReplaceStrFlags = ref$.ifXReplaceStrFlags, blush = ref$.blush, always = ref$.always, T = ref$.T, F = ref$.F, bindLatePropTo = ref$.bindLatePropTo, bindLateProp = ref$.bindLateProp, subtractFrom = ref$.subtractFrom, subtract = ref$.subtract, minus = ref$.minus, add = ref$.add, plus = ref$.plus, multiply = ref$.multiply, divideBy = ref$.divideBy, divideInto = ref$.divideInto, modulo = ref$.modulo, moduloWholePart = ref$.moduloWholePart, toThe = ref$.toThe, repeatV = ref$.repeatV, repeatF = ref$.repeatF, repeatSide = ref$.repeatSide, timesV = ref$.timesV, timesF = ref$.timesF, timesSide = ref$.timesSide;
 sumAll = compose$(list, sum);
 describe('noop, not', function(){
   test('noop', function(){
@@ -753,10 +753,10 @@ describe('letV', function(){
     });
   });
 });
-describe('laat', function(){
+describe('lets', function(){
   test('main', function(){
     return expectToEqual(41)(
-    laat(function(){
+    lets(function(){
       return 10;
     }, function(){
       return 12;
@@ -765,46 +765,46 @@ describe('laat', function(){
     }, sumAll));
   });
   describe('specific versions', function(){
-    test('let2', function(){
+    test('lets2', function(){
       var this$ = this;
       return expectToEqual(11)(
-      let2(function(){
+      lets2(function(){
         return 10;
       }, (function(it){
         return it + 1;
       })));
     });
-    test('let3', function(){
+    test('lets3', function(){
       var this$ = this;
       return expectToEqual(21)(
-      let3(function(){
+      lets3(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll));
     });
-    test('let4', function(){
+    test('lets4', function(){
       var this$ = this;
       return expectToEqual(42)(
-      let4(function(){
+      lets4(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll, sumAll));
     });
-    test('let5', function(){
+    test('lets5', function(){
       var this$ = this;
       return expectToEqual(84)(
-      let5(function(){
+      lets5(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll, sumAll, sumAll));
     });
-    test('let6', function(){
+    test('lets6', function(){
       var this$ = this;
       return expectToEqual(168)(
-      let6(function(){
+      lets6(function(){
         return 10;
       }, (function(it){
         return it + 1;
@@ -836,48 +836,48 @@ describe('laat', function(){
     });
   });
   describe('generic version', function(){
-    test('laat (2)', function(){
+    test('lets (2)', function(){
       var this$ = this;
       return expectToEqual(11)(
-      laat(function(){
+      lets(function(){
         return 10;
       }, (function(it){
         return it + 1;
       })));
     });
-    test('laat (3)', function(){
+    test('lets (3)', function(){
       var this$ = this;
       return expectToEqual(21)(
-      laat(function(){
+      lets(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll));
     });
-    test('laat (6)', function(){
+    test('lets (6)', function(){
       var this$ = this;
       return expectToEqual(168)(
-      laat(function(){
+      lets(function(){
         return 10;
       }, (function(it){
         return it + 1;
       }), sumAll, sumAll, sumAll, sumAll));
     });
-    test('laat (7)', function(){
+    test('lets (7)', function(){
       return expectToThrow(
       function(){
         var this$ = this;
-        return laat(function(){
+        return lets(function(){
           return 10;
         }, (function(it){
           return it + 1;
         }), sumAll, sumAll, sumAll, sumAll, sumAll);
       });
     });
-    return xtest('laat (10)', function(){
+    return xtest('lets (10)', function(){
       var this$ = this;
       return expectToEqual(2688)(
-      laat(function(){
+      lets(function(){
         return 10;
       }, (function(it){
         return it + 1;
@@ -886,7 +886,7 @@ describe('laat', function(){
   });
   test('single function', function(){
     return expectToEqual(11)(
-    laat(function(){
+    lets(function(){
       return 11;
     }));
   });
@@ -916,7 +916,7 @@ describe('laat', function(){
       };
       refs = rRepeat(entry, n + 1);
       args = slice$.call(refs).concat([list]);
-      return laat.apply(null, args);
+      return lets.apply(null, args);
     };
     expect(fibonacci(0)).toEqual([1]);
     expect(fibonacci(1)).toEqual([1, 1]);

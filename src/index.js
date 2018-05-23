@@ -386,14 +386,13 @@ export const reduceObjIn = _recurry (3) (manual.reduceObjIn)
 export const ampersand = _recurry (2) (manual.ampersand)
 export const asterisk = _recurry (2) (manual.asterisk)
 
-// --------- laat / let
+// --------- lets / let
 
 /*
- * laat = let* from racket
- * why not lets for laat
+ * lets = let* from racket
  * letN = let* + array
  * letS = let* + stick (implies N)
- * let1, let2, etc.: wrapped by laat, but can be called directly too.
+ * lets1, lets2, etc.: wrapped by lets, but can be called directly too.
  * letNV = like letV, with array
  * letV = let with values instead of functions
  */
@@ -411,40 +410,33 @@ export const letV = (...xs) => {
  * For simple values, defaultToV can be more convenient:
  * null | defaultToV ('bad news')
 */
-// i like letV fitting the pattern
-// laat -> letV x
-// letN -> letNV x
-// lets2 -> let2 x
-// letsN -> letN x
-// lets -> laat x
-// letsS -> letS x
 
 export const letNV = _recurry (2) (manual.letNV)
 
 // --- trivial form.
-export const let1 = f => invoke (f)
+export const lets1 = f => invoke (f)
 
 // --- these can be called directly by speed freaks; `lets` should be good enough for nearly all
 // uses.
-export const let2 = (f1, f2) => {
+export const lets2 = (f1, f2) => {
     const n1 = f1 ()
     return f2 (n1)
 }
 
-export const let3 = (f1, f2, f3) => {
+export const lets3 = (f1, f2, f3) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     return f3 (n1, n2)
 }
 
-export const let4 = (f1, f2, f3, f4) => {
+export const lets4 = (f1, f2, f3, f4) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     const n3 = f3 (n1, n2)
     return f4 (n1, n2, n3)
 }
 
-export const let5 = (f1, f2, f3, f4, f5) => {
+export const lets5 = (f1, f2, f3, f4, f5) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     const n3 = f3 (n1, n2)
@@ -452,7 +444,7 @@ export const let5 = (f1, f2, f3, f4, f5) => {
     return f5 (n1, n2, n3, n4)
 }
 
-export const let6 = (f1, f2, f3, f4, f5, f6) => {
+export const lets6 = (f1, f2, f3, f4, f5, f6) => {
     const n1 = f1 ()
     const n2 = f2 (n1)
     const n3 = f3 (n1, n2)
@@ -461,20 +453,20 @@ export const let6 = (f1, f2, f3, f4, f5, f6) => {
     return f6 (n1, n2, n3, n4, n5)
 }
 
-export const letN = (xs) => laat (...xs)
+export const letN = (xs) => lets (...xs)
 
 // --- throws an error if more than 6 arguments are given.
 // --- this ought to be enough for normal usage.
 // --- there is a generic functional form (see canonical.js), but it depends on mapAccum, for which
 // we depend on Ramda.
-export const laat = (...xs) => {
-    if (xs.length === 1) return let1 (...xs)
-    if (xs.length === 2) return let2 (...xs)
-    if (xs.length === 3) return let3 (...xs)
-    if (xs.length === 4) return let4 (...xs)
-    if (xs.length === 5) return let5 (...xs)
-    if (xs.length === 6) return let6 (...xs)
-    throw new Error ('laat: too many arguments (max = 6)')
+export const lets = (...xs) => {
+    if (xs.length === 1) return lets1 (...xs)
+    if (xs.length === 2) return lets2 (...xs)
+    if (xs.length === 3) return lets3 (...xs)
+    if (xs.length === 4) return lets4 (...xs)
+    if (xs.length === 5) return lets5 (...xs)
+    if (xs.length === 6) return lets6 (...xs)
+    throw new Error ('lets: too many arguments (max = 6)')
 }
 
 export const letS = _recurry (2) (manual.letS)
@@ -618,7 +610,7 @@ export const xRegExpFlags = (re, flags) => new RegExp (
 )
 
 // --- input: string, [string].
-export const xRegExpStr = (reStr, flags = '') => laat (
+export const xRegExpStr = (reStr, flags = '') => lets (
     _ => reStr | removeSpaces,
     _ => flags,
     neu2 (RegExp),

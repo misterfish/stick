@@ -37,7 +37,7 @@
     sprintf1, sprintf-n,
 
     let-v, let-n-v,
-    laat, let2, let3, let4, let5, let6,
+    lets, lets2, lets3, lets4, lets5, lets6,
     let-n, let-s,
 
     zip-all,
@@ -452,40 +452,40 @@ describe 'letV' ->
             let-n-v [10 12 19], sum-all
             |> expect-to-equal 41
 
-describe 'laat' ->
+describe 'lets' ->
     test 'main' ->
-        laat do
+        lets do
             -> 10, -> 12, -> 19, sum-all
         |> expect-to-equal 41
     describe 'specific versions' ->
-        test 'let2' ->
-            let2 do
+        test 'lets2' ->
+            lets2 do
                 -> 10
                 (+ 1)
             |> expect-to-equal 11
-        test 'let3' ->
-            let3 do
+        test 'lets3' ->
+            lets3 do
                 -> 10
                 (+ 1)
                 sum-all # 21
             |> expect-to-equal 21
-        test 'let4' ->
-            let4 do
+        test 'lets4' ->
+            lets4 do
                 -> 10
                 (+ 1)
                 sum-all # 21
                 sum-all # 42
             |> expect-to-equal 42
-        test 'let5' ->
-            let5 do
+        test 'lets5' ->
+            lets5 do
                 -> 10
                 (+ 1)   # 11
                 sum-all # 21
                 sum-all # 42
                 sum-all # 84
             |> expect-to-equal 84
-        test 'let6' ->
-            let6 do
+        test 'lets6' ->
+            lets6 do
                 -> 10
                 (+ 1)
                 sum-all # 21
@@ -512,19 +512,19 @@ describe 'laat' ->
             |> expect-to-equal 84
 
     describe 'generic version' ->
-        test 'laat (2)' ->
-            laat do
+        test 'lets (2)' ->
+            lets do
                 -> 10
                 (+ 1)
             |> expect-to-equal 11
-        test 'laat (3)' ->
-            laat do
+        test 'lets (3)' ->
+            lets do
                 -> 10
                 (+ 1)
                 sum-all # 21
             |> expect-to-equal 21
-        test 'laat (6)' ->
-            laat do
+        test 'lets (6)' ->
+            lets do
                 -> 10
                 (+ 1)
                 sum-all # 21
@@ -532,8 +532,8 @@ describe 'laat' ->
                 sum-all # 84
                 sum-all # 168
             |> expect-to-equal 168
-        test 'laat (7)' ->
-            (-> laat do
+        test 'lets (7)' ->
+            (-> lets do
                 -> 10
                 (+ 1)
                 sum-all # 21
@@ -542,8 +542,8 @@ describe 'laat' ->
                 sum-all # 168
                 sum-all) # 336
             |> expect-to-throw
-        xtest 'laat (10)' ->
-            laat do
+        xtest 'lets (10)' ->
+            lets do
                 -> 10
                 (+ 1)
                 sum-all # 21
@@ -556,7 +556,7 @@ describe 'laat' ->
                 sum-all # 2688
             |> expect-to-equal 2688
     test 'single function' ->
-        laat -> 11
+        lets -> 11
         |> expect-to-equal 11
     test 'fibonacci' ->
         fibonacci = (n) ->
@@ -569,7 +569,7 @@ describe 'laat' ->
                 | otherwise => sum-last-two prev
             refs = r-repeat entry, n + 1
             args = [...refs, list]
-            laat ...args
+            lets ...args
 
         (expect fibonacci 0).to-equal [1]
         (expect fibonacci 1).to-equal [1 1]

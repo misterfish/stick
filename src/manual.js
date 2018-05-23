@@ -590,9 +590,9 @@ export const repeatSide = (f) => (n) => {
     for (let i = 0; i < n; i++) f (i)
 }
 
-export const timesV = (x) => (n) => repeatV (n) (x)
-export const timesF = (f) => (n) => repeatF (n) (f)
-export const timesSide = (n) => (f) => repeatSide (f) (n)
+export const timesV    = (x) => (n) => repeatV (n) (x)
+export const timesF    = (f) => (n) => repeatF (n) (f)
+export const timesSide = (f) => (n) => repeatSide (n) (f)
 
 // ------ replace / match
 export const ifReplace = (yes) => (no) => (re) => (replArg) => (target) => {

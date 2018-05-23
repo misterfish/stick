@@ -220,6 +220,13 @@ export const update = _recurry (3) (manual.update)
 export const updatePathM = _recurry (3) (manual.updatePathM)
 export const updatePath = _recurry (3) (manual.updatePath)
 
+// --- xxx
+// // --- finds truthy and returns the *value*.
+// const findValue = (f) => (xs) => {
+//   let v
+//   for (const i of xs) if (v = f (i)) return v
+// }
+
 // ------ append.
 
 // --- 4 | appendTo ([1, 2, 3])

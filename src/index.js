@@ -323,10 +323,10 @@ export const filter = _recurry (2) (manual.filter)
 export const reject = _recurry (2) (manual.reject)
 
 // @test
-export const both   = _recurry (3) (manual.both)
-export const either = _recurry (3) (manual.either)
-export const allN   = _recurry (2) (manual.allN  )
-export const anyN   = _recurry (2) (manual.anyN  )
+// export const both   = _recurry (3) (manual.both)
+// export const either = _recurry (3) (manual.either)
+// export const allN   = _recurry (2) (manual.allN  )
+// export const anyN   = _recurry (2) (manual.anyN  )
 
 // --- undef on empty array, like ramda
 export const last = xs => xs [xs.length - 1]

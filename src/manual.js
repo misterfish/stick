@@ -447,6 +447,35 @@ export const each = f => ary => ary.forEach (x => f (x))
 export const filter = f => ary => ary.filter (x => f (x))
 export const reject = f => ary => ary.filter (x => ! f (x))
 
+// ------ function logic
+// --- wrap short-circuiting && / ||
+export const both   = f => g => x => f (x) && g (x)
+export const either = f => g => x => f (x) || g (x)
+export const allN   = (fs) => (x) => {
+    for (const f of fs) if (!f (x)) return false
+    return true
+}
+export const anyN   = (fs) => (x) => {
+    for (const f of fs) if ( f (x)) return true
+    return false
+}
+
+// ------ value logic
+export const allPredicate = (p) => (xs) => {
+    for (const x of xs) if (!p (x)) return false
+    return true
+}
+export const anyPredicate = (p) => (xs) => {
+    for (const x of xs) if ( p (x)) return true
+    return false
+}
+
+// --- wrap short-circuiting && / ||
+export const and    = x => y => x && y
+export const andNot = x => y => y && !x
+export const or     = x => y => x || y
+export const orNot  = y => x => x || !y
+
 // --- returns obj
 export const eachObj = (f) => (o) => {
     for (const k in o) if (hasOwn.call (o, k)) f (o [k], k)
@@ -759,6 +788,7 @@ export default {
     mergeWith, mergeWhen,
     addIndex, addCollection,
     map, filter, reject,
+    both, either, allN, anyN,
     each, eachObj, eachObjIn,
     reduceObj, reduceObjIn,
     ampersand, asterisk,

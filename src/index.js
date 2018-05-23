@@ -204,7 +204,7 @@ export const join   = _recurry (2) (manual.join)
 // ------ objects.
 
 // xxx @test
-export const has = _recurry (2) (manual.has)
+export const has   = _recurry (2) (manual.has)
 export const hasIn = _recurry (2) (manual.hasIn)
 
 export const prop   = _recurry (2) (manual.prop)
@@ -322,8 +322,19 @@ export const each   = _recurry (2) (manual.each)
 export const filter = _recurry (2) (manual.filter)
 export const reject = _recurry (2) (manual.reject)
 
+// @test
+export const both   = _recurry (3) (manual.both)
+export const either = _recurry (3) (manual.either)
+export const allN   = _recurry (2) (manual.allN  )
+export const anyN   = _recurry (2) (manual.anyN  )
+
 // --- undef on empty array, like ramda
 export const last = xs => xs [xs.length - 1]
+// @test
+// --- undef on empty array, like ramda
+export const head = xs => xs [0]
+// @test
+export const tail = xs => xs.slice (1)
 
 export const addIndex      = _recurry (3) (manual.addIndex)
 export const addCollection = _recurry (3) (manual.addCollection)

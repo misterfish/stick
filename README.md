@@ -61,7 +61,7 @@ babel-plugin-operator-overload library by Jussi Kalliokoski
 
 Please see X for a more detailed discussion and many more examples.
 
-#### ٭ basic example
+#### ٭ basic example ٭
 
     // --- header/ source files must begin with this header.
 
@@ -88,7 +88,7 @@ Please see X for a more detailed discussion and many more examples.
 	| sprintf1 ('The answer is %s')
 	| log // outputs 'The answer is 2/3/4' (colorfully)
 
-#### ٭ the 'stick' operator
+#### ٭ the 'stick' operator ٭
 
 `a | b` is simply an equivalent way of writing `b (a)`
 
@@ -120,10 +120,9 @@ A really simple idea, with pretty surprising consequences.
 	  | split (' ')                 // split (' ') is a function
 	  | map (capitaliseFirstLetter) // map (capitaliseFirstLetter) is a function
 	  | join (' ')                  // join (' ') is a function
-
     // 'Just A Perfect Day'
 
-#### ٭ currying styles
+#### ٭ currying styles ٭
 
 All curried functions provided by stick-js can be called using either of 2 currying styles.
 
@@ -131,14 +130,14 @@ This would be a good time to read XXX if you're not familiar with curried functi
 
 1. we will refer to this sort of function and calling style as 'manual':
 
-	`const f = a => b => c => a + b + c          // call like f (1) (2) (3)`
+		const f = a => b => c => a + b + c          // call like f (1) (2) (3)
 
 2. and this sort as 'normal':
 
-	`const g = R.curry ((a, b, c) => a + b + c) // call like f (1) (2) (3) or f (1, 2, 3)`
-                                                // or f (1, 2, 3)
-                                                // or f (1) (2, 3)
-                                                // etc.
+		const g = R.curry ((a, b, c) => a + b + c) // call like f (1) (2) (3) or f (1, 2, 3)
+	                                               // or f (1, 2, 3)
+                                                   // or f (1) (2, 3)
+                                                   // etc.
                                 
 
 	import { map, } from 'stick-js'
@@ -150,7 +149,7 @@ This would be a good time to read XXX if you're not familiar with curried functi
 For extra performance you can also limit yourself to the manual style (see
 below).
 
-#### ٭ markers
+#### ٭ markers ٭
 
 	import { sprintfN, sprintf1, } from 'stick-js'
 
@@ -170,9 +169,25 @@ below).
 	3      | timesV (4)          // [3, 3, 3, 3]
 	random | timesF (4)          // [<random-num>, <random-num>, <random-num>, <random-num>]
 
-There are a few more which we'll see along the way.
+'M' means the data is being mutated. In JS we absolutely can not pretend
+everything is immutable.
 
-#### ٭ ok, anaphoric if
+    import { appendTo, appendToM, } from 'stick-js'
+
+	const a = [1, 2, 3]
+	const b = 4 | appendTo (a) // functional style: the array is cloned.
+	b === a // false
+
+	const a = [1, 2, 3]
+	const b = 4 | appendToM (a) // non-functional style: the array is mutated.
+	b === a // true
+
+	const webGLContext = { ... a complicated object ... }
+	webGLContext | mergeM ({ someProp: false, }) // you definitely want mutable here.
+
+And there are a few more which we'll see along the way.
+
+#### ٭ ok, anaphoric if ٭
 
 `ok (x)` is false if `x` is `null` or `undefined`. Everything else passes.
 
@@ -207,7 +222,7 @@ In the 'ok'	case, the value being tested is passed to the function.
 	  _ => 'nothing',
 	)
 
-A variant, using a point-free style and the `always` function:
+A variant, using a point-free add function and the `always` function:
 
 	import { add, always, } from 'stick-js'
 
@@ -223,7 +238,7 @@ Usage:
 	; [0, 10, null, void 8]
 	| map (add1IfYouCan) // [1, 11, 'nothing', 'nothing']
 
-#### ٭ point-free
+#### ٭ point-free ٭
 
 A common pattern is when the argument to a function is passed directly into a pipe:
 
@@ -254,27 +269,32 @@ If the pipe chain consists of more than 1 link …
 	  >> sprintf1 ('The answer is %s')
 	  >> tap (log)
 
-#### ٭ compositional predicates
+#### ٭ compositional predicates ٭
 
-##### (from here on out we omit the header, but do not forget it ...)
+`ifOk` is a convenience for `ifPredicate (ok)` or `ok | ifPredicate`.
 
-  // --- `ifOk` is a convenience for `ifPredicate (ok)` or `ok | ifPredicate`
-  // --- there is also a 'when' form, which has no 'else branch'.
+There is also a 'when' form, which has no 'else branch'.
 	  
-	  import { add, whenOk, } from 'stick-js'
-	  const add1 = 1 | add // or add (1)
-	  3    | whenOk (add1) // 4
-	  null | whenOk (add1) // undefined
+	import { add, whenOk, } from 'stick-js'
 
-  // --- the selection of `if` and `when` functions we provide is intentionally skimpy, to encourage you to write your own.
+	const add1 = 1 | add // or add (1)
+
+	3    | whenOk (add1) // 4
+	null | whenOk (add1) // undefined
+
+The selection of `if` and `when` functions we provide is intentionally skimpy, to encourage you to compose your own.
 
 	const { floor, } = Math
+
+	// --- predicate to match integers.
 	const isInteger = x => x === floor (x)
 
 	// --- or how about
+	// import { eq, } from 'stick-js'
 	// const isInteger = x => x | floor | eq (x)
 
 	// --- or if you're getting bored:
+	// import { timesV, asterisk, passToN, } from 'stick-js'
 	// const arrowSnd = f => timesV (2) >> asterisk ([id, f])
 	// const isInteger = arrowSnd (floor) >> passToN (eq)
 
@@ -288,31 +308,36 @@ If the pipe chain consists of more than 1 link …
 	| map (ifInteger (add1, 'nothing' | always))
 	  // ['nothing', 5, 'nothing']
 
-  // --- more complicated predicates
+More complicated predicates:
 
-  // --- @todo remove
-  const both = (f, g) => x => f (x) && g (x) ? true : false
+	// --- @todo use `allN`
+	const both = (f, g) => x => f (x) && g (x) ? true : false
 
-  const isOdd = x => x % 2
+	const isOdd = x => x % 2
 
-  const isOddInteger = both (isInteger, isOdd)
-  const ifOddInteger = isOddInteger | ifPredicate
+	const isOddInteger = both (isInteger, isOdd)
+	const ifOddInteger = isOddInteger | ifPredicate
 
-  ; [3.5, 4, 5, 5.5]
-  | map (ifOddInteger (
-	add1,
-	'nothing' | always,
-  ))
-  | log
+	; [3.5, 4, 5, 5.5]
+	| map (ifOddInteger (
+	  add1,
+	  'nothing' | always,
+	))
+	| log
 
-  ; [3.5, 4, 5, 5.5] | map (isOddInteger) | log
+	; [3.5, 4, 5, 5.5] | map (isOddInteger) | log
 
-#### ٭ compositional decoration
+#### ٭ compositional decoration ٭
+
+Our `map` function is capped at one argument, meaning the map routine only
+gets the value and not the index or the collection.
 
 	import { map, addIndex, addCollection, } from 'stick-js'
 
 	; [4, 5, 6]
 	| map ((x, idx) => idx) // [undefined, undefined, undefined]
+
+But:
 
 	const mapWithIndex = map | addIndex
 	; [4, 5, 6]
@@ -323,10 +348,12 @@ If the pipe chain consists of more than 1 link …
 	| mapWithCollection ((x, coll) => coll) // [[4, 5, 6], [4, 5, 6], [4, 5, 6]]
 
 	; [4, 5, 6]
-	  | (map | addIndex | addCollection) ((x, idx, coll) => ...)
+	| (map | addIndex | addCollection) ((x, idx, coll) => ...)
 
 	; [4, 5, 6]
-	  | (map | addCollection | addIndex) ((x, coll, idx) => ...)
+	| (map | addCollection | addIndex) ((x, coll, idx) => ...)
+
+We can also enhance our merge functions, to deal with conflicts:
 
     import { mergeWith, mergeToSym, } from 'stick-js'
 
@@ -345,25 +372,45 @@ If the pipe chain consists of more than 1 link …
 	os | mergeChooseSrc (ot) // 'source name'
 	os | mergeChooseTgt (ot) // 'target name'
 
-#### ٭ semantics and argument order are often derivable by thinking in English
+Or to only merge if certain conditions hold:
 
-	defineBinaryOperator ('|',  (...args) => pipe         (...args))
-	defineBinaryOperator ('<<', (...args) => compose      (...args))
-	defineBinaryOperator ('>>', (...args) => composeRight (...args))
+	import { mergeWhen, eq, } from 'stick-js'
+
+	const { floor, } = Math
+	const isInteger = x => x | floor | eq (x)
+	const srcIsInteger = (src, tgt) => src | isInteger
+	const mergeToWhenSrcIsInteger = mergeToSym | mergeWhen (srcIsInteger)
+
+	const os = { val: 2.2, vil: 3,  vol: 3.5, }
+	const ot = { val: 25,  vil: 25, vol: 25,  vel: 42, }
+
+	os | mergeTo (ot)                 // { val: 2.2, vil: 3, vol: 3.5, vel: 42, }
+	os | mergeToWhenSrcIsInteger (ot) // { val: 25,  vil: 3, vol: 25,  vel: 42, }
+| log
+
+#### ٭ semantics and argument order are often derivable by thinking in English ٭
+
+(We're dying to see a port to Hungarian, too)
 
 	import {
-	  pipe, compose, composeRight,
 	  sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
 	  appendTo, append, bindPropTo, bindProp, bindTo, bind, invoke,
 	} from 'stick-js'
 
-	const obj1 = { thing: 'sandwich', want: 'no thanks', }
-	const obj2 = { want: 'yes please', }
+	const obj1 = { thing: 'sandwich', want: 'no thanks',  }
+	const obj2 = {                    want: 'yes please', }
 
-	// --- obj1 is the object of the preposition 'to'. Read as: 'merge obj2 to obj1'
+When a function ends in 'To', (the) identifier to the right is the object of
+the preposition.
+
+Read this as ‘merge obj2 **to obj1**’
+
 	obj2 | mergeTo (obj1)
-	// --- No preposition -> obj1 is the object of the verb 'merge'.
-	// --- Read as: 'merge obj2 to obj1'
+
+The same function without the 'To' means that the identifier is the object of the verb 'merge'.
+
+Read this as: ‘**merge obj2** to obj1’
+
 	obj1 | merge (obj2)
 
 	4 | appendTo ([1, 2, 3])
@@ -383,18 +430,18 @@ If the pipe chain consists of more than 1 link …
 	}
 
 	const f = 'speak' | bindPropTo (dog)
-	f () // 'My name is Caesar'
+	f ()                                  // 'My name is Caesar'
 
 	'speak' | bindPropTo (dog)   | invoke // same
 	dog     | bindProp ('speak') | invoke // same
 
-	dog.speak | bindTo (dog) | invoke // smae
+	dog.speak | bindTo (dog) | invoke     // same
 
-	// cat.speak () // Error
-	dog.speak | bindTo (cat) | invoke // 'My name is Bo'
-	cat | bind (dog.speak)   | invoke // 'My name is Bo'
+    // cat.speak ()						  // Error
+	dog.speak | bindTo (cat) | invoke     // 'My name is Bo'
+	cat | bind (dog.speak)   | invoke     // 'My name is Bo'
 
-#### ٭ side effects & chaining, mutable vs immutable
+#### ٭ side effects & chaining, mutable vs immutable ٭
 
 defineBinaryOperator ('|',  (...args) => pipe         (...args))
 defineBinaryOperator ('<<', (...args) => compose      (...args))
@@ -432,9 +479,9 @@ const unshift = 'unshift' | side1
 | append (5)  // new array [2, 3, 4, 5]
 | prepend (1) // new array [1, 2, 3, 4, 5]
 
-#### ٭ dog
+#### ٭ dog ٭
 
-#### ٭ this example is intentionally complex
+#### ٭ this example is intentionally complex ٭
 
 ![#f03c15](https://placehold.it/15/f03c15/000000?text=hello) `#f03c15`
 

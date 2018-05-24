@@ -59,7 +59,7 @@ babel-plugin-operator-overload library by Jussi Kalliokoski
 <h3 id="features-(/-why?)"><a class="header-link" href="#features-(/-why?)"></a>Features (/ why?)</h3>
 <h3 id="synopsis-(overview)."><a class="header-link" href="#synopsis-(overview)."></a>Synopsis (overview).</h3>
 <p>Please see X for a more detailed discussion and many more examples.</p>
-<h4 id="٭-basic-example"><a class="header-link" href="#٭-basic-example"></a>٭ basic example</h4>
+<h4 id="٭-basic-example-٭"><a class="header-link" href="#٭-basic-example-٭"></a>٭ basic example ٭</h4>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> --- header/ source files must begin with <span class="hljs-keyword">this</span> header.
 
 defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
@@ -83,7 +83,7 @@ const { log, } = <span class="hljs-built_in">console</span>
 | join (<span class="hljs-string">'/'</span>)
 | green
 | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
-| log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span> (colorfully)</code></pre><h4 id="٭-the-'stick'-operator"><a class="header-link" href="#٭-the-'stick'-operator"></a>٭ the &#39;stick&#39; operator</h4>
+| log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span> (colorfully)</code></pre><h4 id="٭-the-'stick'-operator-٭"><a class="header-link" href="#٭-the-'stick'-operator-٭"></a>٭ the &#39;stick&#39; operator ٭</h4>
 <p><code>a | b</code> is simply an equivalent way of writing <code>b (a)</code></p>
 <p>A really simple idea, with pretty surprising consequences.</p>
 <p>(What if I really want to do bitwise math, you ask? See below).</p>
@@ -111,19 +111,17 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
   | split (<span class="hljs-string">' '</span>)                 <span class="hljs-comment">// split (' ') is a function</span>
   | map (capitaliseFirstLetter) <span class="hljs-comment">// map (capitaliseFirstLetter) is a function</span>
   | join (<span class="hljs-string">' '</span>)                  <span class="hljs-comment">// join (' ') is a function</span>
-
-<span class="hljs-comment">// 'Just A Perfect Day'</span></code></pre><h4 id="٭-currying-styles"><a class="header-link" href="#٭-currying-styles"></a>٭ currying styles</h4>
+<span class="hljs-comment">// 'Just A Perfect Day'</span></code></pre><h4 id="٭-currying-styles-٭"><a class="header-link" href="#٭-currying-styles-٭"></a>٭ currying styles ٭</h4>
 <p>All curried functions provided by stick-js can be called using either of 2 currying styles.</p>
 <p>This would be a good time to read XXX if you&#39;re not familiar with curried functions.</p>
 <ol class="list">
 <li><p>we will refer to this sort of function and calling style as &#39;manual&#39;:</p>
-<p> <code>const f = a =&gt; b =&gt; c =&gt; a + b + c          // call like f (1) (2) (3)</code></p>
-</li>
+<pre class="hljs"><code> const f = <span class="hljs-selector-tag">a</span> =&gt; <span class="hljs-selector-tag">b</span> =&gt; c =&gt; <span class="hljs-selector-tag">a</span> + <span class="hljs-selector-tag">b</span> + c          <span class="hljs-comment">// call like f (1) (2) (3)</span></code></pre></li>
 <li><p>and this sort as &#39;normal&#39;:</p>
-<p> <code>const g = R.curry ((a, b, c) =&gt; a + b + c) // call like f (1) (2) (3) or f (1, 2, 3)</code></p>
-<pre class="hljs"><code>                                         <span class="hljs-comment">// or f (1, 2, 3)</span>
-                                         <span class="hljs-comment">// or f (1) (2, 3)</span>
-                                         <span class="hljs-comment">// etc.</span></code></pre></li>
+<pre class="hljs"><code> const g = R<span class="hljs-selector-class">.curry</span> ((<span class="hljs-selector-tag">a</span>, <span class="hljs-selector-tag">b</span>, c) =&gt; <span class="hljs-selector-tag">a</span> + <span class="hljs-selector-tag">b</span> + c) <span class="hljs-comment">// call like f (1) (2) (3) or f (1, 2, 3)</span>
+                                            <span class="hljs-comment">// or f (1, 2, 3)</span>
+                                            <span class="hljs-comment">// or f (1) (2, 3)</span>
+                                            <span class="hljs-comment">// etc.</span></code></pre></li>
 </ol>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { <span class="hljs-built_in">map</span>, } from <span class="hljs-string">'stick-js'</span>
 
@@ -131,7 +129,7 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-built_in">map</span> (<span class="hljs-keyword">double</span>) ([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])   <span class="hljs-comment">// [2, 4, 6] (manual style)</span>
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>] | <span class="hljs-built_in">map</span> (<span class="hljs-keyword">double</span>) <span class="hljs-comment">// [2, 4, 6] (manual style with stick)</span></code></pre><p>For extra performance you can also limit yourself to the manual style (see
 below).</p>
-<h4 id="٭-markers"><a class="header-link" href="#٭-markers"></a>٭ markers</h4>
+<h4 id="٭-markers-٭"><a class="header-link" href="#٭-markers-٭"></a>٭ markers ٭</h4>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { sprintfN, sprintf1, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
 <span class="hljs-number">3</span> | sprintf1 (<span class="hljs-string">'4 - 1 is %s'</span>) <span class="hljs-comment">// '4 - 1 is 3'</span></code></pre><p>&#39;N&#39; is a marker meaning an array is expected.</p>
@@ -142,8 +140,21 @@ below).</p>
 const { <span class="hljs-built_in">random</span>, } = Math
 
 <span class="hljs-number">3</span>      | timesV (<span class="hljs-number">4</span>)          // [<span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>]
-<span class="hljs-built_in">random</span> | timesF (<span class="hljs-number">4</span>)          // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]</code></pre><p>There are a few more which we&#39;ll see along the way.</p>
-<h4 id="٭-ok,-anaphoric-if"><a class="header-link" href="#٭-ok,-anaphoric-if"></a>٭ ok, anaphoric if</h4>
+<span class="hljs-built_in">random</span> | timesF (<span class="hljs-number">4</span>)          // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]</code></pre><p>&#39;M&#39; means the data is being mutated. In JS we absolutely can not pretend
+everything is immutable.</p>
+<pre class="hljs"><code>import { appendTo, appendToM, } from 'stick-js'
+<span class="hljs-built_in">
+const </span>a = [1, 2, 3]<span class="hljs-built_in">
+const </span>b = 4 | appendTo (a) // functional style: the<span class="hljs-built_in"> array </span>is cloned.
+b === a // false
+<span class="hljs-built_in">
+const </span>a = [1, 2, 3]<span class="hljs-built_in">
+const </span>b = 4 | appendToM (a) // non-functional style: the<span class="hljs-built_in"> array </span>is mutated.
+b === a // true
+<span class="hljs-built_in">
+const </span>webGLContext = { ... a complicated object ... }
+webGLContext | mergeM ({ someProp: false, }) // you definitely want mutable here.</code></pre><p>And there are a few more which we&#39;ll see along the way.</p>
+<h4 id="٭-ok,-anaphoric-if-٭"><a class="header-link" href="#٭-ok,-anaphoric-if-٭"></a>٭ ok, anaphoric if ٭</h4>
 <p><code>ok (x)</code> is false if <code>x</code> is <code>null</code> or <code>undefined</code>. Everything else passes.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { <span class="hljs-built_in">map</span>, ok, notOk, ifOk, } from <span class="hljs-string">'stick-js'</span>
 
@@ -168,7 +179,7 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
 
   <span class="hljs-comment">// no value is passed.</span>
   _ =&gt; <span class="hljs-string">'nothing'</span>,
-)</code></pre><p>A variant, using a point-free style and the <code>always</code> function:</p>
+)</code></pre><p>A variant, using a point-free add function and the <code>always</code> function:</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { add, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
 <span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | add <span class="hljs-comment">// or add (1)</span>
@@ -178,7 +189,7 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
   <span class="hljs-string">'nothing'</span> | always,
 )</code></pre><p>Usage:</p>
 <pre class="hljs"><code>; <span class="hljs-meta">[</span><span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-built_in">null</span>, <span class="hljs-literal">void</span> <span class="hljs-number">8</span><span class="hljs-meta">]</span>
-| map (add1IfYouCan) // <span class="hljs-meta">[</span><span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span><span class="hljs-meta">]</span></code></pre><h4 id="٭-point-free"><a class="header-link" href="#٭-point-free"></a>٭ point-free</h4>
+| map (add1IfYouCan) // <span class="hljs-meta">[</span><span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span><span class="hljs-meta">]</span></code></pre><h4 id="٭-point-free-٭"><a class="header-link" href="#٭-point-free-٭"></a>٭ point-free ٭</h4>
 <p>A common pattern is when the argument to a function is passed directly into a pipe:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Since <code>x</code> does not appear anywhere else in the expression, we can simply remove it:</p>
 <pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)</code></pre><p>If the pipe chain consists of more than 1 link …</p>
@@ -196,21 +207,26 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
   &gt;&gt; String
   &gt;&gt; dot ('toUpperCase')
   &gt;&gt; sprintf1 ('The answer is %s')
-  &gt;&gt; tap (<span class="hljs-name">log</span>)</code></pre><h4 id="٭-compositional-predicates"><a class="header-link" href="#٭-compositional-predicates"></a>٭ compositional predicates</h4>
-<h5 id="(from-here-on-out-we-omit-the-header,-but-do-not-forget-it-...)"><a class="header-link" href="#(from-here-on-out-we-omit-the-header,-but-do-not-forget-it-...)"></a>(from here on out we omit the header, but do not forget it ...)</h5>
-<p>  // --- <code>ifOk</code> is a convenience for <code>ifPredicate (ok)</code> or <code>ok | ifPredicate</code>
-  // --- there is also a &#39;when&#39; form, which has no &#39;else branch&#39;.</p>
-<pre class="hljs"><code>  import { <span class="hljs-keyword">add</span>, whenOk, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
-  <span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span> <span class="hljs-comment">// or add (1)</span>
-  <span class="hljs-number">3</span>    | whenOk (add1) <span class="hljs-comment">// 4</span>
-  <span class="hljs-literal">null</span> | whenOk (add1) <span class="hljs-comment">// undefined</span></code></pre><p>  // --- the selection of <code>if</code> and <code>when</code> functions we provide is intentionally skimpy, to encourage you to write your own.</p>
+  &gt;&gt; tap (<span class="hljs-name">log</span>)</code></pre><h4 id="٭-compositional-predicates-٭"><a class="header-link" href="#٭-compositional-predicates-٭"></a>٭ compositional predicates ٭</h4>
+<p><code>ifOk</code> is a convenience for <code>ifPredicate (ok)</code> or <code>ok | ifPredicate</code>.</p>
+<p>There is also a &#39;when&#39; form, which has no &#39;else branch&#39;.</p>
+<pre class="hljs"><code>import { <span class="hljs-keyword">add</span>, whenOk, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+
+<span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span> <span class="hljs-comment">// or add (1)</span>
+
+<span class="hljs-number">3</span>    | whenOk (add1) <span class="hljs-comment">// 4</span>
+<span class="hljs-literal">null</span> | whenOk (add1) <span class="hljs-comment">// undefined</span></code></pre><p>The selection of <code>if</code> and <code>when</code> functions we provide is intentionally skimpy, to encourage you to compose your own.</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> { <span class="hljs-built_in">floor</span>, } = Math
+
+<span class="hljs-comment">// --- predicate to match integers.</span>
 <span class="hljs-keyword">const</span> isInteger = x =&gt; x === <span class="hljs-built_in">floor</span> (x)
 
 <span class="hljs-comment">// --- or how about</span>
+<span class="hljs-comment">// import { eq, } from 'stick-js'</span>
 <span class="hljs-comment">// const isInteger = x =&gt; x | floor | eq (x)</span>
 
 <span class="hljs-comment">// --- or if you're getting bored:</span>
+<span class="hljs-comment">// import { timesV, asterisk, passToN, } from 'stick-js'</span>
 <span class="hljs-comment">// const arrowSnd = f =&gt; timesV (2) &gt;&gt; asterisk ([id, f])</span>
 <span class="hljs-comment">// const isInteger = arrowSnd (floor) &gt;&gt; passToN (eq)</span>
 
@@ -222,40 +238,43 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
 
 ; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4.2</span>]
 | <span class="hljs-built_in">map</span> (ifInteger (add1, <span class="hljs-string">'nothing'</span> | always))
-  <span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre><p>  // --- more complicated predicates</p>
-<p>  // --- @todo remove
-  const both = (f, g) =&gt; x =&gt; f (x) &amp;&amp; g (x) ? true : false</p>
-<p>  const isOdd = x =&gt; x % 2</p>
-<p>  const isOddInteger = both (isInteger, isOdd)
-  const ifOddInteger = isOddInteger | ifPredicate</p>
-<p>  ; [3.5, 4, 5, 5.5]
-  | map (ifOddInteger (
-    add1,
-    &#39;nothing&#39; | always,
-  ))
-  | log</p>
-<p>  ; [3.5, 4, 5, 5.5] | map (isOddInteger) | log</p>
-<h4 id="٭-compositional-decoration"><a class="header-link" href="#٭-compositional-decoration"></a>٭ compositional decoration</h4>
+  <span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre><p>More complicated predicates:</p>
+<pre class="hljs"><code><span class="hljs-comment">// --- @todo use `allN`</span>
+<span class="hljs-keyword">const</span> both = <span class="hljs-function">(<span class="hljs-params">f, g</span>) =&gt;</span> x =&gt; f (x) &amp;&amp; g (x) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>
+
+<span class="hljs-keyword">const</span> isOdd = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x % <span class="hljs-number">2</span>
+
+<span class="hljs-keyword">const</span> isOddInteger = both (isInteger, isOdd)
+<span class="hljs-keyword">const</span> ifOddInteger = isOddInteger | ifPredicate
+
+; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>]
+| map (ifOddInteger (
+  add1,
+  <span class="hljs-string">'nothing'</span> | always,
+))
+| log
+
+; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>] | map (isOddInteger) | log</code></pre><h4 id="٭-compositional-decoration-٭"><a class="header-link" href="#٭-compositional-decoration-٭"></a>٭ compositional decoration ٭</h4>
+<p>Our <code>map</code> function is capped at one argument, meaning the map routine only
+gets the value and not the index or the collection.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { map, addIndex, addCollection, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
-| map (<span class="hljs-function">(<span class="hljs-params">x, idx</span>) =&gt;</span> idx) <span class="hljs-comment">// [undefined, undefined, undefined]</span>
-
-<span class="hljs-keyword">const</span> mapWithIndex = map | addIndex
+| map (<span class="hljs-function"><span class="hljs-params">(x, idx)</span> =&gt;</span> idx) <span class="hljs-regexp">//</span> [<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>]</code></pre><p>But:</p>
+<pre class="hljs"><code>const mapWithIndex = map | <span class="hljs-type">addIndex</span>
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
-| mapWithIndex (<span class="hljs-function">(<span class="hljs-params">x, idx</span>) =&gt;</span> idx) <span class="hljs-comment">// [0, 1, 2]</span>
+| <span class="hljs-type">mapWithIndex</span> ((x, idx) =&gt; idx) // [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>]
 
-<span class="hljs-keyword">const</span> mapWithCollection = map | addCollection
+const mapWithCollection = map | <span class="hljs-type">addCollection</span>
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
-| mapWithCollection (<span class="hljs-function">(<span class="hljs-params">x, coll</span>) =&gt;</span> coll) <span class="hljs-comment">// [[4, 5, 6], [4, 5, 6], [4, 5, 6]]</span>
-
-; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
-  | <span class="hljs-function">(<span class="hljs-params">map | addIndex | addCollection</span>) (<span class="hljs-params">(x, idx, coll</span>) =&gt;</span> ...)
+| <span class="hljs-type">mapWithCollection</span> ((x, coll) =&gt; coll) // [[<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]]
 
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
-  | <span class="hljs-function">(<span class="hljs-params">map | addCollection | addIndex</span>) (<span class="hljs-params">(x, coll, idx</span>) =&gt;</span> ...)
+| <span class="hljs-type">(map</span> | <span class="hljs-type">addIndex</span> | <span class="hljs-type">addCollection</span>) ((x, idx, coll) =&gt; ...)
 
-<span class="hljs-keyword">import</span> { mergeWith, mergeToSym, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
+| <span class="hljs-type">(map</span> | <span class="hljs-type">addCollection</span> | <span class="hljs-type">addIndex</span>) ((x, coll, idx) =&gt; ...)</code></pre><p>We can also enhance our merge functions, to deal with conflicts:</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { mergeWith, mergeToSym, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
 <span class="hljs-keyword">const</span> chooseTgt = <span class="hljs-function">(<span class="hljs-params">src, tgt</span>) =&gt;</span> tgt
 <span class="hljs-keyword">const</span> chooseSrc = <span class="hljs-function">(<span class="hljs-params">src, tgt</span>) =&gt;</span> src
@@ -270,25 +289,33 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
 <span class="hljs-keyword">const</span> ot = { <span class="hljs-attr">name</span>: <span class="hljs-string">'target name'</span>, }
 
 os | mergeChooseSrc (ot) <span class="hljs-comment">// 'source name'</span>
-os | mergeChooseTgt (ot) <span class="hljs-comment">// 'target name'</span></code></pre><h4 id="٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english"><a class="header-link" href="#٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english"></a>٭ semantics and argument order are often derivable by thinking in English</h4>
-<pre class="hljs"><code>defineBinaryOperator ('|',  (...args) =&gt; pipe         (...args))
-defineBinaryOperator ('&lt;&lt;', (...args) =&gt; compose      (...args))
-defineBinaryOperator ('&gt;&gt;', (...args) =&gt; composeRight (...args))
+os | mergeChooseTgt (ot) <span class="hljs-comment">// 'target name'</span></code></pre><p>Or to only merge if certain conditions hold:</p>
+<pre class="hljs"><code>import { mergeWhen, eq, } from <span class="hljs-string">'stick-js'</span>
 
-import {
-  pipe, compose, composeRight,
+const { <span class="hljs-built_in">floor</span>, } = Math
+const isInteger = <span class="hljs-keyword">x</span> =&gt; <span class="hljs-keyword">x</span> | <span class="hljs-built_in">floor</span> | eq (<span class="hljs-keyword">x</span>)
+const srcIsInteger = (src, tgt) =&gt; src | isInteger
+const mergeToWhenSrcIsInteger = mergeToSym | mergeWhen (srcIsInteger)
+
+const os = { va<span class="hljs-variable">l:</span> <span class="hljs-number">2.2</span>, <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>,  vo<span class="hljs-variable">l:</span> <span class="hljs-number">3.5</span>, }
+const ot = { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">25</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }
+
+os | mergeTo (ot)                 // { va<span class="hljs-variable">l:</span> <span class="hljs-number">2.2</span>, <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">3.5</span>, <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }
+os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }</code></pre><p>| log</p>
+<h4 id="٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english-٭"><a class="header-link" href="#٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english-٭"></a>٭ semantics and argument order are often derivable by thinking in English ٭</h4>
+<p>(We&#39;re dying to see a port to Hungarian, too)</p>
+<pre class="hljs"><code>import {
   sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
-  appendTo, append, bindPropTo, bindProp, bindTo, bind, invoke,
-} from 'stick-js'
-<span class="hljs-built_in">
-const </span>obj1 = { thing: 'sandwich', want: 'no thanks', }<span class="hljs-built_in">
-const </span>obj2 = { want: 'yes please', }
+  appendTo, append, <span class="hljs-built_in">bind</span>PropTo, <span class="hljs-built_in">bind</span>Prop, <span class="hljs-built_in">bind</span>To, <span class="hljs-built_in">bind</span>, invoke,
+} from <span class="hljs-string">'stick-js'</span>
 
-// --- obj1 is the object of the preposition 'to'. Read as: 'merge obj2 to obj1'
-obj2 | mergeTo (obj1)
-// --- No preposition -&gt; obj1 is the object of the verb 'merge'.
-// --- Read as: 'merge obj2 to obj1'
-obj1 | merge (obj2)
+const obj1 = { thing: <span class="hljs-string">'sandwich'</span>, want: <span class="hljs-string">'no thanks'</span>,  }
+const obj2 = {                    want: <span class="hljs-string">'yes please'</span>, }</code></pre><p>When a function ends in &#39;To&#39;, (the) identifier to the right is the object of
+the preposition.</p>
+<p>Read this as ‘merge obj2 <strong>to obj1</strong>’</p>
+<pre class="hljs"><code>obj2 <span class="hljs-string">| mergeTo (obj1)</span></code></pre><p>The same function without the &#39;To&#39; means that the identifier is the object of the verb &#39;merge&#39;.</p>
+<p>Read this as: ‘<strong>merge obj2</strong> to obj1’</p>
+<pre class="hljs"><code>obj1 | merge (obj2)
 
 4 | appendTo ([1, 2, 3])
 ; ([1, 2, 3]) | append (4)
@@ -307,16 +334,16 @@ const </span>cat = {
 }
 <span class="hljs-built_in">
 const </span>f = 'speak' | bindPropTo (dog)
-f () // 'My name is Caesar'
+f ()                                  // 'My name is Caesar'
 
 'speak' | bindPropTo (dog)   |<span class="hljs-built_in"> invoke </span>// same
 dog     | bindProp ('speak') |<span class="hljs-built_in"> invoke </span>// same
 
-dog.speak | bindTo (dog) |<span class="hljs-built_in"> invoke </span>// smae
+dog.speak | bindTo (dog) |<span class="hljs-built_in"> invoke </span>    // same
 
-// cat.speak () // Error
-dog.speak | bindTo (cat) |<span class="hljs-built_in"> invoke </span>// 'My name is Bo'
-cat | bind (dog.speak)   |<span class="hljs-built_in"> invoke </span>// 'My name is Bo'</code></pre><h4 id="٭-side-effects-&-chaining,-mutable-vs-immutable"><a class="header-link" href="#٭-side-effects-&-chaining,-mutable-vs-immutable"></a>٭ side effects &amp; chaining, mutable vs immutable</h4>
+// cat.speak ()                          // Error
+dog.speak | bindTo (cat) |<span class="hljs-built_in"> invoke </span>    // 'My name is Bo'
+cat | bind (dog.speak)   |<span class="hljs-built_in"> invoke </span>    // 'My name is Bo'</code></pre><h4 id="٭-side-effects-&-chaining,-mutable-vs-immutable-٭"><a class="header-link" href="#٭-side-effects-&-chaining,-mutable-vs-immutable-٭"></a>٭ side effects &amp; chaining, mutable vs immutable ٭</h4>
 <p>defineBinaryOperator (&#39;|&#39;,  (...args) =&gt; pipe         (...args))
 defineBinaryOperator (&#39;&lt;&lt;&#39;, (...args) =&gt; compose      (...args))
 defineBinaryOperator (&#39;&gt;&gt;&#39;, (...args) =&gt; composeRight (...args))</p>
@@ -342,8 +369,8 @@ const unshift = &#39;unshift&#39; | side1</p>
 <p>; [2, 3, 4]
 | append (5)  // new array [2, 3, 4, 5]
 | prepend (1) // new array [1, 2, 3, 4, 5]</p>
-<h4 id="٭-dog"><a class="header-link" href="#٭-dog"></a>٭ dog</h4>
-<h4 id="٭-this-example-is-intentionally-complex"><a class="header-link" href="#٭-this-example-is-intentionally-complex"></a>٭ this example is intentionally complex</h4>
+<h4 id="٭-dog-٭"><a class="header-link" href="#٭-dog-٭"></a>٭ dog ٭</h4>
+<h4 id="٭-this-example-is-intentionally-complex-٭"><a class="header-link" href="#٭-this-example-is-intentionally-complex-٭"></a>٭ this example is intentionally complex ٭</h4>
 <p><img src="https://placehold.it/15/f03c15/000000?text=hello" alt="#f03c15"> <code>#f03c15</code></p>
 <pre class="hljs"><code>yarn <span class="hljs-built_in">add</span> ramda chalk
 

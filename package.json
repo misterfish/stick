@@ -5,18 +5,19 @@
   "dependencies": {
     "babel-cli": "^6.24.1",
     "babel-plugin-operator-overload": "^2.0.0",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "sprintf-js": "^1.1.1"
   },
   "devDependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "jest": "^20.0.4",
+    "bilby": "^0.0.2",
+    "daggy": "^1.2.0",
+    "fish-lib": "^0.9.10",
     "jasmine-node": "^1.14.5",
-    "ramda": "^0.24.1",
+    "jest": "^20.0.4",
     "livescript": "^1.5.0",
     "prelude-ls": "^1.1.2",
-    "fish-lib": "^0.9.10",
-    "bilby": "^0.0.2",
-    "daggy": "^1.2.0"
+    "ramda": "^0.24.1"
   }
 }

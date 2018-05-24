@@ -87,7 +87,11 @@ merge</p>
 <p>####
 dog</p>
 <h4 id="4---this-example-is-intentionally-complex"><a class="header-link" href="#4---this-example-is-intentionally-complex"></a>4 - this example is intentionally complex</h4>
-<pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  (...args) =&gt; pipe         (...args))
+<pre class="hljs"><code>yarn <span class="hljs-built_in">add</span> ramda chalk
+
+---
+
+defineBinaryOperator (<span class="hljs-string">'|'</span>,  (...args) =&gt; pipe         (...args))
 defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, (...args) =&gt; compose      (...args))
 defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&gt; composeRight (...args))
 
@@ -129,9 +133,9 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-keyword">const</span> snd = prop (<span class="hljs-number">1</span>)
 <span class="hljs-keyword">const</span> fst = prop (<span class="hljs-number">0</span>)
 
-<span class="hljs-number">10</span> | rangeTo (<span class="hljs-number">20</span>)
-   | <span class="hljs-built_in">map</span> (inRange ([<span class="hljs-number">13</span>, <span class="hljs-number">17</span>]))
-   | <span class="hljs-built_in">map</span> (tap (snd &gt;&gt; <span class="hljs-built_in">log</span>))
-   | <span class="hljs-built_in">map</span> (fst)
-   | <span class="hljs-built_in">log</span></code></pre></body>
+<span class="hljs-number">10</span> | rangeTo (<span class="hljs-number">20</span>) <span class="hljs-comment">// [10, 11, ... 19]</span>
+   | <span class="hljs-built_in">map</span> (inRange ([<span class="hljs-number">13</span>, <span class="hljs-number">17</span>])) <span class="hljs-comment">// maps to tuples of [int, str]</span>
+   | tap (<span class="hljs-built_in">map</span> (snd &gt;&gt; <span class="hljs-built_in">log</span>)) <span class="hljs-comment">// logs the str</span>
+   ![#f03c15](https:<span class="hljs-comment">//placehold.it/15/f03c15/000000?text=hello) `#f03c15`</span>
+   | <span class="hljs-built_in">map</span> (fst) <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre></body>
 </html>

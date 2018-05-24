@@ -106,6 +106,10 @@ dog
 
 #### 4 - this example is intentionally complex
 
+    yarn add ramda chalk
+
+	---
+
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
 	defineBinaryOperator ('<<', (...args) => compose      (...args))
 	defineBinaryOperator ('>>', (...args) => composeRight (...args))
@@ -148,8 +152,8 @@ dog
 	const snd = prop (1)
 	const fst = prop (0)
 
-	10 | rangeTo (20)
-       | map (inRange ([13, 17]))
-       | map (tap (snd >> log))
-       | map (fst)
-       | log
+	10 | rangeTo (20) // [10, 11, ... 19]
+       | map (inRange ([13, 17])) // maps to tuples of [int, str]
+       | tap (map (snd >> log)) // logs the str
+	   ![#f03c15](https://placehold.it/15/f03c15/000000?text=hello) `#f03c15`
+       | map (fst) // [-1, -1, ... 0, ... 1, 1]

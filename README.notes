@@ -220,12 +220,6 @@ prepositions
 
 Using the idiom of a pipe, and sixty or so functions, we 
 
-Well let's get the easy part out of the way first. We have cleverly saved
-your bitwise operations in the appropriately named functions X, Y, and Z.
-
-x on both sides
-
-concat/append
 concat is for when both arguments are arrays or both are strings
 append/prepend are for adding elements to an array.
 

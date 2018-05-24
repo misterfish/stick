@@ -398,21 +398,21 @@ Or to only merge if certain conditions hold:
 	  appendTo, append, bindPropTo, bindProp, bindTo, bind, invoke,
 	} from 'stick-js'
 
-	const obj1 = { thing: 'sandwich', want: 'no thanks',  }
-	const obj2 = {                    want: 'yes please', }
+	const tgt = { thing: 'sandwich', want: 'no thanks',  }
+	const src = {                    want: 'yes please', }
 
 When a function ends in ‘To’, the identifier to the right is the object of
 the preposition.
 
-Read this as ‘merge obj2 **to obj1**’
+Read this as ‘merge src **to tgt**’
 
-	obj2 | mergeTo (obj1)
+	src | mergeTo (tgt)
 
 The same function without the ‘To’ means that the identifier is the object of the verb ‘merge’.
 
-Read this as: ‘**merge obj2** to obj1’
+Read this as: ‘**merge src** to tgt’
 
-	obj1 | merge (obj2)
+	tgt | merge (src)
 
 	4 | appendTo ([1, 2, 3])
 	; ([1, 2, 3]) | append (4)
@@ -433,7 +433,9 @@ Read this as: ‘**merge obj2** to obj1’
 	const f = 'speak' | bindPropTo (dog)
 	f ()                                  // 'My name is Caesar'
 
+    // --- 'bind prop to object'
 	'speak' | bindPropTo (dog)   | invoke // same
+    // --- also 'bind prop to object'
 	dog     | bindProp ('speak') | invoke // same
 
 	dog.speak | bindTo (dog) | invoke     // same
@@ -442,49 +444,61 @@ Read this as: ‘**merge obj2** to obj1’
 	dog.speak | bindTo (cat) | invoke     // 'My name is Bo'
 	cat | bind (dog.speak)   | invoke     // 'My name is Bo'
 
+    // --- 'call this function on this context', i.e., bind and call.
+	; ({}.toString) | callOn ([])           // '[object Array]'
+
+	// --- 'provide this context to this function'
+	; ([] | provideTo ({}.toString)         // '[object Array]'
+
+Some other miscellaneous examples.
+
+	// --- '3 to the 4th'
+	3 | toThe (4)                         // 81
+
+	// --- '3 divided by 6'
+	3 | divideBy (6)                      // 0.5
+
+	// --- 'divide 3 into 6'
+	3 | divideInto (6)                    // 2
+
 #### ٭ side effects & chaining, mutable vs immutable ٭
 
-defineBinaryOperator ('|',  (...args) => pipe         (...args))
-defineBinaryOperator ('<<', (...args) => compose      (...args))
-defineBinaryOperator ('>>', (...args) => composeRight (...args))
+	import {
+	  map, side1, appendM, append, prependM, prepend,
+	} from 'stick-js'
 
-import {
-  pipe, compose, composeRight,
-  map, side1, appendM, append, prependM, prepend,
-} from 'stick-js'
+	// --- chaining with the . will often not do what you want.
 
-// --- chaining with the . will often not do what you want.
+	; [2, 3, 4]
+	  .push (5)
+	  .unshift (1) // error, return value of previous line was 5
 
-; [2, 3, 4]
-  .push (5)
-  .unshift (1) // error, return value of previous line was 5
+	// --- this will:
 
-// --- this will:
+	const push    = 'push'    | side1
+	const unshift = 'unshift' | side1
 
-const push    = 'push' | side1
-const unshift = 'unshift' | side1
+	; [2, 3, 4]
+	| push (5)
+	| unshift (1) // [1, 2, 3, 4, 5]
 
-; [2, 3, 4]
-| push (5)
-| unshift (1) // [1, 2, 3, 4, 5]
+	// --- using stick functions for mutable data:
 
-// --- using stick functions for mutable data:
+	; [2, 3, 4]
+	| appendM (5)
+	| prependM (1)
 
-; [2, 3, 4]
-| appendM (5)
-| prependM (1)
+	// --- using stick functions for immutable data:
 
-// --- using stick functions for immutable data:
-
-; [2, 3, 4]
-| append (5)  // new array [2, 3, 4, 5]
-| prepend (1) // new array [1, 2, 3, 4, 5]
+	; [2, 3, 4]
+	| append (5)  // new array [2, 3, 4, 5]
+	| prepend (1) // new array [1, 2, 3, 4, 5]
 
 #### ٭ dog ٭
 
 #### ٭ frontend stuff ٭
 
-    import { path, prop, } from 'stick-js'
+    import { path, prop, whenTrue, always, } from 'stick-js'
 
 If you use react/redux, perhaps with saga, chances are your modules end in
 something like this:
@@ -531,16 +545,74 @@ for the presence of the props can be annoying, so how about:
 	const SomeElementS = styled.div`
 	  top: 5%;
 	  left: 5%;
-	  ${ prop ('width') >> whenOk (sprintf1 ('width: %spx;')) }
-	  ${ prop ('height') >> whenOk (sprintf1 ('height: %spx;')) }
+	  ${ prop ('width')  >> whenOk   (sprintf1 ('width: %spx;')) }
+	  ${ prop ('height') >> whenOk   (sprintf1 ('height: %spx;')) }
+	  ${ prop ('error')  >> whenTrue ('color: red;' | always) }
 	`
 
-	<SomeElementS width='100%' />
+	<SomeElementS width='100%' error={true} />
+
+#### ٭ backend stuff ٭
+
+When you're using a framework like express, you have this `app` object that
+you carry around everywhere. It just so happens that nearly all methods of
+app return app, so that chaining works in the familiar way:
+
+	app
+	.use (...)
+	.all (...)
+	.post ('/endpoint1', ((req, res) => ...))
+	.patch ('/endpoint2', ((req, res) => ...))
+	.get ('/endpoint3', ((req, res) => ...))
+	...
+	.listen (config.port, ...)
+
+But there are cases when the makers were not so thoughtful, or when you
+simply don't know (or don't care) what a function or method returns. The
+pipe will free you from the limitations of the dot, and allow you to compose
+your own fluid interfaces. We'll use express here to prove that it works.
+See the raindrops example for how you might use this with WebGL.
+
+    import { side1, side2, list, appendTo, } from 'stick-js'
+	import { fromPairs, } from 'ramda'
+
+	const get      = side2 ('get')
+	const post     = side2 ('post')
+	const patch    = side2 ('patch')
+	const use      = side1 ('use')
+	const all      = side2 ('all')
+	const send     = side1 ('send')
+	const status   = side1 ('status')
+	const listen   = side2 ('listen')
+	const sendJSON = side1 ('json')
+
+	const sendStatus = code => data => status (code) >> sendJSON (data)
+	const msg = appendTo (['msg']) >> list >> fromPairs
+
+    app | use (bodyParser.json())
+		| all ('*', (req, res, next) => {
+		  ...
+			next ()
+		})
+
+		| post ('/endpoint1', ((req, res) => {
+		  ...
+		  res | sendStatus (500) ('Server error' | msg)
+		}))
+
+		| patch ('/endpoint2', ((req, res) => {
+		  ...
+		  res | sendStatus (200) ({ results, })
+		}))
+
+		...
+
+		| get ('/endpoint3', ((req, res) => ...))
+
+		| listen (config.port) (...)
 
 
 #### ٭ cond ٭
-
-![#f03c15](https://placehold.it/15/f03c15/000000?text=hello) `#f03c15`
 
 	import {
 	  map, join, condS, guard, otherwise,

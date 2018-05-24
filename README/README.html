@@ -309,13 +309,13 @@ os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <
   appendTo, append, <span class="hljs-built_in">bind</span>PropTo, <span class="hljs-built_in">bind</span>Prop, <span class="hljs-built_in">bind</span>To, <span class="hljs-built_in">bind</span>, invoke,
 } from <span class="hljs-string">'stick-js'</span>
 
-const obj1 = { thing: <span class="hljs-string">'sandwich'</span>, want: <span class="hljs-string">'no thanks'</span>,  }
-const obj2 = {                    want: <span class="hljs-string">'yes please'</span>, }</code></pre><p>When a function ends in ‘To’, the identifier to the right is the object of
+const tgt = { thing: <span class="hljs-string">'sandwich'</span>, want: <span class="hljs-string">'no thanks'</span>,  }
+const src = {                    want: <span class="hljs-string">'yes please'</span>, }</code></pre><p>When a function ends in ‘To’, the identifier to the right is the object of
 the preposition.</p>
-<p>Read this as ‘merge obj2 <strong>to obj1</strong>’</p>
-<pre class="hljs"><code>obj2 <span class="hljs-string">| mergeTo (obj1)</span></code></pre><p>The same function without the ‘To’ means that the identifier is the object of the verb ‘merge’.</p>
-<p>Read this as: ‘<strong>merge obj2</strong> to obj1’</p>
-<pre class="hljs"><code>obj1 | merge (obj2)
+<p>Read this as ‘merge src <strong>to tgt</strong>’</p>
+<pre class="hljs"><code>src <span class="hljs-string">| mergeTo (tgt)</span></code></pre><p>The same function without the ‘To’ means that the identifier is the object of the verb ‘merge’.</p>
+<p>Read this as: ‘<strong>merge src</strong> to tgt’</p>
+<pre class="hljs"><code>tgt | merge (src)
 
 4 | appendTo ([1, 2, 3])
 ; ([1, 2, 3]) | append (4)
@@ -336,42 +336,62 @@ const </span>cat = {
 const </span>f = 'speak' | bindPropTo (dog)
 f ()                                  // 'My name is Caesar'
 
+// --- 'bind prop to object'
 'speak' | bindPropTo (dog)   |<span class="hljs-built_in"> invoke </span>// same
+// --- also 'bind prop to object'
 dog     | bindProp ('speak') |<span class="hljs-built_in"> invoke </span>// same
 
 dog.speak | bindTo (dog) |<span class="hljs-built_in"> invoke </span>    // same
 
 // cat.speak ()                          // Error
 dog.speak | bindTo (cat) |<span class="hljs-built_in"> invoke </span>    // 'My name is Bo'
-cat | bind (dog.speak)   |<span class="hljs-built_in"> invoke </span>    // 'My name is Bo'</code></pre><h4 id="٭-side-effects-&-chaining,-mutable-vs-immutable-٭"><a class="header-link" href="#٭-side-effects-&-chaining,-mutable-vs-immutable-٭"></a>٭ side effects &amp; chaining, mutable vs immutable ٭</h4>
-<p>defineBinaryOperator (&#39;|&#39;,  (...args) =&gt; pipe         (...args))
-defineBinaryOperator (&#39;&lt;&lt;&#39;, (...args) =&gt; compose      (...args))
-defineBinaryOperator (&#39;&gt;&gt;&#39;, (...args) =&gt; composeRight (...args))</p>
-<p>import {
-  pipe, compose, composeRight,
+cat | bind (dog.speak)   |<span class="hljs-built_in"> invoke </span>    // 'My name is Bo'
+
+// --- 'call this function on this context', i.e., bind<span class="hljs-built_in"> and </span>call.
+; ({}.toString) | callOn ([])           // '[object Array]'
+
+// --- 'provide this context to this function'
+; ([] | provideTo ({}.toString)         // '[object Array]'</code></pre><p>Some other miscellaneous examples.</p>
+<pre class="hljs"><code><span class="hljs-comment">// --- '3 to the 4th'</span>
+<span class="hljs-number">3</span> | toThe (<span class="hljs-number">4</span>)                         <span class="hljs-comment">// 81</span>
+
+<span class="hljs-comment">// --- '3 divided by 6'</span>
+<span class="hljs-number">3</span> | divideBy (<span class="hljs-number">6</span>)                      <span class="hljs-comment">// 0.5</span>
+
+<span class="hljs-comment">// --- 'divide 3 into 6'</span>
+<span class="hljs-number">3</span> | divideInto (<span class="hljs-number">6</span>)                    <span class="hljs-comment">// 2</span></code></pre><h4 id="٭-side-effects-&-chaining,-mutable-vs-immutable-٭"><a class="header-link" href="#٭-side-effects-&-chaining,-mutable-vs-immutable-٭"></a>٭ side effects &amp; chaining, mutable vs immutable ٭</h4>
+<pre class="hljs"><code>import {
   map, side1, appendM, append, prependM, prepend,
-} from &#39;stick-js&#39;</p>
-<p>// --- chaining with the . will often not do what you want.</p>
-<p>; [2, 3, 4]
-  .push (5)
-  .unshift (1) // error, return value of previous line was 5</p>
-<p>// --- this will:</p>
-<p>const push    = &#39;push&#39; | side1
-const unshift = &#39;unshift&#39; | side1</p>
-<p>; [2, 3, 4]
-| push (5)
-| unshift (1) // [1, 2, 3, 4, 5]</p>
-<p>// --- using stick functions for mutable data:</p>
-<p>; [2, 3, 4]
-| appendM (5)
-| prependM (1)</p>
-<p>// --- using stick functions for immutable data:</p>
-<p>; [2, 3, 4]
-| append (5)  // new array [2, 3, 4, 5]
-| prepend (1) // new array [1, 2, 3, 4, 5]</p>
-<h4 id="٭-dog-٭"><a class="header-link" href="#٭-dog-٭"></a>٭ dog ٭</h4>
+} from 'stick-js'
+
+<span class="hljs-comment">// --- chaining with the . will often not do what you want.</span>
+
+; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+  .push (<span class="hljs-number">5</span>)
+  .unshift (<span class="hljs-number">1</span>) <span class="hljs-comment">// error, return value of previous line was 5</span>
+
+<span class="hljs-comment">// --- this will:</span>
+
+const push    = 'push'    | side1
+const unshift = 'unshift' | side1
+
+; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+| push (<span class="hljs-number">5</span>)
+| unshift (<span class="hljs-number">1</span>) <span class="hljs-comment">// [1, 2, 3, 4, 5]</span>
+
+<span class="hljs-comment">// --- using stick functions for mutable data:</span>
+
+; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+| appendM (<span class="hljs-number">5</span>)
+| prependM (<span class="hljs-number">1</span>)
+
+<span class="hljs-comment">// --- using stick functions for immutable data:</span>
+
+; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
+| append (<span class="hljs-number">5</span>)  <span class="hljs-comment">// new array [2, 3, 4, 5]</span>
+| prepend (<span class="hljs-number">1</span>) <span class="hljs-comment">// new array [1, 2, 3, 4, 5]</span></code></pre><h4 id="٭-dog-٭"><a class="header-link" href="#٭-dog-٭"></a>٭ dog ٭</h4>
 <h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, whenTrue, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
 something like this:</p>
 <pre class="hljs"><code>const withConnect = connect(<span class="hljs-name">mapStateToProps</span>, mapDispatchToProps)<span class="hljs-comment">;</span>
 const withReducer = injectReducer({ key: 'home', reducer })<span class="hljs-comment">;</span>
@@ -402,12 +422,64 @@ for the presence of the props can be annoying, so how about:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> SomeElementS = styled.div<span class="hljs-string">`
   top: 5%;
   left: 5%;
-  <span class="hljs-subst">${ prop (<span class="hljs-string">'width'</span>) &gt;&gt; whenOk (sprintf1 (<span class="hljs-string">'width: %spx;'</span>)) }</span>
-  <span class="hljs-subst">${ prop (<span class="hljs-string">'height'</span>) &gt;&gt; whenOk (sprintf1 (<span class="hljs-string">'height: %spx;'</span>)) }</span>
+  <span class="hljs-subst">${ prop (<span class="hljs-string">'width'</span>)  &gt;&gt; whenOk   (sprintf1 (<span class="hljs-string">'width: %spx;'</span>)) }</span>
+  <span class="hljs-subst">${ prop (<span class="hljs-string">'height'</span>) &gt;&gt; whenOk   (sprintf1 (<span class="hljs-string">'height: %spx;'</span>)) }</span>
+  <span class="hljs-subst">${ prop (<span class="hljs-string">'error'</span>)  &gt;&gt; whenTrue (<span class="hljs-string">'color: red;'</span> | always) }</span>
 `</span>
 
-&lt;SomeElementS width=<span class="hljs-string">'100%'</span> /&gt;</code></pre><h4 id="٭-cond-٭"><a class="header-link" href="#٭-cond-٭"></a>٭ cond ٭</h4>
-<p><img src="https://placehold.it/15/f03c15/000000?text=hello" alt="#f03c15"> <code>#f03c15</code></p>
+&lt;SomeElementS width=<span class="hljs-string">'100%'</span> error={<span class="hljs-literal">true</span>} /&gt;</code></pre><h4 id="٭-backend-stuff-٭"><a class="header-link" href="#٭-backend-stuff-٭"></a>٭ backend stuff ٭</h4>
+<p>When you&#39;re using a framework like express, you have this <code>app</code> object that
+you carry around everywhere. It just so happens that nearly all methods of
+app return app, so that chaining works in the familiar way:</p>
+<pre class="hljs"><code>app
+<span class="hljs-selector-class">.use</span> (...)
+<span class="hljs-selector-class">.all</span> (...)
+<span class="hljs-selector-class">.post</span> (<span class="hljs-string">'/endpoint1'</span>, ((req, res) =&gt; ...))
+<span class="hljs-selector-class">.patch</span> (<span class="hljs-string">'/endpoint2'</span>, ((req, res) =&gt; ...))
+<span class="hljs-selector-class">.get</span> (<span class="hljs-string">'/endpoint3'</span>, ((req, res) =&gt; ...))
+...
+<span class="hljs-selector-class">.listen</span> (config<span class="hljs-selector-class">.port</span>, ...)</code></pre><p>But there are cases when the makers were not so thoughtful, or when you
+simply don&#39;t know (or don&#39;t care) what a function or method returns. The
+pipe will free you from the limitations of the dot, and allow you to compose
+your own fluid interfaces. We&#39;ll use express here to prove that it works.
+See the raindrops example for how you might use this with WebGL.</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { side1, side2, list, appendTo, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+<span class="hljs-keyword">import</span> { fromPairs, } <span class="hljs-keyword">from</span> <span class="hljs-string">'ramda'</span>
+
+<span class="hljs-keyword">const</span> get      = side2 (<span class="hljs-string">'get'</span>)
+<span class="hljs-keyword">const</span> post     = side2 (<span class="hljs-string">'post'</span>)
+<span class="hljs-keyword">const</span> patch    = side2 (<span class="hljs-string">'patch'</span>)
+<span class="hljs-keyword">const</span> use      = side1 (<span class="hljs-string">'use'</span>)
+<span class="hljs-keyword">const</span> all      = side2 (<span class="hljs-string">'all'</span>)
+<span class="hljs-keyword">const</span> send     = side1 (<span class="hljs-string">'send'</span>)
+<span class="hljs-keyword">const</span> status   = side1 (<span class="hljs-string">'status'</span>)
+<span class="hljs-keyword">const</span> listen   = side2 (<span class="hljs-string">'listen'</span>)
+<span class="hljs-keyword">const</span> sendJSON = side1 (<span class="hljs-string">'json'</span>)
+
+<span class="hljs-keyword">const</span> sendStatus = <span class="hljs-function"><span class="hljs-params">code</span> =&gt;</span> data =&gt; status (code) &gt;&gt; sendJSON (data)
+<span class="hljs-keyword">const</span> msg = appendTo ([<span class="hljs-string">'msg'</span>]) &gt;&gt; list &gt;&gt; fromPairs
+
+app | use (bodyParser.json())
+    | all (<span class="hljs-string">'*'</span>, (req, res, next) =&gt; {
+      ...
+        next ()
+    })
+
+    | post (<span class="hljs-string">'/endpoint1'</span>, (<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+      ...
+      res | sendStatus (<span class="hljs-number">500</span>) (<span class="hljs-string">'Server error'</span> | msg)
+    }))
+
+    | patch (<span class="hljs-string">'/endpoint2'</span>, (<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+      ...
+      res | sendStatus (<span class="hljs-number">200</span>) ({ results, })
+    }))
+
+    ...
+
+    | get (<span class="hljs-string">'/endpoint3'</span>, (<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> ...))
+
+    | listen (config.port) (...)</code></pre><h4 id="٭-cond-٭"><a class="header-link" href="#٭-cond-٭"></a>٭ cond ٭</h4>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> {
   <span class="hljs-built_in">map</span>, <span class="hljs-built_in">join</span>, condS, guard, otherwise,
   sprintfN, rangeTo, lt, gt, tap, appendTo, prop,

@@ -70,6 +70,16 @@ refactoring
 	  ...
 	  }
 
+### What we provide
+
+A way to start using the 'pipe' operator today while the proposal is still
+being fleshed out. (link)
+
+Note that we use `|`, not `|>`, which we believe is far more pleasant to
+work with, and which will still work even if/when the proposal is accepted.
+
+If you really want to do bitwise math, see below.
+
 ### Features
 	;
 
@@ -117,16 +127,8 @@ refactoring
 	3 | double // 6
 	double (3) // 6
 
-	// ------ what if I really want to do bitwise math?
-	// --- 1) use the functional form
-
-	import { bitwiseOr, bitwiseShiftBy, } from 'stick'
-	4 | bitwiseOr (9) // 13
-
-	// --- or 2) do your bitwise math in a separate source file and omit the
-	`defineBinaryOperator` headers.
-	// ------
-
+	// --- what if I really want to do bitwise math?
+	// --- see below.
     // --- it becomes interesting when `b` is curried.
 	// --- this would be a good time to read XXX if you're not familiar with curried functions.
 
@@ -555,4 +557,17 @@ must remember to call it using the manual style:
 	merge (obj1, obj2) // will not work
     obj2 | merge (obj1) // ok
 	merge (obj1) (obj2) // also ok
+
+
+
+
+### Bitwise math
+	// --- 1) use the functional form
+
+	import { bitwiseOr, bitwiseShiftBy, } from 'stick'
+	4 | bitwiseOr (9) // 13
+
+	// --- or 2) do your bitwise math in a separate source file and omit the
+	`defineBinaryOperator` headers.
+	// ------
 

@@ -60,7 +60,13 @@ node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span cl
     ...
   ]
   ...
-  }</code></pre><h3 id="features"><a class="header-link" href="#features"></a>Features</h3>
+  }</code></pre><h3 id="what-we-provide"><a class="header-link" href="#what-we-provide"></a>What we provide</h3>
+<p>A way to start using the &#39;pipe&#39; operator today while the proposal is still
+being fleshed out. (link)</p>
+<p>Note that we use <code>|</code>, not <code>|&gt;</code>, which we believe is far more pleasant to
+work with, and which will still work even if/when the proposal is accepted.</p>
+<p>If you really want to do bitwise math, see below.</p>
+<h3 id="features"><a class="header-link" href="#features"></a>Features</h3>
 <pre class="hljs"><code>;
 
     lodash flow near the top
@@ -92,28 +98,20 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-keyword">import</span> {
     pipe, compose, composeRight,
     map, join, split,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
+} from <span class="hljs-string">'stick'</span>
 
 <span class="hljs-comment">// --- `a | b` is simply an equivalent way of writing `b (a)`</span>
-<span class="hljs-keyword">const</span> double = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x * <span class="hljs-number">2</span>
+<span class="hljs-keyword">const</span> <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
 
-<span class="hljs-number">3</span> | double <span class="hljs-comment">// 6</span>
-double (<span class="hljs-number">3</span>) <span class="hljs-comment">// 6</span>
+<span class="hljs-number">3</span> | <span class="hljs-built_in">double</span> <span class="hljs-comment">// 6</span>
+<span class="hljs-built_in">double</span> (<span class="hljs-number">3</span>) <span class="hljs-comment">// 6</span>
 
-<span class="hljs-comment">// ------ what if I really want to do bitwise math?</span>
-<span class="hljs-comment">// --- 1) use the functional form</span>
-
-<span class="hljs-keyword">import</span> { bitwiseOr, bitwiseShiftBy, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
-<span class="hljs-number">4</span> | bitwiseOr (<span class="hljs-number">9</span>) <span class="hljs-comment">// 13</span>
-
-<span class="hljs-comment">// --- or 2) do your bitwise math in a separate source file and omit the</span>
-<span class="hljs-string">`defineBinaryOperator`</span> headers.
-<span class="hljs-comment">// ------</span>
-
+<span class="hljs-comment">// --- what if I really want to do bitwise math?</span>
+<span class="hljs-comment">// --- see below.</span>
 <span class="hljs-comment">// --- it becomes interesting when `b` is curried.</span>
 <span class="hljs-comment">// --- this would be a good time to read XXX if you're not familiar with curried functions.</span>
 
-<span class="hljs-keyword">const</span> multiply = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> y =&gt; x * y
+<span class="hljs-keyword">const</span> multiply = x =&gt; y =&gt; x * y
 
 <span class="hljs-keyword">const</span> b = multiply (<span class="hljs-number">4</span>) <span class="hljs-comment">// b is a function</span>
 
@@ -123,7 +121,7 @@ double (<span class="hljs-number">3</span>) <span class="hljs-comment">// 6</spa
 <span class="hljs-keyword">const</span> triple = <span class="hljs-number">3</span> | multiply
 <span class="hljs-number">4</span> | triple       <span class="hljs-comment">// 12</span>
 
-<span class="hljs-keyword">const</span> capitaliseFirstLetter = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[<span class="hljs-number">0</span>].toUpperCase () + x.slice (<span class="hljs-number">1</span>)
+<span class="hljs-keyword">const</span> capitaliseFirstLetter = x =&gt; x[<span class="hljs-number">0</span>].toUpperCase () + x.slice (<span class="hljs-number">1</span>)
 
 <span class="hljs-string">'just a perfect day'</span>
 | split (<span class="hljs-string">' '</span>)                 <span class="hljs-comment">// split (' ') is a function</span>
@@ -132,9 +130,9 @@ double (<span class="hljs-number">3</span>) <span class="hljs-comment">// 6</spa
 <span class="hljs-comment">// 'Just A Perfect Day'</span>
 
 <span class="hljs-comment">// --- 2 currying styles: we will refer to this sort of function as 'manually curried'</span>
-<span class="hljs-keyword">const</span> f = <span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> b =&gt; <span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> a + b + c <span class="hljs-comment">// call like f (1) (2) (3)</span>
+<span class="hljs-keyword">const</span> f = a =&gt; b =&gt; c =&gt; a + b + c <span class="hljs-comment">// call like f (1) (2) (3)</span>
 <span class="hljs-comment">// --- and this sort as 'normally curried'</span>
-<span class="hljs-keyword">const</span> g = R.curry (<span class="hljs-function">(<span class="hljs-params">a, b, c</span>) =&gt;</span> a + b + c) <span class="hljs-comment">// call like f (1) (2) (3) or f (1, 2, 3)</span>
+<span class="hljs-keyword">const</span> g = R.curry ((a, b, c) =&gt; a + b + c) <span class="hljs-comment">// call like f (1) (2) (3) or f (1, 2, 3)</span>
 
 <span class="hljs-comment">// --- all curried functions provided by stick can be called using either of the styles.</span>
 <span class="hljs-comment">// --- furthermore, our implementation is far faster than Ramda's (try it yourself and see)</span>
@@ -454,5 +452,13 @@ must remember to call it using the manual style:</p>
 <pre class="hljs"><code>import { merge, } from <span class="hljs-string">'stick/manual'</span>
 merge <span class="hljs-comment">(obj1, obj2)</span> <span class="hljs-comment">// will not work</span>
 obj<span class="hljs-number">2</span> | merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">// ok</span>
-merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)</span> <span class="hljs-comment">// also ok</span></code></pre></body>
+merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)</span> <span class="hljs-comment">// also ok</span></code></pre><h3 id="bitwise-math"><a class="header-link" href="#bitwise-math"></a>Bitwise math</h3>
+<pre class="hljs"><code><span class="hljs-comment">// --- 1) use the functional form</span>
+
+<span class="hljs-keyword">import</span> { bitwiseOr, bitwiseShiftBy, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
+<span class="hljs-number">4</span> | bitwiseOr (<span class="hljs-number">9</span>) <span class="hljs-comment">// 13</span>
+
+<span class="hljs-comment">// --- or 2) do your bitwise math in a separate source file and omit the</span>
+`defineBinaryOperator` headers.
+<span class="hljs-comment">// ------</span></code></pre></body>
 </html>

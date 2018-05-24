@@ -256,7 +256,7 @@ If the pipe chain consists of more than 1 link …
 
     const add1IfYouCan = x => x
 	  | ifOk (add1, 'nothing' | always)
-	  | String						  // type conversions are easy using type constructors by the way
+	  | String                        // conversion using type constructor
 	  | dot ('toUpperCase')
 	  | sprintf1 ('The answer is %s')
 	  | tap (log)                     // outputs 'The answer is 1' or 'The answer is NOTHING' or ...
@@ -274,7 +274,7 @@ If the pipe chain consists of more than 1 link …
 
 `ifOk` is a convenience for `ifPredicate (ok)` or `ok | ifPredicate`.
 
-There is also a 'when' form, which has no 'else branch'.
+There is also a 'when' form, which has no 'else' branch.
 	  
 	import { add, whenOk, } from 'stick-js'
 
@@ -341,10 +341,11 @@ gets the value and not the index or the collection.
 But:
 
 	const mapWithIndex = map | addIndex
+	const mapWithCollection = map | addCollection
+
 	; [4, 5, 6]
 	| mapWithIndex ((x, idx) => idx) // [0, 1, 2]
 
-	const mapWithCollection = map | addCollection
 	; [4, 5, 6]
 	| mapWithCollection ((x, coll) => coll) // [[4, 5, 6], [4, 5, 6], [4, 5, 6]]
 
@@ -387,7 +388,6 @@ Or to only merge if certain conditions hold:
 
 	os | mergeTo (ot)                 // { val: 2.2, vil: 3, vol: 3.5, vel: 42, }
 	os | mergeToWhenSrcIsInteger (ot) // { val: 25,  vil: 3, vol: 25,  vel: 42, }
-| log
 
 #### ٭ semantics and argument order are often derivable by thinking in English ٭
 
@@ -401,14 +401,14 @@ Or to only merge if certain conditions hold:
 	const obj1 = { thing: 'sandwich', want: 'no thanks',  }
 	const obj2 = {                    want: 'yes please', }
 
-When a function ends in 'To', (the) identifier to the right is the object of
+When a function ends in ‘To’, the identifier to the right is the object of
 the preposition.
 
 Read this as ‘merge obj2 **to obj1**’
 
 	obj2 | mergeTo (obj1)
 
-The same function without the 'To' means that the identifier is the object of the verb 'merge'.
+The same function without the ‘To’ means that the identifier is the object of the verb ‘merge’.
 
 Read this as: ‘**merge obj2** to obj1’
 
@@ -482,32 +482,73 @@ const unshift = 'unshift' | side1
 
 #### ٭ dog ٭
 
-#### ٭ this example is intentionally complex ٭
+#### ٭ frontend stuff ٭
+
+    import { path, prop, } from 'stick-js'
+
+If you use react/redux, perhaps with saga, chances are your modules end in
+something like this:
+
+	const withConnect = connect(mapStateToProps, mapDispatchToProps);
+	const withReducer = injectReducer({ key: 'home', reducer });
+	const withSaga = injectSaga({ key: 'home', saga });
+
+	export default compose(
+	  withReducer,
+	  withSaga,
+	  withConnect,
+	)(HomePage);
+
+We should see by now that this composing of functions, invoked upon a single
+value, is exactly our pipe pattern. So why not:
+
+	export default App
+	  | connect       (mapStateToProps, mapDispatchToProps)
+	  | injectSaga    ({ key: 'home', saga, })
+	  | injectReducer ({ key: 'home', reducer, })
+	  | injectReducer ({ key: 'ui', uiReducer, })
+	  | ...
+
+And maybe you call actions using a structure like:
+
+    export function mapDispatchToProps(dispatch) {
+	return {
+	  onChangeUsername: (evt) => dispatch(changeUsername(evt.target.value)),
+	};
+  }
+
+Why not:
+
+	export const mapDispatchToProps = (dispatch) => ({
+	  onChangeUsername: path (['target', 'value'] >> changeUsername >> dispatch,
+	})
+
+Try it yourself and see :D
+
+If you use styled components, perhaps you pass optional props in. Checking
+for the presence of the props can be annoying, so how about:
+
+	const SomeElementS = styled.div`
+	  top: 5%;
+	  left: 5%;
+	  ${ prop ('width') >> whenOk (sprintf1 ('width: %spx;')) }
+	  ${ prop ('height') >> whenOk (sprintf1 ('height: %spx;')) }
+	`
+
+	<SomeElementS width='100%' />
+
+
+#### ٭ cond ٭
 
 ![#f03c15](https://placehold.it/15/f03c15/000000?text=hello) `#f03c15`
 
-    yarn add ramda chalk
-
-	---
-
-	defineBinaryOperator ('|',  (...args) => pipe         (...args))
-	defineBinaryOperator ('<<', (...args) => compose      (...args))
-	defineBinaryOperator ('>>', (...args) => composeRight (...args))
-
 	import {
-	  pipe, compose, composeRight,
-	  recurry, map, join, condS, guard, otherwise,
-	  sprintfN, rangeTo, lt, gt,
-	  tap, appendTo, prop,
+	  map, join, condS, guard, otherwise,
+	  sprintfN, rangeTo, lt, gt, tap, appendTo, prop,
 	} from 'stick-js'
 
-	import {
-	  curry,
-	} from 'ramda'
-
-	import {
-	  yellow, green, red,
-	} from 'chalk'
+	import { curry, }              from 'ramda'
+	import { yellow, green, red, } from 'chalk'
 
 	const { log, } = console
 
@@ -519,10 +560,11 @@ const unshift = 'unshift' | side1
 	const greaterThanStr  = cmpStr ('greater than', red)
 	const inBetweenString = ([ low, high ]) => cmpStr ('in between', green, [low, high] | join (' and '))
 
+    // --- this is intentionally complex for illustration
 	const getCmpStr = curry ((low, high, x) => x
 	  | condS ([
-		low | lt | guard ((low | lessThanStr) >> appendTo ([-1])),
-		high | gt | guard ((high | greaterThanStr) >> appendTo ([1])),
+		low  | lt | guard ((low | lessThanStr)           >> appendTo ([-1])),
+		high | gt | guard ((high | greaterThanStr)       >> appendTo ([1])),
 		otherwise | guard (inBetweenString ([low, high]) >> appendTo ([0])),
 	  ])
 	)

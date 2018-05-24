@@ -198,7 +198,7 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
 
 <span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x
   | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
-  | <span class="hljs-built_in">String</span>                          <span class="hljs-comment">// type conversions are easy using type constructors by the way</span>
+  | <span class="hljs-built_in">String</span>                        <span class="hljs-comment">// conversion using type constructor</span>
   | dot (<span class="hljs-string">'toUpperCase'</span>)
   | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
   | tap (log)                     <span class="hljs-comment">// outputs 'The answer is 1' or 'The answer is NOTHING' or ...</span></code></pre><p>… then we remove the <code>x =&gt; x</code> and change all the <code>|</code> to <code>&gt;&gt;</code></p>
@@ -209,7 +209,7 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
   &gt;&gt; sprintf1 ('The answer is %s')
   &gt;&gt; tap (<span class="hljs-name">log</span>)</code></pre><h4 id="٭-compositional-predicates-٭"><a class="header-link" href="#٭-compositional-predicates-٭"></a>٭ compositional predicates ٭</h4>
 <p><code>ifOk</code> is a convenience for <code>ifPredicate (ok)</code> or <code>ok | ifPredicate</code>.</p>
-<p>There is also a &#39;when&#39; form, which has no &#39;else branch&#39;.</p>
+<p>There is also a &#39;when&#39; form, which has no &#39;else&#39; branch.</p>
 <pre class="hljs"><code>import { <span class="hljs-keyword">add</span>, whenOk, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
 <span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span> <span class="hljs-comment">// or add (1)</span>
@@ -262,10 +262,11 @@ gets the value and not the index or the collection.</p>
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
 | map (<span class="hljs-function"><span class="hljs-params">(x, idx)</span> =&gt;</span> idx) <span class="hljs-regexp">//</span> [<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>]</code></pre><p>But:</p>
 <pre class="hljs"><code>const mapWithIndex = map | <span class="hljs-type">addIndex</span>
+const mapWithCollection = map | <span class="hljs-type">addCollection</span>
+
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
 | <span class="hljs-type">mapWithIndex</span> ((x, idx) =&gt; idx) // [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>]
 
-const mapWithCollection = map | <span class="hljs-type">addCollection</span>
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
 | <span class="hljs-type">mapWithCollection</span> ((x, coll) =&gt; coll) // [[<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]]
 
@@ -301,8 +302,7 @@ const os = { va<span class="hljs-variable">l:</span> <span class="hljs-number">2
 const ot = { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">25</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }
 
 os | mergeTo (ot)                 // { va<span class="hljs-variable">l:</span> <span class="hljs-number">2.2</span>, <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">3.5</span>, <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }
-os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }</code></pre><p>| log</p>
-<h4 id="٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english-٭"><a class="header-link" href="#٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english-٭"></a>٭ semantics and argument order are often derivable by thinking in English ٭</h4>
+os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }</code></pre><h4 id="٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english-٭"><a class="header-link" href="#٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english-٭"></a>٭ semantics and argument order are often derivable by thinking in English ٭</h4>
 <p>(We&#39;re dying to see a port to Hungarian, too)</p>
 <pre class="hljs"><code>import {
   sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
@@ -310,10 +310,10 @@ os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <
 } from <span class="hljs-string">'stick-js'</span>
 
 const obj1 = { thing: <span class="hljs-string">'sandwich'</span>, want: <span class="hljs-string">'no thanks'</span>,  }
-const obj2 = {                    want: <span class="hljs-string">'yes please'</span>, }</code></pre><p>When a function ends in &#39;To&#39;, (the) identifier to the right is the object of
+const obj2 = {                    want: <span class="hljs-string">'yes please'</span>, }</code></pre><p>When a function ends in ‘To’, the identifier to the right is the object of
 the preposition.</p>
 <p>Read this as ‘merge obj2 <strong>to obj1</strong>’</p>
-<pre class="hljs"><code>obj2 <span class="hljs-string">| mergeTo (obj1)</span></code></pre><p>The same function without the &#39;To&#39; means that the identifier is the object of the verb &#39;merge&#39;.</p>
+<pre class="hljs"><code>obj2 <span class="hljs-string">| mergeTo (obj1)</span></code></pre><p>The same function without the ‘To’ means that the identifier is the object of the verb ‘merge’.</p>
 <p>Read this as: ‘<strong>merge obj2</strong> to obj1’</p>
 <pre class="hljs"><code>obj1 | merge (obj2)
 
@@ -370,30 +370,51 @@ const unshift = &#39;unshift&#39; | side1</p>
 | append (5)  // new array [2, 3, 4, 5]
 | prepend (1) // new array [1, 2, 3, 4, 5]</p>
 <h4 id="٭-dog-٭"><a class="header-link" href="#٭-dog-٭"></a>٭ dog ٭</h4>
-<h4 id="٭-this-example-is-intentionally-complex-٭"><a class="header-link" href="#٭-this-example-is-intentionally-complex-٭"></a>٭ this example is intentionally complex ٭</h4>
+<h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
+something like this:</p>
+<pre class="hljs"><code>const withConnect = connect(<span class="hljs-name">mapStateToProps</span>, mapDispatchToProps)<span class="hljs-comment">;</span>
+const withReducer = injectReducer({ key: 'home', reducer })<span class="hljs-comment">;</span>
+const withSaga = injectSaga({ key: 'home', saga })<span class="hljs-comment">;</span>
+
+export default compose(
+  <span class="hljs-name">withReducer</span>,
+  withSaga,
+  withConnect,
+)(<span class="hljs-name">HomePage</span>)<span class="hljs-comment">;</span></code></pre><p>We should see by now that this composing of functions, invoked upon a single
+value, is exactly our pipe pattern. So why not:</p>
+<pre class="hljs"><code>export <span class="hljs-keyword">default</span> App
+  | connect       (mapStateToProps, mapDispatchToProps)
+  | injectSaga    ({ <span class="hljs-string">key:</span> <span class="hljs-string">'home'</span>, saga, })
+  | injectReducer ({ <span class="hljs-string">key:</span> <span class="hljs-string">'home'</span>, reducer, })
+  | injectReducer ({ <span class="hljs-string">key:</span> <span class="hljs-string">'ui'</span>, uiReducer, })
+  | ...</code></pre><p>And maybe you call actions using a structure like:</p>
+<pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mapDispatchToProps</span>(<span class="hljs-params">dispatch</span>) </span>{
+<span class="hljs-keyword">return</span> {
+  <span class="hljs-attr">onChangeUsername</span>: <span class="hljs-function">(<span class="hljs-params">evt</span>) =&gt;</span> dispatch(changeUsername(evt.target.value)),
+};</code></pre><p>  }</p>
+<p>Why not:</p>
+<pre class="hljs"><code><span class="hljs-keyword">export</span> const mapDispatchToProps = <span class="hljs-function"><span class="hljs-params">(dispatch)</span> =&gt;</span> ({
+  onChangeUsername: path ([<span class="hljs-string">'target'</span>, <span class="hljs-string">'value'</span>] &gt;&gt; changeUsername &gt;&gt; dispatch,
+})</code></pre><p>Try it yourself and see :D</p>
+<p>If you use styled components, perhaps you pass optional props in. Checking
+for the presence of the props can be annoying, so how about:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> SomeElementS = styled.div<span class="hljs-string">`
+  top: 5%;
+  left: 5%;
+  <span class="hljs-subst">${ prop (<span class="hljs-string">'width'</span>) &gt;&gt; whenOk (sprintf1 (<span class="hljs-string">'width: %spx;'</span>)) }</span>
+  <span class="hljs-subst">${ prop (<span class="hljs-string">'height'</span>) &gt;&gt; whenOk (sprintf1 (<span class="hljs-string">'height: %spx;'</span>)) }</span>
+`</span>
+
+&lt;SomeElementS width=<span class="hljs-string">'100%'</span> /&gt;</code></pre><h4 id="٭-cond-٭"><a class="header-link" href="#٭-cond-٭"></a>٭ cond ٭</h4>
 <p><img src="https://placehold.it/15/f03c15/000000?text=hello" alt="#f03c15"> <code>#f03c15</code></p>
-<pre class="hljs"><code>yarn <span class="hljs-built_in">add</span> ramda chalk
-
----
-
-defineBinaryOperator (<span class="hljs-string">'|'</span>,  (...args) =&gt; pipe         (...args))
-defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, (...args) =&gt; compose      (...args))
-defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&gt; composeRight (...args))
-
-<span class="hljs-keyword">import</span> {
-  pipe, compose, composeRight,
-  recurry, <span class="hljs-built_in">map</span>, <span class="hljs-built_in">join</span>, condS, guard, otherwise,
-  sprintfN, rangeTo, lt, gt,
-  tap, appendTo, prop,
+<pre class="hljs"><code><span class="hljs-keyword">import</span> {
+  <span class="hljs-built_in">map</span>, <span class="hljs-built_in">join</span>, condS, guard, otherwise,
+  sprintfN, rangeTo, lt, gt, tap, appendTo, prop,
 } from <span class="hljs-string">'stick-js'</span>
 
-<span class="hljs-keyword">import</span> {
-  curry,
-} from <span class="hljs-string">'ramda'</span>
-
-<span class="hljs-keyword">import</span> {
-  yellow, <span class="hljs-built_in">green</span>, <span class="hljs-built_in">red</span>,
-} from <span class="hljs-string">'chalk'</span>
+<span class="hljs-keyword">import</span> { curry, }              from <span class="hljs-string">'ramda'</span>
+<span class="hljs-keyword">import</span> { yellow, <span class="hljs-built_in">green</span>, <span class="hljs-built_in">red</span>, } from <span class="hljs-string">'chalk'</span>
 
 <span class="hljs-keyword">const</span> { <span class="hljs-built_in">log</span>, } = console
 
@@ -405,10 +426,11 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-keyword">const</span> greaterThanStr  = cmpStr (<span class="hljs-string">'greater than'</span>, <span class="hljs-built_in">red</span>)
 <span class="hljs-keyword">const</span> inBetweenString = ([ low, high ]) =&gt; cmpStr (<span class="hljs-string">'in between'</span>, <span class="hljs-built_in">green</span>, [low, high] | <span class="hljs-built_in">join</span> (<span class="hljs-string">' and '</span>))
 
+<span class="hljs-comment">// --- this is intentionally complex for illustration</span>
 <span class="hljs-keyword">const</span> getCmpStr = curry ((low, high, x) =&gt; x
   | condS ([
-    low | lt | guard ((low | lessThanStr) &gt;&gt; appendTo ([<span class="hljs-number">-1</span>])),
-    high | gt | guard ((high | greaterThanStr) &gt;&gt; appendTo ([<span class="hljs-number">1</span>])),
+    low  | lt | guard ((low | lessThanStr)           &gt;&gt; appendTo ([<span class="hljs-number">-1</span>])),
+    high | gt | guard ((high | greaterThanStr)       &gt;&gt; appendTo ([<span class="hljs-number">1</span>])),
     otherwise | guard (inBetweenString ([low, high]) &gt;&gt; appendTo ([<span class="hljs-number">0</span>])),
   ])
 )

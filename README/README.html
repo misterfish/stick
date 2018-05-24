@@ -27,7 +27,7 @@ about the whole business.</p>
 refactoring</p>
 <h1 id="github"><a class="header-link" href="#github"></a>Github</h1>
 <h3 id="usage"><a class="header-link" href="#usage"></a>Usage</h3>
-<h4 id="node"><a class="header-link" href="#node"></a>node</h4>
+<h4 id="٭-node"><a class="header-link" href="#٭-node"></a>٭ node</h4>
 <pre class="hljs"><code>npm i stick-js <span class="hljs-comment"># or yarn</span>
 
 cat &gt;.babelrc &lt;&lt;EOT
@@ -37,7 +37,7 @@ cat &gt;.babelrc &lt;&lt;EOT
 EOT
 
 babel -d <span class="hljs-class"><span class="hljs-keyword">lib</span> <span class="hljs-title">src</span></span>
-node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span class="hljs-title">entry</span>-<span class="hljs-title">file</span>&gt;.<span class="hljs-title">js</span></span></code></pre><h4 id="webpack"><a class="header-link" href="#webpack"></a>webpack</h4>
+node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span class="hljs-title">entry</span>-<span class="hljs-title">file</span>&gt;.<span class="hljs-title">js</span></span></code></pre><h4 id="٭-webpack"><a class="header-link" href="#٭-webpack"></a>٭ webpack</h4>
 <h5 id="webpack-config:"><a class="header-link" href="#webpack-config:"></a>webpack config:</h5>
 <pre class="hljs"><code><span class="hljs-attr">module:</span> {
 <span class="hljs-attr">  rules:</span> [
@@ -72,15 +72,17 @@ work with, and which will still work even if/when the proposal is accepted.</p>
     lodash flow near the top
     people who already <span class="hljs-keyword">use</span> lodash flow
     <span class="hljs-keyword">static</span> tools</code></pre><h3 id="synopsis:-major-features."><a class="header-link" href="#synopsis:-major-features."></a>Synopsis: major features.</h3>
-<h4 id="basic-example"><a class="header-link" href="#basic-example"></a>basic example</h4>
+<h4 id="٭-basic-example"><a class="header-link" href="#٭-basic-example"></a>٭ basic example</h4>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> --- source files must begin with <span class="hljs-keyword">this</span> header.
 defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
 defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
 defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeRight (...args))
-<span class="hljs-regexp">//</span> --- /header
 
 <span class="hljs-keyword">import</span> {
     pipe, compose, composeRight,
+
+<span class="hljs-regexp">//</span> --- /header
+
     map, join,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
 
@@ -90,13 +92,17 @@ const { log, } = <span class="hljs-built_in">console</span>
 | map (x =&gt; x + <span class="hljs-number">1</span>)
 | join (<span class="hljs-string">'/'</span>)
 | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
-| log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span></code></pre><h4 id="the-'stick'-operator"><a class="header-link" href="#the-'stick'-operator"></a>the &#39;stick&#39; operator</h4>
-<pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  (...args) =&gt; pipe         (...args))
+| log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span></code></pre><h4 id="٭-the-'stick'-operator"><a class="header-link" href="#٭-the-'stick'-operator"></a>٭ the &#39;stick&#39; operator</h4>
+<pre class="hljs"><code><span class="hljs-comment">// --- reminder: source files must begin with this header.</span>
+<span class="hljs-comment">// --- from here on out we'll omit it in the examples.</span>
+defineBinaryOperator (<span class="hljs-string">'|'</span>,  (...args) =&gt; pipe         (...args))
 defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, (...args) =&gt; compose      (...args))
 defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&gt; composeRight (...args))
 
 <span class="hljs-keyword">import</span> {
     pipe, compose, composeRight,
+<span class="hljs-comment">// --- /header</span>
+
     map, join, split,
 } from <span class="hljs-string">'stick'</span>
 
@@ -137,20 +143,28 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-comment">// --- all curried functions provided by stick can be called using either of the styles.</span>
 <span class="hljs-comment">// --- furthermore, our implementation is far faster than Ramda's (try it yourself and see)</span>
 <span class="hljs-comment">// XXX</span>
-<span class="hljs-comment">// --- performance, own section ...</span></code></pre><h4 id="markers"><a class="header-link" href="#markers"></a>markers</h4>
-<pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
-defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
-defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeRight (...args))
-
-<span class="hljs-keyword">import</span> {
-  pipe, compose, composeRight,
+<span class="hljs-comment">// --- performance, own section ...</span></code></pre><h4 id="٭-markers"><a class="header-link" href="#٭-markers"></a>٭ markers</h4>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> {
   sprintfN, sprintf1,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
 
-<span class="hljs-number">3</span> | sprintf1 (<span class="hljs-string">'4 - 1 is %s'</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">'4 - 1 is 3'</span>
+<span class="hljs-number">3</span> | sprintf1 (<span class="hljs-string">'4 - 1 is %s'</span>) <span class="hljs-comment">// '4 - 1 is 3'</span>
 
+<span class="hljs-comment">// --- 'N' is a marker meaning an array is expected.</span>
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">3</span>]
-| sprintfN (<span class="hljs-string">'%s - 1 is %s'</span>) <span class="hljs-regexp">//</span> same. <span class="hljs-string">'N'</span> <span class="hljs-keyword">is</span> a marker meaning an array <span class="hljs-keyword">is</span> expected.</code></pre><h4 id="ok,-anaphoric-if"><a class="header-link" href="#ok,-anaphoric-if"></a>ok, anaphoric if</h4>
+| sprintfN (<span class="hljs-string">'%s - 1 is %s'</span>) <span class="hljs-comment">// same.</span>
+
+<span class="hljs-comment">// --- 'V' means a value is expected, to disambiguate cases where a</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">can</span> <span class="hljs-title">also</span> <span class="hljs-title">work</span>.
+
+<span class="hljs-title">import</span> </span>{
+  timesV, timesF,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
+
+<span class="hljs-keyword">const</span> { random, } = <span class="hljs-built_in">Math</span>
+
+<span class="hljs-number">3</span>      | timesV (<span class="hljs-number">4</span>) <span class="hljs-comment">// [3, 3, 3, 3]</span>
+random | timesF (<span class="hljs-number">4</span>) <span class="hljs-comment">// [random#, random#, random#, random#]</span></code></pre><h4 id="٭-ok,-anaphoric-if"><a class="header-link" href="#٭-ok,-anaphoric-if"></a>٭ ok, anaphoric if</h4>
 <pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
 defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
 defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeRight (...args))
@@ -181,45 +195,62 @@ let answer
   answer = <span class="hljs-string">'nothing'</span>
 }
 
-<span class="hljs-regexp">//</span> --- it can be vastly improved using an <span class="hljs-string">'anaphoric if'</span> <span class="hljs-keyword">and</span> a stick idiom:
+<span class="hljs-regexp">//</span> --- it can be vastly improved using an <span class="hljs-string">'anaphoric if'</span> <span class="hljs-keyword">and</span> a stick idiom.
+<span class="hljs-regexp">//</span> --- `<span class="javascript">ifOk</span>` takes two functions -- a <span class="hljs-string">'then'</span> function <span class="hljs-keyword">and</span> an <span class="hljs-string">'else'</span>
+function.
 
-const add1IfYouCan = val =&gt; val
-  | ifOk (
-    <span class="hljs-regexp">//</span> <span class="hljs-keyword">in</span> the <span class="hljs-string">'ok'</span> case, the value <span class="hljs-keyword">is</span> passed to the function.
-    x =&gt; x + <span class="hljs-number">1</span>,
-    <span class="hljs-regexp">//</span> <span class="hljs-keyword">in</span> the <span class="hljs-string">'not ok'</span> case, <span class="hljs-literal">no</span> value <span class="hljs-keyword">is</span> passed.
-    _ =&gt; <span class="hljs-string">'nothing'</span>,
-  )
+const add1IfYouCan = val =&gt; val | ifOk (
+  <span class="hljs-regexp">//</span> <span class="hljs-keyword">in</span> the <span class="hljs-string">'ok'</span> case, the value <span class="hljs-keyword">is</span> passed to the function.
+  <span class="hljs-regexp">//</span> `<span class="javascript">that</span>` <span class="hljs-keyword">is</span> here `<span class="javascript">val</span>`
+  that =&gt; that + <span class="hljs-number">1</span>,
+
+  <span class="hljs-regexp">//</span> <span class="hljs-keyword">in</span> the <span class="hljs-string">'not ok'</span> case, <span class="hljs-literal">no</span> value <span class="hljs-keyword">is</span> passed.
+  _ =&gt; <span class="hljs-string">'nothing'</span>,
+)
 
 <span class="hljs-regexp">//</span> --- <span class="hljs-keyword">or</span> a variant:
 
 <span class="hljs-keyword">import</span> { add, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
 
 const add1 = <span class="hljs-number">1</span> | add <span class="hljs-regexp">//</span> <span class="hljs-keyword">or</span> add (<span class="hljs-number">1</span>)
-const add1IfYouCan = x =&gt; x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
+
+const add1IfYouCan = x =&gt; x | ifOk (
+  add1,
+  <span class="hljs-string">'nothing'</span> | always,
+)
 
 <span class="hljs-regexp">//</span> --- usage:
 
 ; [<span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-literal">null</span>, void <span class="hljs-number">8</span>]
-| map (add1IfYouCan) <span class="hljs-regexp">//</span> [<span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span>]</code></pre><h4 id="point-free"><a class="header-link" href="#point-free"></a>point-free</h4>
-<p>// --- a common pattern is when the argument to a function is passed directly into a pipe:</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>// --- since <code>x</code> does not appear anywhere else, we can simply remove it:</p>
-<pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)</code></pre><p>// --- if the pipe chain consists of more than 1 link:</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> { log, } = <span class="hljs-built_in">console</span>
+| map (add1IfYouCan) <span class="hljs-regexp">//</span> [<span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span>]</code></pre><h4 id="٭-point-free"><a class="header-link" href="#٭-point-free"></a>٭ point-free</h4>
+<pre class="hljs"><code><span class="hljs-comment">// --- a common pattern is when the argument to a function is passed directly into a pipe:</span>
+
+<span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
+
+<span class="hljs-comment">// --- since `x` does not appear anywhere else, we can simply remove it:</span>
+
+<span class="hljs-keyword">const</span> add1IfYouCan = ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
+
+<span class="hljs-comment">// --- if the pipe chain consists of more than 1 link:</span>
+
+<span class="hljs-keyword">const</span> { log, } = <span class="hljs-built_in">console</span>
 <span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x
   | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
   | <span class="hljs-built_in">String</span>                          <span class="hljs-comment">// type conversions are easy using type constructors by the way</span>
   | dot (<span class="hljs-string">'toUpperCase'</span>)
   | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
-  | tap (log)                     <span class="hljs-comment">// outputs 'The answer is 1' or 'The answer is NOTHING' or ...</span></code></pre><p>// --- ... then we remove the <code>x =&gt; x</code> and change all the <code>|</code> to <code>&gt;&gt;</code></p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> { <span class="hljs-built_in">log</span>, } = console
+  | tap (log)                     <span class="hljs-comment">// outputs 'The answer is 1' or 'The answer is NOTHING' or ...</span>
+
+<span class="hljs-comment">// --- ... then we remove the `x =&gt; x` and change all the `|` to `&gt;&gt;`</span>
+
+<span class="hljs-keyword">const</span> { log, } = <span class="hljs-built_in">console</span>
 <span class="hljs-keyword">const</span> { dot, sprintf1, tap, }
 <span class="hljs-keyword">const</span> add1IfYouCan =
   ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
   &gt;&gt; <span class="hljs-built_in">String</span>
   &gt;&gt; dot (<span class="hljs-string">'toUpperCase'</span>)
   &gt;&gt; sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
-  &gt;&gt; tap (<span class="hljs-built_in">log</span>)</code></pre><h4 id="compositional-predicates"><a class="header-link" href="#compositional-predicates"></a>compositional predicates</h4>
+  &gt;&gt; tap (log)</code></pre><h4 id="٭-compositional-predicates"><a class="header-link" href="#٭-compositional-predicates"></a>٭ compositional predicates</h4>
 <h5 id="(from-here-on-out-we-omit-the-header,-but-do-not-forget-it-...)"><a class="header-link" href="#(from-here-on-out-we-omit-the-header,-but-do-not-forget-it-...)"></a>(from here on out we omit the header, but do not forget it ...)</h5>
 <p>  // --- <code>ifOk</code> is a convenience for <code>ifPredicate (ok)</code> or <code>ok | ifPredicate</code>
   // --- there is also a &#39;when&#39; form, which has no &#39;else branch&#39;.</p>
@@ -258,7 +289,7 @@ const add1IfYouCan = x =&gt; x | ifOk (add1, <span class="hljs-string">'nothing'
   ))
   | log</p>
 <p>  ; [3.5, 4, 5, 5.5] | map (isOddInteger) | log</p>
-<h4 id="compositional-decoration"><a class="header-link" href="#compositional-decoration"></a>compositional decoration</h4>
+<h4 id="٭-compositional-decoration"><a class="header-link" href="#٭-compositional-decoration"></a>٭ compositional decoration</h4>
 <pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
 defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
 defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeRight (...args))
@@ -284,7 +315,7 @@ const mapWithCollection = map | addCollection
   | (map | addIndex | addCollection) (<span class="hljs-function"><span class="hljs-params">(x, idx, coll)</span> =&gt;</span> ...)
 
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
-  | (map | addCollection | addIndex) (<span class="hljs-function"><span class="hljs-params">(x, coll, idx)</span> =&gt;</span> ...)</code></pre><h4 id="semantics-and-argument-order-are-often-derivable-by-thinking-in-english"><a class="header-link" href="#semantics-and-argument-order-are-often-derivable-by-thinking-in-english"></a>semantics and argument order are often derivable by thinking in English</h4>
+  | (map | addCollection | addIndex) (<span class="hljs-function"><span class="hljs-params">(x, coll, idx)</span> =&gt;</span> ...)</code></pre><h4 id="٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english"><a class="header-link" href="#٭-semantics-and-argument-order-are-often-derivable-by-thinking-in-english"></a>٭ semantics and argument order are often derivable by thinking in English</h4>
 <pre class="hljs"><code>defineBinaryOperator ('|',  (...args) =&gt; pipe         (...args))
 defineBinaryOperator ('&lt;&lt;', (...args) =&gt; compose      (...args))
 defineBinaryOperator ('&gt;&gt;', (...args) =&gt; composeRight (...args))
@@ -330,7 +361,7 @@ dog.speak | bindTo (dog) |<span class="hljs-built_in"> invoke </span>// smae
 
 // cat.speak () // Error
 dog.speak | bindTo (cat) |<span class="hljs-built_in"> invoke </span>// 'My name is Bo'
-cat | bind (dog.speak)   |<span class="hljs-built_in"> invoke </span>// 'My name is Bo'</code></pre><h4 id="side-effects-&-chaining,-mutable-vs-immutable"><a class="header-link" href="#side-effects-&-chaining,-mutable-vs-immutable"></a>side effects &amp; chaining, mutable vs immutable</h4>
+cat | bind (dog.speak)   |<span class="hljs-built_in"> invoke </span>// 'My name is Bo'</code></pre><h4 id="٭-side-effects-&-chaining,-mutable-vs-immutable"><a class="header-link" href="#٭-side-effects-&-chaining,-mutable-vs-immutable"></a>٭ side effects &amp; chaining, mutable vs immutable</h4>
 <p>defineBinaryOperator (&#39;|&#39;,  (...args) =&gt; pipe         (...args))
 defineBinaryOperator (&#39;&lt;&lt;&#39;, (...args) =&gt; compose      (...args))
 defineBinaryOperator (&#39;&gt;&gt;&#39;, (...args) =&gt; composeRight (...args))</p>
@@ -356,8 +387,8 @@ const unshift = &#39;unshift&#39; | side1</p>
 <p>; [2, 3, 4]
 | append (5)  // new array [2, 3, 4, 5]
 | prepend (1) // new array [1, 2, 3, 4, 5]</p>
-<h4 id="dog"><a class="header-link" href="#dog"></a>dog</h4>
-<h4 id="this-example-is-intentionally-complex"><a class="header-link" href="#this-example-is-intentionally-complex"></a>this example is intentionally complex</h4>
+<h4 id="٭-dog"><a class="header-link" href="#٭-dog"></a>٭ dog</h4>
+<h4 id="٭-this-example-is-intentionally-complex"><a class="header-link" href="#٭-this-example-is-intentionally-complex"></a>٭ this example is intentionally complex</h4>
 <p><img src="https://placehold.it/15/f03c15/000000?text=hello" alt="#f03c15"> <code>#f03c15</code></p>
 <pre class="hljs"><code>yarn <span class="hljs-built_in">add</span> ramda chalk
 

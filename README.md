@@ -30,7 +30,7 @@ refactoring
 
 ### Usage
 
-#### node
+#### ٭ node
 
 	npm i stick-js # or yarn
 
@@ -43,7 +43,7 @@ refactoring
 	babel -d lib src
 	node lib/<entry-file>.js
 
-#### webpack
+#### ٭ webpack
 
 ##### webpack config:
 
@@ -89,16 +89,18 @@ If you really want to do bitwise math, see below.
 
 ### Synopsis: major features.
 
-#### basic example
+#### ٭ basic example
 
     // --- source files must begin with this header.
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
 	defineBinaryOperator ('<<', (...args) => compose      (...args))
 	defineBinaryOperator ('>>', (...args) => composeRight (...args))
-	// --- /header
 
 	import {
 		pipe, compose, composeRight,
+
+	// --- /header
+
 		map, join,
 	} from 'stick'
 
@@ -110,14 +112,18 @@ If you really want to do bitwise math, see below.
 	| sprintf1 ('The answer is %s')
 	| log // outputs 'The answer is 2/3/4'
 
-#### the 'stick' operator
+#### ٭ the 'stick' operator
 
+    // --- reminder: source files must begin with this header.
+	// --- from here on out we'll omit it in the examples.
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
 	defineBinaryOperator ('<<', (...args) => compose      (...args))
 	defineBinaryOperator ('>>', (...args) => composeRight (...args))
 
 	import {
 		pipe, compose, composeRight,
+	// --- /header
+
 		map, join, split,
 	} from 'stick'
 
@@ -160,23 +166,31 @@ If you really want to do bitwise math, see below.
 	// XXX
 	// --- performance, own section ...
 
-#### markers
-
-	defineBinaryOperator ('|',  (...args) => pipe         (...args))
-	defineBinaryOperator ('<<', (...args) => compose      (...args))
-	defineBinaryOperator ('>>', (...args) => composeRight (...args))
+#### ٭ markers
 
 	import {
-	  pipe, compose, composeRight,
 	  sprintfN, sprintf1,
 	} from 'stick'
 
 	3 | sprintf1 ('4 - 1 is %s') // '4 - 1 is 3'
 
+	// --- 'N' is a marker meaning an array is expected.
 	; [4, 3]
-	| sprintfN ('%s - 1 is %s') // same. 'N' is a marker meaning an array is expected.
+	| sprintfN ('%s - 1 is %s') // same.
 
-#### ok, anaphoric if
+	// --- 'V' means a value is expected, to disambiguate cases where a
+	function can also work.
+
+	import {
+	  timesV, timesF,
+	} from 'stick'
+
+	const { random, } = Math
+
+	3      | timesV (4) // [3, 3, 3, 3]
+	random | timesF (4) // [random#, random#, random#, random#]
+
+#### ٭ ok, anaphoric if
 
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
 	defineBinaryOperator ('<<', (...args) => compose      (...args))
@@ -208,39 +222,46 @@ If you really want to do bitwise math, see below.
 	  answer = 'nothing'
 	}
 
-	// --- it can be vastly improved using an 'anaphoric if' and a stick idiom:
+	// --- it can be vastly improved using an 'anaphoric if' and a stick idiom.
+	// --- `ifOk` takes two functions -- a 'then' function and an 'else'
+	function.
 
-	const add1IfYouCan = val => val
-	  | ifOk (
-		// in the 'ok' case, the value is passed to the function.
-		x => x + 1,
-		// in the 'not ok' case, no value is passed.
-		_ => 'nothing',
-	  )
+	const add1IfYouCan = val => val | ifOk (
+	  // in the 'ok' case, the value is passed to the function.
+	  // `that` is here `val`
+	  that => that + 1,
+
+	  // in the 'not ok' case, no value is passed.
+	  _ => 'nothing',
+	)
 
 	// --- or a variant:
 
 	import { add, always, } from 'stick'
 
 	const add1 = 1 | add // or add (1)
-	const add1IfYouCan = x => x | ifOk (add1, 'nothing' | always)
+
+	const add1IfYouCan = x => x | ifOk (
+	  add1,
+	  'nothing' | always,
+	)
 
     // --- usage:
 
 	; [0, 10, null, void 8]
 	| map (add1IfYouCan) // [1, 11, 'nothing', 'nothing']
 
-#### point-free
+#### ٭ point-free
 
-// --- a common pattern is when the argument to a function is passed directly into a pipe:
+	// --- a common pattern is when the argument to a function is passed directly into a pipe:
 
 	const add1IfYouCan = x => x | ifOk (add1, 'nothing' | always)
 
-// --- since `x` does not appear anywhere else, we can simply remove it:
+	// --- since `x` does not appear anywhere else, we can simply remove it:
 
 	const add1IfYouCan = ifOk (add1, 'nothing' | always)
 
-// --- if the pipe chain consists of more than 1 link:
+	// --- if the pipe chain consists of more than 1 link:
 
     const { log, } = console
     const add1IfYouCan = x => x
@@ -250,7 +271,7 @@ If you really want to do bitwise math, see below.
 	  | sprintf1 ('The answer is %s')
 	  | tap (log)                     // outputs 'The answer is 1' or 'The answer is NOTHING' or ...
 
-// --- ... then we remove the `x => x` and change all the `|` to `>>`
+	// --- ... then we remove the `x => x` and change all the `|` to `>>`
 
     const { log, } = console
 	const { dot, sprintf1, tap, }
@@ -261,7 +282,7 @@ If you really want to do bitwise math, see below.
 	  >> sprintf1 ('The answer is %s')
 	  >> tap (log)
 
-#### compositional predicates
+#### ٭ compositional predicates
 
 ##### (from here on out we omit the header, but do not forget it ...)
 
@@ -314,7 +335,7 @@ If you really want to do bitwise math, see below.
 
   ; [3.5, 4, 5, 5.5] | map (isOddInteger) | log
 
-#### compositional decoration
+#### ٭ compositional decoration
 
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
 	defineBinaryOperator ('<<', (...args) => compose      (...args))
@@ -343,7 +364,7 @@ If you really want to do bitwise math, see below.
 	; [4, 5, 6]
 	  | (map | addCollection | addIndex) ((x, coll, idx) => ...)
 
-#### semantics and argument order are often derivable by thinking in English
+#### ٭ semantics and argument order are often derivable by thinking in English
 
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
 	defineBinaryOperator ('<<', (...args) => compose      (...args))
@@ -392,7 +413,7 @@ If you really want to do bitwise math, see below.
 	dog.speak | bindTo (cat) | invoke // 'My name is Bo'
 	cat | bind (dog.speak)   | invoke // 'My name is Bo'
 
-#### side effects & chaining, mutable vs immutable
+#### ٭ side effects & chaining, mutable vs immutable
 
 defineBinaryOperator ('|',  (...args) => pipe         (...args))
 defineBinaryOperator ('<<', (...args) => compose      (...args))
@@ -430,9 +451,9 @@ const unshift = 'unshift' | side1
 | append (5)  // new array [2, 3, 4, 5]
 | prepend (1) // new array [1, 2, 3, 4, 5]
 
-#### dog
+#### ٭ dog
 
-#### this example is intentionally complex
+#### ٭ this example is intentionally complex
 
 ![#f03c15](https://placehold.it/15/f03c15/000000?text=hello) `#f03c15`
 

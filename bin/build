@@ -6,7 +6,67 @@ set -o pipefail
 bindir=$(realpath "$(dirname "$0")")
 
 . "$bindir"/functions.bash
+. "$bindir"/vars
 
-USAGE="Usage: $0"
+USAGE="Usage: $0 [-w | --watch]"
 
+opt_w=
+while getopts hw-: arg; do
+    case $arg in
+        h) warn "$USAGE"; exit 0 ;;
+        w) opt_w=yes ;;
+        -) OPTARG_VALUE="${OPTARG#*=}"
+            case $OPTARG in
+                help)  warn "$USAGE"; exit 0 ;;
+                watch)  opt_w=yes ;;
+                '')    break ;;
+                *)     error "Illegal option --$OPTARG" ;;
+                esac ;;
+        *) error "$USAGE" ;;
+    esac
+done
+shift $((OPTIND-1))
+
+distfiles=(
+    index.js
+    # monad.js
+    operator.js
+    manual.js
+    internal/
+)
+
+build () {
+    local watch
+    local opt
+    watch="${1:-}"
+    if [ "$watch" = yes ]; then opt=-wd;
+    else opt=-d
+    fi
+
+    cmd "$nodebindir"/babel "$opt" "$libdir" "$srcdir"
+}
+
+build-watch () {
+    cmd build yes
+}
+
+copy () {
+    local file
+    file="$1"
+    cmd cp -raf "$libdir"/"$file" "$rootdir"
+}
+
+copy-files () {
+    for i in "${distfiles[@]}"; do
+        copy "$i"
+    done
+}
+
+if [ "$opt_w" = yes ]; then
+    build-watch
+else
+    build
+    info 'copying built files to root, so npm works'
+    copy-files
+fi
 

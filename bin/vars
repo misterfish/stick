@@ -1,8 +1,11 @@
+#!/bin/bash
+
 set -eu
 
 bindir=$(realpath "$(dirname "$0")")
 rootdir="$bindir"/..
 nodemodulesdir="$rootdir/node_modules"
+nodebindir="$nodemodulesdir"/.bin
 
 srcdir="$rootdir"/src
 libdir="$rootdir"/lib
@@ -10,8 +13,8 @@ libdir="$rootdir"/lib
 tstdir="$srcdir"/__tests__
 
 nodecmd=node
-lsccmd="$nodemodulesdir"/.bin/lsc
-babelcmd="$nodemodulesdir"/.bin/babel
+lsccmd="$nodebindir"/lsc
+babelcmd="$nodebindir"/babel
 
 # ------ short-circuit on emptiness.
 doublebar() {

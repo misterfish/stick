@@ -553,10 +553,10 @@ value, is exactly our pipe pattern. So why not:
 And maybe you call actions using a structure like:
 
     export function mapDispatchToProps(dispatch) {
-	return {
-	  onChangeUsername: (evt) => dispatch(changeUsername(evt.target.value)),
+	  return {
+		onChangeUsername: (evt) => dispatch(changeUsername(evt.target.value)),
+	  };
 	};
-  }
 
 Why not:
 
@@ -598,7 +598,8 @@ But there are cases when the makers were not so thoughtful, or when you
 simply don't know (or don't care) what a function or method returns. The
 pipe will free you from the limitations of the dot, and allow you to compose
 your own fluid interfaces. We'll use express here to prove that it works.
-See the raindrops example for how you might use this with WebGL.
+See the raindrops example for how you might use this with WebGL, and there
+are many other places this can be used.
 
     import { side1, side2, list, appendTo, } from 'stick-js'
 	import { fromPairs, } from 'ramda'
@@ -691,10 +692,10 @@ See the raindrops example for how you might use this with WebGL.
 
 Stick is fast. See here for a benchmark of our factory example.
 
-Stick is much faster than Ramda. Though it initially depended on
-Ramda, we have decided to eliminate that dependency by reimplementing many
-of the functions. While profiling the WebGL example we found that even
-trivial functions like `R.flip` and `R.tap` are surprisingly expensive.
+Though it initially depended on Ramda, we have decided to eliminate that
+dependency by reimplementing many of the functions. While profiling the
+WebGL example we found that even trivial functions like `R.flip` and `R.tap`
+are surprisingly expensive.
 
 This really only becomes an issue in tight loops -- an inner loop of a
 socket or server, an animation, a particle system where lots of objects are

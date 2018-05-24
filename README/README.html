@@ -428,10 +428,10 @@ value, is exactly our pipe pattern. So why not:</p>
   | injectReducer ({ <span class="hljs-string">key:</span> <span class="hljs-string">'ui'</span>, uiReducer, })
   | ...</code></pre><p>And maybe you call actions using a structure like:</p>
 <pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mapDispatchToProps</span>(<span class="hljs-params">dispatch</span>) </span>{
-<span class="hljs-keyword">return</span> {
-  <span class="hljs-attr">onChangeUsername</span>: <span class="hljs-function">(<span class="hljs-params">evt</span>) =&gt;</span> dispatch(changeUsername(evt.target.value)),
-};</code></pre><p>  }</p>
-<p>Why not:</p>
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">onChangeUsername</span>: <span class="hljs-function">(<span class="hljs-params">evt</span>) =&gt;</span> dispatch(changeUsername(evt.target.value)),
+  };
+};</code></pre><p>Why not:</p>
 <pre class="hljs"><code><span class="hljs-keyword">export</span> const mapDispatchToProps = <span class="hljs-function"><span class="hljs-params">(dispatch)</span> =&gt;</span> ({
   onChangeUsername: path ([<span class="hljs-string">'target'</span>, <span class="hljs-string">'value'</span>] &gt;&gt; changeUsername &gt;&gt; dispatch,
 })</code></pre><p>Try it yourself and see :D</p>
@@ -460,7 +460,8 @@ app return app, so that chaining works in the familiar way:</p>
 simply don&#39;t know (or don&#39;t care) what a function or method returns. The
 pipe will free you from the limitations of the dot, and allow you to compose
 your own fluid interfaces. We&#39;ll use express here to prove that it works.
-See the raindrops example for how you might use this with WebGL.</p>
+See the raindrops example for how you might use this with WebGL, and there
+are many other places this can be used.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { side1, side2, list, appendTo, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 <span class="hljs-keyword">import</span> { fromPairs, } <span class="hljs-keyword">from</span> <span class="hljs-string">'ramda'</span>
 
@@ -535,10 +536,10 @@ app | use (bodyParser.json())
    | tap (<span class="hljs-built_in">map</span> (snd &gt;&gt; <span class="hljs-built_in">log</span>))   <span class="hljs-comment">// logs the str</span>
    | <span class="hljs-built_in">map</span> (fst)                <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre><h3 id="performance"><a class="header-link" href="#performance"></a>performance</h3>
 <p>Stick is fast. See here for a benchmark of our factory example.</p>
-<p>Stick is much faster than Ramda. Though it initially depended on
-Ramda, we have decided to eliminate that dependency by reimplementing many
-of the functions. While profiling the WebGL example we found that even
-trivial functions like <code>R.flip</code> and <code>R.tap</code> are surprisingly expensive.</p>
+<p>Though it initially depended on Ramda, we have decided to eliminate that
+dependency by reimplementing many of the functions. While profiling the
+WebGL example we found that even trivial functions like <code>R.flip</code> and <code>R.tap</code>
+are surprisingly expensive.</p>
 <p>This really only becomes an issue in tight loops -- an inner loop of a
 socket or server, an animation, a particle system where lots of objects are
 spawned per second, WebGL. For cases like these, see below.</p>

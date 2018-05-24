@@ -80,10 +80,11 @@ refactoring
 
 If you really want to do bitwise math, see below.
 
-The overloading is made possible thanks to jussi-kalliokoski's work on the
-babel-plugin-operator-overload plugin.
+The overloading is made possible thanks to the great
+babel-plugin-operator-overload library by Jussi Kalliokoski
+(@jussi-kalliokoski).
 
-### Features
+### Features (/ why?)
 
 ### Synopsis (overview).
 
@@ -91,7 +92,8 @@ Please see X for a more detailed discussion and many more examples.
 
 #### ٭ basic example
 
-    // --- source files must begin with this header.
+    // --- header/ source files must begin with this header.
+
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
 	defineBinaryOperator ('<<', (...args) => compose      (...args))
 	defineBinaryOperator ('>>', (...args) => composeRight (...args))
@@ -104,47 +106,42 @@ Please see X for a more detailed discussion and many more examples.
 		map, join,
 	} from 'stick-js'
 
+	import { green, } from 'chalk'
+
 	const { log, } = console
 
 	; [1, 2, 3]
 	| map (x => x + 1)
 	| join ('/')
+	| green
 	| sprintf1 ('The answer is %s')
-	| log // outputs 'The answer is 2/3/4'
+	| log // outputs 'The answer is 2/3/4' (colorfully)
 
 #### ٭ the 'stick' operator
 
 `a | b` is simply an equivalent way of writing `b (a)`
 
-    // --- reminder: source files must begin with this header.
+A really simple idea, with pretty surprising consequences.
+
+(What if I really want to do bitwise math, you ask? See below).
+
+    // --- reminder: source files must begin with this.
 	// --- from here on out we'll omit it in the examples.
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
 	defineBinaryOperator ('<<', (...args) => compose      (...args))
 	defineBinaryOperator ('>>', (...args) => composeRight (...args))
 
 	import {
-		pipe, compose, composeRight,
-	// --- /header
-
-		map, join, split,
+	  pipe, compose, composeRight,
+	  map, join, split,
 	} from 'stick-js'
 
-	const double = x => x * 2
-
-	3 | double // 6
-	double (3) // 6
-
-	// --- what if I really want to do bitwise math? ... see below.
-
 	const multiply = x => y => x * y
+	const double = multiply (2)     // or 2 | multiply
 
-	const b = multiply (4) // b is a function
-
-	3 | b            // 12
-	3 | multiply (4) // 12
-
-	const triple = 3 | multiply
-	4 | triple       // 12
+	3 | double                      // 6
+	double (3)                      // 6
+	3 | multiply (4)                // 12
 
     const capitaliseFirstLetter = x => x[0].toUpperCase () + x.slice (1)
 
@@ -152,75 +149,65 @@ Please see X for a more detailed discussion and many more examples.
 	  | split (' ')                 // split (' ') is a function
 	  | map (capitaliseFirstLetter) // map (capitaliseFirstLetter) is a function
 	  | join (' ')                  // join (' ') is a function
-	  // 'Just A Perfect Day'
+
+    // 'Just A Perfect Day'
 
 #### ٭ currying styles
 
-There are 2 currying styles. All curried functions provided by stick can be
-called using either of the styles.
-
-For extra performance you can also limit yourself to the manual style (see
-below).
+All curried functions provided by stick-js can be called using either of 2 currying styles.
 
 This would be a good time to read XXX if you're not familiar with curried functions.
 
-1. we will refer to this sort of function as 'manually curried'.
+1. we will refer to this sort of function and calling style as 'manual':
 
-	`const f = a => b => c => a + b + c // call like f (1) (2) (3)`
+	`const f = a => b => c => a + b + c          // call like f (1) (2) (3)`
 
-2. and this sort as 'normally curried'
+2. and this sort as 'normal':
 
 	`const g = R.curry ((a, b, c) => a + b + c) // call like f (1) (2) (3) or f (1, 2, 3)`
-
-
+                                                // or f (1, 2, 3)
+                                                // or f (1) (2, 3)
+                                                // etc.
+                                
 
 	import { map, } from 'stick-js'
 
 	map (double, [1, 2, 3])    // [2, 4, 6] (normal style)
-
 	map (double) ([1, 2, 3])   // [2, 4, 6] (manual style)
-	; [1, 2, 3] | map (double) // [2, 4, 6] (manual style with pipe)
+	; [1, 2, 3] | map (double) // [2, 4, 6] (manual style with stick)
+
+For extra performance you can also limit yourself to the manual style (see
+below).
 
 #### ٭ markers
 
-	import {
-	  sprintfN, sprintf1,
-	} from 'stick-js'
+	import { sprintfN, sprintf1, } from 'stick-js'
 
 	3 | sprintf1 ('4 - 1 is %s') // '4 - 1 is 3'
 
-	// --- 'N' is a marker meaning an array is expected.
+'N' is a marker meaning an array is expected.
+
 	; [4, 3]
-	| sprintfN ('%s - 1 is %s') // same.
+	| sprintfN ('%s - 1 is %s')  // same.
 
-	// --- 'V' means a value is expected, to disambiguate cases where a
-	function can also work.
+'V' means a value is expected, to disambiguate cases where a function can also work.
 
-	import {
-	  timesV, timesF,
-	} from 'stick-js'
+	import { timesV, timesF, } from 'stick-js'
 
 	const { random, } = Math
 
-	3      | timesV (4) // [3, 3, 3, 3]
-	random | timesF (4) // [random#, random#, random#, random#]
+	3      | timesV (4)          // [3, 3, 3, 3]
+	random | timesF (4)          // [<random-num>, <random-num>, <random-num>, <random-num>]
+
+There are a few more which we'll see along the way.
 
 #### ٭ ok, anaphoric if
 
-	defineBinaryOperator ('|',  (...args) => pipe         (...args))
-	defineBinaryOperator ('<<', (...args) => compose      (...args))
-	defineBinaryOperator ('>>', (...args) => composeRight (...args))
+`ok (x)` is false if `x` is `null` or `undefined`. Everything else passes.
 
-	import {
-	  pipe, compose, composeRight,
-	  map, ok, notOk,
-	  ifOk,
-	} from 'stick-js'
+	import { map, ok, notOk, ifOk, } from 'stick-js'
 
 	const { log, } = console
-
-	const someVar = ...
-	someVar | ok // true if `someVar` is not `null` or `undefined`
 
 	; [0, false, '', null, void 8]
 	| map (ok)    // [true, true, true, false, false]
@@ -228,7 +215,7 @@ This would be a good time to read XXX if you're not familiar with curried functi
 	; [0, false, '', null, void 8]
 	| map (notOk) // [false, false, false, true, true]
 
-	// --- we see this a lot in JS:
+Something we see a lot in JS in the wild is:
 
 	let answer
 	if (someVar !== undefined && someVar !== null) {
@@ -237,20 +224,19 @@ This would be a good time to read XXX if you're not familiar with curried functi
 	  answer = 'nothing'
 	}
 
-	// --- it can be vastly improved using an 'anaphoric if' and a stick idiom.
-	// --- `ifOk` takes two functions -- a 'then' function and an 'else'
-	function.
+This can vastly improved using an 'anaphoric if' and a stick idiom.
+`ifOk` takes two functions -- a 'then' function and an 'else' function.
+In the 'ok'	case, the value being tested is passed to the function.
 
 	const add1IfYouCan = val => val | ifOk (
-	  // in the 'ok' case, the value is passed to the function.
 	  // `that` is here `val`
 	  that => that + 1,
 
-	  // in the 'not ok' case, no value is passed.
+	  // no value is passed.
 	  _ => 'nothing',
 	)
 
-	// --- or a variant:
+A variant, using a point-free style and the `always` function:
 
 	import { add, always, } from 'stick-js'
 
@@ -261,24 +247,26 @@ This would be a good time to read XXX if you're not familiar with curried functi
 	  'nothing' | always,
 	)
 
-    // --- usage:
+Usage:
 
 	; [0, 10, null, void 8]
 	| map (add1IfYouCan) // [1, 11, 'nothing', 'nothing']
 
 #### ٭ point-free
 
-	// --- a common pattern is when the argument to a function is passed directly into a pipe:
+A common pattern is when the argument to a function is passed directly into a pipe:
 
 	const add1IfYouCan = x => x | ifOk (add1, 'nothing' | always)
 
-	// --- since `x` does not appear anywhere else, we can simply remove it:
+Since `x` does not appear anywhere else in the expression, we can simply remove it:
 
 	const add1IfYouCan = ifOk (add1, 'nothing' | always)
 
-	// --- if the pipe chain consists of more than 1 link:
+If the pipe chain consists of more than 1 link …
 
+	const { dot, sprintf1, tap, }
     const { log, } = console
+
     const add1IfYouCan = x => x
 	  | ifOk (add1, 'nothing' | always)
 	  | String						  // type conversions are easy using type constructors by the way
@@ -286,10 +274,8 @@ This would be a good time to read XXX if you're not familiar with curried functi
 	  | sprintf1 ('The answer is %s')
 	  | tap (log)                     // outputs 'The answer is 1' or 'The answer is NOTHING' or ...
 
-	// --- ... then we remove the `x => x` and change all the `|` to `>>`
+… then we remove the `x => x` and change all the `|` to `>>`
 
-    const { log, } = console
-	const { dot, sprintf1, tap, }
     const add1IfYouCan =
 	  ifOk (add1, 'nothing' | always)
 	  >> String

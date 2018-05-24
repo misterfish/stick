@@ -71,22 +71,20 @@ refactoring
 
 ### What we provide
 
-A way to start using the 'pipe' operator today while the proposal is still
-being fleshed out. (link)
+- A way to start using the pipe (or 'stick') operator today while the
+  proposal is still being fleshed out. (link)
 
-Note that we use `|`, not `|>`, which we believe is far more pleasant to
-work with, and which will still work even if/when the proposal is accepted.
+- Note that we use `|`, not `|>`, which is not only easier to overload but
+  far more pleasant to work with, and which will still work even if/when the
+  proposal is accepted.
 
 If you really want to do bitwise math, see below.
 
 ### Features
-	;
 
-		lodash flow near the top
-		people who already use lodash flow
-		static tools
+### Synopsis (overview).
 
-### Synopsis: major features.
+Please see X for a more detailed discussion and many more examples.
 
 #### ٭ basic example
 

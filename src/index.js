@@ -12,15 +12,13 @@ import {
     bitwiseLeftBy, bitwiseRightBy, bitwiseRightZeroFillBy,
 } from './operator'
 
-import {
-    doe,
-} from './monad'
+// import { doe, } from './monad'
 
 export {
     bitwiseAnd, bitwiseOr, bitwiseXor, bitwiseNot,
     bitwiseLeft, bitwiseRight, bitwiseRightZeroFill,
     bitwiseLeftBy, bitwiseRightBy, bitwiseRightZeroFillBy,
-    doe,
+    // doe,
 }
 
 import manual from './manual'

@@ -8,17 +8,20 @@ bindir=$(realpath "$(dirname "$0")")
 . "$bindir"/functions.bash
 . "$bindir"/vars
 
-USAGE="Usage: $0 [-w | --watch]"
+USAGE="Usage: $0 [-w | --watch] [-p | --publish]"
 
 opt_w=
-while getopts hw-: arg; do
+opt_p=
+while getopts hpw-: arg; do
     case $arg in
         h) warn "$USAGE"; exit 0 ;;
         w) opt_w=yes ;;
+        p) opt_p=yes ;;
         -) OPTARG_VALUE="${OPTARG#*=}"
             case $OPTARG in
                 help)  warn "$USAGE"; exit 0 ;;
                 watch)  opt_w=yes ;;
+                publish)  opt_p=yes ;;
                 '')    break ;;
                 *)     error "Illegal option --$OPTARG" ;;
                 esac ;;
@@ -62,11 +65,16 @@ copy-files () {
     done
 }
 
+publish () {
+    cmd npm publish
+}
+
 if [ "$opt_w" = yes ]; then
     build-watch
 else
     build
     info 'copying built files to root, so npm works'
     copy-files
+    if [ "$opt_p" = yes ]; then publish; fi
 fi
 

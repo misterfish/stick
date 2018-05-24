@@ -7,3 +7,5 @@ lib/__tests__
 scratch
 
 lib/examples/rain-webgl
+
+yarn-error.log

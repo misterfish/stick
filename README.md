@@ -104,23 +104,108 @@ refactoring
 
 #### markers
 
-defineBinaryOperator ('|',  (...args) => pipe         (...args))
-defineBinaryOperator ('<<', (...args) => compose      (...args))
-defineBinaryOperator ('>>', (...args) => composeRight (...args))
+	defineBinaryOperator ('|',  (...args) => pipe         (...args))
+	defineBinaryOperator ('<<', (...args) => compose      (...args))
+	defineBinaryOperator ('>>', (...args) => composeRight (...args))
 
-import {
-  pipe, compose, composeRight,
-  sprintfN, sprintf1,
-} from 'stick'
+	import {
+	  pipe, compose, composeRight,
+	  sprintfN, sprintf1,
+	} from 'stick'
 
-3 | sprintf1 ('4 - 1 is %s') // '4 - 1 is 3'
+	3 | sprintf1 ('4 - 1 is %s') // '4 - 1 is 3'
 
-; [4, 3]
-| sprintfN ('%s - 1 is %s') // same. 'N' is a marker meaning an array is expected.
+	; [4, 3]
+	| sprintfN ('%s - 1 is %s') // same. 'N' is a marker meaning an array is expected.
 
-push
-merge
+#### ok, anaphoric if
 
+	defineBinaryOperator ('|',  (...args) => pipe         (...args))
+	defineBinaryOperator ('<<', (...args) => compose      (...args))
+	defineBinaryOperator ('>>', (...args) => composeRight (...args))
+
+	import {
+	  pipe, compose, composeRight,
+	  map, ok, notOk,
+	  ifOk,
+	} from 'stick'
+
+	const { log, } = console
+
+	const someVar = ...
+	someVar | ok // true if `someVar` is not `null` or `undefined`
+
+	; [0, false, '', null, void 8]
+	| map (ok)    // [true, true, true, false, false]
+
+	; [0, false, '', null, void 8]
+	| map (notOk) // [false, false, false, true, true]
+
+	// --- we see this a lot in JS:
+
+	const someVar = ...
+
+	let answer
+	if (someVar !== undefined && someVar !== null) {
+	  answer = someVar + 1
+	} else {
+	  answer = 'nothing'
+	}
+
+	// --- it can be vastly improved using an 'anaphoric if' and a stick idiom:
+
+	const add1IfYouCan = val => val
+	  | ifOk (
+		// in the 'ok' case, the value is passed to the function.
+		x => x + 1,
+		// in the 'not ok' case, no value is passed.
+		_ => 'nothing',
+	  )
+
+	// --- or a variant:
+
+	import { add, always, } from 'stick'
+
+	const add1 = 1 | add
+	const add1IfYouCan = x => x | ifOk (add1, 'nothing' | always)
+
+	; [0, 10, null, void 8]
+	| map (add1IfYouCan) // [1, 11, 'nothing', 'nothing']
+
+#### point-free
+
+// --- a common pattern is when the argument to a function is passed
+directly into a pipe:
+
+	const add1IfYouCan = x => x | ifOk (add1, 'nothing' | always)
+
+// --- since `x` does not appear anywhere else, we can simply remove it:
+
+	const add1IfYouCan = ifOk (add1, 'nothing' | always)
+
+// --- if the pipe chain consists of more than 1 link:
+
+    const { log, } = console
+    const add1IfYouCan = x => x
+	  | ifOk (add1, 'nothing' | always)
+	  | String // type conversions are easy using type constructors
+	  | dot ('toUpperCase')
+	  | sprintf1 ('The answer is %s') // 'The answer is 1', 'The answer is NOTHING' ...
+	  | tap (log)
+
+// --- ... then we remove the `x => x` and change all the `|` to `>>`
+
+    const { log, } = console
+	const { dot, sprintf1, tap, }
+    const add1IfYouCan =
+	  ifOk (add1, 'nothing' | always)
+	  >> String // type conversions are easy using JS type constructors
+	  >> dot ('toUpperCase')
+	  >> sprintf1 ('The answer is %s') // 'The answer is 1', 'The answer is NOTHING' ...
+	  >> tap (log)
+
+
+#### compositional predicates
 #### compositional decoration
 
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))

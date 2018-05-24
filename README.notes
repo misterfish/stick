@@ -209,6 +209,7 @@ with an example of each
 prepositions
 * a clear separation between mutable and immutable versions of functions
 * anaphoric if
+* prototype & extended object stuff
 * functions for regular expressions
 * readable regular expressions (like perl’s /x)
 * let-expressions

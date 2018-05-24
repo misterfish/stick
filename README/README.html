@@ -71,6 +71,8 @@ proposal is accepted.</p>
 </li>
 </ul>
 <p>If you really want to do bitwise math, see below.</p>
+<p>The overloading is made possible thanks to jussi-kalliokoski&#39;s work on the
+babel-plugin-operator-overload plugin.</p>
 <h3 id="features"><a class="header-link" href="#features"></a>Features</h3>
 <h3 id="synopsis-(overview)."><a class="header-link" href="#synopsis-(overview)."></a>Synopsis (overview).</h3>
 <p>Please see X for a more detailed discussion and many more examples.</p>
@@ -95,6 +97,7 @@ const { log, } = <span class="hljs-built_in">console</span>
 | join (<span class="hljs-string">'/'</span>)
 | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
 | log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span></code></pre><h4 id="٭-the-'stick'-operator"><a class="header-link" href="#٭-the-'stick'-operator"></a>٭ the &#39;stick&#39; operator</h4>
+<p><code>a | b</code> is simply an equivalent way of writing <code>b (a)</code></p>
 <pre class="hljs"><code><span class="hljs-comment">// --- reminder: source files must begin with this header.</span>
 <span class="hljs-comment">// --- from here on out we'll omit it in the examples.</span>
 defineBinaryOperator (<span class="hljs-string">'|'</span>,  (...args) =&gt; pipe         (...args))
@@ -110,7 +113,6 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 
 <span class="hljs-keyword">const</span> <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
 
-<span class="hljs-comment">// --- `a | b` is simply an equivalent way of writing `b (a)`</span>
 <span class="hljs-number">3</span> | <span class="hljs-built_in">double</span> <span class="hljs-comment">// 6</span>
 <span class="hljs-built_in">double</span> (<span class="hljs-number">3</span>) <span class="hljs-comment">// 6</span>
 

@@ -80,6 +80,9 @@ refactoring
 
 If you really want to do bitwise math, see below.
 
+The overloading is made possible thanks to jussi-kalliokoski's work on the
+babel-plugin-operator-overload plugin.
+
 ### Features
 
 ### Synopsis (overview).
@@ -111,6 +114,8 @@ Please see X for a more detailed discussion and many more examples.
 
 #### ٭ the 'stick' operator
 
+`a | b` is simply an equivalent way of writing `b (a)`
+
     // --- reminder: source files must begin with this header.
 	// --- from here on out we'll omit it in the examples.
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
@@ -126,7 +131,6 @@ Please see X for a more detailed discussion and many more examples.
 
 	const double = x => x * 2
 
-    // --- `a | b` is simply an equivalent way of writing `b (a)`
 	3 | double // 6
 	double (3) // 6
 

@@ -65,11 +65,14 @@ node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span cl
 
     lodash flow near the top
     people who already <span class="hljs-keyword">use</span> lodash flow
-    <span class="hljs-keyword">static</span> tools</code></pre><h3 id="synopsis"><a class="header-link" href="#synopsis"></a>Synopsis</h3>
+    <span class="hljs-keyword">static</span> tools</code></pre><h3 id="synopsis:-major-features."><a class="header-link" href="#synopsis:-major-features."></a>Synopsis: major features.</h3>
 <p>(See x for a more complete overview)</p>
-<pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
+<h4 id="basic-example"><a class="header-link" href="#basic-example"></a>basic example</h4>
+<pre class="hljs"><code><span class="hljs-regexp">//</span> --- source files must begin with <span class="hljs-keyword">this</span> header.
+defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
 defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
 defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeRight (...args))
+<span class="hljs-regexp">//</span> --- /header
 
 <span class="hljs-keyword">import</span> {
     pipe, compose, composeRight,
@@ -79,14 +82,124 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="
 const { log, } = <span class="hljs-built_in">console</span>
 
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
-  | map (x =&gt; x + <span class="hljs-number">1</span>)
-  | join (<span class="hljs-string">'/'</span>)
-  | log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'2/3/4'</span></code></pre><h4 id="2"><a class="header-link" href="#2"></a>2</h4>
+| map (x =&gt; x + <span class="hljs-number">1</span>)
+| join (<span class="hljs-string">'/'</span>)
+| sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
+| log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span></code></pre><h4 id="markers"><a class="header-link" href="#markers"></a>markers</h4>
+<p>defineBinaryOperator (&#39;|&#39;,  (...args) =&gt; pipe         (...args))
+defineBinaryOperator (&#39;&lt;&lt;&#39;, (...args) =&gt; compose      (...args))
+defineBinaryOperator (&#39;&gt;&gt;&#39;, (...args) =&gt; composeRight (...args))</p>
+<p>import {
+  pipe, compose, composeRight,
+  sprintfN, sprintf1,
+} from &#39;stick&#39;</p>
+<p>3 | sprintf1 (&#39;4 - 1 is %s&#39;) // &#39;4 - 1 is 3&#39;</p>
+<p>; [4, 3]
+| sprintfN (&#39;%s - 1 is %s&#39;) // same. &#39;N&#39; is a marker meaning an array is expected.</p>
 <p>push
 merge</p>
+<h4 id="compositional-decoration"><a class="header-link" href="#compositional-decoration"></a>compositional decoration</h4>
+<pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
+defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
+defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeRight (...args))
+
+<span class="hljs-keyword">import</span> {
+  pipe, compose, composeRight,
+  map,
+  addIndex, addCollection,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
+
+; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
+| map (<span class="hljs-function"><span class="hljs-params">(x, idx)</span> =&gt;</span> idx) <span class="hljs-regexp">//</span> [<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>]
+
+const mapWithIndex = map | addIndex
+; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
+| mapWithIndex (<span class="hljs-function"><span class="hljs-params">(x, idx)</span> =&gt;</span> idx) <span class="hljs-regexp">//</span> [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>]
+
+const mapWithCollection = map | addCollection
+; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
+| mapWithCollection (<span class="hljs-function"><span class="hljs-params">(x, coll)</span> =&gt;</span> coll) <span class="hljs-regexp">//</span> [[<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]]
+
+; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
+  | (map | addIndex | addCollection) (<span class="hljs-function"><span class="hljs-params">(x, idx, coll)</span> =&gt;</span> ...)
+
+; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
+  | (map | addCollection | addIndex) (<span class="hljs-function"><span class="hljs-params">(x, coll, idx)</span> =&gt;</span> ...)</code></pre><h4 id="semantics-and-argument-order-are-often-derivable-by-thinking-in-english"><a class="header-link" href="#semantics-and-argument-order-are-often-derivable-by-thinking-in-english"></a>semantics and argument order are often derivable by thinking in English</h4>
+<pre class="hljs"><code>defineBinaryOperator ('|',  (...args) =&gt; pipe         (...args))
+defineBinaryOperator ('&lt;&lt;', (...args) =&gt; compose      (...args))
+defineBinaryOperator ('&gt;&gt;', (...args) =&gt; composeRight (...args))
+
+import {
+  pipe, compose, composeRight,
+  sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
+  appendTo, append, bindPropTo, bindProp, bindTo, bind, invoke,
+} from 'stick'
+<span class="hljs-built_in">
+const </span>obj1 = { thing: 'sandwich', want: 'no thanks', }<span class="hljs-built_in">
+const </span>obj2 = { want: 'yes please', }
+
+// --- obj1 is the object of the preposition 'to'. Read as: 'merge obj2 to obj1'
+obj2 | mergeTo (obj1)
+// --- No preposition -&gt; obj1 is the object of the verb 'merge'.
+// --- Read as: 'merge obj2 to obj1'
+obj1 | merge (obj2)
+
+4 | appendTo ([1, 2, 3])
+; ([1, 2, 3]) | append (4)
+
+0 | prependTo ([1, 2, 3])
+; ([1, 2, 3]) | prepend (0)
+<span class="hljs-built_in">
+const </span>dog = {
+  name: 'Caesar',
+  speak () {<span class="hljs-built_in"> return </span>'My name is ' + this.name },
+}
+<span class="hljs-built_in">
+const </span>cat = {
+  name: 'Bo',
+  speak () {<span class="hljs-built_in"> throw </span>new Error },
+}
+<span class="hljs-built_in">
+const </span>f = 'speak' | bindPropTo (dog)
+f () // 'My name is Caesar'
+
+'speak' | bindPropTo (dog)   |<span class="hljs-built_in"> invoke </span>// same
+dog     | bindProp ('speak') |<span class="hljs-built_in"> invoke </span>// same
+
+dog.speak | bindTo (dog) |<span class="hljs-built_in"> invoke </span>// smae
+
+// cat.speak () // Error
+dog.speak | bindTo (cat) |<span class="hljs-built_in"> invoke </span>// 'My name is Bo'
+cat | bind (dog.speak)   |<span class="hljs-built_in"> invoke </span>// 'My name is Bo'</code></pre><h4 id="side-effects-&-chaining,-mutable-vs-immutable"><a class="header-link" href="#side-effects-&-chaining,-mutable-vs-immutable"></a>side effects &amp; chaining, mutable vs immutable</h4>
+<p>defineBinaryOperator (&#39;|&#39;,  (...args) =&gt; pipe         (...args))
+defineBinaryOperator (&#39;&lt;&lt;&#39;, (...args) =&gt; compose      (...args))
+defineBinaryOperator (&#39;&gt;&gt;&#39;, (...args) =&gt; composeRight (...args))</p>
+<p>import {
+  pipe, compose, composeRight,
+  map, side1, appendM, append, prependM, prepend,
+} from &#39;stick&#39;</p>
+<p>// --- chaining with the . will often not do what you want.</p>
+<p>; [2, 3, 4]
+  .push (5)
+  .unshift (1) // error, return value of previous line was 5</p>
+<p>// --- this will:</p>
+<p>const push    = &#39;push&#39; | side1
+const unshift = &#39;unshift&#39; | side1</p>
+<p>; [2, 3, 4]
+| push (5)
+| unshift (1) // [1, 2, 3, 4, 5]</p>
+<p>// --- using stick functions for mutable data:</p>
+<p>; [2, 3, 4]
+| appendM (5)
+| prependM (1)</p>
+<p>// --- using stick functions for immutable data:</p>
+<p>; [2, 3, 4]
+| append (5)  // new array [2, 3, 4, 5]
+| prepend (1) // new array [1, 2, 3, 4, 5]</p>
 <p>####
 dog</p>
-<h4 id="4---this-example-is-intentionally-complex"><a class="header-link" href="#4---this-example-is-intentionally-complex"></a>4 - this example is intentionally complex</h4>
+<h4 id="this-example-is-intentionally-complex"><a class="header-link" href="#this-example-is-intentionally-complex"></a>this example is intentionally complex</h4>
+<p><img src="https://placehold.it/15/f03c15/000000?text=hello" alt="#f03c15"> <code>#f03c15</code></p>
 <pre class="hljs"><code>yarn <span class="hljs-built_in">add</span> ramda chalk
 
 ---
@@ -133,9 +246,8 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-keyword">const</span> snd = prop (<span class="hljs-number">1</span>)
 <span class="hljs-keyword">const</span> fst = prop (<span class="hljs-number">0</span>)
 
-<span class="hljs-number">10</span> | rangeTo (<span class="hljs-number">20</span>) <span class="hljs-comment">// [10, 11, ... 19]</span>
+<span class="hljs-number">10</span> | rangeTo (<span class="hljs-number">20</span>)             <span class="hljs-comment">// [10, 11, ... 19]</span>
    | <span class="hljs-built_in">map</span> (inRange ([<span class="hljs-number">13</span>, <span class="hljs-number">17</span>])) <span class="hljs-comment">// maps to tuples of [int, str]</span>
-   | tap (<span class="hljs-built_in">map</span> (snd &gt;&gt; <span class="hljs-built_in">log</span>)) <span class="hljs-comment">// logs the str</span>
-   ![#f03c15](https:<span class="hljs-comment">//placehold.it/15/f03c15/000000?text=hello) `#f03c15`</span>
-   | <span class="hljs-built_in">map</span> (fst) <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre></body>
+   | tap (<span class="hljs-built_in">map</span> (snd &gt;&gt; <span class="hljs-built_in">log</span>))   <span class="hljs-comment">// logs the str</span>
+   | <span class="hljs-built_in">map</span> (fst)                <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre></body>
 </html>

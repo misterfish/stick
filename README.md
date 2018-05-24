@@ -143,8 +143,6 @@ refactoring
 
 	// --- we see this a lot in JS:
 
-	const someVar = ...
-
 	let answer
 	if (someVar !== undefined && someVar !== null) {
 	  answer = someVar + 1
@@ -166,16 +164,17 @@ refactoring
 
 	import { add, always, } from 'stick'
 
-	const add1 = 1 | add
+	const add1 = 1 | add // or add (1)
 	const add1IfYouCan = x => x | ifOk (add1, 'nothing' | always)
+
+    // --- usage:
 
 	; [0, 10, null, void 8]
 	| map (add1IfYouCan) // [1, 11, 'nothing', 'nothing']
 
 #### point-free
 
-// --- a common pattern is when the argument to a function is passed
-directly into a pipe:
+// --- a common pattern is when the argument to a function is passed directly into a pipe:
 
 	const add1IfYouCan = x => x | ifOk (add1, 'nothing' | always)
 
@@ -188,10 +187,10 @@ directly into a pipe:
     const { log, } = console
     const add1IfYouCan = x => x
 	  | ifOk (add1, 'nothing' | always)
-	  | String // type conversions are easy using type constructors
+	  | String						  // type conversions are easy using type constructors by the way
 	  | dot ('toUpperCase')
-	  | sprintf1 ('The answer is %s') // 'The answer is 1', 'The answer is NOTHING' ...
-	  | tap (log)
+	  | sprintf1 ('The answer is %s')
+	  | tap (log)                     // outputs 'The answer is 1' or 'The answer is NOTHING' or ...
 
 // --- ... then we remove the `x => x` and change all the `|` to `>>`
 
@@ -199,13 +198,65 @@ directly into a pipe:
 	const { dot, sprintf1, tap, }
     const add1IfYouCan =
 	  ifOk (add1, 'nothing' | always)
-	  >> String // type conversions are easy using JS type constructors
+	  >> String
 	  >> dot ('toUpperCase')
-	  >> sprintf1 ('The answer is %s') // 'The answer is 1', 'The answer is NOTHING' ...
+	  >> sprintf1 ('The answer is %s')
 	  >> tap (log)
 
-
 #### compositional predicates
+
+##### (from here on out we omit the header, but do not forget it ...)
+
+  // --- `ifOk` is a convenience for `ifPredicate (ok)` or `ok | ifPredicate`
+  // --- there is also a 'when' form, which has no 'else branch'.
+	  
+	  import { add, whenOk, } from 'stick'
+	  const add1 = 1 | add // or add (1)
+	  3    | whenOk (add1) // 4
+	  null | whenOk (add1) // undefined
+
+  // --- the selection of `if` and `when` functions we provide is
+  intentionally skimpy, to encourage you to write your own.
+
+	const { floor, } = Math
+	const isInteger = x => x === floor (x)
+
+	// or how about
+	// const isInteger = x => x | floor | eq (x)
+
+	// or if you're getting bored:
+	// const arrowSnd = f => timesV (2) >> asterisk ([id, f])
+	// const isInteger = arrowSnd (floor) >> passToN (eq)
+
+	// --- now compose it into an anaphoric if:
+
+	const ifInteger = isInteger | ifPredicate
+
+	const add1 = add (1)
+
+	; [3.5, 4, 4.2]
+	  | map (ifInteger (add1, 'nothing' | always))
+	  // ['nothing', 5, 'nothing']
+
+  // --- more complicated predicates
+
+  // --- @todo remove
+  const both = (f, g) => x => f (x) && g (x) ? true : false
+
+  const isOdd = x => x % 2
+
+  const isOddInteger = both (isInteger, isOdd)
+  const ifOddInteger = isOddInteger | ifPredicate
+
+  ; [3.5, 4, 5, 5.5]
+  | map (ifOddInteger (
+	add1,
+	'nothing' | always,
+  ))
+  | log
+
+  ; [3.5, 4, 5, 5.5] | map (isOddInteger) | log
+
 #### compositional decoration
 
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))

@@ -122,8 +122,6 @@ someVar | ok <span class="hljs-regexp">//</span> <span class="hljs-literal">true
 
 <span class="hljs-regexp">//</span> --- we see <span class="hljs-keyword">this</span> a lot <span class="hljs-keyword">in</span> JS:
 
-const someVar = ...
-
 let answer
 <span class="hljs-keyword">if</span> (someVar !== <span class="hljs-literal">undefined</span> &amp;&amp; someVar !== <span class="hljs-literal">null</span>) {
   answer = someVar + <span class="hljs-number">1</span>
@@ -145,30 +143,70 @@ const add1IfYouCan = val =&gt; val
 
 <span class="hljs-keyword">import</span> { add, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
 
-const add1 = <span class="hljs-number">1</span> | add
+const add1 = <span class="hljs-number">1</span> | add <span class="hljs-regexp">//</span> <span class="hljs-keyword">or</span> add (<span class="hljs-number">1</span>)
 const add1IfYouCan = x =&gt; x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
+
+<span class="hljs-regexp">//</span> --- usage:
 
 ; [<span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-literal">null</span>, void <span class="hljs-number">8</span>]
 | map (add1IfYouCan) <span class="hljs-regexp">//</span> [<span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span>]</code></pre><h4 id="point-free"><a class="header-link" href="#point-free"></a>point-free</h4>
-<p>// --- a common pattern is when the argument to a function is passed
-directly into a pipe:</p>
+<p>// --- a common pattern is when the argument to a function is passed directly into a pipe:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>// --- since <code>x</code> does not appear anywhere else, we can simply remove it:</p>
 <pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)</code></pre><p>// --- if the pipe chain consists of more than 1 link:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> { log, } = <span class="hljs-built_in">console</span>
 <span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x
   | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
-  | <span class="hljs-built_in">String</span> <span class="hljs-comment">// type conversions are easy using type constructors</span>
+  | <span class="hljs-built_in">String</span>                          <span class="hljs-comment">// type conversions are easy using type constructors by the way</span>
   | dot (<span class="hljs-string">'toUpperCase'</span>)
-  | sprintf1 (<span class="hljs-string">'The answer is %s'</span>) <span class="hljs-comment">// 'The answer is 1', 'The answer is NOTHING' ...</span>
-  | tap (log)</code></pre><p>// --- ... then we remove the <code>x =&gt; x</code> and change all the <code>|</code> to <code>&gt;&gt;</code></p>
+  | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
+  | tap (log)                     <span class="hljs-comment">// outputs 'The answer is 1' or 'The answer is NOTHING' or ...</span></code></pre><p>// --- ... then we remove the <code>x =&gt; x</code> and change all the <code>|</code> to <code>&gt;&gt;</code></p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> { <span class="hljs-built_in">log</span>, } = console
 <span class="hljs-keyword">const</span> { dot, sprintf1, tap, }
 <span class="hljs-keyword">const</span> add1IfYouCan =
   ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
-  &gt;&gt; <span class="hljs-keyword">String</span> <span class="hljs-comment">// type conversions are easy using JS type constructors</span>
+  &gt;&gt; <span class="hljs-built_in">String</span>
   &gt;&gt; dot (<span class="hljs-string">'toUpperCase'</span>)
-  &gt;&gt; sprintf1 (<span class="hljs-string">'The answer is %s'</span>) <span class="hljs-comment">// 'The answer is 1', 'The answer is NOTHING' ...</span>
+  &gt;&gt; sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
   &gt;&gt; tap (<span class="hljs-built_in">log</span>)</code></pre><h4 id="compositional-predicates"><a class="header-link" href="#compositional-predicates"></a>compositional predicates</h4>
+<h5 id="(from-here-on-out-we-omit-the-header,-but-do-not-forget-it-...)"><a class="header-link" href="#(from-here-on-out-we-omit-the-header,-but-do-not-forget-it-...)"></a>(from here on out we omit the header, but do not forget it ...)</h5>
+<p>  // --- <code>ifOk</code> is a convenience for <code>ifPredicate (ok)</code> or <code>ok | ifPredicate</code>
+  // --- there is also a &#39;when&#39; form, which has no &#39;else branch&#39;.</p>
+<pre class="hljs"><code>  import { <span class="hljs-keyword">add</span>, whenOk, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
+  <span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span> <span class="hljs-comment">// or add (1)</span>
+  <span class="hljs-number">3</span>    | whenOk (add1) <span class="hljs-comment">// 4</span>
+  <span class="hljs-literal">null</span> | whenOk (add1) <span class="hljs-comment">// undefined</span></code></pre><p>  // --- the selection of <code>if</code> and <code>when</code> functions we provide is
+  intentionally skimpy, to encourage you to write your own.</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> { <span class="hljs-built_in">floor</span>, } = Math
+<span class="hljs-keyword">const</span> isInteger = x =&gt; x === <span class="hljs-built_in">floor</span> (x)
+
+<span class="hljs-comment">// or how about</span>
+<span class="hljs-comment">// const isInteger = x =&gt; x | floor | eq (x)</span>
+
+<span class="hljs-comment">// or if you're getting bored:</span>
+<span class="hljs-comment">// const arrowSnd = f =&gt; timesV (2) &gt;&gt; asterisk ([id, f])</span>
+<span class="hljs-comment">// const isInteger = arrowSnd (floor) &gt;&gt; passToN (eq)</span>
+
+<span class="hljs-comment">// --- now compose it into an anaphoric if:</span>
+
+<span class="hljs-keyword">const</span> ifInteger = isInteger | ifPredicate
+
+<span class="hljs-keyword">const</span> add1 = <span class="hljs-built_in">add</span> (<span class="hljs-number">1</span>)
+
+; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4.2</span>]
+  | <span class="hljs-built_in">map</span> (ifInteger (add1, <span class="hljs-string">'nothing'</span> | always))
+  <span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre><p>  // --- more complicated predicates</p>
+<p>  // --- @todo remove
+  const both = (f, g) =&gt; x =&gt; f (x) &amp;&amp; g (x) ? true : false</p>
+<p>  const isOdd = x =&gt; x % 2</p>
+<p>  const isOddInteger = both (isInteger, isOdd)
+  const ifOddInteger = isOddInteger | ifPredicate</p>
+<p>  ; [3.5, 4, 5, 5.5]
+  | map (ifOddInteger (
+    add1,
+    &#39;nothing&#39; | always,
+  ))
+  | log</p>
+<p>  ; [3.5, 4, 5, 5.5] | map (isOddInteger) | log</p>
 <h4 id="compositional-decoration"><a class="header-link" href="#compositional-decoration"></a>compositional decoration</h4>
 <pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
 defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))

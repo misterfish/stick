@@ -1,0 +1,601 @@
+now, app returns itself after all method calls, because it's designed that way. but what if it weren't? or if you weren't sure if it were? or if one method out of 10 didn't behave this way?
+
+or, if you're writing your own interface: what if you actually want your methods to return something? that's a pretty useful property of methods after all.
+
+
+
+--
+
+free yourself from the dot.
+
+--
+
+why don't you just use purescript / elm / livescript / ...
+
+large organisational hurdle.
+
+--
+
+
+i firmly belive lego something something
+
+
+nasty bug: point-free style with e.g. empty array for reducer
+
+
+min -> minWith
+min (2, 3, 1) doesn't do what you think!
+3 | minWith (2)
+2 | minWith (3)
+
+
+
+mergeFromM
+
+it will require learning some new vocabulary
+
+It is intended to fit comfortably into the ramda ecosystem, or similarly designed functional libraries. It also makes heavy use of ramda internally. In some cases we have changed the behavior of ramda's functions to make the calling style or the semantics a bit more consistent with the stick way, though he have tried to avoid doing this.
+
+
+
+N is only if there are non-N versions (e.g. sprintf1, dot1)
+O generally implies N.
+
+It arose partly out of my fascination with the LiveScript language, which I still believe is in many ways a major improvement to JS, and my frustration at how I could not convince anyone to try it. Hopefully something with a more native feel will work better. You still need an open mind, of course, for the new idioms and conventions and a fairly radical transformation of how you write code once you start using it. If you are in a team of people who are already comfortable with ramda, (or lodash fp), I hope the step is a small one. In particular, if people are writing out compositions using compose (x, y) or using lodash flow (flow (f1, f2, f3) (x)), the step should almost make itself. On the other hand, if your team is skeptical, not already enthusiastic about FP, or suffering from JS fatigue in general, the learning curve involved here might not be the best idea.
+
+
+Example with throw becoming an expression.
+
+
+How to use factory.
+Yes you want create and init.
+create is to create. you can put instance vars in if you want.
+you almost always want init: like a constructor. some kind of logic, checking, etc.
+
+
+example for checking args, and also composing checkers. would be good to show step-by-step: first with ugly ifs in the func, then ifs factored away, then condo, then whenOk (exception) & whenOk (raise).
+
+const isInteger = x => x === Math.floor (x)
+const isNonNegative = 0 | gte
+const isNonNegativeInt = both (isInteger, isNonNegative)
+const isNotNonNegativeInt = isNonNegativeInt >> not
+
+const checkInit = ({ lower, upper, value }) => condo ([
+  (_ => upper <= lower)
+    | guardA ('upper must be greater than lower'),
+  (_ => isNotNonNegativeInt (upper) || isNotNonNegativeInt (lower))
+    | guardA ('upper and lower must be non-negative integers'),
+  (_ => value < lower || value >= upper)
+    | guardA ('value must be in the range [lower, upper)'),
+  otherwise | guardA (null),
+]) | whenOk (exception)
+
+const proto = {
+  init ({ lower, upper, value, }) {
+    checkInit ({ lower, upper, value}) | whenOk (raise)
+
+
+Hopefully I can also convince you that you don't need the dot operator quite as much as you think.
+
+
+this only makes a difference when you are looping a *lot* -- in an animation or a drawing, for example.
+
+to help you write at the *right level* of abstraction.
+
+
+consolidating statements into 1 expression si a good thing, because expressions are like legos.
+you can read what it does in one glance.
+you can refactor.
+
+aside: style (early)
+ use spaces! it will look terrible in the beginning, but in no time you will never go back.
+
+
+
+the famous pattern
+a => a | 
+
+prototypical!
+
+it is the belief of the author that 'new' and the concept of 'classes' in the sense of classical inheritance have (almost) no place in JS.
+
+The idea behind all of this is to radically change & improve the way you program. If it doesn't, we have all failed.
+
+exceptions are a nice example for all of this (exception >> raise, etc.)
+
+
+export const mergeToWithM = curry ((collision, tgt, src) => {
+
+with applies to collision, to applies to tgt.
+
+join & split are exceptions to the naming rule because they are trivial wrappers to the underlying JS functions of the same name, and it is expected that this usage is very familiar.
+
+repeat, times: switched order
+
+
+this part is optional, but recommended, so people know which properties can be expected.
+set them to *undefined* to start with, not false, 0 or null.
+it's optional of course, but recommended.
+(you're not putting your properties in your prototype, right?)
+
+
+The basic idea is that you redefine the bitwise-or ('stick') operator to do something much more useful than binary math, which -- fight me -- you almost never use. While you're at it you also redefine the << and >> operators. (See below for how you can still do bitwise math)
+
+below: You can still access the old functionality using bitwiseOr, bitwiseLeftShift, and bitwiseRightShift. Or, if speed is important, do your bitwise math in a source file in which you omit the `defineBinaryOperator` headers, and it will work like it always did.
+
+
+
+// --- exceptions as expressions.
+// --- extended regex.
+
+
+transformation rules
+
+export const isType = curry ((t, x) => x
+    | provideTo ({}.toString)
+    | dot2 ('slice') (8, -1)
+    | equals (t)
+)
+
+export const getType = provideTo ({}.toString)
+    >> dot2 ('slice') (8, -1) (
+)
+
+to cut a section out of the pipe, make it a compose.
+
+
+0 | rangeTo (10), nice
+// --- the by matches with the 2 and the to with the 10.
+0 | rangeToBy (2) (10)
+
+
+which doesn't pretend that the world is immutable, and thus provides both mutable and immutable versions of many functions.
+
+nearly anything which is immutable results in flattening the prototype chain. when doing functional JS you are most often dealing with shallow objects, but you should be aware of this for the times they are not shallow.
+
+
+if you forget to return this from init. use side anyway.
+
+a pattern we see a lot is:
+const myReduce3 = curry ((f, acc, xs) => xs | ifEmpty (
+    _ => acc,
+    _ => laatStar (
+        _ => head (xs),
+        _ => tail (xs),
+        (h, t) => myReduce3 (f, f (acc, h), t),
+    ),
+))
+
+
+what's wrong with ramda / lodash / etc.? nothing, they're great and you can keep using them, or mix and match functions as you please.
+but we're faster and our names are better.
+
+isArrayOrObject
+
+things which I learned over time using ramda.
+like the flattening prototypes.
+
+
+
+
+A note on style. We’re not starting holy wars (Hi Douglas), but we don’t use 
+semicolons. You can do as you wish, but we find JS far more enjoyable to 
+write without them. Just be aware that we use them at the beginning of lines 
+which begin with braces, brackets, or parentheses.
+
+    ; [3, 4] | map (double)
+
+And we put a space before parentheses. This may look strange at first, but 
+give it a shot. In particular, you might start to find that sequences of 
+arguments to curried functions look much better with the spaces:
+
+    // foo (3)(4)(5)
+    foo (3) (4) (5)
+    someVal | ifOk (double) (‘error’ | always)
+
+This is intended to become a part of the functional JS ecosystem, alongside 
+ramda. Examples are also provided of immutable data, lazy lists, monads, and 
+algebraic data types by integrating with libraries like Immutable, Lazy, 
+bilby, and daggy, as well as a working example of frontend code 
+(redux/reselect/saga), backend code (express), and a simple command-line 
+download manager.
+
+How do we complement Ramda?
+
+We provide 3 new operators and about 60 functions which allow:
+
+with an example of each
+* deducing the arguments from the function name, based on e.g. english 
+prepositions
+* a clear separation between mutable and immutable versions of functions
+* anaphoric if
+* functions for regular expressions
+* readable regular expressions (like perl’s /x)
+* let-expressions
+* conditions / guards / pattern-matching (daggy)
+* composable predicates, branching
+* factory for prototypical inheritance
+* [is there a name for asterisk etc.?]
+
+Using the idiom of a pipe, and sixty or so functions, we 
+
+Well let's get the easy part out of the way first. We have cleverly saved
+your bitwise operations in the appropriately named functions X, Y, and Z.
+
+x on both sides
+
+concat/append
+concat is for when both arguments are arrays or both are strings
+append/prepend are for adding elements to an array.
+
+One of the questions we will encounter over and over again is, when we see a 
+variable on both the left and right sides of the function (x in this case), 
+can we somehow abstract it away?
+
+    const foo = x => x + 5
+
+Ramda provides a function call `add`, so let’s try it out:
+
+    const foo = x => add (x, 5)
+
+That didn’t help much, but add is commutative:
+
+    const foo = x => add (5, x)
+
+Wonderful, now the x is buried inside of parentheses so how does this help?
+
+First a bit of theory. Almost every function in Ramda, and in Stick, is 
+‘curried’. What that means is that if you call the function which fewer 
+arguments than that it requires, you will get back a new function, which can 
+then be called with the remaining arguments.
+
+    add (2, 3) // 5
+    const adder = add (2) // a new function which adds 2 to its input
+    adder (3) // 5
+    adder (10) // 12
+
+`add` takes 2 arguments. It is said to have an ‘arity’ of 2. The first line 
+is of course the familiar usage of a function. In the second line, add is 
+being called with only 1 argument, though it has an arity of 2. The result 
+is therefore a new function, which wants 1 more argument (or ‘has an arity 
+of 1’).
+
+Let’s give the intermediate function a better name:
+
+    add (2, 3) // 5
+    const addTwo = add (2)
+    addTwo (3) // 5
+    addTwo (10) // 12
+
+Or how about a function which multiplies its input by 2:
+
+    multiply (4, 5) // 20, normal usage
+    const double = multiply (2) // a new function which multiplies its input by 2
+    double (3) // 6
+    double (10) // 20
+
+A property of curried functions is that you can group the parentheses any 
+way you like. Imagine a function `foo` of arity 4. The following are 
+equivalent:
+
+    foo (10, 11, 12, 13)
+    foo (10) (11, 12, 13)
+    foo (10, 11) (12, 13)
+    foo (10, 11, 12) (13)
+
+Now back to where we left off:
+
+    const foo = x => add (5, x)
+
+Using our new knowledge we regroup the parentheses:
+
+    const foo = x => add (5) (x)
+
+This is a pattern we will see over and over again and which will become 
+familiar shortly. The symbol on the left (x) appears in the last position on 
+the right, and than thus simply be omitted on both sides:
+
+    const foo = add (5)
+
+In fact we’ve just derived the same sort of function we looked at in the 
+diversion. `foo` adds 5 to any input it receives.
+
+This new form is written in what’s called ‘point-free’ style. ‘point’ should 
+not be confused with the (.) symbol or a decimal point – it has nothing to 
+do with those. Point-free style means essentially that you don’t mention the 
+data. In this case, we abstracted away the x on both sides.
+
+Point-free style is one technique which opens up your code to abstraction 
+and composability. By not ‘mentioning’ the data you will find that you can 
+mix & compose point-free functions like legos.
+
+It is also possible to go too far with point-free style. As with any form of 
+abstraction, it can make things pretty confusing in larger projects. It’s up 
+to you to strike a good balance!
+
+The Stick
+
+What’s with the stick anyway? We introduce a new symbol |, such that
+
+    a | b
+
+is exactly equivalent to
+
+    b (a)
+
+That’s it. From this deceptively simple beginning a whole range of idioms & 
+abstractions present themselves.
+
+The stick can also be thought of as a ‘pipe’. It is equivalent to the pipe 
+operator (|>) in F# and LiveScript, functionally equivalent to ‘flow’ in 
+lodash/FP, and very loosely related, if it helps to form an intuition about 
+it, to the UNIX pipe operator.
+
+But what about …
+
+Yes indeed, the | symbol already has a meaning in JS - the bitwise-or 
+operator. The only thing is, you can probably count on 3 fingers (that’s 1 | 
+2 for the bitwise-savvy) the number of times you’ve needed it in the past, 
+say, year. And it’s taking up a perfectly good symbol which we can put to 
+better use. Before you worry too much, we’ve cleverly stashed away the 
+bitwise or function in `bitwiseOr`.
+
+The most basic idiom using | is:
+
+    import { map, join, multiply, } from 'ramda'
+    const double = multiply (2)
+
+    ; [1, 2, 3]
+    | map (double)
+    | join ('-') // '2-4-6'
+
+I’m OK.
+
+Anaphoric if.
+
+Is / If
+
+sprintfN
+
+Mut
+
+dot
+ This is known as invoker in Ramda. It’s a bit less catchy, and requires
+ that the arity be given as an argument. dotX = invoker.
+
+xmatch
+
+condO
+laatsO
+
+condL
+laatsL
+tryCatchL
+
+As an example, let’s write the English phrase “2 to the 4th”, i.e., 2 ^ 4 =
+16, like this:
+
+2 | toThe (4)
+
+How to do this? Well, `toThe` is a function we need to write.
+
+    const toThe = todo
+
+It takes a first argument (4 in this example).
+
+    const toThe = a => todo
+
+And a second argument, the data-last argument (the 2 to the left of the
+stick in this example).
+
+    const toThe = (a, b) => todo
+
+And it takes them one at a time, via the now familiar mechanism of currying:
+
+    const toThe = curry ((a, b) => todo)
+
+And now the function body using JS’s Math library:
+
+    const toThe = curry ((a, b) => Math.pow (a, b)
+
+You could also have written it like this:
+
+    const toThe = a => b => Math.pow (a, b)
+
+except that the version using `curry` is generally preferred, for the
+reasons given above.
+
+call, istype
+
+What’s your type?
+
+There’s a lot of confusion about types in JS – rightly so. Stick uses some
+simple logic to deal with primitive types. The case of distinguishing an 
+array from an object is presented below both to illustrate the few functions 
+which are provided to help with this, and in order to demonstrate
+some other concepts as well.
+
+What about complicated taxonomies? You know the Dog which extends a Mammal 
+which extends an Animal and so on. We feel, along with many JS developers, 
+that complicated type hierarchies and extensive run-time checking of types 
+is generally not something you need or should be doing. There are always 
+exceptions, of course, and there are many ways to do it – but Stick is not 
+your friend here.
+
+So how do you distinguish an array from an object? Say we have a variable 
+`mystery` and we need to know which it is.
+
+You can not use JS’s native `typeof` operator, which returns ‘object’ in 
+both cases. An array is an object after all, so it’s technically not lying.
+
+Answer: use `getType`, which will print ‘Array’ or ‘Object’.
+
+    ; [] | getType // ‘Array’
+    ; {} | getType // ‘Object’
+
+It works like this.
+
+Try these in the REPL, some of which may be sort of familiar:
+
+    ({}).toString.call ([]) // ‘[object Array]’
+    ({}).toString.call (3) // ‘[object Number]’
+    ({}).toString.call ('blue') // ‘[object String]’
+    ({}).toString.call ({}) // ‘[object Object]‘
+
+(The parens around {} are necessary in the Node REPL).
+
+So this weird magic produces the string ‘[object XXX]’ where XXX is exactly 
+what we are after. This trick works consistently for many kinds of objects 
+and values. We combine this with a ‘slice’ call, to read from index 8 up 
+until one before the end:
+
+    ({}).toString.call ([]).slice (8, -1) // ‘Array’
+    ({}).toString.call (3).slice (8, -1) // ‘Number’
+    ({}).toString.call ('blue').slice (8, -1) // ‘String’
+    ({}).toString.call ({}).slice (8, -1) // ‘Object‘
+
+So one way to write `getType (x)` is:
+
+const getType = x => ({}).toString.call (x).slice (8, -1)
+
+We’ll see in a minute how we can rewrite this using Stick. Note particularly 
+that x appears on the left and right hand sides, but it’s not immediately 
+clear how to factor it out, since the one on the right is pretty deeply 
+embedded in the expression. We’ll come back to this in a moment.
+
+First an explanation of what is going on here.
+
+Now try these:
+
+    ({}).toString () // ‘[object Object]‘
+    [].toString () // ‘’
+    ''.toString () // ‘’
+
+In the last three example we call the `toString` method directly, but only 
+the first of these is useful. The second and third can not disambiguate an 
+array from a string, for example.
+
+But what does it mean?
+
+All objects (arrays are objects too) have a prototype.
+
+    const a = [3, 4]
+
+Then `a`’s prototype is Array.prototype, which is an object.
+
+And Array.prototype has a prototype, which is Object.prototype, which is an 
+object.
+
+You could see the inheritance tree like this:
+
+Object.prototype (<– inherits from –) Array.prototype (<- inherits from –) [3, 4]
+
+And, all these intermediate objects have a method called ‘toString’. The 
+crux of the trick is this: the ‘toString’ provided by Array.prototype, which 
+is not useful for us, is overriding the version provided by 
+Object.prototype, which is the version we want.
+
+When you call
+
+    [].toString ()
+
+or
+    [3, 4].toString ()
+
+You are calling the .toString () method of Array.prototype, because it is 
+the closest in the chain.
+
+Is it possible to skip it, and call the .toString () of Object.prototype 
+instead?
+
+Of course we can.
+
+(If words like ‘super’ or ‘superclass’ are popping into your head, please 
+take a walk and come back when they’ve disappeared again)
+
+The way we do it in JS is by splicing the toString method onto our object, 
+then calling it with dot notation. Watch:
+
+    const a = [3, 4]
+    const desiredImplementation = Object.prototype.toString
+    const unwantedImplementation = a.toString // not needed, illustration only.
+    a.toString = desiredImplementation // clobber the unwanted one.
+    a.toString () // ‘[object Array]’
+
+This is (almost) exactly what is happening when we use the preferred form: 
+
+    Object.prototype.toString.call ([3, 4]) // 
+
+And by the way, {} can generally be used instead of Object.prototype (though 
+it’s slighly slower because it allocates a new Object, for the purists).
+
+    {}.toString.call ([3, 4]) // 
+
+This is *almost* the same as the long form we wrote out above, but is even 
+better, because it doesn’t clobber the other `toString`. It’s like it 
+temporarily replaces it just long enough for you to make the call, then 
+restores the other one.
+
+Now we can explain the `callOn` and `callUnder` functions which Stick 
+provides.
+
+The object of the preposition ‘on’ is the value in parentheses in the call 
+above, or equivalently, the value to the left of the dot in line 5 above: it 
+is the ‘substrate’ on which a function is to be spliced and then invoked 
+using dot-notation.
+
+So the above could be written:
+
+    ; {}.toString | callOn ([3, 4])
+
+And `callUnder` is exactly the reverse, for when you want to your substrate 
+to the left of the stick and the function to be spliced to the right:
+
+    ; [3, 4] | callUnder ({}.toString)
+
+
+
+factory
+
+flatMap, doe
+
+Let’s call them a “pure” value and a “boxed” value. These names are of
+course inadequate, but should help beginners get a foothold into the bizarre
+world they are about to enter.
+
+flatMap
+
+Contrived example: look up two numbers in an object and divide them by each
+other.
+
+Excessive indenting, excessive ifs.
+
+This is a problem which recurs in several forms and guises. One example is
+“callback hell”, which you are probably familiar with if you’ve ever used
+the non-promisifed APIs of Node.js, for example.
+
+bilby, ADT, cata, fold.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+example
+
+    const cb = (res) => {
+        const { headers, statusCode, } = res
+        // --- on a partial download, contentLength is just the part left.
+        const { 'content-length': contentLength, } = headers
+        if (none (eq) ([200, 206]))
+            return (('status ' + statusCode) | exception | onError)
+        return downloader ({ res, contentLength, writeToDisk, onData, onEnd, onError, })
+    }

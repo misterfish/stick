@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>StickJS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link type="text/css" rel="stylesheet" href="assets/style.css" />
+    <link type="text/css" rel="stylesheet" href="assets/pilcrow.css" />
+    <link type="text/css" rel="stylesheet" href="assets/hljs-github.min.css"/>
+  </head>
+<body><h1 id="stickjs"><a class="header-link" href="#stickjs"></a>StickJS</h1>
+<h3 id="intro"><a class="header-link" href="#intro"></a>Intro</h3>
+<p>StickJS is a library for functional programming in JavaScript. It is
+intended to be used in conjunction with the pipe operator <code>|&gt;</code>, which is 
+currently in the proposal stage (xxx link); or better yet, the bitwise-or 
+(&#39;stick&#39;) operator <code>|</code>. This way you can start using it today in your 
+projects using @xxx&#39;s babel-operator-overload, and the stick is more 
+enjoyable to work with to boot. </p>
+<p>In addition to being fast and practical, it also introduces a new range of 
+idioms and some conventions of its own. These may take some time to master, 
+though people coming from a Lisp or Haskell background should hit the ground 
+running. I hope to show you that it can improve both the quality of your 
+code and your own enjoyment, and maybe clue you in to a new way to think 
+about the whole business.</p>
+<h3 id="common-patterns"><a class="header-link" href="#common-patterns"></a>Common patterns</h3>
+<p>rewriting
+refactoring</p>
+<h1 id="github"><a class="header-link" href="#github"></a>Github</h1>
+<h3 id="usage"><a class="header-link" href="#usage"></a>Usage</h3>
+<h4 id="node"><a class="header-link" href="#node"></a>node</h4>
+<pre class="hljs"><code>npm i stick-js <span class="hljs-comment"># or yarn</span>
+
+cat &gt;.babelrc &lt;&lt;EOT
+{<span class="hljs-string">"presets"</span>: [<span class="hljs-string">"babel-preset-es2015"</span>, <span class="hljs-string">"stage-0"</span>], <span class="hljs-string">"plugins"</span>: [
+    <span class="hljs-string">"babel-plugin-operator-overload"</span>
+]}
+EOT
+
+babel -d <span class="hljs-class"><span class="hljs-keyword">lib</span> <span class="hljs-title">src</span></span>
+node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span class="hljs-title">entry</span>-<span class="hljs-title">file</span>&gt;.<span class="hljs-title">js</span></span></code></pre><h4 id="webpack"><a class="header-link" href="#webpack"></a>webpack</h4>
+<h5 id="webpack-config:"><a class="header-link" href="#webpack-config:"></a>webpack config:</h5>
+<pre class="hljs"><code><span class="hljs-attr">module:</span> {
+<span class="hljs-attr">  rules:</span> [
+    {
+<span class="hljs-attr">      test:</span> /\.js$/,
+<span class="hljs-attr">      exclude:</span> /node_modules/,
+<span class="hljs-attr">      use:</span> {
+<span class="hljs-attr">        loader:</span> <span class="hljs-string">'babel-loader'</span>,
+<span class="hljs-attr">        options:</span> {
+<span class="hljs-attr">          presets:</span> [[
+            <span class="hljs-string">"env"</span>,
+            { <span class="hljs-string">"modules"</span>: <span class="hljs-literal">false</span> },
+          ]],
+<span class="hljs-attr">          plugins:</span> [
+            <span class="hljs-string">'operator-overload'</span>,
+          ]
+        }
+      },
+    },
+    ...
+  ]
+  ...
+  }</code></pre><h3 id="features"><a class="header-link" href="#features"></a>Features</h3>
+<pre class="hljs"><code>;
+
+    lodash flow near the top
+    people who already <span class="hljs-keyword">use</span> lodash flow
+    <span class="hljs-keyword">static</span> tools</code></pre><h3 id="synopsis"><a class="header-link" href="#synopsis"></a>Synopsis</h3>
+<p>(See x for a more complete overview)</p>
+<pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
+defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
+defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeRight (...args))
+
+<span class="hljs-keyword">import</span> {
+    pipe, compose, composeRight,
+    map, join,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
+
+const { log, } = <span class="hljs-built_in">console</span>
+
+; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
+  | map (x =&gt; x + <span class="hljs-number">1</span>)
+  | join (<span class="hljs-string">'/'</span>)
+  | log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'2/3/4'</span></code></pre><h4 id="2"><a class="header-link" href="#2"></a>2</h4>
+<p>push
+merge</p>
+<p>####
+dog</p>
+<h4 id="4---this-example-is-intentionally-complex"><a class="header-link" href="#4---this-example-is-intentionally-complex"></a>4 - this example is intentionally complex</h4>
+<pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  (...args) =&gt; pipe         (...args))
+defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, (...args) =&gt; compose      (...args))
+defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&gt; composeRight (...args))
+
+<span class="hljs-keyword">import</span> {
+  pipe, compose, composeRight,
+  recurry, <span class="hljs-built_in">map</span>, <span class="hljs-built_in">join</span>, condS, guard, otherwise,
+  sprintfN, rangeTo, lt, gt,
+  tap, appendTo, prop,
+} from <span class="hljs-string">'stick'</span>
+
+<span class="hljs-keyword">import</span> {
+  curry,
+} from <span class="hljs-string">'ramda'</span>
+
+<span class="hljs-keyword">import</span> {
+  yellow, <span class="hljs-built_in">green</span>, <span class="hljs-built_in">red</span>,
+} from <span class="hljs-string">'chalk'</span>
+
+<span class="hljs-keyword">const</span> { <span class="hljs-built_in">log</span>, } = console
+
+<span class="hljs-keyword">const</span> cmpStr = curry ((<span class="hljs-built_in">str</span>, <span class="hljs-built_in">color</span>, tgtStr, x) =&gt; [x, <span class="hljs-built_in">str</span> | <span class="hljs-built_in">color</span>, tgtStr]
+  | sprintfN (<span class="hljs-string">'%s is %s %s'</span>)
+)
+
+<span class="hljs-keyword">const</span> lessThanStr     = cmpStr (<span class="hljs-string">'less than'</span>, yellow)
+<span class="hljs-keyword">const</span> greaterThanStr  = cmpStr (<span class="hljs-string">'greater than'</span>, <span class="hljs-built_in">red</span>)
+<span class="hljs-keyword">const</span> inBetweenString = ([ low, high ]) =&gt; cmpStr (<span class="hljs-string">'in between'</span>, <span class="hljs-built_in">green</span>, [low, high] | <span class="hljs-built_in">join</span> (<span class="hljs-string">' and '</span>))
+
+<span class="hljs-keyword">const</span> getCmpStr = curry ((low, high, x) =&gt; x
+  | condS ([
+    low | lt | guard ((low | lessThanStr) &gt;&gt; appendTo ([<span class="hljs-number">-1</span>])),
+    high | gt | guard ((high | greaterThanStr) &gt;&gt; appendTo ([<span class="hljs-number">1</span>])),
+    otherwise | guard (inBetweenString ([low, high]) &gt;&gt; appendTo ([<span class="hljs-number">0</span>])),
+  ])
+)
+
+<span class="hljs-keyword">const</span> inRange = ([low, high]) =&gt; x =&gt; getCmpStr (low, high, x)
+
+<span class="hljs-keyword">const</span> snd = prop (<span class="hljs-number">1</span>)
+<span class="hljs-keyword">const</span> fst = prop (<span class="hljs-number">0</span>)
+
+<span class="hljs-number">10</span> | rangeTo (<span class="hljs-number">20</span>)
+   | <span class="hljs-built_in">map</span> (inRange ([<span class="hljs-number">13</span>, <span class="hljs-number">17</span>]))
+   | <span class="hljs-built_in">map</span> (tap (snd &gt;&gt; <span class="hljs-built_in">log</span>))
+   | <span class="hljs-built_in">map</span> (fst)
+   | <span class="hljs-built_in">log</span></code></pre></body>
+</html>

@@ -1,4 +1,4 @@
-set -e
+set -eu
 
 bindir=$(realpath "$(dirname "$0")")
 rootdir="$bindir"/..
@@ -22,3 +22,5 @@ ternary() {
 }
 
 # vim: ft=sh
+# ex: ft=sh
+

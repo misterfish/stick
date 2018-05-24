@@ -4,8 +4,8 @@ set -e
 
 bindir=$(realpath "$(dirname "$0")")
 
-. "$bindir"/vars
 . "$bindir"/functions.bash
+. "$bindir"/vars
 
 cmd "$lsccmd" -w -bck --no-header \
     "$tstdir"/*.ls \

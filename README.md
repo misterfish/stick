@@ -8,7 +8,6 @@ currently in the proposal stage (xxx link); or better yet, the bitwise-or
 ('stick') operator `|`. This way you can start using it today in your 
 projects using @xxx's babel-operator-overload, and the stick is more 
 enjoyable to work with to boot. 
-
 In addition to being fast and practical, it also introduces a new range of 
 idioms and some conventions of its own. These may take some time to master, 
 though people coming from a Lisp or Haskell background should hit the ground 
@@ -102,7 +101,7 @@ If you really want to do bitwise math, see below.
 	// --- /header
 
 		map, join,
-	} from 'stick'
+	} from 'stick-js'
 
 	const { log, } = console
 
@@ -125,18 +124,15 @@ If you really want to do bitwise math, see below.
 	// --- /header
 
 		map, join, split,
-	} from 'stick'
+	} from 'stick-js'
 
-    // --- `a | b` is simply an equivalent way of writing `b (a)`
 	const double = x => x * 2
 
+    // --- `a | b` is simply an equivalent way of writing `b (a)`
 	3 | double // 6
 	double (3) // 6
 
-	// --- what if I really want to do bitwise math?
-	// --- see below.
-    // --- it becomes interesting when `b` is curried.
-	// --- this would be a good time to read XXX if you're not familiar with curried functions.
+	// --- what if I really want to do bitwise math? ... see below.
 
 	const multiply = x => y => x * y
 
@@ -151,26 +147,43 @@ If you really want to do bitwise math, see below.
     const capitaliseFirstLetter = x => x[0].toUpperCase () + x.slice (1)
 
 	'just a perfect day'
-	| split (' ')                 // split (' ') is a function
-	| map (capitaliseFirstLetter) // map (capitaliseFirstLetter) is a function
-	| join (' ')                  // join (' ') is a function
-	// 'Just A Perfect Day'
+	  | split (' ')                 // split (' ') is a function
+	  | map (capitaliseFirstLetter) // map (capitaliseFirstLetter) is a function
+	  | join (' ')                  // join (' ') is a function
+	  // 'Just A Perfect Day'
 
-    // --- 2 currying styles: we will refer to this sort of function as 'manually curried'
-	const f = a => b => c => a + b + c // call like f (1) (2) (3)
-	// --- and this sort as 'normally curried'
-	const g = R.curry ((a, b, c) => a + b + c) // call like f (1) (2) (3) or f (1, 2, 3)
+#### ٭ currying styles
 
-	// --- all curried functions provided by stick can be called using either of the styles.
-	// --- furthermore, our implementation is far faster than Ramda's (try it yourself and see)
-	// XXX
-	// --- performance, own section ...
+There are 2 currying styles. All curried functions provided by stick can be
+called using either of the styles.
+
+For extra performance you can also limit yourself to the manual style (see
+below).
+
+This would be a good time to read XXX if you're not familiar with curried functions.
+
+1. we will refer to this sort of function as 'manually curried'.
+
+	`const f = a => b => c => a + b + c // call like f (1) (2) (3)`
+
+2. and this sort as 'normally curried'
+
+	`const g = R.curry ((a, b, c) => a + b + c) // call like f (1) (2) (3) or f (1, 2, 3)`
+
+
+
+	import { map, } from 'stick-js'
+
+	map (double, [1, 2, 3])    // [2, 4, 6] (normal style)
+
+	map (double) ([1, 2, 3])   // [2, 4, 6] (manual style)
+	; [1, 2, 3] | map (double) // [2, 4, 6] (manual style with pipe)
 
 #### ٭ markers
 
 	import {
 	  sprintfN, sprintf1,
-	} from 'stick'
+	} from 'stick-js'
 
 	3 | sprintf1 ('4 - 1 is %s') // '4 - 1 is 3'
 
@@ -183,7 +196,7 @@ If you really want to do bitwise math, see below.
 
 	import {
 	  timesV, timesF,
-	} from 'stick'
+	} from 'stick-js'
 
 	const { random, } = Math
 
@@ -200,7 +213,7 @@ If you really want to do bitwise math, see below.
 	  pipe, compose, composeRight,
 	  map, ok, notOk,
 	  ifOk,
-	} from 'stick'
+	} from 'stick-js'
 
 	const { log, } = console
 
@@ -237,7 +250,7 @@ If you really want to do bitwise math, see below.
 
 	// --- or a variant:
 
-	import { add, always, } from 'stick'
+	import { add, always, } from 'stick-js'
 
 	const add1 = 1 | add // or add (1)
 
@@ -289,7 +302,7 @@ If you really want to do bitwise math, see below.
   // --- `ifOk` is a convenience for `ifPredicate (ok)` or `ok | ifPredicate`
   // --- there is also a 'when' form, which has no 'else branch'.
 	  
-	  import { add, whenOk, } from 'stick'
+	  import { add, whenOk, } from 'stick-js'
 	  const add1 = 1 | add // or add (1)
 	  3    | whenOk (add1) // 4
 	  null | whenOk (add1) // undefined
@@ -337,15 +350,7 @@ If you really want to do bitwise math, see below.
 
 #### ٭ compositional decoration
 
-	defineBinaryOperator ('|',  (...args) => pipe         (...args))
-	defineBinaryOperator ('<<', (...args) => compose      (...args))
-	defineBinaryOperator ('>>', (...args) => composeRight (...args))
-
-	import {
-	  pipe, compose, composeRight,
-	  map,
-	  addIndex, addCollection,
-	} from 'stick'
+	import { map, addIndex, addCollection, } from 'stick-js'
 
 	; [4, 5, 6]
 	| map ((x, idx) => idx) // [undefined, undefined, undefined]
@@ -364,6 +369,23 @@ If you really want to do bitwise math, see below.
 	; [4, 5, 6]
 	  | (map | addCollection | addIndex) ((x, coll, idx) => ...)
 
+    import { mergeWith, mergeToSym, } from 'stick-js'
+
+    const chooseTgt = (src, tgt) => tgt
+    const chooseSrc = (src, tgt) => src
+
+    // --- choose target value on conflict
+	const mergeChooseTgt = mergeToSym | mergeWith (chooseTgt)
+
+    // --- choose source value on conflict
+	const mergeChooseSrc = mergeToSym | mergeWith (chooseSrc)
+
+	const os = { name: 'source name', }
+    const ot = { name: 'target name', }
+
+	os | mergeChooseSrc (ot) // 'source name'
+	os | mergeChooseTgt (ot) // 'target name'
+
 #### ٭ semantics and argument order are often derivable by thinking in English
 
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
@@ -374,7 +396,7 @@ If you really want to do bitwise math, see below.
 	  pipe, compose, composeRight,
 	  sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
 	  appendTo, append, bindPropTo, bindProp, bindTo, bind, invoke,
-	} from 'stick'
+	} from 'stick-js'
 
 	const obj1 = { thing: 'sandwich', want: 'no thanks', }
 	const obj2 = { want: 'yes please', }
@@ -422,7 +444,7 @@ defineBinaryOperator ('>>', (...args) => composeRight (...args))
 import {
   pipe, compose, composeRight,
   map, side1, appendM, append, prependM, prepend,
-} from 'stick'
+} from 'stick-js'
 
 // --- chaining with the . will often not do what you want.
 
@@ -470,7 +492,7 @@ const unshift = 'unshift' | side1
 	  recurry, map, join, condS, guard, otherwise,
 	  sprintfN, rangeTo, lt, gt,
 	  tap, appendTo, prop,
-	} from 'stick'
+	} from 'stick-js'
 
 	import {
 	  curry,
@@ -540,7 +562,7 @@ suits you.
 
 	import { map, } from 'ramda'
 	import { filter, } from 'lodash/fp'
-	import { ifPredicate, } from 'stick'
+	import { ifPredicate, } from 'stick-js'
 
 The stick idiom will still work, as long as the functions are curried and
 data-last.
@@ -570,11 +592,15 @@ merge benchmark: manual / index / ramda
 
 ### Extra performance
 
-For speed freaks: check the docs to see if your function is exported by
-'stick/manual'. If so, you can directly import the manual version, but you
-must remember to call it using the manual style:
+For speed freaks: the curried functions you import from the main module are
+written first using manual currying, and then recurried and exported. This
+is in order to allow both calling styles.
 
-	import { merge, } from 'stick/manual'
+For a speed boost you can check the docs to see if your function is exported
+by 'stick-js/manual'. If so, you can directly import the manual version, but
+you must remember to call it using the manual style:
+
+	import { merge, } from 'stick-js/manual'
 	merge (obj1, obj2) // will not work
     obj2 | merge (obj1) // ok
 	merge (obj1) (obj2) // also ok
@@ -585,10 +611,17 @@ must remember to call it using the manual style:
 ### Bitwise math
 	// --- 1) use the functional form
 
-	import { bitwiseOr, bitwiseShiftBy, } from 'stick'
+	import { bitwiseOr, bitwiseShiftBy, } from 'stick-js'
 	4 | bitwiseOr (9) // 13
 
 	// --- or 2) do your bitwise math in a separate source file and omit the
 	`defineBinaryOperator` headers.
 	// ------
 
+
+
+### Why not use lodash?
+
+- you don't need to carry around the _
+- free functions are far more flexible than dotted ones
+- predictable semantics based on English

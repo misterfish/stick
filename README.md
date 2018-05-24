@@ -408,7 +408,7 @@ Read this as ‘merge src **to tgt**’
 
 	src | mergeTo (tgt)
 
-The same function without the ‘To’ means that the identifier is the object of the verb ‘merge’.
+The same function without the ‘To’ means that the identifier to the right is the object of the verb ‘merge’.
 
 Read this as: ‘**merge src** to tgt’
 
@@ -440,15 +440,18 @@ Read this as: ‘**merge src** to tgt’
 
 	dog.speak | bindTo (dog) | invoke     // same
 
-    // cat.speak ()						  // Error
+    // cat.speak ()                       // Error
 	dog.speak | bindTo (cat) | invoke     // 'My name is Bo'
 	cat | bind (dog.speak)   | invoke     // 'My name is Bo'
 
     // --- 'call this function on this context', i.e., bind and call.
-	; ({}.toString) | callOn ([])           // '[object Array]'
+	; ({}.toString) | callOn (3)          // '[object Number]'
 
 	// --- 'provide this context to this function'
-	; ([] | provideTo ({}.toString)         // '[object Array]'
+	; 3 | provideTo ({}.toString)        // '[object Number]'
+
+    dog.speak | callOn (cat)             // 'My name is Bo'
+    cat       | provideTo (dog.speak)    // 'My name is Bo'
 
 Some other miscellaneous examples.
 

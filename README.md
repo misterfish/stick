@@ -79,8 +79,6 @@ refactoring
 
 ### Synopsis: major features.
 
-(See x for a more complete overview)
-
 #### basic example
 
     // --- source files must begin with this header.
@@ -101,6 +99,64 @@ refactoring
 	| join ('/')
 	| sprintf1 ('The answer is %s')
 	| log // outputs 'The answer is 2/3/4'
+
+#### the 'stick' operator
+
+	defineBinaryOperator ('|',  (...args) => pipe         (...args))
+	defineBinaryOperator ('<<', (...args) => compose      (...args))
+	defineBinaryOperator ('>>', (...args) => composeRight (...args))
+
+	import {
+		pipe, compose, composeRight,
+		map, join, split,
+	} from 'stick'
+
+    // --- `a | b` is simply an equivalent way of writing `b (a)`
+	const double = x => x * 2
+
+	3 | double // 6
+	double (3) // 6
+
+	// ------ what if I really want to do bitwise math?
+	// --- 1) use the functional form
+
+	import { bitwiseOr, bitwiseShiftBy, } from 'stick'
+	4 | bitwiseOr (9) // 13
+
+	// --- or 2) do your bitwise math in a separate source file and omit the
+	`defineBinaryOperator` headers.
+	// ------
+
+    // --- it becomes interesting when `b` is curried.
+	// --- this would be a good time to read XXX if you're not familiar with curried functions.
+
+	const multiply = x => y => x * y
+
+	const b = multiply (4) // b is a function
+
+	3 | b            // 12
+	3 | multiply (4) // 12
+
+	const triple = 3 | multiply
+	4 | triple       // 12
+
+    const capitaliseFirstLetter = x => x[0].toUpperCase () + x.slice (1)
+
+	'just a perfect day'
+	| split (' ')                 // split (' ') is a function
+	| map (capitaliseFirstLetter) // map (capitaliseFirstLetter) is a function
+	| join (' ')                  // join (' ') is a function
+	// 'Just A Perfect Day'
+
+    // --- 2 currying styles: we will refer to this sort of function as 'manually curried'
+	const f = a => b => c => a + b + c // call like f (1) (2) (3)
+	// --- and this sort as 'normally curried'
+	const g = R.curry ((a, b, c) => a + b + c) // call like f (1) (2) (3) or f (1, 2, 3)
+
+	// --- all curried functions provided by stick can be called using either of the styles.
+	// --- furthermore, our implementation is far faster than Ramda's (try it yourself and see)
+	// XXX
+	// --- performance, own section ...
 
 #### markers
 
@@ -215,16 +271,15 @@ refactoring
 	  3    | whenOk (add1) // 4
 	  null | whenOk (add1) // undefined
 
-  // --- the selection of `if` and `when` functions we provide is
-  intentionally skimpy, to encourage you to write your own.
+  // --- the selection of `if` and `when` functions we provide is intentionally skimpy, to encourage you to write your own.
 
 	const { floor, } = Math
 	const isInteger = x => x === floor (x)
 
-	// or how about
+	// --- or how about
 	// const isInteger = x => x | floor | eq (x)
 
-	// or if you're getting bored:
+	// --- or if you're getting bored:
 	// const arrowSnd = f => timesV (2) >> asterisk ([id, f])
 	// const isInteger = arrowSnd (floor) >> passToN (eq)
 
@@ -235,7 +290,7 @@ refactoring
 	const add1 = add (1)
 
 	; [3.5, 4, 4.2]
-	  | map (ifInteger (add1, 'nothing' | always))
+	| map (ifInteger (add1, 'nothing' | always))
 	  // ['nothing', 5, 'nothing']
 
   // --- more complicated predicates
@@ -429,3 +484,75 @@ const unshift = 'unshift' | side1
        | map (inRange ([13, 17])) // maps to tuples of [int, str]
        | tap (map (snd >> log))   // logs the str
        | map (fst)                // [-1, -1, ... 0, ... 1, 1]
+
+
+
+
+
+
+
+
+
+
+### performance
+
+Stick is fast. See here for a benchmark of our factory example.
+
+Stick is much faster than Ramda. Though it initially depended on
+Ramda, we have decided to eliminate that dependency by reimplementing many
+of the functions. While profiling the WebGL example we found that even
+trivial functions like `R.flip` and `R.tap` are surprisingly expensive.
+
+This really only becomes an issue in tight loops -- an inner loop of a
+socket or server, an animation, a particle system where lots of objects are
+spawned per second, WebGL. For cases like these, see below.
+
+It is true that `a | b` compiles to three function calls, whereas `b (a)` is
+only one. But this is almost certainly not going to affect your app. Your JS
+runtime can call *a lot* of functions per millisecond.
+
+Nonetheless you are encouraged to mix and match our functions with whichever
+functional libraries you like -- Ramda, Lodash/FP, or anything else, as it
+suits you.
+
+	import { map, } from 'ramda'
+	import { filter, } from 'lodash/fp'
+	import { ifPredicate, } from 'stick'
+
+The stick idiom will still work, as long as the functions are curried and
+data-last.
+
+Furthermore Ramda is probably perfectly fine for your app, and its functions
+often provide type-checking and error messages (we don't), and many of their
+functions are more sophisticated. `R.map` works on functors and
+transformers, for example -- ours doesn't.
+
+And, it is our belief that if you are already using the `flow` pattern in
+Lodash/FP or the `pipe` function in Ramda, that it will really be a
+no-brainer to overload the operator and keep everything else the same.
+
+    _.flow (
+	  _.split (' '),
+	  _.map (capitaliseFirstLetter),
+	  _.join (' '),
+	) (myData)
+
+	// ->
+	myData
+	| _.split (' '),
+	| _.map (capitaliseFirstLetter),
+	| _.join (' ')
+
+merge benchmark: manual / index / ramda
+
+### Extra performance
+
+For speed freaks: check the docs to see if your function is exported by
+'stick/manual'. If so, you can directly import the manual version, but you
+must remember to call it using the manual style:
+
+	import { merge, } from 'stick/manual'
+	merge (obj1, obj2) // will not work
+    obj2 | merge (obj1) // ok
+	merge (obj1) (obj2) // also ok
+

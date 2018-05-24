@@ -66,7 +66,6 @@ node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span cl
     lodash flow near the top
     people who already <span class="hljs-keyword">use</span> lodash flow
     <span class="hljs-keyword">static</span> tools</code></pre><h3 id="synopsis:-major-features."><a class="header-link" href="#synopsis:-major-features."></a>Synopsis: major features.</h3>
-<p>(See x for a more complete overview)</p>
 <h4 id="basic-example"><a class="header-link" href="#basic-example"></a>basic example</h4>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> --- source files must begin with <span class="hljs-keyword">this</span> header.
 defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
@@ -85,7 +84,62 @@ const { log, } = <span class="hljs-built_in">console</span>
 | map (x =&gt; x + <span class="hljs-number">1</span>)
 | join (<span class="hljs-string">'/'</span>)
 | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
-| log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span></code></pre><h4 id="markers"><a class="header-link" href="#markers"></a>markers</h4>
+| log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span></code></pre><h4 id="the-'stick'-operator"><a class="header-link" href="#the-'stick'-operator"></a>the &#39;stick&#39; operator</h4>
+<pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  (...args) =&gt; pipe         (...args))
+defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, (...args) =&gt; compose      (...args))
+defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&gt; composeRight (...args))
+
+<span class="hljs-keyword">import</span> {
+    pipe, compose, composeRight,
+    map, join, split,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
+
+<span class="hljs-comment">// --- `a | b` is simply an equivalent way of writing `b (a)`</span>
+<span class="hljs-keyword">const</span> double = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x * <span class="hljs-number">2</span>
+
+<span class="hljs-number">3</span> | double <span class="hljs-comment">// 6</span>
+double (<span class="hljs-number">3</span>) <span class="hljs-comment">// 6</span>
+
+<span class="hljs-comment">// ------ what if I really want to do bitwise math?</span>
+<span class="hljs-comment">// --- 1) use the functional form</span>
+
+<span class="hljs-keyword">import</span> { bitwiseOr, bitwiseShiftBy, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
+<span class="hljs-number">4</span> | bitwiseOr (<span class="hljs-number">9</span>) <span class="hljs-comment">// 13</span>
+
+<span class="hljs-comment">// --- or 2) do your bitwise math in a separate source file and omit the</span>
+<span class="hljs-string">`defineBinaryOperator`</span> headers.
+<span class="hljs-comment">// ------</span>
+
+<span class="hljs-comment">// --- it becomes interesting when `b` is curried.</span>
+<span class="hljs-comment">// --- this would be a good time to read XXX if you're not familiar with curried functions.</span>
+
+<span class="hljs-keyword">const</span> multiply = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> y =&gt; x * y
+
+<span class="hljs-keyword">const</span> b = multiply (<span class="hljs-number">4</span>) <span class="hljs-comment">// b is a function</span>
+
+<span class="hljs-number">3</span> | b            <span class="hljs-comment">// 12</span>
+<span class="hljs-number">3</span> | multiply (<span class="hljs-number">4</span>) <span class="hljs-comment">// 12</span>
+
+<span class="hljs-keyword">const</span> triple = <span class="hljs-number">3</span> | multiply
+<span class="hljs-number">4</span> | triple       <span class="hljs-comment">// 12</span>
+
+<span class="hljs-keyword">const</span> capitaliseFirstLetter = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[<span class="hljs-number">0</span>].toUpperCase () + x.slice (<span class="hljs-number">1</span>)
+
+<span class="hljs-string">'just a perfect day'</span>
+| split (<span class="hljs-string">' '</span>)                 <span class="hljs-comment">// split (' ') is a function</span>
+| map (capitaliseFirstLetter) <span class="hljs-comment">// map (capitaliseFirstLetter) is a function</span>
+| join (<span class="hljs-string">' '</span>)                  <span class="hljs-comment">// join (' ') is a function</span>
+<span class="hljs-comment">// 'Just A Perfect Day'</span>
+
+<span class="hljs-comment">// --- 2 currying styles: we will refer to this sort of function as 'manually curried'</span>
+<span class="hljs-keyword">const</span> f = <span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> b =&gt; <span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> a + b + c <span class="hljs-comment">// call like f (1) (2) (3)</span>
+<span class="hljs-comment">// --- and this sort as 'normally curried'</span>
+<span class="hljs-keyword">const</span> g = R.curry (<span class="hljs-function">(<span class="hljs-params">a, b, c</span>) =&gt;</span> a + b + c) <span class="hljs-comment">// call like f (1) (2) (3) or f (1, 2, 3)</span>
+
+<span class="hljs-comment">// --- all curried functions provided by stick can be called using either of the styles.</span>
+<span class="hljs-comment">// --- furthermore, our implementation is far faster than Ramda's (try it yourself and see)</span>
+<span class="hljs-comment">// XXX</span>
+<span class="hljs-comment">// --- performance, own section ...</span></code></pre><h4 id="markers"><a class="header-link" href="#markers"></a>markers</h4>
 <pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
 defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
 defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeRight (...args))
@@ -174,15 +228,14 @@ const add1IfYouCan = x =&gt; x | ifOk (add1, <span class="hljs-string">'nothing'
 <pre class="hljs"><code>  import { <span class="hljs-keyword">add</span>, whenOk, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span>
   <span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span> <span class="hljs-comment">// or add (1)</span>
   <span class="hljs-number">3</span>    | whenOk (add1) <span class="hljs-comment">// 4</span>
-  <span class="hljs-literal">null</span> | whenOk (add1) <span class="hljs-comment">// undefined</span></code></pre><p>  // --- the selection of <code>if</code> and <code>when</code> functions we provide is
-  intentionally skimpy, to encourage you to write your own.</p>
+  <span class="hljs-literal">null</span> | whenOk (add1) <span class="hljs-comment">// undefined</span></code></pre><p>  // --- the selection of <code>if</code> and <code>when</code> functions we provide is intentionally skimpy, to encourage you to write your own.</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> { <span class="hljs-built_in">floor</span>, } = Math
 <span class="hljs-keyword">const</span> isInteger = x =&gt; x === <span class="hljs-built_in">floor</span> (x)
 
-<span class="hljs-comment">// or how about</span>
+<span class="hljs-comment">// --- or how about</span>
 <span class="hljs-comment">// const isInteger = x =&gt; x | floor | eq (x)</span>
 
-<span class="hljs-comment">// or if you're getting bored:</span>
+<span class="hljs-comment">// --- or if you're getting bored:</span>
 <span class="hljs-comment">// const arrowSnd = f =&gt; timesV (2) &gt;&gt; asterisk ([id, f])</span>
 <span class="hljs-comment">// const isInteger = arrowSnd (floor) &gt;&gt; passToN (eq)</span>
 
@@ -193,7 +246,7 @@ const add1IfYouCan = x =&gt; x | ifOk (add1, <span class="hljs-string">'nothing'
 <span class="hljs-keyword">const</span> add1 = <span class="hljs-built_in">add</span> (<span class="hljs-number">1</span>)
 
 ; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4.2</span>]
-  | <span class="hljs-built_in">map</span> (ifInteger (add1, <span class="hljs-string">'nothing'</span> | always))
+| <span class="hljs-built_in">map</span> (ifInteger (add1, <span class="hljs-string">'nothing'</span> | always))
   <span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre><p>  // --- more complicated predicates</p>
 <p>  // --- @todo remove
   const both = (f, g) =&gt; x =&gt; f (x) &amp;&amp; g (x) ? true : false</p>
@@ -357,5 +410,49 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-number">10</span> | rangeTo (<span class="hljs-number">20</span>)             <span class="hljs-comment">// [10, 11, ... 19]</span>
    | <span class="hljs-built_in">map</span> (inRange ([<span class="hljs-number">13</span>, <span class="hljs-number">17</span>])) <span class="hljs-comment">// maps to tuples of [int, str]</span>
    | tap (<span class="hljs-built_in">map</span> (snd &gt;&gt; <span class="hljs-built_in">log</span>))   <span class="hljs-comment">// logs the str</span>
-   | <span class="hljs-built_in">map</span> (fst)                <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre></body>
+   | <span class="hljs-built_in">map</span> (fst)                <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre><h3 id="performance"><a class="header-link" href="#performance"></a>performance</h3>
+<p>Stick is fast. See here for a benchmark of our factory example.</p>
+<p>Stick is much faster than Ramda. Though it initially depended on
+Ramda, we have decided to eliminate that dependency by reimplementing many
+of the functions. While profiling the WebGL example we found that even
+trivial functions like <code>R.flip</code> and <code>R.tap</code> are surprisingly expensive.</p>
+<p>This really only becomes an issue in tight loops -- an inner loop of a
+socket or server, an animation, a particle system where lots of objects are
+spawned per second, WebGL. For cases like these, see below.</p>
+<p>It is true that <code>a | b</code> compiles to three function calls, whereas <code>b (a)</code> is
+only one. But this is almost certainly not going to affect your app. Your JS
+runtime can call <em>a lot</em> of functions per millisecond.</p>
+<p>Nonetheless you are encouraged to mix and match our functions with whichever
+functional libraries you like -- Ramda, Lodash/FP, or anything else, as it
+suits you.</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { map, } <span class="hljs-keyword">from</span> <span class="hljs-string">'ramda'</span>
+<span class="hljs-keyword">import</span> { filter, } <span class="hljs-keyword">from</span> <span class="hljs-string">'lodash/fp'</span>
+<span class="hljs-keyword">import</span> { ifPredicate, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick'</span></code></pre><p>The stick idiom will still work, as long as the functions are curried and
+data-last.</p>
+<p>Furthermore Ramda is probably perfectly fine for your app, and its functions
+often provide type-checking and error messages (we don&#39;t), and many of their
+functions are more sophisticated. <code>R.map</code> works on functors and
+transformers, for example -- ours doesn&#39;t.</p>
+<p>And, it is our belief that if you are already using the <code>flow</code> pattern in
+Lodash/FP or the <code>pipe</code> function in Ramda, that it will really be a
+no-brainer to overload the operator and keep everything else the same.</p>
+<pre class="hljs"><code><span class="hljs-symbol">_</span>.flow (
+  <span class="hljs-symbol">_</span>.<span class="hljs-built_in">split</span> (' '),
+  <span class="hljs-symbol">_</span>.<span class="hljs-built_in">map</span> (capitaliseFirstLetter),
+  <span class="hljs-symbol">_</span>.<span class="hljs-built_in">join</span> (' '),
+) (myData)
+
+// -&gt;
+myData
+| <span class="hljs-symbol">_</span>.<span class="hljs-built_in">split</span> (' '),
+| <span class="hljs-symbol">_</span>.<span class="hljs-built_in">map</span> (capitaliseFirstLetter),
+| <span class="hljs-symbol">_</span>.<span class="hljs-built_in">join</span> (' ')</code></pre><p>merge benchmark: manual / index / ramda</p>
+<h3 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h3>
+<p>For speed freaks: check the docs to see if your function is exported by
+&#39;stick/manual&#39;. If so, you can directly import the manual version, but you
+must remember to call it using the manual style:</p>
+<pre class="hljs"><code>import { merge, } from <span class="hljs-string">'stick/manual'</span>
+merge <span class="hljs-comment">(obj1, obj2)</span> <span class="hljs-comment">// will not work</span>
+obj<span class="hljs-number">2</span> | merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">// ok</span>
+merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)</span> <span class="hljs-comment">// also ok</span></code></pre></body>
 </html>

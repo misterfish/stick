@@ -207,6 +207,21 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
   &gt;&gt; String
   &gt;&gt; dot ('toUpperCase')
   &gt;&gt; sprintf1 ('The answer is %s')
+  &gt;&gt; tap (<span class="hljs-name">log</span>)</code></pre><p>The following pattern holds:</p>
+<pre class="hljs"><code>a | <span class="hljs-type">b</span> | <span class="hljs-type">c</span> = a | <span class="hljs-type">(b</span> &gt;&gt; c)</code></pre><p>So when the chains start to get long (as above), you can cut pieces out
+using this property. For example, you can refactor lines 2-4 into a new
+function:</p>
+<pre class="hljs"><code>// --- convert input <span class="hljs-keyword">to</span> <span class="hljs-built_in">String</span>, make uppercase, perform sprintf.
+<span class="hljs-keyword">const</span> processString = <span class="hljs-built_in">String</span>
+  &gt;&gt; dot (<span class="hljs-string">'toUpperCase'</span>)
+  &gt;&gt; sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
+
+<span class="hljs-keyword">const</span> add1IfYouCan = x =&gt; x
+  | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
+  | processString
+  | tap (<span class="hljs-built_in">log</span>)</code></pre><p>Or</p>
+<pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)
+  &gt;&gt; processString
   &gt;&gt; tap (<span class="hljs-name">log</span>)</code></pre><h4 id="٭-compositional-predicates-٭"><a class="header-link" href="#٭-compositional-predicates-٭"></a>٭ compositional predicates ٭</h4>
 <p><code>ifOk</code> is a convenience for <code>ifPredicate (ok)</code> or <code>ok | ifPredicate</code>.</p>
 <p>There is also a &#39;when&#39; form, which has no &#39;else&#39; branch.</p>
@@ -317,11 +332,11 @@ the preposition.</p>
 <p>Read this as: ‘<strong>merge src</strong> to tgt’</p>
 <pre class="hljs"><code>tgt | merge (src)
 
-4 | appendTo ([1, 2, 3])
-; ([1, 2, 3]) | append (4)
+4 | appendTo ([1, 2, 3])             // [1, 2, 3, 4]
+; ([1, 2, 3]) | append (4)           // [1, 2, 3, 4]
 
-0 | prependTo ([1, 2, 3])
-; ([1, 2, 3]) | prepend (0)
+0 | prependTo ([1, 2, 3])            // [0, 1, 2, 3]
+; ([1, 2, 3]) | prepend (0)          // [0, 1, 2, 3]
 <span class="hljs-built_in">
 const </span>dog = {
   name: 'Caesar',

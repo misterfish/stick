@@ -270,6 +270,30 @@ If the pipe chain consists of more than 1 link …
 	  >> sprintf1 ('The answer is %s')
 	  >> tap (log)
 
+The following pattern holds:
+
+    a | b | c = a | (b >> c)
+
+So when the chains start to get long (as above), you can cut pieces out
+using this property. For example, you can refactor lines 2-4 into a new
+function:
+
+    // --- convert input to String, make uppercase, perform sprintf.
+    const processString = String
+	  >> dot ('toUpperCase')
+	  >> sprintf1 ('The answer is %s')
+
+	const add1IfYouCan = x => x
+	  | ifOk (add1, 'nothing' | always)
+	  | processString
+	  | tap (log)
+	  
+Or
+
+	const add1IfYouCan = ifOk (add1, 'nothing' | always)
+	  >> processString
+	  >> tap (log)
+
 #### ٭ compositional predicates ٭
 
 `ifOk` is a convenience for `ifPredicate (ok)` or `ok | ifPredicate`.
@@ -414,11 +438,11 @@ Read this as: ‘**merge src** to tgt’
 
 	tgt | merge (src)
 
-	4 | appendTo ([1, 2, 3])
-	; ([1, 2, 3]) | append (4)
+	4 | appendTo ([1, 2, 3])             // [1, 2, 3, 4]
+	; ([1, 2, 3]) | append (4)           // [1, 2, 3, 4]
 
-	0 | prependTo ([1, 2, 3])
-	; ([1, 2, 3]) | prepend (0)
+	0 | prependTo ([1, 2, 3])            // [0, 1, 2, 3]
+	; ([1, 2, 3]) | prepend (0)          // [0, 1, 2, 3]
 
 	const dog = {
 	  name: 'Caesar',

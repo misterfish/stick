@@ -52,8 +52,9 @@
 If you really want to do bitwise math, see below.
 
 The overloading is made possible thanks to the great
-babel-plugin-operator-overload library by Jussi Kalliokoski
-(@jussi-kalliokoski).
+[babel-plugin-operator-overload](https://github.com/jussi-kalliokoski/babel-plugin-operator-overload)
+library by Jussi Kalliokoski (@jussi-kalliokoski).
+
 
 ### Features (/ why?)
 
@@ -615,19 +616,22 @@ you must remember to call it using the manual style:
 
 
 ### Bitwise math
-	// --- 1) use the functional form
 
-	import { bitwiseOr, bitwiseShiftBy, } from 'stick-js'
-	4 | bitwiseOr (9) // 13
+Of course, we've saved your precious bitwise operators. You can either:
 
-	// --- or 2) do your bitwise math in a separate source file and omit the
-	`defineBinaryOperator` headers.
-	// ------
+1. Use the functional form
 
+		import { bitwiseOr, bitwiseShiftBy, } from 'stick-js'
+		4 | bitwiseOr (9) // 13
 
+2. Do your bitwise math in a separate scope than that in which the
+`defineBinaryOperator` calls appear. The operators are only overloaded in
+the scope in which the calls are made. We recommend doing the bitwise math
+in a separate source file and not mixing the two styles in one file.
 
 ### Why not use lodash?
 
 - you don't need to carry around the _
 - free functions are far more flexible than dotted ones
 - predictable semantics based on English
+- prototype stuff

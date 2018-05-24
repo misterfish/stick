@@ -54,8 +54,8 @@ proposal is accepted.</p>
 </ul>
 <p>If you really want to do bitwise math, see below.</p>
 <p>The overloading is made possible thanks to the great
-babel-plugin-operator-overload library by Jussi Kalliokoski
-(@jussi-kalliokoski).</p>
+<a href="https://github.com/jussi-kalliokoski/babel-plugin-operator-overload">babel-plugin-operator-overload</a>
+library by Jussi Kalliokoski (@jussi-kalliokoski).</p>
 <h3 id="features-(/-why?)"><a class="header-link" href="#features-(/-why?)"></a>Features (/ why?)</h3>
 <h3 id="synopsis-(overview)."><a class="header-link" href="#synopsis-(overview)."></a>Synopsis (overview).</h3>
 <p>Please see X for a more detailed discussion and many more examples.</p>
@@ -469,18 +469,23 @@ you must remember to call it using the manual style:</p>
 merge <span class="hljs-comment">(obj1, obj2)</span> <span class="hljs-comment">// will not work</span>
 obj<span class="hljs-number">2</span> | merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">// ok</span>
 merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)</span> <span class="hljs-comment">// also ok</span></code></pre><h3 id="bitwise-math"><a class="header-link" href="#bitwise-math"></a>Bitwise math</h3>
-<pre class="hljs"><code><span class="hljs-comment">// --- 1) use the functional form</span>
-
-<span class="hljs-keyword">import</span> { bitwiseOr, bitwiseShiftBy, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
-<span class="hljs-number">4</span> | bitwiseOr (<span class="hljs-number">9</span>) <span class="hljs-comment">// 13</span>
-
-<span class="hljs-comment">// --- or 2) do your bitwise math in a separate source file and omit the</span>
-`defineBinaryOperator` headers.
-<span class="hljs-comment">// ------</span></code></pre><h3 id="why-not-use-lodash?"><a class="header-link" href="#why-not-use-lodash?"></a>Why not use lodash?</h3>
+<p>Of course, we&#39;ve saved your precious bitwise operators. You can either:</p>
+<ol class="list">
+<li><p>Use the functional form</p>
+<pre class="hljs"><code> <span class="hljs-keyword">import</span> { bitwiseOr, bitwiseShiftBy, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+ <span class="hljs-number">4</span> | bitwiseOr (<span class="hljs-number">9</span>) <span class="hljs-comment">// 13</span></code></pre></li>
+<li><p>Do your bitwise math in a separate scope than that in which the
+<code>defineBinaryOperator</code> calls appear. The operators are only overloaded in
+the scope in which the calls are made. We recommend doing the bitwise math
+in a separate source file and not mixing the two styles in one file.</p>
+</li>
+</ol>
+<h3 id="why-not-use-lodash?"><a class="header-link" href="#why-not-use-lodash?"></a>Why not use lodash?</h3>
 <ul class="list">
 <li>you don&#39;t need to carry around the _</li>
 <li>free functions are far more flexible than dotted ones</li>
 <li>predictable semantics based on English</li>
+<li>prototype stuff</li>
 </ul>
 </body>
 </html>

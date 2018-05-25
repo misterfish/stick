@@ -138,6 +138,7 @@ This would be a good time to read up on curried functions if you're not familiar
                                                    // etc.
 
 
+
 	import { map, } from 'stick-js'
 
 	map (double, [1, 2, 3])    // [2, 4, 6] (normal style)

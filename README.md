@@ -137,7 +137,7 @@ This would be a good time to read up on curried functions if you're not familiar
                                                    // or f (1) (2, 3)
                                                    // etc.
 
-
+Calling:
 
 	import { map, } from 'stick-js'
 

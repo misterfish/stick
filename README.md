@@ -487,7 +487,7 @@ Or to only merge if certain conditions hold:
 	os | mergeTo (ot)                 // { val: 2.2, vil: 3, vol: 3.5, vel: 42, }
 	os | mergeToWhenSrcIsInteger (ot) // { val: 25,  vil: 3, vol: 25,  vel: 42, }
 
-## ٭ semantics and argument order are often based on English grammar ٭
+## ٭ semantics and argument order are based where possible on English grammar ٭
 
 (We're dying to see a port to Hungarian, too)
 

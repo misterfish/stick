@@ -65,61 +65,62 @@ library by Jussi Kalliokoski (@jussi-kalliokoski).
 
 A few examples:
 
-- -
-		; [1, 2, 3]
-		| map (x => x + 1)
-		| join ('/')
-		| green
-		| sprintf1 ('The answer is %s')
-		| log // outputs 'The answer is 2/3/4' (colorfully)
+	; [1, 2, 3]
+	| map (x => x + 1)
+	| join ('/')
+	| green
+	| sprintf1 ('The answer is %s')
+	| log // outputs 'The answer is 2/3/4' (colorfully)
 
-- -
+----------
 
-		const isInteger = x => x === Math.floor (x)
-		const ifInteger = isInteger | ifPredicate
+	const isInteger = x => x === Math.floor (x)
+	const ifInteger = isInteger | ifPredicate
 
-		; [3.5, 4, 4.2]
-		| map (ifInteger (
-		  1 | add,
-		  'nothing' | always,
-		))
-		// ['nothing', 5, 'nothing']
+	; [3.5, 4, 4.2]
+	| map (ifInteger (
+	  1 | add,
+	  'nothing' | always,
+	))
+	// ['nothing', 5, 'nothing']
 
-- -
+----------
 
-		const convertFahrenheit = fah => lets (
-		  _ => (fah - 32) / 9 * 5,    // (1) celsius
-		  (cel) => cel + 273,         // (2) kelvin
-		  (cel, kel) => [cel, kel],   // (3) result
-		)
+	const convertFahrenheit = fah => lets (
+	  _ => (fah - 32) / 9 * 5,    // (1) celsius
+	  (cel) => cel + 273,         // (2) kelvin
+	  (cel, kel) => [cel, kel],   // (3) result
+	)
+	
+	convertFahrenheit (86) // [30, 303]
 
-		convertFahrenheit (86) // [30, 303]
+----------
 
-- -
+	const checkVal = condS ([
+	  4 | eq    | guard  (sprintf1 ('%s was 4')),
+	  4 | lt    | guard  (sprintf1 ('%s was less than 4')),
+	  4 | gt    | guard  (sprintf1 ('%s was more than 4')),
+	  otherwise | guardV ("error, this shouldn't happen"),
+	])
+	
+	; [3, 4, 5]
+	| map (checkVal)
+	| join (' | ')
+	// 3 was less than 4 | 4 was 4 | 5 was more than 4
 
-		const checkVal = condS ([
-		  4 | eq    | guard  (sprintf1 ('%s was 4')),
-		  4 | lt    | guard  (sprintf1 ('%s was less than 4')),
-		  4 | gt    | guard  (sprintf1 ('%s was more than 4')),
-		  otherwise | guardV ("error, this shouldn't happen"),
-		])
+----------
 
-		; [3, 4, 5]
-		| map (checkVal)
-		| join (' | ')
-		// 3 was less than 4 | 4 was 4 | 5 was more than 4
+	// ------ dog.js
+	const proto = { speak () { 'Hi from ' + this.name }}
+	export default proto | factory
+	
+	// ------ main.js
+	import Dog from './dog'
+	Dog.create ({ name: 'Caesar', }).speak () // 'Hi from Caesar'
 
-- -
+----------
 
-		// ------ dog.js
-		const proto = { speak () { 'Hi from ' + this.name }}
-		export default proto | factory
-
-		// ------ main.js
-		import Dog from './dog'
-		Dog.create ({ name: 'Caesar', }).speak () // 'Hi from Caesar'
-
-- and much more.
+And much more.
 
 # Overview
 

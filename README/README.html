@@ -63,55 +63,47 @@ etc.), or mix and match as you like.</p>
 library by Jussi Kalliokoski (@jussi-kalliokoski).</p>
 <h1 id="tl;dr"><a class="header-link" href="#tl;dr"></a>TL;DR</h1>
 <p>A few examples:</p>
-<ul class="list">
-<li><p>-</p>
-<pre class="hljs"><code>  ; <span class="hljs-selector-attr">[1, 2, 3]</span>
-  | <span class="hljs-selector-tag">map</span> (x =&gt; x + <span class="hljs-number">1</span>)
-  | <span class="hljs-selector-tag">join</span> (<span class="hljs-string">'/'</span>)
-  | <span class="hljs-selector-tag">green</span>
-  | <span class="hljs-selector-tag">sprintf1</span> (<span class="hljs-string">'The answer is %s'</span>)
-  | <span class="hljs-selector-tag">log</span> <span class="hljs-comment">// outputs 'The answer is 2/3/4' (colorfully)</span></code></pre></li>
-<li><p>-</p>
-<pre class="hljs"><code>  <span class="hljs-keyword">const</span> isInteger = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x === <span class="hljs-built_in">Math</span>.floor (x)
-  <span class="hljs-keyword">const</span> ifInteger = isInteger | ifPredicate
+<pre class="hljs"><code>; <span class="hljs-selector-attr">[1, 2, 3]</span>
+| <span class="hljs-selector-tag">map</span> (x =&gt; x + <span class="hljs-number">1</span>)
+| <span class="hljs-selector-tag">join</span> (<span class="hljs-string">'/'</span>)
+| <span class="hljs-selector-tag">green</span>
+| <span class="hljs-selector-tag">sprintf1</span> (<span class="hljs-string">'The answer is %s'</span>)
+| <span class="hljs-selector-tag">log</span> <span class="hljs-comment">// outputs 'The answer is 2/3/4' (colorfully)</span></code></pre><hr>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> isInteger = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x === <span class="hljs-built_in">Math</span>.floor (x)
+<span class="hljs-keyword">const</span> ifInteger = isInteger | ifPredicate
 
-  ; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4.2</span>]
-  | map (ifInteger (
-    <span class="hljs-number">1</span> | add,
-    <span class="hljs-string">'nothing'</span> | always,
-  ))
-  <span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre></li>
-<li><p>-</p>
-<pre class="hljs"><code>  <span class="hljs-keyword">const</span> convertFahrenheit = fah =&gt; lets (
-    _ =&gt; (fah - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,    <span class="hljs-comment">// (1) celsius</span>
-    (cel) =&gt; cel + <span class="hljs-number">273</span>,         <span class="hljs-comment">// (2) kelvin</span>
-    (cel, kel) =&gt; [cel, kel],   <span class="hljs-comment">// (3) result</span>
-  )
+; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4.2</span>]
+| map (ifInteger (
+  <span class="hljs-number">1</span> | add,
+  <span class="hljs-string">'nothing'</span> | always,
+))
+<span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre><hr>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> convertFahrenheit = fah =&gt; lets (
+  _ =&gt; (fah - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,    <span class="hljs-comment">// (1) celsius</span>
+  (cel) =&gt; cel + <span class="hljs-number">273</span>,         <span class="hljs-comment">// (2) kelvin</span>
+  (cel, kel) =&gt; [cel, kel],   <span class="hljs-comment">// (3) result</span>
+)
 
-  convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-comment">// [30, 303]</span></code></pre></li>
-<li><p>-</p>
-<pre class="hljs"><code>  const checkVal = condS ([
-    <span class="hljs-number">4</span> | e<span class="hljs-string">q    | guard  (sprintf1 ('%s was 4')),
-    4 |</span> <span class="hljs-keyword">lt</span>    | guard  (sprintf1 (<span class="hljs-string">'%s was less than 4'</span>)),
-    <span class="hljs-number">4</span> | <span class="hljs-keyword">gt</span>    | guard  (sprintf1 (<span class="hljs-string">'%s was more than 4'</span>)),
-    otherwise | guardV (<span class="hljs-string">"error, this shouldn't happen"</span>),
-  ])
+convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-comment">// [30, 303]</span></code></pre><hr>
+<pre class="hljs"><code>const checkVal = condS ([
+  <span class="hljs-number">4</span> | e<span class="hljs-string">q    | guard  (sprintf1 ('%s was 4')),
+  4 |</span> <span class="hljs-keyword">lt</span>    | guard  (sprintf1 (<span class="hljs-string">'%s was less than 4'</span>)),
+  <span class="hljs-number">4</span> | <span class="hljs-keyword">gt</span>    | guard  (sprintf1 (<span class="hljs-string">'%s was more than 4'</span>)),
+  otherwise | guardV (<span class="hljs-string">"error, this shouldn't happen"</span>),
+])
 
-  ; [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
-  | <span class="hljs-keyword">map</span> (checkVal)
-  | <span class="hljs-keyword">join</span> (<span class="hljs-string">' | '</span>)
-  // <span class="hljs-number">3</span> was less than <span class="hljs-number">4</span> | <span class="hljs-number">4</span> was <span class="hljs-number">4</span> | <span class="hljs-number">5</span> was more than <span class="hljs-number">4</span></code></pre></li>
-<li><p>-</p>
-<pre class="hljs"><code>  <span class="hljs-comment">// ------ dog.js</span>
-  <span class="hljs-keyword">const</span> proto = { speak () { <span class="hljs-string">'Hi from '</span> + <span class="hljs-keyword">this</span>.name }}
-  <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto | <span class="hljs-keyword">factory</span>
+; [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+| <span class="hljs-keyword">map</span> (checkVal)
+| <span class="hljs-keyword">join</span> (<span class="hljs-string">' | '</span>)
+// <span class="hljs-number">3</span> was less than <span class="hljs-number">4</span> | <span class="hljs-number">4</span> was <span class="hljs-number">4</span> | <span class="hljs-number">5</span> was more than <span class="hljs-number">4</span></code></pre><hr>
+<pre class="hljs"><code><span class="hljs-comment">// ------ dog.js</span>
+<span class="hljs-keyword">const</span> proto = { speak () { <span class="hljs-string">'Hi from '</span> + <span class="hljs-keyword">this</span>.name }}
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto | <span class="hljs-keyword">factory</span>
 
-  <span class="hljs-comment">// ------ main.js</span>
-  <span class="hljs-keyword">import</span> Dog from <span class="hljs-string">'./dog'</span>
-  Dog.create ({ name: <span class="hljs-string">'Caesar'</span>, }).speak () <span class="hljs-comment">// 'Hi from Caesar'</span></code></pre></li>
-<li><p>and much more.</p>
-</li>
-</ul>
+<span class="hljs-comment">// ------ main.js</span>
+<span class="hljs-keyword">import</span> Dog from <span class="hljs-string">'./dog'</span>
+Dog.create ({ name: <span class="hljs-string">'Caesar'</span>, }).speak () <span class="hljs-comment">// 'Hi from Caesar'</span></code></pre><hr>
+<p>And much more.</p>
 <h1 id="overview"><a class="header-link" href="#overview"></a>Overview</h1>
 <h2 id="٭-basic-example-٭"><a class="header-link" href="#٭-basic-example-٭"></a>٭ basic example ٭</h2>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> --- source files must begin with <span class="hljs-keyword">this</span> header.

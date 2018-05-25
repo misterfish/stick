@@ -1038,6 +1038,66 @@ But we can trick it like this:
 	// or just
 	// const error = die
 
+#### ٭ cond ٭
+
+    import {
+	  cond, condN, condS, guard, guardV, sprintf1, otherwise,
+	} from 'stick-js'
+
+Naive form:
+
+	cond (
+	  [3 === 4, _ => 'strange'],
+	  [3 === 5, _ => 'even stranger'],
+	  [null, _ => 'ok'],
+	)
+
+An arbitrary number of lines can be provided.
+
+With a stick idiom:
+
+    cond (
+	  (_ => 3 === 4) | guard (_ => 'strange'),
+	  (_ => 3 === 5) | guard (_ => 'even stranger'),
+	  otherwise      | guard (_ => 'ok'),
+	)
+
+If the guard functions return simple expressions, `guardV` can be more
+convenient:
+
+    cond (
+	  (_ => 3 === 4) | guardV ('strange'),
+	  (_ => 3 === 5) | guardV ('even stranger'),
+	  otherwise      | guardV ('ok'),
+	)
+
+The most useful version is `condS`. Remember, 'S' implies 'N', so give it an
+array.
+
+    const checkVal = val => val | condS ([
+	  eq (4)    | guard (val => val | sprintf1 ('%s was 4')),
+	  lt (4)    | guard (val => val | sprintf1 ('%s was less than 4')),
+	  gt (4)    | guard (val => val | sprintf1 ('%s was more than 4')),
+	  otherwise | guardV ("error, this shouldn't happen"),
+	])
+
+Cleaning it up a bit, and inverting the parentheses in the test expressions:
+
+    const checkVal = condS ([
+	  4 | eq    | guard  (sprintf1 ('%s was 4')),
+	  4 | lt    | guard  (sprintf1 ('%s was less than 4')),
+	  4 | gt    | guard  (sprintf1 ('%s was more than 4')),
+	  otherwise | guardV ("error, this shouldn't happen"),
+	])
+
+This will for sure look strange at first, but it does work and is extremely
+useful. Try it for yourself:
+
+; [3, 4, 5]
+| map (checkVal)
+| join (' | ')
+// 3 was less than 4 | 4 was 4 | 5 was more than 4
+
 #### ٭ frontend stuff ٭
 
     import { path, prop, whenTrue, always, } from 'stick-js'

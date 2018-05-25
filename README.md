@@ -911,6 +911,56 @@ You can specify these behaviors explicitly:
     dogProto | discardPrototype | <mixin functions ...> |
     dogProto | Object.create    | <mixin functions ...> |
 
+#### ٭ let expressions ٭
+
+You can consolidate a number of assignment statements into a single let
+expression, and also limit the scope of the assignments in a way which is
+easy to read. Code which is more expression-heavy can often be much easier
+to follow at a glance & refactor, especially considering that each statement
+is a possible side-effect inducing timebomb.
+
+    // --- convert a celsius value to both fahrenheit & kelvin.
+
+    const convertCelsius = (c) => letV (
+	  c / 5 * 9 + 32, // fahrenheit
+	  c - 273,   // kelvin
+	  (fah, kel) => [fah, kel],
+	)
+
+`letV` takes an arbitrary number of values, and expects the last one to be a
+function. It simply passes the values in order to the function.
+
+There is an 'N' form (`letVN`, which takes an array of values and one
+function).
+
+Far more useful is `lets` and `letS`. (Think 'let\*' in racket).
+
+If we went the other way:
+
+    // --- convert fahrenheit to celsius & kelvin
+
+	const convertFahrenheit = (f) => letV (
+	  (f - 32) / 9 * 5,      // celsius
+	  (f - 32) / 9 * 5 + 273 // kelvin
+	  (cel, kel) => [cel, kel],
+	)
+
+We see that we are repeating work. With `lets`, it would be:
+
+    // --- convert fahrenheit to celsius & kelvin
+
+	const convertFahrenheit = (f) => letV (
+	  _ => (f - 32) / 9 * 5,           // (1) celsius
+	  (cel) => c + 273,      // (2) kelvin
+	  (cel, kel) => [cel, kel], // (3) result
+	)
+
+`lets` expects each line to be a function. The first line is called with no
+argument. The result (1) is passed as the argument to (2). (1) and the
+result of (2) are passed as the arguments to (3), and so on.
+
+(For now, there can be up to 6 lines. See below for a generic version).
+
 #### ٭ frontend stuff ٭
 
     import { path, prop, whenTrue, always, } from 'stick-js'
@@ -1216,6 +1266,62 @@ you must remember to call it using the manual style:
 	merge (obj1) (obj2) // also ok
 
 
+### Generic version of `lets`
+
+Here is a generic form of `lets` which takes any number of non-zero
+arguments. We removed it from stick because it depends on `mapAccum`, for
+which we do not currently have an implementation without depending on Ramda.
+
+// --- generic form, for any non-zero number of arguments.
+const lets = (...xs) => {
+    const executeStep = prevVals => applyToN (prevVals)
+
+    const ys = xs
+        // --- acc contains running output array, up to the previous item.
+        | mapAccum ((acc, v) => executeStep (acc) (v)
+            | (stepVal => [[...acc, stepVal], stepVal])
+        ) ([])
+        | prop (1)
+
+    return ys | last
+}
+
+Note: this is not fast, but it is correct. You can prove it with a 
+contrived fibonacci example:
+
+    import { list, timesV, applyToN, rangeTo, } from 'stick-js'
+
+    const fibonacci = (x) => {
+	  const sumLastTwo = (xs) => {
+	    const l = xs.length
+		return xs [l-1] + xs [l-2]
+	  }
+	  const entry = (...prev) => {
+	    const l = prev.length
+		return l === 0 ? 1 :
+		       l === 1 ? 1 : sumLastTwo (prev)
+	  }
+      const refs = entry | timesV (n + 1)
+      const args = [...refs, list]
+	  return lets (...args)
+	}
+
+	1 | rangeTo (20)
+	  | map (fibonacci)
+
+	/*
+	  [ [ 1, 1 ],
+		[ 1, 1, 2 ],
+		[ 1, 1, 2, 3 ],
+		[ 1, 1, 2, 3, 5 ],
+		[ 1, 1, 2, 3, 5, 8 ],
+		[ 1, 1, 2, 3, 5, 8, 13 ],
+		[ 1, 1, 2, 3, 5, 8, 13, 21 ],
+		[ 1, 1, 2, 3, 5, 8, 13, 21, 34 ],
+	    [ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 ]
+        ...
+      ]
+    */
 
 
 ### Bitwise math

@@ -175,7 +175,7 @@ const ignore = n => f => (...args) => args | splitAt (n) | prop (1) | passToN (f
 const headTail = f => splitAt (1) >> f
 
 // --- generic form, for any non-zero number of arguments.
-export const _laat = (...xs) => {
+export const _lets = (...xs) => {
     const executeStep = prevVals => applyToN (prevVals)
 
     const ys = xs

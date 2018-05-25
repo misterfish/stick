@@ -709,7 +709,42 @@ only the own keys? Should it create a new object using and mutate it?</p>
 <p>You can specify these behaviors explicitly:</p>
 <pre class="hljs"><code>dogProto |<span class="hljs-string"> flattenPrototype </span>|<span class="hljs-string"> &lt;mixin functions ...&gt; </span>|
 dogProto |<span class="hljs-string"> discardPrototype </span>|<span class="hljs-string"> &lt;mixin functions ...&gt; </span>|
-dogProto |<span class="hljs-string"> Object.create    </span>|<span class="hljs-string"> &lt;mixin functions ...&gt; </span>|</code></pre><h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
+dogProto |<span class="hljs-string"> Object.create    </span>|<span class="hljs-string"> &lt;mixin functions ...&gt; </span>|</code></pre><h4 id="٭-let-expressions-٭"><a class="header-link" href="#٭-let-expressions-٭"></a>٭ let expressions ٭</h4>
+<p>You can consolidate a number of assignment statements into a single let
+expression, and also limit the scope of the assignments in a way which is
+easy to read. Code which is more expression-heavy can often be much easier
+to follow at a glance &amp; refactor, especially considering that each statement
+is a possible side-effect inducing timebomb.</p>
+<pre class="hljs"><code><span class="hljs-comment">// --- convert a celsius value to both fahrenheit &amp; kelvin.</span>
+
+const convertCelsius = (c) =&gt; letV (
+  c / <span class="hljs-number">5</span> * <span class="hljs-number">9</span> + <span class="hljs-number">32</span>, <span class="hljs-comment">// fahrenheit</span>
+  c - <span class="hljs-number">273</span>,   <span class="hljs-comment">// kelvin</span>
+  (fah, kel) =&gt; [fah, kel],
+)</code></pre><p><code>letV</code> takes an arbitrary number of values, and expects the last one to be a
+function. It simply passes the values in order to the function.</p>
+<p>There is an &#39;N&#39; form (<code>letVN</code>, which takes an array of values and one
+function).</p>
+<p>Far more useful is <code>lets</code> and <code>letS</code>. (Think &#39;let*&#39; in racket).</p>
+<p>If we went the other way:</p>
+<pre class="hljs"><code><span class="hljs-comment">// --- convert fahrenheit to celsius &amp; kelvin</span>
+
+const convertFahrenheit = (f) =&gt; letV (
+  (f - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,      <span class="hljs-comment">// celsius</span>
+  (f - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span> + <span class="hljs-number">273</span> <span class="hljs-comment">// kelvin</span>
+  (cel, kel) =&gt; [cel, kel],
+)</code></pre><p>We see that we are repeating work. With <code>lets</code>, it would be:</p>
+<pre class="hljs"><code><span class="hljs-comment">// --- convert fahrenheit to celsius &amp; kelvin</span>
+
+<span class="hljs-keyword">const</span> convertFahrenheit = (f) =&gt; letV (
+  _ =&gt; (f - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,           <span class="hljs-comment">// (1) celsius</span>
+  (cel) =&gt; c + <span class="hljs-number">273</span>,      <span class="hljs-comment">// (2) kelvin</span>
+  (cel, kel) =&gt; [cel, kel], <span class="hljs-comment">// (3) result</span>
+)</code></pre><p><code>lets</code> expects each line to be a function. The first line is called with no
+argument. The result (1) is passed as the argument to (2). (1) and the
+result of (2) are passed as the arguments to (3), and so on.</p>
+<p>(For now, there can be up to 6 lines. See below for a generic version).</p>
+<h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, whenTrue, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
 something like this:</p>
 <pre class="hljs"><code>const withConnect = connect(<span class="hljs-name">mapStateToProps</span>, mapDispatchToProps)<span class="hljs-comment">;</span>
@@ -936,7 +971,56 @@ you must remember to call it using the manual style:</p>
 <pre class="hljs"><code>import { merge, } from <span class="hljs-string">'stick-js/manual'</span>
 merge <span class="hljs-comment">(obj1, obj2)</span> <span class="hljs-comment">// will not work</span>
 obj<span class="hljs-number">2</span> | merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">// ok</span>
-merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)</span> <span class="hljs-comment">// also ok</span></code></pre><h3 id="bitwise-math"><a class="header-link" href="#bitwise-math"></a>Bitwise math</h3>
+merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)</span> <span class="hljs-comment">// also ok</span></code></pre><h3 id="generic-version-of-`lets`"><a class="header-link" href="#generic-version-of-`lets`"></a>Generic version of <code>lets</code></h3>
+<p>Here is a generic form of <code>lets</code> which takes any number of non-zero
+arguments. We removed it from stick because it depends on <code>mapAccum</code>, for
+which we do not currently have an implementation without depending on Ramda.</p>
+<p>// --- generic form, for any non-zero number of arguments.
+const lets = (...xs) =&gt; {
+    const executeStep = prevVals =&gt; applyToN (prevVals)</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> ys = xs
+    <span class="hljs-comment">// --- acc contains running output array, up to the previous item.</span>
+    | mapAccum (<span class="hljs-function">(<span class="hljs-params">acc, v</span>) =&gt;</span> executeStep (acc) (v)
+        | (<span class="hljs-function"><span class="hljs-params">stepVal</span> =&gt;</span> [[...acc, stepVal], stepVal])
+    ) ([])
+    | prop (<span class="hljs-number">1</span>)
+
+<span class="hljs-keyword">return</span> ys | last</code></pre><p>}</p>
+<p>Note: this is not fast, but it is correct. You can prove it with a 
+contrived fibonacci example:</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { list, timesV, applyToN, rangeTo, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+
+<span class="hljs-keyword">const</span> fibonacci = <span class="hljs-function">(<span class="hljs-params">x</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> sumLastTwo = <span class="hljs-function">(<span class="hljs-params">xs</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> l = xs.length
+    <span class="hljs-keyword">return</span> xs [l<span class="hljs-number">-1</span>] + xs [l<span class="hljs-number">-2</span>]
+  }
+  <span class="hljs-keyword">const</span> entry = <span class="hljs-function">(<span class="hljs-params">...prev</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> l = prev.length
+    <span class="hljs-keyword">return</span> l === <span class="hljs-number">0</span> ? <span class="hljs-number">1</span> :
+           l === <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : sumLastTwo (prev)
+  }
+  <span class="hljs-keyword">const</span> refs = entry | timesV (n + <span class="hljs-number">1</span>)
+  <span class="hljs-keyword">const</span> args = [...refs, list]
+  <span class="hljs-keyword">return</span> lets (...args)
+}
+
+<span class="hljs-number">1</span> | rangeTo (<span class="hljs-number">20</span>)
+  | map (fibonacci)
+
+<span class="hljs-comment">/*
+  [ [ 1, 1 ],
+    [ 1, 1, 2 ],
+    [ 1, 1, 2, 3 ],
+    [ 1, 1, 2, 3, 5 ],
+    [ 1, 1, 2, 3, 5, 8 ],
+    [ 1, 1, 2, 3, 5, 8, 13 ],
+    [ 1, 1, 2, 3, 5, 8, 13, 21 ],
+    [ 1, 1, 2, 3, 5, 8, 13, 21, 34 ],
+    [ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 ]
+    ...
+  ]
+*/</span></code></pre><h3 id="bitwise-math"><a class="header-link" href="#bitwise-math"></a>Bitwise math</h3>
 <p>Of course, we&#39;ve saved your precious bitwise operators. You can either:</p>
 <ol class="list">
 <li><p>Use the functional form</p>

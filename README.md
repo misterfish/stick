@@ -413,9 +413,12 @@ Or to only merge if certain conditions hold:
 	os | mergeTo (ot)                 // { val: 2.2, vil: 3, vol: 3.5, vel: 42, }
 	os | mergeToWhenSrcIsInteger (ot) // { val: 25,  vil: 3, vol: 25,  vel: 42, }
 
-#### ٭ semantics and argument order are often derivable by thinking in English ٭
+#### ٭ semantics and argument order are often based on English grammar ٭
 
 (We're dying to see a port to Hungarian, too)
+
+Once you master this, the usage becomes intuitive and greatly reduces the
+need to keep checking the docs.
 
 	import {
 	  sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
@@ -425,14 +428,14 @@ Or to only merge if certain conditions hold:
 	const tgt = { thing: 'sandwich', want: 'no thanks',  }
 	const src = {                    want: 'yes please', }
 
-When a function ends in ‘To’, the identifier to the right is the object of
-the preposition.
+When a function ends in a preposition, for example, ‘To’, the identifier to
+the right is the object of the preposition.
 
 Read this as ‘merge src **to tgt**’
 
 	src | mergeTo (tgt)
 
-The same function without the ‘To’ means that the identifier to the right is the object of the verb ‘merge’.
+The same function without the preposition means that the identifier to the right is the object of the verb ‘merge’.
 
 Read this as: ‘**merge src** to tgt’
 
@@ -459,6 +462,7 @@ Read this as: ‘**merge src** to tgt’
 
     // --- 'bind prop to object'
 	'speak' | bindPropTo (dog)   | invoke // same
+
     // --- also 'bind prop to object'
 	dog     | bindProp ('speak') | invoke // same
 
@@ -472,10 +476,21 @@ Read this as: ‘**merge src** to tgt’
 	; ({}.toString) | callOn (3)          // '[object Number]'
 
 	// --- 'provide this context to this function'
-	; 3 | provideTo ({}.toString)        // '[object Number]'
+	; 3 | provideTo ({}.toString)         // '[object Number]'
 
-    dog.speak | callOn (cat)             // 'My name is Bo'
-    cat       | provideTo (dog.speak)    // 'My name is Bo'
+Note that this fits the `a | b | c` pattern:
+
+	dog.speak | bindTo (cat) | invoke     // 'My name is Bo'
+
+So we can also write it as `a | (b >> c)`:
+
+	dog.speak | (bindTo (cat) >> invoke)  // 'My name is Bo'
+
+In fact `bindTo (x) >> invoke` is already provided under the name `callOn`,
+and its inverse `provideTo`:
+
+    dog.speak | callOn (cat)              // 'My name is Bo'
+    cat       | provideTo (dog.speak)     // 'My name is Bo'
 
 Some other miscellaneous examples.
 
@@ -488,22 +503,38 @@ Some other miscellaneous examples.
 	// --- 'divide 3 into 6'
 	3 | divideInto (6)                    // 2
 
+	// --- 'subtract 3 from 4'
+	3 | subtractFrom (4)                  // 1
+
+	// --- 'subtract 4 from 3'
+	3 | subtract (4)                      // -1
+
+	// --- '3 minus 4'
+	3 | minus (4)                         // -1
+
 #### ٭ side effects & chaining, mutable vs immutable ٭
 
 	import {
 	  map, side1, appendM, append, prependM, prepend,
 	} from 'stick-js'
 
-	// --- chaining with the . will often not do what you want.
+Chaining with the `.` will often not do what you want.
 
 	; [2, 3, 4]
 	  .push (5)
 	  .unshift (1) // error, return value of previous line was 5
 
-	// --- this will:
+But this will:
 
 	const push    = 'push'    | side1
 	const unshift = 'unshift' | side1
+
+The 1 in side1 refers to the arity of the function, i.e., the exact number
+of arguments it expects. When working with functions in this way it's
+important to specify this.
+
+`.push` and `.unshift`, both methods of `Array.prototype`, expect exactly
+one argument, hence `side1` in both caes.
 
 	; [2, 3, 4]
 	| push (5)
@@ -521,7 +552,142 @@ Some other miscellaneous examples.
 	| append (5)  // new array [2, 3, 4, 5]
 	| prepend (1) // new array [1, 2, 3, 4, 5]
 
-#### ٭ dog ٭
+#### ٭ dog ٭ synopsis
+
+#### ٭ dog ٭ explained
+
+We provide a functional style for working with objects the way JS was
+designed to: using prototypical inheritance and Object.create. We hope to
+show you that the `new` keyword and 'classes' and all the baggage they bring
+are unnecessary, and that they obfuscate the way that objects actually work.
+
+To recap: you create an object in JS by first building a prototype object,
+consisting of only functions.
+
+    const animalProto = {
+	  breathe () { return 'woo' },
+	  speak () { throw new Error },
+	  ...
+	}
+
+To make an `animal` instance, you pass this prototype object to Object.create,
+then assign properties. If you wish you can treat one of these instances as
+a prototype for a new kind of object, a `dog` for example, copy in some
+more functions, use Object.create again, and so on.
+
+We encapsulate this process with the notion of a factory, which is an object
+which knows how to spawn objects of a certain type.
+
+    import { factory, } from 'stick-js'
+
+    const animalProto = {
+	  breathe () { return 'woo' },
+	  speak () { throw new Error },
+	  ...
+	}
+
+	const Animal = animalProto | factory // other idioms might call it `animal` or `animalFactory`
+	const animal1 = Animal.create ()
+	const animal2 = Animal.create ()
+	animal1.breathe () // 'woo'
+	animal2.breathe () // 'woo'
+	animal2.speak () // Error
+
+To add properties:
+
+    const animalProps = {
+	  type: 'animal',
+	  size: undefined,
+	  numLegs: undefined,
+	}
+
+And we recommend always having an `init` method, which you will almost certainly
+need. `.create ().init ()` becomes a well-worn pattern.
+
+    const isOdd = x => x % 2
+	const ifOdd = isOdd | ifPredicate
+
+    const animalProto = {
+	  init () {
+		...
+		return this
+	  },
+	  breathe () { return 'woo' },
+	  speak () { throw new Error },
+	  move () {
+		return this.numLegs | ifOdd (
+		  _ => 'hobble',
+		  _ => 'gait',
+		)
+	  },
+	}
+
+	const Animal = animalProto | factory | factoryProps (animalProps)
+
+On `create`, the properties which are 'ok' will get copied in to the new
+object. The others are there for documentation. Do use `undefined` for props
+that are waiting to be defined, which is arguably better than `null` and
+definitely better than `false`.
+
+    const animal = Animal.create ().init ()
+	animal.type // 'animal'
+	animal.size // undefined
+
+You can pass an object to `create` to initialise properties. These will be
+copied in *after* the props passed to `factoryProps`.
+
+    const bigBiped = Animal.create ({ size: 'big', numLegs: 2, }).init ()
+
+You can also eliminate the dots entirely:
+
+    const create = dot1 ('create')
+	const init   = side ('init')
+	const move   = dot  ('move')
+	const speak  = dot  ('speak')
+
+    Animal | create ({ size: 'small', numLegs: 2, })
+	       | init
+	       | move // 'gait'
+
+Note that by using `side` for `init` we are assured that the instance is
+passed down through the pipe and not the return value of `init` (although in
+this case, `init` returns `this`, so `dot` would have worked too.) `create`
+and `move` definitely need `dot` and not `side`.
+
+To extend `Animal` to the obligatory `Dog` find the `Animal` prototype
+(pretend `animalProto` is not in scope).
+
+    const animalProto = Animal.proto
+
+Or
+
+    const animalProto = Animal.create ().__proto__ // might not be available in all runtimes
+
+Create it, add dog methods, and make a new factory:
+
+    const dogProto = animalProto
+	  | Object.create
+	  | mergeM ({
+	    speak () { return this.loud ? 'WOOF' : 'woof' },
+	  })
+
+	const Dog = dogProto | factory | factoryProps (dogProps)
+
+    ; [true, false]
+	| map ((loud) => Dog
+	  | create ({ loud, })
+	  | speak
+	)
+	// ['WOOF', 'woof']
+	
+
+    
+
+    
+
+Working with mixins is tricky -- but you have all the tools now to specify
+exactly how you want it to work. Now you have what JS is known for giving
+you a lot of: freedom.
 
 #### ٭ frontend stuff ٭
 

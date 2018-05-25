@@ -52,15 +52,13 @@ far more pleasant to work with, and which will still work even if/when the
 proposal is accepted.</p>
 </li>
 </ul>
-<p>If you really want to do bitwise math, see below.</p>
 <p>The overloading is made possible thanks to the great
 <a href="https://github.com/jussi-kalliokoski/babel-plugin-operator-overload">babel-plugin-operator-overload</a>
 library by Jussi Kalliokoski (@jussi-kalliokoski).</p>
 <h3 id="features-(/-why?)"><a class="header-link" href="#features-(/-why?)"></a>Features (/ why?)</h3>
-<h3 id="synopsis-(overview)."><a class="header-link" href="#synopsis-(overview)."></a>Synopsis (overview).</h3>
-<p>Please see X for a more detailed discussion and many more examples.</p>
+<h3 id="synopsis-(overview-of-main-features)."><a class="header-link" href="#synopsis-(overview-of-main-features)."></a>Synopsis (overview of main features).</h3>
 <h4 id="٭-basic-example-٭"><a class="header-link" href="#٭-basic-example-٭"></a>٭ basic example ٭</h4>
-<pre class="hljs"><code><span class="hljs-regexp">//</span> --- header/ source files must begin with <span class="hljs-keyword">this</span> header.
+<pre class="hljs"><code><span class="hljs-regexp">//</span> --- source files must begin with <span class="hljs-keyword">this</span> header.
 
 defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
 defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
@@ -86,7 +84,8 @@ const { log, } = <span class="hljs-built_in">console</span>
 | log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span> (colorfully)</code></pre><h4 id="٭-the-'stick'-operator-٭"><a class="header-link" href="#٭-the-'stick'-operator-٭"></a>٭ the &#39;stick&#39; operator ٭</h4>
 <p><code>a | b</code> is simply an equivalent way of writing <code>b (a)</code></p>
 <p>A really simple idea, with pretty surprising consequences.</p>
-<p>(What if I really want to do bitwise math, you ask? See below).</p>
+<p>(What if I really want to do bitwise math, you ask? Don&#39;t worry, you still
+can: see below).</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- reminder: source files must begin with this.</span>
 <span class="hljs-comment">// --- from here on out we'll omit it in the examples.</span>
 defineBinaryOperator (<span class="hljs-string">'|'</span>,  (...args) =&gt; pipe         (...args))
@@ -113,7 +112,7 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
   | join (<span class="hljs-string">' '</span>)                  <span class="hljs-comment">// join (' ') is a function</span>
 <span class="hljs-comment">// 'Just A Perfect Day'</span></code></pre><h4 id="٭-currying-styles-٭"><a class="header-link" href="#٭-currying-styles-٭"></a>٭ currying styles ٭</h4>
 <p>All curried functions provided by stick-js can be called using either of 2 currying styles.</p>
-<p>This would be a good time to read XXX if you&#39;re not familiar with curried functions.</p>
+<p>This would be a good time to read up on curried functions if you&#39;re not familiar with them.</p>
 <ol class="list">
 <li><p>we will refer to this sort of function and calling style as &#39;manual&#39;:</p>
 <pre class="hljs"><code> const f = <span class="hljs-selector-tag">a</span> =&gt; <span class="hljs-selector-tag">b</span> =&gt; c =&gt; <span class="hljs-selector-tag">a</span> + <span class="hljs-selector-tag">b</span> + c          <span class="hljs-comment">// call like f (1) (2) (3)</span></code></pre></li>

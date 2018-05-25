@@ -49,8 +49,6 @@
   far more pleasant to work with, and which will still work even if/when the
   proposal is accepted.
 
-If you really want to do bitwise math, see below.
-
 The overloading is made possible thanks to the great
 [babel-plugin-operator-overload](https://github.com/jussi-kalliokoski/babel-plugin-operator-overload)
 library by Jussi Kalliokoski (@jussi-kalliokoski).
@@ -58,13 +56,11 @@ library by Jussi Kalliokoski (@jussi-kalliokoski).
 
 ### Features (/ why?)
 
-### Synopsis (overview).
-
-Please see X for a more detailed discussion and many more examples.
+### Synopsis (overview of main features).
 
 #### ٭ basic example ٭
 
-    // --- header/ source files must begin with this header.
+    // --- source files must begin with this header.
 
 	defineBinaryOperator ('|',  (...args) => pipe         (...args))
 	defineBinaryOperator ('<<', (...args) => compose      (...args))
@@ -95,7 +91,8 @@ Please see X for a more detailed discussion and many more examples.
 
 A really simple idea, with pretty surprising consequences.
 
-(What if I really want to do bitwise math, you ask? See below).
+(What if I really want to do bitwise math, you ask? Don't worry, you still
+can: see below).
 
     // --- reminder: source files must begin with this.
 	// --- from here on out we'll omit it in the examples.
@@ -127,7 +124,7 @@ A really simple idea, with pretty surprising consequences.
 
 All curried functions provided by stick-js can be called using either of 2 currying styles.
 
-This would be a good time to read XXX if you're not familiar with curried functions.
+This would be a good time to read up on curried functions if you're not familiar with them.
 
 1. we will refer to this sort of function and calling style as 'manual':
 
@@ -139,7 +136,7 @@ This would be a good time to read XXX if you're not familiar with curried functi
 	                                               // or f (1, 2, 3)
                                                    // or f (1) (2, 3)
                                                    // etc.
-                                
+
 
 	import { map, } from 'stick-js'
 

@@ -567,7 +567,7 @@ one argument, hence `side1` in both caes.
 		...
 		return this
 	  },
-	  breathe () { return 'woo' },
+	  breathe () { return 'huff' },
 	  whoami ()  { return this.name },
 	  getType () { return this.type },
 	}
@@ -590,7 +590,7 @@ one argument, hence `side1` in both caes.
 
 	const dog = Dog.create ()
 	// const dog = Dog.create ().init () // useful in practice
-	dog.breathe ()                       // 'woo'
+	dog.breathe ()                       // 'huff'
 	dog.type                             // 'dog', if `factoryProps` used
 	dog.getType ()                       // 'dog', same
 	dog.whoami ()                        // undefined, because no default.
@@ -624,7 +624,7 @@ one argument, hence `side1` in both caes.
 		  _ => 'gait',
 		)
 	  },
-	  breathe () { return 'woo' },
+	  breathe () { return 'huff' },
 	  speak ()   { 'not implemented' | die },
 	  getType () { return this.type },
 	}
@@ -686,10 +686,32 @@ one argument, hence `side1` in both caes.
 	import Dog from './dog'
 
 	const dog = Dog.create ({ name: 'garfunkel', })
-	dog.breathe ()                                  // 'woo' (from animal)
+	// const dog = Dog.create ({ name: 'garfunkel', }).init () // with init
+	dog.breathe ()                                  // 'huff' (from animal)
 	dog.getType ()                                  // 'dog' (function from animal, property from dog)
 	dog.speak ()                                    // 'Dog garfunkel says woof' (function from dog, property from instance initialisation)
 	dog.cheat ('a bit')                             // 'I cheat a bit' (from cheater)
+
+Stick idioms:
+
+    const breathe = dot ('breathe')
+	const getType = dot ('getType')
+	const speak = dot ('speak')
+	const cheat = dot1 ('cheat')
+	const init = side ('init')
+	const create = dot1 ('create')
+
+	const dog = Dog
+	  | create ({ name: 'garfunkel', })
+	  | init
+
+    dog | breathe
+	dog | getType
+	dog | speak
+
+	Dog | create ({ name: 'garfunkel', })
+	    | init
+        | cheat
 
 #### ٭ factory ٭ explained
 
@@ -706,7 +728,7 @@ To recap: you create an object in JS by first building a prototype object,
 consisting of only functions.
 
     const animalProto = {
-	  breathe () { return 'woo' },
+	  breathe () { return 'huff' },
 	  speak () { throw new Error },
 	  ...
 	}
@@ -722,7 +744,7 @@ which knows how to spawn objects of a certain type.
     import { factory, } from 'stick-js'
 
     const animalProto = {
-	  breathe () { return 'woo' },
+	  breathe () { return 'huff' },
 	  speak () { throw new Error },
 	  ...
 	}
@@ -730,8 +752,8 @@ which knows how to spawn objects of a certain type.
 	const Animal = animalProto | factory // other idioms might call it `animal` or `animalFactory`
 	const animal1 = Animal.create ()
 	const animal2 = Animal.create ()
-	animal1.breathe () // 'woo'
-	animal2.breathe () // 'woo'
+	animal1.breathe () // 'huff'
+	animal2.breathe () // 'huff'
 	animal2.speak () // Error
 
 To add properties:
@@ -743,7 +765,7 @@ To add properties:
 	}
 
 And we recommend always having an `init` method, which you will almost certainly
-need. `.create ().init ()` becomes a well-worn pattern.
+need. `myFactory.create ().init ()` becomes a well-worn pattern.
 
     const isOdd = x => x % 2 !== 0
 	const ifOdd = isOdd | ifPredicate
@@ -753,7 +775,7 @@ need. `.create ().init ()` becomes a well-worn pattern.
 		...
 		return this
 	  },
-	  breathe () { return 'woo' },
+	  breathe () { return 'huff' },
 	  speak () { throw new Error },
 	  move () {
 		return this.numLegs | ifOdd (
@@ -766,10 +788,12 @@ need. `.create ().init ()` becomes a well-worn pattern.
 	const Animal = animalProto | factory | factoryProps (animalProps)
 
 On `create`, the properties which are 'ok' will get copied in to the new
-object. The others are there for documentation. Do use `undefined` for props
-that are waiting to be defined, which is arguably better than `null` and
-definitely better than `false`. Use `void 8` or your very own favorite
-number to impress … no one.
+object.
+
+The others are there for documentation: put them here, not peppered
+throughout the methods. Do use `undefined` for props that are waiting to be
+defined, which is arguably better than `null` and definitely better than
+`false`. Use `void 8` or your very own favorite number to impress … no one.
 
     const animal = Animal.create ().init ()
 	animal.type // 'animal'
@@ -797,7 +821,7 @@ this case, `init` returns `this`, so `dot` would have worked too.) `create`
 and `move` definitely need `dot` and not `side`.
 
 To extend `Animal` to the obligatory `Dog` find the `Animal` prototype
-(pretend `animalProto` is not in scope).
+(if `animalProto` is not in scope).
 
     const animalProto = Animal.proto
 
@@ -825,7 +849,7 @@ Create it, add dog methods, and make a new factory:
 	  | create ({ loud: loudness, })
 	  | (dog => [dog.speak (), dog.breathe (), dog.move ()])
 	)
-	// [['WOOF', 'woo', 'gait'], ['woof', 'woo', 'gait']]
+	// [['WOOF', 'huff', 'gait'], ['woof', 'huff', 'gait']]
 	
 Note that we can call methods of both `Animal` and `Dog` now.
 
@@ -833,23 +857,52 @@ Note that we can call methods of both `Animal` and `Dog` now.
 
     const Dog = dogProto | mixinM (animalProto) | factory | factoryProps (dogProps)
 
-Working with mixins is tricky -- but you have all the tools now to specify
-exactly how you want it to work. Now you have what JS is known for giving
-you a lot of: freedom.
+Working with mixins is tricky. At some point, there will be namespace
+conflicts and it's not always obvious which version should win out -- and
+you have to decide how you want to deal with that.
 
-    const Dog = dogProto1 | mixinM (animalProto) | factory | factoryProps (dogProps)
+But you have all the tools now to specify exactly how you want it to work.
+Now you have what JS is known for giving you a lot of: freedom.
+
+    const Dog = dogProto | mixinPreM (animalProto) | factory | factoryProps (dogProps)
 	const dog1 = Dog | create ({})
-	dog1 | breathe // 'woo'
-	dog1 | speak // Errorr
-
-We mixed the animal into the dog, meaning that Animal's
-(unimplemented) version of breathe won. What we wanted to was mixinPreM:
-
-    const Dog = dogProto1 | mixinPreM (animalProto) | factory | factoryProps (dogProps)
+	dog1 | breathe // 'huff'
+    const Dog = dogProto | mixinPreM (animalProto) | factory | factoryProps (dogProps)
 	Dog.create ({}) | speak // 'woof'
 
+We mixed the animal into the dog as a 'pre' mixin, meaning that on name
+conflicts, Dog's version will win. If we had used `mixinM` instead of
+`mixinPreM`:
 
+    const Dog = dogProto | mixinM (animalProto) | factory | factoryProps (dogProps)
+	Dog | create ({})
+	    | speak // Error, this is Animal's version.
 
+Non-pre mixins are useful for orthogonal functionality -- something like
+logging, for example.
+
+You can add as many pre and post mixins as you like.
+
+    dogProto | mixinPreM (...) | ... | mixinM (...) | ... | factory
+
+Or use the 'N' versions to provide an array:
+
+    dogProto | mixinPreNM ([a, b, c]) | mixinNM ([d, e, f]) | factory
+
+Note the 'M' marker on the mixin functions. This is to make clear that these
+functions mutate the prototype object, which might be a bit surprising when
+using this style. We do not provide non-M versions of the mixin functions,
+because it's not obvious exactly what the semantics should be, as several
+alternatives could be equally intuitive.
+
+Should the prototype chain be flattened? Should it be discarded, leaving
+only the own keys? Should it create a new object using and mutate it?
+
+You can specify these behaviors explicitly:
+
+    dogProto | flattenPrototype | <mixin functions ...> |
+    dogProto | discardPrototype | <mixin functions ...> |
+    dogProto | Object.create    | <mixin functions ...> |
 
 #### ٭ frontend stuff ٭
 

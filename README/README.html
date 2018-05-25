@@ -799,7 +799,28 @@ you can tell what went wrong:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> throwError = <span class="hljs-function"><span class="hljs-params">reason</span> =&gt;</span> reason | die
 
 <span class="hljs-comment">// or just</span>
-<span class="hljs-comment">// const error = die</span></code></pre><h4 id="٭-cond-٭"><a class="header-link" href="#٭-cond-٭"></a>٭ cond ٭</h4>
+<span class="hljs-comment">// const error = die</span></code></pre><p>Now we can improve this common code:</p>
+<pre class="hljs"><code><span class="hljs-keyword">let</span> answer
+<span class="hljs-keyword">try</span> {
+    answer = dubiousFunction ()
+} <span class="hljs-keyword">catch</span> (e) {
+    console.warn (e)
+    answer = <span class="hljs-string">'bad news'</span>
+}</code></pre><p>Like this:</p>
+<pre class="hljs"><code>const answer = dubiousFunction | tryCatch (
+  plus (<span class="hljs-number">10</span>),
+  <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span> {
+      e | decorateException (<span class="hljs-string">"That didn't go well"</span>)
+        | <span class="hljs-built_in">console</span>.warn
+      <span class="hljs-keyword">return</span> <span class="hljs-string">'bad news'</span>
+  },
+}</code></pre><p>Or perhaps:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> answer = dubiousFunction | tryCatch (
+  plus (<span class="hljs-number">10</span>),
+  decorateException (<span class="hljs-string">"That didn't go well"</span>)
+  &gt;&gt; tap (<span class="hljs-built_in">console</span>.warn)
+  &gt;&gt; (<span class="hljs-string">'bad news'</span> | always)
+)</code></pre><h4 id="٭-cond-٭"><a class="header-link" href="#٭-cond-٭"></a>٭ cond ٭</h4>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> {
   cond, condN, condS, guard, guardV, sprintf1, <span class="hljs-keyword">otherwise</span>,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>Naive form:</p>
@@ -832,7 +853,7 @@ array.</p>
   <span class="hljs-number">4</span> | lt    | guard  (<span class="hljs-name">sprintf1</span> ('%s was less than <span class="hljs-number">4</span>')),
   <span class="hljs-number">4</span> | gt    | guard  (<span class="hljs-name">sprintf1</span> ('%s was more than <span class="hljs-number">4</span>')),
   otherwise | guardV (<span class="hljs-string">"error, this shouldn't happen"</span>),
-])</code></pre><p>This will for sure look strange at first, after a while you&#39;ll . Try it for yourself:</p>
+])</code></pre><p>Wut?! This does work, strange as it looks. Try it for yourself:</p>
 <p>; [3, 4, 5]
 | map (checkVal)
 | join (&#39; | &#39;)

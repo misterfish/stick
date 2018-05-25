@@ -1038,6 +1038,36 @@ But we can trick it like this:
 	// or just
 	// const error = die
 
+Now we can improve this common code:
+
+    let answer
+	try {
+	    answer = dubiousFunction ()
+	} catch (e) {
+	    console.warn (e)
+	    answer = 'bad news'
+	}
+
+Like this:
+
+    const answer = dubiousFunction | tryCatch (
+	  plus (10),
+	  (e) => {
+	      e | decorateException ("That didn't go well")
+	        | console.warn
+		  return 'bad news'
+	  },
+	}
+
+Or perhaps:
+
+    const answer = dubiousFunction | tryCatch (
+	  plus (10),
+	  decorateException ("That didn't go well")
+	  >> tap (console.warn)
+	  >> ('bad news' | always)
+	)
+
 #### ٭ cond ٭
 
     import {
@@ -1090,8 +1120,7 @@ Cleaning it up a bit, and inverting the parentheses in the test expressions:
 	  otherwise | guardV ("error, this shouldn't happen"),
 	])
 
-This will for sure look strange at first, but it does work and is extremely
-useful. Try it for yourself:
+Wut?! This does work, strange as it looks. Try it for yourself:
 
 ; [3, 4, 5]
 | map (checkVal)

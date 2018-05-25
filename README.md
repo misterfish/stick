@@ -42,8 +42,10 @@
 
 ### What we provide
 
-- A way to start using the pipe (or 'stick') operator today while the
-  proposal is still being fleshed out. (link)
+- A way to start using the pipe (or 'stick') operator today while 
+  proposal
+  [TC39/proposal-pipeline-operator](https://github.com/tc39/proposal-pipeline-operator)
+  is still being fleshed out.
 
   Note that we use `|`, not `|>`, which is not only easier to overload but
   far more pleasant to work with, and which will still work even if/when the

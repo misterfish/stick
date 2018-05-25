@@ -596,3 +596,9 @@ example
     }
 ## Features (/ why?)
 
+# Why not use lodash? / ramda/ etc.
+
+- you don't need to carry around the _
+- free functions are far more flexible than dotted ones
+- predictable semantics based on English
+- prototype stuff

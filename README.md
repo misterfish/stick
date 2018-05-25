@@ -1572,9 +1572,3 @@ Of course, we've saved your precious bitwise operators. You can either:
 the scope in which the calls are made. We recommend doing the bitwise math
 in a separate source file and not mixing the two styles in one file.
 
-# Why not use lodash? / ramda/ etc.
-
-- you don't need to carry around the _
-- free functions are far more flexible than dotted ones
-- predictable semantics based on English
-- prototype stuff

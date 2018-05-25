@@ -45,14 +45,19 @@
 - A way to start using the pipe (or 'stick') operator today while the
   proposal is still being fleshed out. (link)
 
-- Note that we use `|`, not `|>`, which is not only easier to overload but
+  Note that we use `|`, not `|>`, which is not only easier to overload but
   far more pleasant to work with, and which will still work even if/when the
   proposal is accepted.
+
+- A toolkit of functions centered around this pattern, and a number of
+  idioms which they facilitate.
+
+  You can use our functions, or your own favorite library (Ramda, lodash/fp,
+  etc.), or mix and match as you like.
 
 The overloading is made possible thanks to the great
 [babel-plugin-operator-overload](https://github.com/jussi-kalliokoski/babel-plugin-operator-overload)
 library by Jussi Kalliokoski (@jussi-kalliokoski).
-
 
 ### Features (/ why?)
 

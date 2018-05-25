@@ -323,6 +323,7 @@ os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <
 <p>(We&#39;re dying to see a port to Hungarian, too)</p>
 <p>Once you master this, the usage becomes intuitive and greatly reduces the
 need to check the docs.</p>
+<p>(What&#39;s the argument order of <code>append</code>, <code>times</code>, and <code>subtract</code> in your favorite library?)</p>
 <pre class="hljs"><code>import {
   sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
   appendTo, append, <span class="hljs-built_in">bind</span>PropTo, <span class="hljs-built_in">bind</span>Prop, <span class="hljs-built_in">bind</span>To, <span class="hljs-built_in">bind</span>, invoke,
@@ -348,7 +349,7 @@ const </span>dog = {
 }
 <span class="hljs-built_in">
 const </span>cat = {
-  name: 'Bo',
+  name: 'Fritz',
   speak () {<span class="hljs-built_in"> throw </span>new Error },
 }
 <span class="hljs-built_in">
@@ -364,19 +365,19 @@ dog     | bindProp ('speak') |<span class="hljs-built_in"> invoke </span>// same
 dog.speak | bindTo (dog) |<span class="hljs-built_in"> invoke </span>    // same
 
 // cat.speak ()                       // Error
-dog.speak | bindTo (cat) |<span class="hljs-built_in"> invoke </span>    // 'My name is Bo'
-cat | bind (dog.speak)   |<span class="hljs-built_in"> invoke </span>    // 'My name is Bo'
+dog.speak | bindTo (cat) |<span class="hljs-built_in"> invoke </span>    // 'My name is Fritz'
+cat | bind (dog.speak)   |<span class="hljs-built_in"> invoke </span>    // 'My name is Fritz'
 
 // --- 'call this function on this context', i.e., bind<span class="hljs-built_in"> and </span>call.
 ; ({}.toString) | callOn (3)          // '[object Number]'
 
 // --- 'provide this context to this function'
 ; 3 | provideTo ({}.toString)         // '[object Number]'</code></pre><p>Note that this fits the <code>a | b | c</code> pattern:</p>
-<pre class="hljs"><code>dog.speak | bindTo (cat) |<span class="hljs-built_in"> invoke </span>    // 'My name is Bo'</code></pre><p>So we can also write it as <code>a | (b &gt;&gt; c)</code>:</p>
-<pre class="hljs"><code>dog.speak | (bindTo (cat) &gt;&gt; invoke)  // <span class="hljs-symbol">'My</span> name <span class="hljs-keyword">is</span> Bo'</code></pre><p>In fact <code>bindTo (x) &gt;&gt; invoke</code> is already provided under the name <code>callOn</code>,
+<pre class="hljs"><code>dog.speak | bindTo (cat) |<span class="hljs-built_in"> invoke </span>    // 'My name is Fritz'</code></pre><p>So we can also write it as <code>a | (b &gt;&gt; c)</code>:</p>
+<pre class="hljs"><code>dog.speak | (bindTo (cat) &gt;&gt; invoke)  // <span class="hljs-symbol">'My</span> name <span class="hljs-keyword">is</span> Fritz'</code></pre><p>In fact <code>bindTo (x) &gt;&gt; invoke</code> is already provided under the name <code>callOn</code>,
 and its inverse <code>provideTo</code>:</p>
-<pre class="hljs"><code>dog.speak | callOn (cat)              // <span class="hljs-symbol">'My</span> name <span class="hljs-keyword">is</span> Bo'
-cat       | provideTo (dog.speak)     // <span class="hljs-symbol">'My</span> name <span class="hljs-keyword">is</span> Bo'</code></pre><p>Some other miscellaneous examples.</p>
+<pre class="hljs"><code>dog.speak | callOn (cat)              // <span class="hljs-symbol">'My</span> name <span class="hljs-keyword">is</span> Fritz'
+cat       | provideTo (dog.speak)     // <span class="hljs-symbol">'My</span> name <span class="hljs-keyword">is</span> Fritz'</code></pre><p>Some other miscellaneous examples.</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- '3 to the 4th'</span>
 <span class="hljs-number">3</span> | toThe (<span class="hljs-number">4</span>)                         <span class="hljs-comment">// 81</span>
 
@@ -393,7 +394,7 @@ cat       | provideTo (dog.speak)     // <span class="hljs-symbol">'My</span> na
 <span class="hljs-number">3</span> | subtract (<span class="hljs-number">4</span>)                      <span class="hljs-comment">// -1</span>
 
 <span class="hljs-comment">// --- '3 minus 4'</span>
-<span class="hljs-number">3</span> | minus (<span class="hljs-number">4</span>)                         <span class="hljs-comment">// -1</span></code></pre><h4 id="٭-side-effects-&-chaining,-mutable-vs-immutable-٭"><a class="header-link" href="#٭-side-effects-&-chaining,-mutable-vs-immutable-٭"></a>٭ side effects &amp; chaining, mutable vs immutable ٭</h4>
+<span class="hljs-number">3</span> | minus (<span class="hljs-number">4</span>)                         <span class="hljs-comment">// -1</span></code></pre><h4 id="٭-side-effects-&-chaining-٭-mutable-vs-immutable-٭"><a class="header-link" href="#٭-side-effects-&-chaining-٭-mutable-vs-immutable-٭"></a>٭ side effects &amp; chaining ٭ mutable vs immutable ٭</h4>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> {
   <span class="hljs-keyword">map</span>, side1, appendM, <span class="hljs-built_in">append</span>, prependM, prepend,
 } from <span class="hljs-string">'stick-js'</span></code></pre><p>Chaining with the <code>.</code> will often not do what you want.</p>
@@ -420,12 +421,146 @@ one argument, hence <code>side1</code> in both caes.</p>
 
 ; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
 | append (<span class="hljs-number">5</span>)  <span class="hljs-comment">// new array [2, 3, 4, 5]</span>
-| prepend (<span class="hljs-number">1</span>) <span class="hljs-comment">// new array [1, 2, 3, 4, 5]</span></code></pre><h4 id="٭-dog-٭-synopsis"><a class="header-link" href="#٭-dog-٭-synopsis"></a>٭ dog ٭ synopsis</h4>
-<h4 id="٭-dog-٭-explained"><a class="header-link" href="#٭-dog-٭-explained"></a>٭ dog ٭ explained</h4>
+| prepend (<span class="hljs-number">1</span>) <span class="hljs-comment">// new array [1, 2, 3, 4, 5]</span></code></pre><h4 id="٭-factory-٭-synopsis-٭"><a class="header-link" href="#٭-factory-٭-synopsis-٭"></a>٭ factory ٭ synopsis ٭</h4>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> {
+  <span class="hljs-keyword">factory</span>, factoryProps,
+  factoryStatics,
+} from <span class="hljs-string">'stick-js'</span>
+
+<span class="hljs-comment">// --- dog.js:</span>
+<span class="hljs-keyword">const</span> proto = {
+  init () {
+    ...
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+  },
+  breathe () { <span class="hljs-keyword">return</span> <span class="hljs-string">'woo'</span> },
+  whoami ()  { <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name },
+  getType () { <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type },
+}
+
+<span class="hljs-keyword">const</span> props = {
+  type: <span class="hljs-string">'dog'</span>,
+  name: undefined,
+}
+
+<span class="hljs-comment">// --- basic:</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto | <span class="hljs-keyword">factory</span>
+
+<span class="hljs-comment">// --- variants:</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto | <span class="hljs-keyword">factory</span> | factoryProps (props)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto | <span class="hljs-keyword">factory</span> | factoryStatics ({ ... }) | factoryProps (props)
+
+<span class="hljs-comment">// ------ main.js</span>
+
+<span class="hljs-keyword">import</span> Dog from <span class="hljs-string">'./dog'</span>
+
+<span class="hljs-keyword">const</span> dog = Dog.create ()
+<span class="hljs-comment">// const dog = Dog.create ().init () // useful in practice</span>
+dog.breathe ()                       <span class="hljs-comment">// 'woo'</span>
+dog.type                             <span class="hljs-comment">// 'dog', if `factoryProps` used</span>
+dog.getType ()                       <span class="hljs-comment">// 'dog', same</span>
+dog.whoami ()                        <span class="hljs-comment">// undefined, because no default.</span>
+
+<span class="hljs-keyword">const</span> dog2 = Dog.create ({ name: <span class="hljs-string">'garfunkel'</span>, })
+dog2.whoami ()                       <span class="hljs-comment">// 'garfunkel', thanks to args to create</span></code></pre><h4 id="٭-factory-w/mixins-٭-synopsis-٭"><a class="header-link" href="#٭-factory-w/mixins-٭-synopsis-٭"></a>٭ factory w/mixins ٭ synopsis ٭</h4>
+<pre class="hljs"><code><span class="hljs-comment">// ------ animal.js:</span>
+
+<span class="hljs-keyword">import</span> {
+  factory, factoryStatics, mixinM, mixinPreM,
+  factoryProps,
+  ifPredicate,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+
+<span class="hljs-keyword">const</span> isOdd = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x % <span class="hljs-number">2</span> !== <span class="hljs-number">0</span>
+<span class="hljs-keyword">const</span> ifOdd = isOdd | ifPredicate
+
+<span class="hljs-comment">// --- a 'base' object (animal)</span>
+
+<span class="hljs-keyword">const</span> proto = {
+  init () {
+    ...
+    return <span class="hljs-keyword">this</span>
+  },
+  move () {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.numLegs | ifOdd (
+      <span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-string">'hobble'</span>,
+      _ =&gt; <span class="hljs-string">'gait'</span>,
+    )
+  },
+  breathe () { <span class="hljs-keyword">return</span> <span class="hljs-string">'woo'</span> },
+  speak ()   { <span class="hljs-string">'not implemented'</span> | die },
+  getType () { <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.type },
+}
+
+<span class="hljs-keyword">const</span> props = {
+  <span class="hljs-attr">type</span>: <span class="hljs-string">'animal'</span>,
+  <span class="hljs-attr">numLegs</span>: <span class="hljs-literal">undefined</span>,
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto | factory | factoryProps (props)
+
+<span class="hljs-comment">// ------ cheater.js:</span>
+
+<span class="hljs-comment">// --- some orthogonal functionality</span>
+
+<span class="hljs-keyword">const</span> proto = {
+  <span class="hljs-attr">cheat</span>: <span class="hljs-function"><span class="hljs-params">howMuch</span> =&gt;</span> <span class="hljs-string">'I cheat '</span> + howMuch,
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto | factory
+
+<span class="hljs-comment">// ------ dog.js:</span>
+
+<span class="hljs-keyword">import</span> {
+  sprintf1,
+  factory,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+
+<span class="hljs-keyword">import</span> Animal <span class="hljs-keyword">from</span> <span class="hljs-string">'./animal'</span>
+<span class="hljs-keyword">import</span> Cheater <span class="hljs-keyword">from</span> <span class="hljs-string">'./cheater'</span>
+
+<span class="hljs-keyword">const</span> { <span class="hljs-attr">proto</span>: animalProto, } = Animal
+<span class="hljs-keyword">const</span> { <span class="hljs-attr">proto</span>: cheaterProto, } = Cheater
+
+<span class="hljs-comment">// --- a composite object (dog), extended from animal, with extra functions mixed in.</span>
+
+<span class="hljs-keyword">const</span> proto = {
+  init () {
+    ...
+    return <span class="hljs-keyword">this</span>
+  },
+  speak () { <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name | sprintf1 (<span class="hljs-string">'Dog %s says woof'</span>) }
+}
+
+<span class="hljs-keyword">const</span> props = {
+  <span class="hljs-attr">type</span>: <span class="hljs-string">'dog'</span>,
+  <span class="hljs-attr">numLegs</span>: <span class="hljs-number">4</span>,
+  <span class="hljs-attr">name</span>: <span class="hljs-literal">undefined</span>,
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto
+  | mixinPreM (animalProto)
+  | mixinM (cheaterProto)
+  | factory
+  | factoryProps (props)
+
+<span class="hljs-comment">// ------ main.js</span>
+
+<span class="hljs-keyword">import</span> Dog <span class="hljs-keyword">from</span> <span class="hljs-string">'./dog'</span>
+
+<span class="hljs-keyword">const</span> dog = Dog.create ({ <span class="hljs-attr">name</span>: <span class="hljs-string">'garfunkel'</span>, })
+dog.breathe ()                                  <span class="hljs-comment">// 'woo' (from animal)</span>
+dog.getType ()                                  <span class="hljs-comment">// 'dog' (function from animal, property from dog)</span>
+dog.speak ()                                    <span class="hljs-comment">// 'Dog garfunkel says woof' (function from dog, property</span>
+<span class="hljs-keyword">from</span> instance initialisation)
+dog.cheat (<span class="hljs-string">'a bit'</span>)                             <span class="hljs-comment">// 'I cheat a bit' (from cheater)</span></code></pre><h4 id="٭-factory-٭-explained"><a class="header-link" href="#٭-factory-٭-explained"></a>٭ factory ٭ explained</h4>
 <p>We provide a functional style for working with objects the way JS was
 designed to: using prototypical inheritance and Object.create. We hope to
 show you that the <code>new</code> keyword and &#39;classes&#39; and all the baggage they bring
-are unnecessary, and that they obfuscate the way that objects actually work.</p>
+are unnecessary, and that they obfuscate the way that it actually works.</p>
+<p>We provide a simple abstraction for factories, with as little sugar
+and magic as possible, and encourage you to mix and match the components to
+do exactly what you need.</p>
 <p>To recap: you create an object in JS by first building a prototype object,
 consisting of only functions.</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> animalProto = {
@@ -458,7 +593,7 @@ animal2.speak () <span class="hljs-comment">// Error</span></code></pre><p>To ad
   numLegs: <span class="hljs-literal">undefined</span>,
 }</code></pre><p>And we recommend always having an <code>init</code> method, which you will almost certainly
 need. <code>.create ().init ()</code> becomes a well-worn pattern.</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> isOdd = x =&gt; x % <span class="hljs-number">2</span>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> isOdd = x =&gt; x % <span class="hljs-number">2</span> !== <span class="hljs-number">0</span>
 <span class="hljs-keyword">const</span> ifOdd = isOdd | ifPredicate
 
 <span class="hljs-keyword">const</span> animalProto = {
@@ -713,7 +848,7 @@ the scope in which the calls are made. We recommend doing the bitwise math
 in a separate source file and not mixing the two styles in one file.</p>
 </li>
 </ol>
-<h3 id="why-not-use-lodash?"><a class="header-link" href="#why-not-use-lodash?"></a>Why not use lodash?</h3>
+<h3 id="why-not-use-lodash?-/-ramda/-etc."><a class="header-link" href="#why-not-use-lodash?-/-ramda/-etc."></a>Why not use lodash? / ramda/ etc.</h3>
 <ul class="list">
 <li>you don&#39;t need to carry around the _</li>
 <li>free functions are far more flexible than dotted ones</li>

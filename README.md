@@ -420,6 +420,8 @@ Or to only merge if certain conditions hold:
 Once you master this, the usage becomes intuitive and greatly reduces the
 need to check the docs.
 
+(What's the argument order of `append`, `times`, and `subtract` in your favorite library?)
+
 	import {
 	  sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
 	  appendTo, append, bindPropTo, bindProp, bindTo, bind, invoke,
@@ -453,7 +455,7 @@ Read this as: ‘**merge src** to tgt’
 	}
 
 	const cat = {
-	  name: 'Bo',
+	  name: 'Fritz',
 	  speak () { throw new Error },
 	}
 
@@ -469,8 +471,8 @@ Read this as: ‘**merge src** to tgt’
 	dog.speak | bindTo (dog) | invoke     // same
 
     // cat.speak ()                       // Error
-	dog.speak | bindTo (cat) | invoke     // 'My name is Bo'
-	cat | bind (dog.speak)   | invoke     // 'My name is Bo'
+	dog.speak | bindTo (cat) | invoke     // 'My name is Fritz'
+	cat | bind (dog.speak)   | invoke     // 'My name is Fritz'
 
     // --- 'call this function on this context', i.e., bind and call.
 	; ({}.toString) | callOn (3)          // '[object Number]'
@@ -480,17 +482,17 @@ Read this as: ‘**merge src** to tgt’
 
 Note that this fits the `a | b | c` pattern:
 
-	dog.speak | bindTo (cat) | invoke     // 'My name is Bo'
+	dog.speak | bindTo (cat) | invoke     // 'My name is Fritz'
 
 So we can also write it as `a | (b >> c)`:
 
-	dog.speak | (bindTo (cat) >> invoke)  // 'My name is Bo'
+	dog.speak | (bindTo (cat) >> invoke)  // 'My name is Fritz'
 
 In fact `bindTo (x) >> invoke` is already provided under the name `callOn`,
 and its inverse `provideTo`:
 
-    dog.speak | callOn (cat)              // 'My name is Bo'
-    cat       | provideTo (dog.speak)     // 'My name is Bo'
+    dog.speak | callOn (cat)              // 'My name is Fritz'
+    cat       | provideTo (dog.speak)     // 'My name is Fritz'
 
 Some other miscellaneous examples.
 
@@ -512,7 +514,7 @@ Some other miscellaneous examples.
 	// --- '3 minus 4'
 	3 | minus (4)                         // -1
 
-#### ٭ side effects & chaining, mutable vs immutable ٭
+#### ٭ side effects & chaining ٭ mutable vs immutable ٭
 
 	import {
 	  map, side1, appendM, append, prependM, prepend,
@@ -552,14 +554,153 @@ one argument, hence `side1` in both caes.
 	| append (5)  // new array [2, 3, 4, 5]
 	| prepend (1) // new array [1, 2, 3, 4, 5]
 
-#### ٭ dog ٭ synopsis
+#### ٭ factory ٭ synopsis ٭
 
-#### ٭ dog ٭ explained
+    import {
+	  factory, factoryProps,
+	  factoryStatics,
+	} from 'stick-js'
+
+    // --- dog.js:
+    const proto = {
+	  init () {
+		...
+		return this
+	  },
+	  breathe () { return 'woo' },
+	  whoami ()  { return this.name },
+	  getType () { return this.type },
+	}
+
+	const props = {
+	  type: 'dog',
+	  name: undefined,
+	}
+
+    // --- basic:
+	export default proto | factory
+
+	// --- variants:
+	export default proto | factory | factoryProps (props)
+	export default proto | factory | factoryStatics ({ ... }) | factoryProps (props)
+
+    // ------ main.js
+
+	import Dog from './dog'
+
+	const dog = Dog.create ()
+	// const dog = Dog.create ().init () // useful in practice
+	dog.breathe ()                       // 'woo'
+	dog.type                             // 'dog', if `factoryProps` used
+	dog.getType ()                       // 'dog', same
+	dog.whoami ()                        // undefined, because no default.
+
+	const dog2 = Dog.create ({ name: 'garfunkel', })
+	dog2.whoami ()                       // 'garfunkel', thanks to args to create
+
+#### ٭ factory w/mixins ٭ synopsis ٭
+
+    // ------ animal.js:
+
+    import {
+	  factory, factoryStatics, mixinM, mixinPreM,
+	  factoryProps,
+	  ifPredicate,
+	} from 'stick-js'
+
+    const isOdd = x => x % 2 !== 0
+    const ifOdd = isOdd | ifPredicate
+
+    // --- a 'base' object (animal)
+
+    const proto = {
+	  init () {
+		...
+		return this
+	  },
+	  move () {
+		return this.numLegs | ifOdd (
+		  _ => 'hobble',
+		  _ => 'gait',
+		)
+	  },
+	  breathe () { return 'woo' },
+	  speak ()   { 'not implemented' | die },
+	  getType () { return this.type },
+	}
+
+	const props = {
+	  type: 'animal',
+	  numLegs: undefined,
+	}
+	
+	export default proto | factory | factoryProps (props)
+
+    // ------ cheater.js:
+
+    // --- some orthogonal functionality
+
+	const proto = {
+      cheat: howMuch => 'I cheat ' + howMuch,
+	}
+
+	export default proto | factory
+
+    // ------ dog.js:
+
+    import {
+	  sprintf1,
+	  factory,
+	} from 'stick-js'
+
+    import Animal from './animal'
+    import Cheater from './cheater'
+
+	const { proto: animalProto, } = Animal
+	const { proto: cheaterProto, } = Cheater
+
+    // --- a composite object (dog), extended from animal, with extra functions mixed in.
+
+    const proto = {
+	  init () {
+		...
+		return this
+	  },
+	  speak () { return this.name | sprintf1 ('Dog %s says woof') }
+	}
+
+	const props = {
+	  type: 'dog',
+	  numLegs: 4,
+	  name: undefined,
+	}
+
+	export default proto
+	  | mixinPreM (animalProto)
+	  | mixinM (cheaterProto)
+	  | factory
+	  | factoryProps (props)
+
+    // ------ main.js
+
+	import Dog from './dog'
+
+	const dog = Dog.create ({ name: 'garfunkel', })
+	dog.breathe ()                                  // 'woo' (from animal)
+	dog.getType ()                                  // 'dog' (function from animal, property from dog)
+	dog.speak ()                                    // 'Dog garfunkel says woof' (function from dog, property from instance initialisation)
+	dog.cheat ('a bit')                             // 'I cheat a bit' (from cheater)
+
+#### ٭ factory ٭ explained
 
 We provide a functional style for working with objects the way JS was
 designed to: using prototypical inheritance and Object.create. We hope to
 show you that the `new` keyword and 'classes' and all the baggage they bring
-are unnecessary, and that they obfuscate the way that objects actually work.
+are unnecessary, and that they obfuscate the way that it actually works.
+
+We provide a simple abstraction for factories, with as little sugar
+and magic as possible, and encourage you to mix and match the components to
+do exactly what you need.
 
 To recap: you create an object in JS by first building a prototype object,
 consisting of only functions.
@@ -604,7 +745,7 @@ To add properties:
 And we recommend always having an `init` method, which you will almost certainly
 need. `.create ().init ()` becomes a well-worn pattern.
 
-    const isOdd = x => x % 2
+    const isOdd = x => x % 2 !== 0
 	const ifOdd = isOdd | ifPredicate
 
     const animalProto = {

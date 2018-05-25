@@ -627,7 +627,8 @@ need. `.create ().init ()` becomes a well-worn pattern.
 On `create`, the properties which are 'ok' will get copied in to the new
 object. The others are there for documentation. Do use `undefined` for props
 that are waiting to be defined, which is arguably better than `null` and
-definitely better than `false`.
+definitely better than `false`. Use `void 8` or your very own favorite
+number to impress … no one.
 
     const animal = Animal.create ().init ()
 	animal.type // 'animal'
@@ -671,23 +672,43 @@ Create it, add dog methods, and make a new factory:
 	    speak () { return this.loud ? 'WOOF' : 'woof' },
 	  })
 
+    const dogProps = {
+	  numLegs: 4,
+	  loud: undefined,
+	}
+
 	const Dog = dogProto | factory | factoryProps (dogProps)
 
     ; [true, false]
-	| map ((loud) => Dog
-	  | create ({ loud, })
-	  | speak
+	| map ((loudness) => Dog
+	  | create ({ loud: loudness, })
+	  | (dog => [dog.speak (), dog.breathe (), dog.move ()])
 	)
-	// ['WOOF', 'woof']
+	// [['WOOF', 'woo', 'gait'], ['woof', 'woo', 'gait']]
 	
+Note that we can call methods of both `Animal` and `Dog` now.
 
-    
+#### ٭ dog ٭ with mixins ٭
 
-    
+    const Dog = dogProto | mixinM (animalProto) | factory | factoryProps (dogProps)
 
 Working with mixins is tricky -- but you have all the tools now to specify
 exactly how you want it to work. Now you have what JS is known for giving
 you a lot of: freedom.
+
+    const Dog = dogProto1 | mixinM (animalProto) | factory | factoryProps (dogProps)
+	const dog1 = Dog | create ({})
+	dog1 | breathe // 'woo'
+	dog1 | speak // Errorr
+
+We mixed the animal into the dog, meaning that Animal's
+(unimplemented) version of breathe won. What we wanted to was mixinPreM:
+
+    const Dog = dogProto1 | mixinPreM (animalProto) | factory | factoryProps (dogProps)
+	Dog.create ({}) | speak // 'woof'
+
+
+
 
 #### ٭ frontend stuff ٭
 

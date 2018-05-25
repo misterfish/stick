@@ -477,7 +477,8 @@ need. <code>.create ().init ()</code> becomes a well-worn pattern.</p>
 <span class="hljs-keyword">const</span> Animal = animalProto | <span class="hljs-keyword">factory</span> | factoryProps (animalProps)</code></pre><p>On <code>create</code>, the properties which are &#39;ok&#39; will get copied in to the new
 object. The others are there for documentation. Do use <code>undefined</code> for props
 that are waiting to be defined, which is arguably better than <code>null</code> and
-definitely better than <code>false</code>.</p>
+definitely better than <code>false</code>. Use <code>void 8</code> or your very own favorite
+number to impress … no one.</p>
 <pre class="hljs"><code>const animal = Animal<span class="hljs-selector-class">.create</span> ()<span class="hljs-selector-class">.init</span> ()
 animal<span class="hljs-selector-class">.type</span> <span class="hljs-comment">// 'animal'</span>
 animal<span class="hljs-selector-class">.size</span> <span class="hljs-comment">// undefined</span></code></pre><p>You can pass an object to <code>create</code> to initialise properties. These will be
@@ -498,23 +499,36 @@ and <code>move</code> definitely need <code>dot</code> and not <code>side</code>
 (pretend <code>animalProto</code> is not in scope).</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> animalProto = Animal.proto</code></pre><p>Or</p>
 <pre class="hljs"><code>const animalProto = Animal.create ().__proto__ // might <span class="hljs-keyword">not</span> be available <span class="hljs-keyword">in</span> <span class="hljs-keyword">all</span> runtimes</code></pre><p>Create it, add dog methods, and make a new factory:</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> dogProto = animalProto
-  | <span class="hljs-built_in">Object</span>.create
+<pre class="hljs"><code>const dogProto = animalProto
+  | Object.create
   | mergeM ({
     speak () { <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.loud ? <span class="hljs-string">'WOOF'</span> : <span class="hljs-string">'woof'</span> },
   })
 
-<span class="hljs-keyword">const</span> Dog = dogProto | <span class="hljs-keyword">factory</span> | factoryProps (dogProps)
+const dogProps = {
+  numLegs: <span class="hljs-number">4</span>,
+  loud: <span class="hljs-literal">undefined</span>,
+}
 
-; [<span class="hljs-keyword">true</span>, <span class="hljs-keyword">false</span>]
-| map ((loud) =&gt; Dog
-  | create ({ loud, })
-  | speak
+const Dog = dogProto | factory | factoryProps (dogProps)
+
+; [<span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>]
+| map (<span class="hljs-function"><span class="hljs-params">(loudness)</span> =&gt;</span> Dog
+  | create ({ loud: loudness, })
+  | (dog =&gt; [dog.speak (), dog.breathe (), dog.move ()])
 )
-<span class="hljs-comment">// ['WOOF', 'woof']</span></code></pre><p>Working with mixins is tricky -- but you have all the tools now to specify
+<span class="hljs-regexp">//</span> [[<span class="hljs-string">'WOOF'</span>, <span class="hljs-string">'woo'</span>, <span class="hljs-string">'gait'</span>], [<span class="hljs-string">'woof'</span>, <span class="hljs-string">'woo'</span>, <span class="hljs-string">'gait'</span>]]</code></pre><p>Note that we can call methods of both <code>Animal</code> and <code>Dog</code> now.</p>
+<h4 id="٭-dog-٭-with-mixins-٭"><a class="header-link" href="#٭-dog-٭-with-mixins-٭"></a>٭ dog ٭ with mixins ٭</h4>
+<pre class="hljs"><code>const Dog = dogProto | <span class="hljs-type">mixinM</span> (animalProto) | <span class="hljs-type">factory</span> | <span class="hljs-type">factoryProps</span> (dogProps)</code></pre><p>Working with mixins is tricky -- but you have all the tools now to specify
 exactly how you want it to work. Now you have what JS is known for giving
 you a lot of: freedom.</p>
-<h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
+<pre class="hljs"><code>const Dog = dogProto1 | <span class="hljs-type">mixinM</span> (animalProto) | <span class="hljs-type">factory</span> | <span class="hljs-type">factoryProps</span> (dogProps)
+const dog1 = Dog | <span class="hljs-type">create</span> ({})
+dog1 | <span class="hljs-type">breathe</span> // 'woo'
+dog1 | <span class="hljs-type">speak</span> // Errorr</code></pre><p>We mixed the animal into the dog, meaning that Animal&#39;s
+(unimplemented) version of breathe won. What we wanted to was mixinPreM:</p>
+<pre class="hljs"><code>const Dog = dogProto1 | <span class="hljs-type">mixinPreM</span> (animalProto) | <span class="hljs-type">factory</span> | <span class="hljs-type">factoryProps</span> (dogProps)
+Dog.create ({}) | <span class="hljs-type">speak</span> // 'woof'</code></pre><h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, whenTrue, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
 something like this:</p>
 <pre class="hljs"><code>const withConnect = connect(<span class="hljs-name">mapStateToProps</span>, mapDispatchToProps)<span class="hljs-comment">;</span>

@@ -818,8 +818,8 @@ you can tell what went wrong:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> answer = dubiousFunction | tryCatch (
   plus (<span class="hljs-number">10</span>),
   decorateException (<span class="hljs-string">"That didn't go well"</span>)
-  &gt;&gt; tap (<span class="hljs-built_in">console</span>.warn)
-  &gt;&gt; (<span class="hljs-string">'bad news'</span> | always)
+    &gt;&gt; tap (<span class="hljs-built_in">console</span>.warn)
+    &gt;&gt; (<span class="hljs-string">'bad news'</span> | always)
 )</code></pre><h4 id="٭-cond-٭"><a class="header-link" href="#٭-cond-٭"></a>٭ cond ٭</h4>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> {
   cond, condN, condS, guard, guardV, sprintf1, <span class="hljs-keyword">otherwise</span>,
@@ -1089,18 +1089,19 @@ merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)
 <p>Here is a generic form of <code>lets</code> which takes any number of non-zero
 arguments. We removed it from stick because it depends on <code>mapAccum</code>, for
 which we do not currently have an implementation without depending on Ramda.</p>
-<p>// --- generic form, for any non-zero number of arguments.
-const lets = (...xs) =&gt; {
-    const executeStep = prevVals =&gt; applyToN (prevVals)</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> ys = xs
-    <span class="hljs-comment">// --- acc contains running output array, up to the previous item.</span>
-    | mapAccum (<span class="hljs-function">(<span class="hljs-params">acc, v</span>) =&gt;</span> executeStep (acc) (v)
-        | (<span class="hljs-function"><span class="hljs-params">stepVal</span> =&gt;</span> [[...acc, stepVal], stepVal])
-    ) ([])
-    | prop (<span class="hljs-number">1</span>)
+<pre class="hljs"><code><span class="hljs-comment">// --- generic form, for any non-zero number of arguments.</span>
+<span class="hljs-keyword">const</span> lets = <span class="hljs-function">(<span class="hljs-params">...xs</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> executeStep = <span class="hljs-function"><span class="hljs-params">prevVals</span> =&gt;</span> applyToN (prevVals)
 
-<span class="hljs-keyword">return</span> ys | last</code></pre><p>}</p>
-<p>Note: this is not fast, but it is correct. You can prove it with a 
+    <span class="hljs-keyword">const</span> ys = xs
+        <span class="hljs-comment">// --- acc contains running output array, up to the previous item.</span>
+        | mapAccum (<span class="hljs-function">(<span class="hljs-params">acc, v</span>) =&gt;</span> executeStep (acc) (v)
+            | (<span class="hljs-function"><span class="hljs-params">stepVal</span> =&gt;</span> [[...acc, stepVal], stepVal])
+        ) ([])
+        | prop (<span class="hljs-number">1</span>)
+
+    <span class="hljs-keyword">return</span> ys | last
+}</code></pre><p>Note: this is not fast, but it is correct. You can prove it with a 
 contrived fibonacci example:</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { list, timesV, applyToN, rangeTo, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 

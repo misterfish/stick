@@ -1,6 +1,6 @@
-### Usage
+## Usage
 
-#### ٭ node
+### ٭ node
 
 	npm i stick-js # or yarn
 
@@ -13,9 +13,9 @@
 	node_modules/.bin/babel -d lib src
 	node lib/<entry-file>.js
 
-#### ٭ webpack
+### ٭ webpack
 
-##### webpack config:
+#### webpack config:
 
 	module: {
 	  rules: [
@@ -40,7 +40,7 @@
 	  ...
 	  }
 
-### What we provide
+## What we provide
 
 - A way to start using the pipe (or 'stick') operator today while 
   proposal
@@ -61,11 +61,11 @@ The overloading is made possible thanks to the great
 [babel-plugin-operator-overload](https://github.com/jussi-kalliokoski/babel-plugin-operator-overload)
 library by Jussi Kalliokoski (@jussi-kalliokoski).
 
-### Features (/ why?)
+## Features (/ why?)
 
-### Synopsis (overview of main features).
+## Synopsis (overview of main features).
 
-#### ٭ basic example ٭
+### ٭ basic example ٭
 
     // --- source files must begin with this header.
 
@@ -92,7 +92,7 @@ library by Jussi Kalliokoski (@jussi-kalliokoski).
 	| sprintf1 ('The answer is %s')
 	| log // outputs 'The answer is 2/3/4' (colorfully)
 
-#### ٭ the 'stick' operator ٭
+### ٭ the 'stick' operator ٭
 
 `a | b` is simply an equivalent way of writing `b (a)`
 
@@ -127,7 +127,7 @@ can: see below).
 	  | join (' ')                  // ... you get the picture.
     // 'Just A Perfect Day'
 
-#### ٭ currying styles ٭
+### ٭ currying styles ٭
 
 All curried functions provided by stick-js can be called using either of 2 currying styles.
 
@@ -156,7 +156,7 @@ Calling:
 For extra performance you can also limit yourself to the manual style (see
 below).
 
-#### ٭ markers ٭
+### ٭ markers ٭
 
 	import { sprintfN, sprintf1, } from 'stick-js'
 
@@ -195,7 +195,7 @@ everything is immutable.
 
 And there are a few more which we'll see along the way.
 
-#### ٭ ok, anaphoric if ٭
+### ٭ ok, anaphoric if ٭
 
 `ok (x)` is false if `x` is `null` or `undefined`. Everything else passes.
 
@@ -246,7 +246,7 @@ Usage:
 	; [0, 10, null, void 8]
 	| map (add1IfYouCan) // [1, 11, 'nothing', 'nothing']
 
-#### ٭ point-free ٭
+### ٭ point-free ٭
 
 A common pattern is when the argument to a function is passed immediately into a pipe:
 
@@ -301,7 +301,7 @@ Or
 	  >> processString
 	  >> tap (log)
 
-#### ٭ compositional predicates ٭
+### ٭ compositional predicates ٭
 
 `ifOk` is a convenience for `ifPredicate (ok)` or `ok | ifPredicate`.
 
@@ -359,7 +359,7 @@ More complicated predicates:
 
 	; [3.5, 4, 5, 5.5] | map (isOddInteger) | log
 
-#### ٭ compositional decoration ٭
+### ٭ compositional decoration ٭
 
 Our `map` function is capped at one argument, meaning the map routine only
 gets the value and not the index or the collection.
@@ -420,7 +420,7 @@ Or to only merge if certain conditions hold:
 	os | mergeTo (ot)                 // { val: 2.2, vil: 3, vol: 3.5, vel: 42, }
 	os | mergeToWhenSrcIsInteger (ot) // { val: 25,  vil: 3, vol: 25,  vel: 42, }
 
-#### ٭ semantics and argument order are often based on English grammar ٭
+### ٭ semantics and argument order are often based on English grammar ٭
 
 (We're dying to see a port to Hungarian, too)
 
@@ -521,7 +521,7 @@ Some other miscellaneous examples.
 	// --- '3 minus 4'
 	3 | minus (4)                         // -1
 
-#### ٭ side effects & chaining ٭ mutable vs immutable ٭
+### ٭ side effects & chaining ٭ mutable vs immutable ٭
 
 	import {
 	  map, side1, appendM, append, prependM, prepend,
@@ -561,7 +561,7 @@ one argument, hence `side1` in both caes.
 	| append (5)  // new array [2, 3, 4, 5]
 	| prepend (1) // new array [1, 2, 3, 4, 5]
 
-#### ٭ factory ٭ synopsis ٭
+### ٭ factory ٭ synopsis ٭
 
     import {
 	  factory, factoryProps,
@@ -605,7 +605,7 @@ one argument, hence `side1` in both caes.
 	const dog2 = Dog.create ({ name: 'garfunkel', })
 	dog2.whoami ()                       // 'garfunkel', thanks to args to create
 
-#### ٭ factory ٭ with mixins ٭ synopsis ٭
+### ٭ factory ٭ with mixins ٭ synopsis ٭
 
     // ------ animal.js:
 
@@ -720,7 +720,7 @@ Stick idioms:
 	    | init
         | cheat
 
-#### ٭ factory ٭ explained
+### ٭ factory ٭ explained
 
 We provide a functional style for working with objects the way JS was
 designed to: using prototypical inheritance and Object.create. We hope to
@@ -860,7 +860,7 @@ Create it, add dog methods, and make a new factory:
 	
 Note that we can call methods of both `Animal` and `Dog` now.
 
-#### ٭ factory ٭ with mixins ٭ explained ٭
+### ٭ factory ٭ with mixins ٭ explained ٭
 
     const Dog = dogProto | mixinM (animalProto) | factory | factoryProps (dogProps)
 
@@ -911,7 +911,7 @@ You can specify these behaviors explicitly:
     dogProto | discardPrototype | <mixin functions ...> |
     dogProto | Object.create    | <mixin functions ...> |
 
-#### ٭ let expressions ٭
+### ٭ let expressions ٭
 
 You can consolidate a number of assignment statements into a single let
 expression, and also limit the scope of the assignments in a way which is
@@ -1000,7 +1000,7 @@ possible, at the expense of everyone's sanity:
 
 	convertFahrenheit (86) // [30, 303]
 
-#### ٭ exceptions ٭ try/catch ٭
+### ٭ exceptions ٭ try/catch ٭
 
     import { tryCatch, } from 'stick-js'
 
@@ -1064,11 +1064,11 @@ Or perhaps:
     const answer = dubiousFunction | tryCatch (
 	  plus (10),
 	  decorateException ("That didn't go well")
-	  >> tap (console.warn)
-	  >> ('bad news' | always)
+		>> tap (console.warn)
+		>> ('bad news' | always)
 	)
 
-#### ٭ cond ٭
+### ٭ cond ٭
 
     import {
 	  cond, condN, condS, guard, guardV, sprintf1, otherwise,
@@ -1127,7 +1127,7 @@ Wut?! This does work, strange as it looks. Try it for yourself:
 | join (' | ')
 // 3 was less than 4 | 4 was 4 | 5 was more than 4
 
-#### ٭ frontend stuff ٭
+### ٭ frontend stuff ٭
 
     import { path, prop, whenTrue, always, } from 'stick-js'
 
@@ -1256,7 +1256,7 @@ but we can handle this nicely:
 	  {children | ifOk (identity) (spinner)}
 	</ListS>
 
-#### ٭ backend stuff ٭
+### ٭ backend stuff ٭
 
 When you're using a framework like Express, you have the well-known `app`
 object that you carry around everywhere. It just so happens that nearly all
@@ -1317,7 +1317,7 @@ are many other places this can be used.
 		| listen (config.port) (...)
 
 
-#### ٭ cond ٭
+### ٭ cond ٭
 
 	import {
 	  map, join, condS, guard, otherwise,
@@ -1365,7 +1365,7 @@ are many other places this can be used.
 
 
 
-### performance
+## performance
 
 Stick is fast. See here for a benchmark of our factory example.
 
@@ -1416,7 +1416,7 @@ no-brainer to overload the operator and keep everything else the same.
 
 merge benchmark: manual / index / ramda
 
-### Extra performance
+## Extra performance
 
 For speed freaks: the curried functions you import from the main module are
 written first using manual currying, and then recurried and exported. This
@@ -1432,25 +1432,25 @@ you must remember to call it using the manual style:
 	merge (obj1) (obj2) // also ok
 
 
-### Generic version of `lets`
+## Generic version of `lets`
 
 Here is a generic form of `lets` which takes any number of non-zero
 arguments. We removed it from stick because it depends on `mapAccum`, for
 which we do not currently have an implementation without depending on Ramda.
 
-// --- generic form, for any non-zero number of arguments.
-const lets = (...xs) => {
-    const executeStep = prevVals => applyToN (prevVals)
+	// --- generic form, for any non-zero number of arguments.
+	const lets = (...xs) => {
+		const executeStep = prevVals => applyToN (prevVals)
 
-    const ys = xs
-        // --- acc contains running output array, up to the previous item.
-        | mapAccum ((acc, v) => executeStep (acc) (v)
-            | (stepVal => [[...acc, stepVal], stepVal])
-        ) ([])
-        | prop (1)
+		const ys = xs
+			// --- acc contains running output array, up to the previous item.
+			| mapAccum ((acc, v) => executeStep (acc) (v)
+				| (stepVal => [[...acc, stepVal], stepVal])
+			) ([])
+			| prop (1)
 
-    return ys | last
-}
+		return ys | last
+	}
 
 Note: this is not fast, but it is correct. You can prove it with a 
 contrived fibonacci example:
@@ -1490,7 +1490,7 @@ contrived fibonacci example:
     */
 
 
-### Bitwise math
+## Bitwise math
 
 Of course, we've saved your precious bitwise operators. You can either:
 
@@ -1504,7 +1504,7 @@ Of course, we've saved your precious bitwise operators. You can either:
 the scope in which the calls are made. We recommend doing the bitwise math
 in a separate source file and not mixing the two styles in one file.
 
-### Why not use lodash? / ramda/ etc.
+## Why not use lodash? / ramda/ etc.
 
 - you don't need to carry around the _
 - free functions are far more flexible than dotted ones

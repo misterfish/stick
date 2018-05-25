@@ -610,7 +610,7 @@ of arguments it expects. When working with functions in this way it's
 important to specify this.
 
 `.push` and `.unshift`, both methods of `Array.prototype`, expect exactly
-one argument, hence `side1` in both caes.
+one argument, hence `side1` in both cases.
 
 	; [2, 3, 4]
 	| push (5)

@@ -89,7 +89,7 @@ const { log, } = <span class="hljs-built_in">console</span>
 | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
 | log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span> (colorfully)</code></pre><h4 id="٭-the-'stick'-operator-٭"><a class="header-link" href="#٭-the-'stick'-operator-٭"></a>٭ the &#39;stick&#39; operator ٭</h4>
 <p><code>a | b</code> is simply an equivalent way of writing <code>b (a)</code></p>
-<p>A really simple idea, with pretty surprising consequences.</p>
+<p>A really simple idea, with some pretty far-reaching consequences.</p>
 <p>(What if I really want to do bitwise math, you ask? Don&#39;t worry, you still
 can: see below).</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- reminder: source files must begin with this.</span>
@@ -115,7 +115,7 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-string">'just a perfect day'</span>
   | split (<span class="hljs-string">' '</span>)                 <span class="hljs-comment">// split (' ') is a function</span>
   | map (capitaliseFirstLetter) <span class="hljs-comment">// map (capitaliseFirstLetter) is a function</span>
-  | join (<span class="hljs-string">' '</span>)                  <span class="hljs-comment">// join (' ') is a function</span>
+  | join (<span class="hljs-string">' '</span>)                  <span class="hljs-comment">// ... you get the picture.</span>
 <span class="hljs-comment">// 'Just A Perfect Day'</span></code></pre><h4 id="٭-currying-styles-٭"><a class="header-link" href="#٭-currying-styles-٭"></a>٭ currying styles ٭</h4>
 <p>All curried functions provided by stick-js can be called using either of 2 currying styles.</p>
 <p>This would be a good time to read up on curried functions if you&#39;re not familiar with them.</p>
@@ -161,7 +161,7 @@ const </span>b = 4 | appendToM (a) // non-functional style: the<span class="hljs
 b === a // true
 <span class="hljs-built_in">
 const </span>webGLContext = { ... a complicated object ... }
-webGLContext | mergeM ({ someProp: false, }) // you definitely want mutable here.</code></pre><p>And there are a few more which we&#39;ll see along the way.</p>
+webGLContext | mergeM ({ someProp: false, }) // you probably want mutable here.</code></pre><p>And there are a few more which we&#39;ll see along the way.</p>
 <h4 id="٭-ok,-anaphoric-if-٭"><a class="header-link" href="#٭-ok,-anaphoric-if-٭"></a>٭ ok, anaphoric if ٭</h4>
 <p><code>ok (x)</code> is false if <code>x</code> is <code>null</code> or <code>undefined</code>. Everything else passes.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { <span class="hljs-built_in">map</span>, ok, notOk, ifOk, } from <span class="hljs-string">'stick-js'</span>
@@ -468,7 +468,7 @@ dog.getType ()                       <span class="hljs-comment">// 'dog', same</
 dog.whoami ()                        <span class="hljs-comment">// undefined, because no default.</span>
 
 <span class="hljs-keyword">const</span> dog2 = Dog.create ({ name: <span class="hljs-string">'garfunkel'</span>, })
-dog2.whoami ()                       <span class="hljs-comment">// 'garfunkel', thanks to args to create</span></code></pre><h4 id="٭-factory-w/mixins-٭-synopsis-٭"><a class="header-link" href="#٭-factory-w/mixins-٭-synopsis-٭"></a>٭ factory w/mixins ٭ synopsis ٭</h4>
+dog2.whoami ()                       <span class="hljs-comment">// 'garfunkel', thanks to args to create</span></code></pre><h4 id="٭-factory-٭-with-mixins-٭-synopsis-٭"><a class="header-link" href="#٭-factory-٭-with-mixins-٭-synopsis-٭"></a>٭ factory ٭ with mixins ٭ synopsis ٭</h4>
 <pre class="hljs"><code><span class="hljs-comment">// ------ animal.js:</span>
 
 <span class="hljs-keyword">import</span> {
@@ -680,7 +680,7 @@ const Dog = dogProto | factory | factoryProps (dogProps)
   | (dog =&gt; [dog.speak (), dog.breathe (), dog.move ()])
 )
 <span class="hljs-regexp">//</span> [[<span class="hljs-string">'WOOF'</span>, <span class="hljs-string">'huff'</span>, <span class="hljs-string">'gait'</span>], [<span class="hljs-string">'woof'</span>, <span class="hljs-string">'huff'</span>, <span class="hljs-string">'gait'</span>]]</code></pre><p>Note that we can call methods of both <code>Animal</code> and <code>Dog</code> now.</p>
-<h4 id="٭-dog-٭-with-mixins-٭"><a class="header-link" href="#٭-dog-٭-with-mixins-٭"></a>٭ dog ٭ with mixins ٭</h4>
+<h4 id="٭-factory-٭-with-mixins-٭-explained-٭"><a class="header-link" href="#٭-factory-٭-with-mixins-٭-explained-٭"></a>٭ factory ٭ with mixins ٭ explained ٭</h4>
 <pre class="hljs"><code>const Dog = dogProto | <span class="hljs-type">mixinM</span> (animalProto) | <span class="hljs-type">factory</span> | <span class="hljs-type">factoryProps</span> (dogProps)</code></pre><p>Working with mixins is tricky. At some point, there will be namespace
 conflicts and it&#39;s not always obvious which version should win out -- and
 you have to decide how you want to deal with that.</p>
@@ -744,7 +744,63 @@ for the presence of the props can be annoying, so how about:</p>
   <span class="hljs-subst">${ prop (<span class="hljs-string">'error'</span>)  &gt;&gt; whenTrue (<span class="hljs-string">'color: red;'</span> | always) }</span>
 `</span>
 
-&lt;SomeElementS width=<span class="hljs-string">'100%'</span> error={<span class="hljs-literal">true</span>} /&gt;</code></pre><h4 id="٭-backend-stuff-٭"><a class="header-link" href="#٭-backend-stuff-٭"></a>٭ backend stuff ٭</h4>
+&lt;SomeElementS width=<span class="hljs-string">'100%'</span> error={<span class="hljs-literal">true</span>} /&gt;</code></pre><p>If you use saga, perhaps you have something like this:</p>
+<pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">getRepos</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> select(makeSelectUsername());
+  <span class="hljs-keyword">const</span> requestURL = <span class="hljs-string">`https://api.github.com/users/<span class="hljs-subst">${username}</span>/repos`</span>;
+
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">const</span> repos = <span class="hljs-keyword">yield</span> call(request, requestURL);
+    <span class="hljs-keyword">yield</span> put(reposLoaded(repos, username));
+  } <span class="hljs-keyword">catch</span> (err) {
+    <span class="hljs-keyword">yield</span> put(repoLoadingError(err));
+  }
+}</code></pre><p>How about this:</p>
+<pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">getRepos</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> makeSelectUsername () | select
+  <span class="hljs-keyword">const</span> requestURL = username | sprintf1 (<span class="hljs-string">'https://api.github.com/users/%s/repos'</span>)
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">const</span> repos = <span class="hljs-keyword">yield</span> call (request, requestURL)
+    reposLoaded (repos, username) | reposLoaded | put
+  } <span class="hljs-keyword">catch</span> (err) {
+    <span class="hljs-keyword">yield</span> err | repoLoadingError | put
+  }
+}</code></pre><p>Try it yourself and see :D</p>
+<p>If you use reselect, this is fine:</p>
+<pre class="hljs"><code>const selectHome = <span class="hljs-function"><span class="hljs-params">(state)</span> =&gt;</span> state.get(<span class="hljs-string">'home'</span>);
+const makeSelectUsername = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> createSelector(
+  selectHome,
+  <span class="hljs-function"><span class="hljs-params">(homeState)</span> =&gt;</span> homeState.get(<span class="hljs-string">'username'</span>)
+);</code></pre><p>But this is lit:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> <span class="hljs-keyword">get</span> = dot1 (<span class="hljs-string">'get'</span>)
+
+<span class="hljs-keyword">const</span> selectHome = <span class="hljs-keyword">get</span> (<span class="hljs-string">'home'</span>)
+<span class="hljs-keyword">const</span> makeSelectUsername = () =&gt; createSelector(
+  selectHome,
+  <span class="hljs-keyword">get</span> (<span class="hljs-string">'username'</span>),
+)</code></pre><p>When composing selectors, something like this works nicely to make sure the
+one being composed is valid:</p>
+<pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeSelectBooks = _ =&gt; createSelector (
+  selectHome,
+  <span class="hljs-keyword">get</span> (<span class="hljs-string">'books'</span>),
+)
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> makeSelectBookTitles = _ =&gt; createSelector (
+  makeSelectBooks (),
+  <span class="hljs-string">'titles'</span> | <span class="hljs-keyword">get</span> | whenOk,
+)</code></pre><p>The author uses stick idioms to slay a common front-end pattern. When you&#39;re
+fetching your list of todos, the list should be <code>undefined</code> when it hasn&#39;t
+been set yet, and empty only if it has been fetched and really is empty.
+This makes testing easier, avoids weird flickers, lets you show a spinner,
+etc. It does introduce an extra condition you need to test for in your code,
+but we can handle this nicely:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> ListS = styled.div<span class="hljs-string">`
+  min-height: 150px;
+`</span>
+
+<span class="hljs-keyword">const</span> List = <span class="hljs-function">(<span class="hljs-params">{ children }</span>) =&gt;</span> &lt;ListS&gt;
+  {children | ifOk (identity) (spinner)}
+&lt;<span class="hljs-regexp">/ListS&gt;</span></code></pre><h4 id="٭-backend-stuff-٭"><a class="header-link" href="#٭-backend-stuff-٭"></a>٭ backend stuff ٭</h4>
 <p>When you&#39;re using a framework like Express, you have the well-known <code>app</code>
 object that you carry around everywhere. It just so happens that nearly all
 methods of <code>app</code> return <code>app</code>, so that chaining works in the familiar way:</p>

@@ -96,7 +96,7 @@ library by Jussi Kalliokoski (@jussi-kalliokoski).
 
 `a | b` is simply an equivalent way of writing `b (a)`
 
-A really simple idea, with pretty surprising consequences.
+A really simple idea, with some pretty far-reaching consequences.
 
 (What if I really want to do bitwise math, you ask? Don't worry, you still
 can: see below).
@@ -124,7 +124,7 @@ can: see below).
 	'just a perfect day'
 	  | split (' ')                 // split (' ') is a function
 	  | map (capitaliseFirstLetter) // map (capitaliseFirstLetter) is a function
-	  | join (' ')                  // join (' ') is a function
+	  | join (' ')                  // ... you get the picture.
     // 'Just A Perfect Day'
 
 #### ٭ currying styles ٭
@@ -191,7 +191,7 @@ everything is immutable.
 	b === a // true
 
 	const webGLContext = { ... a complicated object ... }
-	webGLContext | mergeM ({ someProp: false, }) // you definitely want mutable here.
+	webGLContext | mergeM ({ someProp: false, }) // you probably want mutable here.
 
 And there are a few more which we'll see along the way.
 
@@ -605,7 +605,7 @@ one argument, hence `side1` in both caes.
 	const dog2 = Dog.create ({ name: 'garfunkel', })
 	dog2.whoami ()                       // 'garfunkel', thanks to args to create
 
-#### ٭ factory w/mixins ٭ synopsis ٭
+#### ٭ factory ٭ with mixins ٭ synopsis ٭
 
     // ------ animal.js:
 
@@ -860,7 +860,7 @@ Create it, add dog methods, and make a new factory:
 	
 Note that we can call methods of both `Animal` and `Dog` now.
 
-#### ٭ dog ٭ with mixins ٭
+#### ٭ factory ٭ with mixins ٭ explained ٭
 
     const Dog = dogProto | mixinM (animalProto) | factory | factoryProps (dogProps)
 
@@ -964,6 +964,81 @@ for the presence of the props can be annoying, so how about:
 	`
 
 	<SomeElementS width='100%' error={true} />
+
+If you use saga, perhaps you have something like this:
+
+	export function* getRepos() {
+	  const username = yield select(makeSelectUsername());
+	  const requestURL = `https://api.github.com/users/${username}/repos`;
+
+	  try {
+		const repos = yield call(request, requestURL);
+		yield put(reposLoaded(repos, username));
+	  } catch (err) {
+		yield put(repoLoadingError(err));
+	  }
+	}
+
+How about this:
+
+    export function* getRepos () {
+	  const username = yield makeSelectUsername () | select
+	  const requestURL = username | sprintf1 ('https://api.github.com/users/%s/repos')
+	  try {
+	    const repos = yield call (request, requestURL)
+		reposLoaded (repos, username) | reposLoaded | put
+	  } catch (err) {
+	    yield err | repoLoadingError | put
+	  }
+	}
+
+Try it yourself and see :D
+
+If you use reselect, this is fine:
+
+	const selectHome = (state) => state.get('home');
+	const makeSelectUsername = () => createSelector(
+	  selectHome,
+	  (homeState) => homeState.get('username')
+	);
+
+But this is lit:
+
+    const get = dot1 ('get')
+
+	const selectHome = get ('home')
+	const makeSelectUsername = () => createSelector(
+	  selectHome,
+	  get ('username'),
+	)
+
+When composing selectors, something like this works nicely to make sure the
+one being composed is valid:
+
+	export const makeSelectBooks = _ => createSelector (
+	  selectHome,
+	  get ('books'),
+	)
+
+	export const makeSelectBookTitles = _ => createSelector (
+	  makeSelectBooks (),
+	  'titles' | get | whenOk,
+	)
+
+The author uses stick idioms to slay a common front-end pattern. When you're
+fetching your list of todos, the list should be `undefined` when it hasn't
+been set yet, and empty only if it has been fetched and really is empty.
+This makes testing easier, avoids weird flickers, lets you show a spinner,
+etc. It does introduce an extra condition you need to test for in your code,
+but we can handle this nicely:
+
+    const ListS = styled.div`
+	  min-height: 150px;
+	`
+
+	const List = ({ children }) => <ListS>
+	  {children | ifOk (identity) (spinner)}
+	</ListS>
 
 #### ٭ backend stuff ٭
 

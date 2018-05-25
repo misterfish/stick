@@ -1000,6 +1000,44 @@ possible, at the expense of everyone's sanity:
 
 	convertFahrenheit (86) // [30, 303]
 
+#### ٭ exceptions ٭ try/catch ٭
+
+    import { tryCatch, } from 'stick-js'
+
+	const dubiousFunction = ...
+
+	dubiousFunction | tryCatch (
+	  // --- no exception: `v` is the return value of `dubiousFunction`
+	  (v) => ...,
+
+	  // --- exception thrown: `e` is the exception
+	  (e) => e | decorateException ('Dubious function said:')
+	)
+
+Sometimes it's nice to rethrow an exception, with a string prefixed to it so
+you can tell what went wrong:
+
+	  (e) => e | decorateException ('Dubious function said:') | die
+
+	const throwError = reason => reason
+	  | exception // new Error (reason)
+	  | raise     // throw it
+
+    const throwError = reason => reason | (exception >> raise)
+
+	// `exception >> raise` is also known as `die`
+
+Note that this is illegal in JS, because `throw` is not an expression:
+
+    const throwError = reason => throw new Error (reason)
+
+But we can trick it like this:
+
+    const throwError = reason => reason | die
+
+	// or just
+	// const error = die
+
 #### ٭ frontend stuff ٭
 
     import { path, prop, whenTrue, always, } from 'stick-js'

@@ -773,7 +773,33 @@ const convertFahrenheit = letS ([
   list &gt;&gt; tail,
 ])
 
-convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-comment">// [30, 303]</span></code></pre><h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
+convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-comment">// [30, 303]</span></code></pre><h4 id="٭-exceptions-٭-try/catch-٭"><a class="header-link" href="#٭-exceptions-٭-try/catch-٭"></a>٭ exceptions ٭ try/catch ٭</h4>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { tryCatch, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+
+const dubiousFunction = ...
+
+dubiousFunction | tryCatch (
+  <span class="hljs-regexp">//</span> --- <span class="hljs-literal">no</span> exception: `<span class="javascript">v</span>` <span class="hljs-keyword">is</span> the <span class="hljs-keyword">return</span> value <span class="hljs-keyword">of</span> `<span class="javascript">dubiousFunction</span>`
+  (v) =&gt; ...,
+
+  <span class="hljs-regexp">//</span> --- exception thrown: `<span class="javascript">e</span>` <span class="hljs-keyword">is</span> the exception
+  (e) =&gt; e | decorateException (<span class="hljs-string">'Dubious function said:'</span>)
+)</code></pre><p>Sometimes it&#39;s nice to rethrow an exception, with a string prefixed to it so
+you can tell what went wrong:</p>
+<pre class="hljs"><code>  (e) =&gt; e | decorateException (<span class="hljs-string">'Dubious function said:'</span>) | <span class="hljs-keyword">die</span>
+
+<span class="hljs-keyword">const</span> throwError = reason =&gt; reason
+  | <span class="hljs-keyword">exception</span> <span class="hljs-comment">// new Error (reason)</span>
+  | raise     <span class="hljs-comment">// throw it</span>
+
+<span class="hljs-keyword">const</span> throwError = reason =&gt; reason | (<span class="hljs-keyword">exception</span> &gt;&gt; raise)
+
+<span class="hljs-comment">// `exception &gt;&gt; raise` is also known as `die`</span></code></pre><p>Note that this is illegal in JS, because <code>throw</code> is not an expression:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> throwError = <span class="hljs-function"><span class="hljs-params">reason</span> =&gt;</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span> (reason)</code></pre><p>But we can trick it like this:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> throwError = <span class="hljs-function"><span class="hljs-params">reason</span> =&gt;</span> reason | die
+
+<span class="hljs-comment">// or just</span>
+<span class="hljs-comment">// const error = die</span></code></pre><h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, whenTrue, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
 something like this:</p>
 <pre class="hljs"><code>const withConnect = connect(<span class="hljs-name">mapStateToProps</span>, mapDispatchToProps)<span class="hljs-comment">;</span>

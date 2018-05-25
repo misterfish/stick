@@ -61,9 +61,64 @@ The overloading is made possible thanks to the great
 [babel-plugin-operator-overload](https://github.com/jussi-kalliokoski/babel-plugin-operator-overload)
 library by Jussi Kalliokoski (@jussi-kalliokoski).
 
-## Features (/ why?)
+## TL;DR
 
-## Synopsis (overview of main features).
+A few examples:
+
+- -
+		; [1, 2, 3]
+		| map (x => x + 1)
+		| join ('/')
+		| green
+		| sprintf1 ('The answer is %s')
+		| log // outputs 'The answer is 2/3/4' (colorfully)
+
+- -
+
+		const isInteger = x => x === Math.floor (x)
+		const ifInteger = isInteger | ifPredicate
+
+		; [3.5, 4, 4.2]
+		| map (ifInteger (1 | add, 'nothing' | always))
+		// ['nothing', 5, 'nothing']
+
+- -
+
+		const convertFahrenheit = fah => lets (
+		  _ => (fah - 32) / 9 * 5,    // (1) celsius
+		  (cel) => cel + 273,         // (2) kelvin
+		  (cel, kel) => [cel, kel],   // (3) result
+		)
+
+		convertFahrenheit (86) // [30, 303]
+
+- -
+
+		const checkVal = condS ([
+		  4 | eq    | guard  (sprintf1 ('%s was 4')),
+		  4 | lt    | guard  (sprintf1 ('%s was less than 4')),
+		  4 | gt    | guard  (sprintf1 ('%s was more than 4')),
+		  otherwise | guardV ("error, this shouldn't happen"),
+		])
+
+		; [3, 4, 5]
+		| map (checkVal)
+		| join (' | ')
+		// 3 was less than 4 | 4 was 4 | 5 was more than 4
+
+- -
+
+		// ------ dog.js
+		const proto = { speak () { 'Hi from ' + this.name }}
+		export default proto | factory
+
+		// ------ main.js
+		import Dog from './dog'
+		Dog.create ({ name: 'Caesar', }).speak () // 'Hi from Caesar'
+
+- and much more.
+
+## Overview
 
 ### ٭ basic example ٭
 
@@ -176,6 +231,11 @@ fits.
 
 	3      | timesV (4)          // [3, 3, 3, 3]
 	random | timesF (4)          // [<random-num>, <random-num>, <random-num>, <random-num>]
+	random | timesV (4)          // [random, random, random, random]
+
+Note that the last one stores the function in the array.
+
+    random | timesV (4) | map (invoke) // [<random-num>, <random-num>, <random-num>, <random-num>]
 
 'M' means the data is being mutated. In JS we absolutely can not pretend
 everything is immutable.
@@ -271,11 +331,11 @@ If the pipe chain consists of more than 1 link …
 … then we remove the `x => x` and change all the `|` to `>>`
 
     const add1IfYouCan =
-	  ifOk (add1, 'nothing' | always)
-	  >> String
-	  >> dot ('toUpperCase')
-	  >> sprintf1 ('The answer is %s')
-	  >> tap (log)
+	  ifOk (add1, 'nothing' | always)  // (1)
+	  >> String                        // (2)
+	  >> dot ('toUpperCase')           // (3)
+	  >> sprintf1 ('The answer is %s') // (4)
+	  >> tap (log)                     // (5)
 
 The following pattern holds:
 
@@ -290,6 +350,8 @@ function:
 	  >> dot ('toUpperCase')
 	  >> sprintf1 ('The answer is %s')
 
+And splice it back in:
+
 	const add1IfYouCan = x => x
 	  | ifOk (add1, 'nothing' | always)
 	  | processString
@@ -297,7 +359,8 @@ function:
 	  
 Or
 
-	const add1IfYouCan = ifOk (add1, 'nothing' | always)
+	const add1IfYouCan =
+	  ifOk (add1, 'nothing' | always)
 	  >> processString
 	  >> tap (log)
 
@@ -952,7 +1015,7 @@ We see that we are wasting work. With `lets`, it would be:
 	const convertFahrenheit = fah => lets (
 	  _ => (fah - 32) / 9 * 5,    // (1) celsius
 	  (cel) => cel + 273,         // (2) kelvin
-	  (cel, kel) => [cel, kel], // (3) result
+	  (cel, kel) => [cel, kel],   // (3) result
 	)
 
 `lets` expects each line to be a function. The first line is called with no
@@ -992,6 +1055,7 @@ As an exercise you could try to make the entire expression as point-free as
 possible, at the expense of everyone's sanity:
 
     import { letS, minus, divideBy, multiply, add, arg1, list, tail, } from 'stick-js'
+
     const convertFahrenheit = letS ([
 	  minus (32) >> divideBy (9) >> multiply (5),
 	  arg1 >> add (273),

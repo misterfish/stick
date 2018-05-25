@@ -8,8 +8,8 @@
     <link type="text/css" rel="stylesheet" href="assets/pilcrow.css" />
     <link type="text/css" rel="stylesheet" href="assets/hljs-github.min.css"/>
   </head>
-<body><h3 id="usage"><a class="header-link" href="#usage"></a>Usage</h3>
-<h4 id="٭-node"><a class="header-link" href="#٭-node"></a>٭ node</h4>
+<body><h2 id="usage"><a class="header-link" href="#usage"></a>Usage</h2>
+<h3 id="٭-node"><a class="header-link" href="#٭-node"></a>٭ node</h3>
 <pre class="hljs"><code>npm i stick-js <span class="hljs-comment"># or yarn</span>
 
 cat &gt;.babelrc &lt;&lt;EOT
@@ -19,8 +19,8 @@ cat &gt;.babelrc &lt;&lt;EOT
 EOT
 
 node_modules/.bin/babel -d <span class="hljs-class"><span class="hljs-keyword">lib</span> <span class="hljs-title">src</span></span>
-node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span class="hljs-title">entry</span>-<span class="hljs-title">file</span>&gt;.<span class="hljs-title">js</span></span></code></pre><h4 id="٭-webpack"><a class="header-link" href="#٭-webpack"></a>٭ webpack</h4>
-<h5 id="webpack-config:"><a class="header-link" href="#webpack-config:"></a>webpack config:</h5>
+node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span class="hljs-title">entry</span>-<span class="hljs-title">file</span>&gt;.<span class="hljs-title">js</span></span></code></pre><h3 id="٭-webpack"><a class="header-link" href="#٭-webpack"></a>٭ webpack</h3>
+<h4 id="webpack-config:"><a class="header-link" href="#webpack-config:"></a>webpack config:</h4>
 <pre class="hljs"><code><span class="hljs-attr">module:</span> {
 <span class="hljs-attr">  rules:</span> [
     {
@@ -42,7 +42,7 @@ node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span cl
     ...
   ]
   ...
-  }</code></pre><h3 id="what-we-provide"><a class="header-link" href="#what-we-provide"></a>What we provide</h3>
+  }</code></pre><h2 id="what-we-provide"><a class="header-link" href="#what-we-provide"></a>What we provide</h2>
 <ul class="list">
 <li><p>A way to start using the pipe (or &#39;stick&#39;) operator today while 
 proposal
@@ -61,9 +61,55 @@ etc.), or mix and match as you like.</p>
 <p>The overloading is made possible thanks to the great
 <a href="https://github.com/jussi-kalliokoski/babel-plugin-operator-overload">babel-plugin-operator-overload</a>
 library by Jussi Kalliokoski (@jussi-kalliokoski).</p>
-<h3 id="features-(/-why?)"><a class="header-link" href="#features-(/-why?)"></a>Features (/ why?)</h3>
-<h3 id="synopsis-(overview-of-main-features)."><a class="header-link" href="#synopsis-(overview-of-main-features)."></a>Synopsis (overview of main features).</h3>
-<h4 id="٭-basic-example-٭"><a class="header-link" href="#٭-basic-example-٭"></a>٭ basic example ٭</h4>
+<h2 id="tl;dr"><a class="header-link" href="#tl;dr"></a>TL;DR</h2>
+<ul class="list">
+<li><p>-</p>
+<pre class="hljs"><code>  ; <span class="hljs-selector-attr">[1, 2, 3]</span>
+  | <span class="hljs-selector-tag">map</span> (x =&gt; x + <span class="hljs-number">1</span>)
+  | <span class="hljs-selector-tag">join</span> (<span class="hljs-string">'/'</span>)
+  | <span class="hljs-selector-tag">green</span>
+  | <span class="hljs-selector-tag">sprintf1</span> (<span class="hljs-string">'The answer is %s'</span>)
+  | <span class="hljs-selector-tag">log</span> <span class="hljs-comment">// outputs 'The answer is 2/3/4' (colorfully)</span></code></pre></li>
+<li><p>-</p>
+<pre class="hljs"><code>  <span class="hljs-keyword">const</span> isInteger = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x === <span class="hljs-built_in">Math</span>.floor (x)
+  <span class="hljs-keyword">const</span> ifInteger = isInteger | ifPredicate
+
+  ; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4.2</span>]
+  | map (ifInteger (<span class="hljs-number">1</span> | add, <span class="hljs-string">'nothing'</span> | always))
+  <span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre></li>
+<li><p>-</p>
+<pre class="hljs"><code>  <span class="hljs-keyword">const</span> convertFahrenheit = fah =&gt; lets (
+    _ =&gt; (fah - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,    <span class="hljs-comment">// (1) celsius</span>
+    (cel) =&gt; cel + <span class="hljs-number">273</span>,         <span class="hljs-comment">// (2) kelvin</span>
+    (cel, kel) =&gt; [cel, kel],   <span class="hljs-comment">// (3) result</span>
+  )
+
+  convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-comment">// [30, 303]</span></code></pre></li>
+<li><p>-</p>
+<pre class="hljs"><code>  const checkVal = condS ([
+    <span class="hljs-number">4</span> | e<span class="hljs-string">q    | guard  (sprintf1 ('%s was 4')),
+    4 |</span> <span class="hljs-keyword">lt</span>    | guard  (sprintf1 (<span class="hljs-string">'%s was less than 4'</span>)),
+    <span class="hljs-number">4</span> | <span class="hljs-keyword">gt</span>    | guard  (sprintf1 (<span class="hljs-string">'%s was more than 4'</span>)),
+    otherwise | guardV (<span class="hljs-string">"error, this shouldn't happen"</span>),
+  ])
+
+  ; [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+  | <span class="hljs-keyword">map</span> (checkVal)
+  | <span class="hljs-keyword">join</span> (<span class="hljs-string">' | '</span>)
+  // <span class="hljs-number">3</span> was less than <span class="hljs-number">4</span> | <span class="hljs-number">4</span> was <span class="hljs-number">4</span> | <span class="hljs-number">5</span> was more than <span class="hljs-number">4</span></code></pre></li>
+<li><p>-</p>
+<pre class="hljs"><code>  <span class="hljs-comment">// ------ dog.js</span>
+  <span class="hljs-keyword">const</span> proto = { speak () { <span class="hljs-string">'Hi from '</span> + <span class="hljs-keyword">this</span>.name }}
+  <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto | <span class="hljs-keyword">factory</span>
+
+  <span class="hljs-comment">// ------ main.js</span>
+  <span class="hljs-keyword">import</span> Dog from <span class="hljs-string">'./dog'</span>
+  Dog.create ({ name: <span class="hljs-string">'Caesar'</span>, }).speak () <span class="hljs-comment">// 'Hi from Caesar'</span></code></pre></li>
+<li><p>and much more.</p>
+</li>
+</ul>
+<h2 id="overview"><a class="header-link" href="#overview"></a>Overview</h2>
+<h3 id="٭-basic-example-٭"><a class="header-link" href="#٭-basic-example-٭"></a>٭ basic example ٭</h3>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> --- source files must begin with <span class="hljs-keyword">this</span> header.
 
 defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
@@ -87,7 +133,7 @@ const { log, } = <span class="hljs-built_in">console</span>
 | join (<span class="hljs-string">'/'</span>)
 | green
 | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
-| log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span> (colorfully)</code></pre><h4 id="٭-the-'stick'-operator-٭"><a class="header-link" href="#٭-the-'stick'-operator-٭"></a>٭ the &#39;stick&#39; operator ٭</h4>
+| log <span class="hljs-regexp">//</span> outputs <span class="hljs-string">'The answer is 2/3/4'</span> (colorfully)</code></pre><h3 id="٭-the-'stick'-operator-٭"><a class="header-link" href="#٭-the-'stick'-operator-٭"></a>٭ the &#39;stick&#39; operator ٭</h3>
 <p><code>a | b</code> is simply an equivalent way of writing <code>b (a)</code></p>
 <p>A really simple idea, with some pretty far-reaching consequences.</p>
 <p>(What if I really want to do bitwise math, you ask? Don&#39;t worry, you still
@@ -116,7 +162,7 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
   | split (<span class="hljs-string">' '</span>)                 <span class="hljs-comment">// split (' ') is a function</span>
   | map (capitaliseFirstLetter) <span class="hljs-comment">// map (capitaliseFirstLetter) is a function</span>
   | join (<span class="hljs-string">' '</span>)                  <span class="hljs-comment">// ... you get the picture.</span>
-<span class="hljs-comment">// 'Just A Perfect Day'</span></code></pre><h4 id="٭-currying-styles-٭"><a class="header-link" href="#٭-currying-styles-٭"></a>٭ currying styles ٭</h4>
+<span class="hljs-comment">// 'Just A Perfect Day'</span></code></pre><h3 id="٭-currying-styles-٭"><a class="header-link" href="#٭-currying-styles-٭"></a>٭ currying styles ٭</h3>
 <p>All curried functions provided by stick-js can be called using either of 2 currying styles.</p>
 <p>This would be a good time to read up on curried functions if you&#39;re not familiar with them.</p>
 <ol class="list">
@@ -136,7 +182,7 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-built_in">map</span> (<span class="hljs-keyword">double</span>) ([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])   <span class="hljs-comment">// [2, 4, 6] (manual style)</span>
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>] | <span class="hljs-built_in">map</span> (<span class="hljs-keyword">double</span>) <span class="hljs-comment">// [2, 4, 6] (manual style with stick)</span></code></pre><p>For extra performance you can also limit yourself to the manual style (see
 below).</p>
-<h4 id="٭-markers-٭"><a class="header-link" href="#٭-markers-٭"></a>٭ markers ٭</h4>
+<h3 id="٭-markers-٭"><a class="header-link" href="#٭-markers-٭"></a>٭ markers ٭</h3>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { sprintfN, sprintf1, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
 <span class="hljs-number">3</span> | sprintf1 (<span class="hljs-string">'4 - 1 is %s'</span>) <span class="hljs-comment">// '4 - 1 is 3'</span></code></pre><p>&#39;N&#39; is a marker meaning an array is expected.</p>
@@ -148,7 +194,9 @@ fits.</p>
 const { <span class="hljs-built_in">random</span>, } = Math
 
 <span class="hljs-number">3</span>      | timesV (<span class="hljs-number">4</span>)          // [<span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>]
-<span class="hljs-built_in">random</span> | timesF (<span class="hljs-number">4</span>)          // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]</code></pre><p>&#39;M&#39; means the data is being mutated. In JS we absolutely can not pretend
+<span class="hljs-built_in">random</span> | timesF (<span class="hljs-number">4</span>)          // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]
+<span class="hljs-built_in">random</span> | timesV (<span class="hljs-number">4</span>)          // [<span class="hljs-built_in">random</span>, <span class="hljs-built_in">random</span>, <span class="hljs-built_in">random</span>, <span class="hljs-built_in">random</span>]</code></pre><p>Note that the last one stores the function in the array.</p>
+<pre class="hljs"><code><span class="hljs-built_in">random</span> | timesV (<span class="hljs-number">4</span>) | <span class="hljs-built_in">map</span> (invoke) // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]</code></pre><p>&#39;M&#39; means the data is being mutated. In JS we absolutely can not pretend
 everything is immutable.</p>
 <pre class="hljs"><code>import { appendTo, appendToM, } from 'stick-js'
 <span class="hljs-built_in">
@@ -162,7 +210,7 @@ b === a // true
 <span class="hljs-built_in">
 const </span>webGLContext = { ... a complicated object ... }
 webGLContext | mergeM ({ someProp: false, }) // you probably want mutable here.</code></pre><p>And there are a few more which we&#39;ll see along the way.</p>
-<h4 id="٭-ok,-anaphoric-if-٭"><a class="header-link" href="#٭-ok,-anaphoric-if-٭"></a>٭ ok, anaphoric if ٭</h4>
+<h3 id="٭-ok,-anaphoric-if-٭"><a class="header-link" href="#٭-ok,-anaphoric-if-٭"></a>٭ ok, anaphoric if ٭</h3>
 <p><code>ok (x)</code> is false if <code>x</code> is <code>null</code> or <code>undefined</code>. Everything else passes.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { <span class="hljs-built_in">map</span>, ok, notOk, ifOk, } from <span class="hljs-string">'stick-js'</span>
 
@@ -197,7 +245,7 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
   <span class="hljs-string">'nothing'</span> | always,
 )</code></pre><p>Usage:</p>
 <pre class="hljs"><code>; <span class="hljs-meta">[</span><span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-built_in">null</span>, <span class="hljs-literal">void</span> <span class="hljs-number">8</span><span class="hljs-meta">]</span>
-| map (add1IfYouCan) // <span class="hljs-meta">[</span><span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span><span class="hljs-meta">]</span></code></pre><h4 id="٭-point-free-٭"><a class="header-link" href="#٭-point-free-٭"></a>٭ point-free ٭</h4>
+| map (add1IfYouCan) // <span class="hljs-meta">[</span><span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span><span class="hljs-meta">]</span></code></pre><h3 id="٭-point-free-٭"><a class="header-link" href="#٭-point-free-٭"></a>٭ point-free ٭</h3>
 <p>A common pattern is when the argument to a function is passed immediately into a pipe:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Since <code>x</code> does not appear anywhere else in the expression, we can simply remove it, along with the function argument:</p>
 <pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)</code></pre><p>If the pipe chain consists of more than 1 link …</p>
@@ -211,26 +259,26 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
   | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
   | tap (log)                     <span class="hljs-comment">// outputs 'The answer is 1', 'The answer is NOTHING', ...</span></code></pre><p>… then we remove the <code>x =&gt; x</code> and change all the <code>|</code> to <code>&gt;&gt;</code></p>
 <pre class="hljs"><code>const add1IfYouCan =
-  ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)
-  &gt;&gt; String
-  &gt;&gt; dot ('toUpperCase')
-  &gt;&gt; sprintf1 ('The answer is %s')
-  &gt;&gt; tap (<span class="hljs-name">log</span>)</code></pre><p>The following pattern holds:</p>
+  ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)  // (<span class="hljs-number">1</span>)
+  &gt;&gt; String                        // (<span class="hljs-number">2</span>)
+  &gt;&gt; dot ('toUpperCase')           // (<span class="hljs-number">3</span>)
+  &gt;&gt; sprintf1 ('The answer is %s') // (<span class="hljs-number">4</span>)
+  &gt;&gt; tap (<span class="hljs-name">log</span>)                     // (<span class="hljs-number">5</span>)</code></pre><p>The following pattern holds:</p>
 <pre class="hljs"><code>a | <span class="hljs-type">b</span> | <span class="hljs-type">c</span> = a | <span class="hljs-type">(b</span> &gt;&gt; c)</code></pre><p>So when the chains start to get long (as above), you can cut pieces out
 using this property. For example, you can refactor lines 2-4 into a new
 function:</p>
 <pre class="hljs"><code>// --- convert input <span class="hljs-keyword">to</span> <span class="hljs-built_in">String</span>, make uppercase, perform sprintf.
 <span class="hljs-keyword">const</span> processString = <span class="hljs-built_in">String</span>
   &gt;&gt; dot (<span class="hljs-string">'toUpperCase'</span>)
-  &gt;&gt; sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
-
-<span class="hljs-keyword">const</span> add1IfYouCan = x =&gt; x
-  | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)
-  | processString
-  | tap (<span class="hljs-built_in">log</span>)</code></pre><p>Or</p>
-<pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)
+  &gt;&gt; sprintf1 (<span class="hljs-string">'The answer is %s'</span>)</code></pre><p>And splice it back in:</p>
+<pre class="hljs"><code>const add1IfYouCan = x =&gt; x
+  | <span class="hljs-type">ifOk</span> (add1, 'nothing' | <span class="hljs-type">always</span>)
+  | <span class="hljs-type">processString</span>
+  | <span class="hljs-type">tap</span> (log)</code></pre><p>Or</p>
+<pre class="hljs"><code>const add1IfYouCan =
+  ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)
   &gt;&gt; processString
-  &gt;&gt; tap (<span class="hljs-name">log</span>)</code></pre><h4 id="٭-compositional-predicates-٭"><a class="header-link" href="#٭-compositional-predicates-٭"></a>٭ compositional predicates ٭</h4>
+  &gt;&gt; tap (<span class="hljs-name">log</span>)</code></pre><h3 id="٭-compositional-predicates-٭"><a class="header-link" href="#٭-compositional-predicates-٭"></a>٭ compositional predicates ٭</h3>
 <p><code>ifOk</code> is a convenience for <code>ifPredicate (ok)</code> or <code>ok | ifPredicate</code>.</p>
 <p>There is also a &#39;when&#39; form, which has no &#39;else&#39; branch.</p>
 <pre class="hljs"><code>import { <span class="hljs-keyword">add</span>, whenOk, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
@@ -277,7 +325,7 @@ function:</p>
 ))
 | log
 
-; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>] | map (isOddInteger) | log</code></pre><h4 id="٭-compositional-decoration-٭"><a class="header-link" href="#٭-compositional-decoration-٭"></a>٭ compositional decoration ٭</h4>
+; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>] | map (isOddInteger) | log</code></pre><h3 id="٭-compositional-decoration-٭"><a class="header-link" href="#٭-compositional-decoration-٭"></a>٭ compositional decoration ٭</h3>
 <p>Our <code>map</code> function is capped at one argument, meaning the map routine only
 gets the value and not the index or the collection.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { map, addIndex, addCollection, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
@@ -325,7 +373,7 @@ const os = { va<span class="hljs-variable">l:</span> <span class="hljs-number">2
 const ot = { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">25</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }
 
 os | mergeTo (ot)                 // { va<span class="hljs-variable">l:</span> <span class="hljs-number">2.2</span>, <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">3.5</span>, <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }
-os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }</code></pre><h4 id="٭-semantics-and-argument-order-are-often-based-on-english-grammar-٭"><a class="header-link" href="#٭-semantics-and-argument-order-are-often-based-on-english-grammar-٭"></a>٭ semantics and argument order are often based on English grammar ٭</h4>
+os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }</code></pre><h3 id="٭-semantics-and-argument-order-are-often-based-on-english-grammar-٭"><a class="header-link" href="#٭-semantics-and-argument-order-are-often-based-on-english-grammar-٭"></a>٭ semantics and argument order are often based on English grammar ٭</h3>
 <p>(We&#39;re dying to see a port to Hungarian, too)</p>
 <p>Once you master this, the usage becomes intuitive and greatly reduces the
 need to check the docs.</p>
@@ -400,7 +448,7 @@ cat       | provideTo (dog.speak)     // <span class="hljs-symbol">'My</span> na
 <span class="hljs-number">3</span> | subtract (<span class="hljs-number">4</span>)                      <span class="hljs-comment">// -1</span>
 
 <span class="hljs-comment">// --- '3 minus 4'</span>
-<span class="hljs-number">3</span> | minus (<span class="hljs-number">4</span>)                         <span class="hljs-comment">// -1</span></code></pre><h4 id="٭-side-effects-&-chaining-٭-mutable-vs-immutable-٭"><a class="header-link" href="#٭-side-effects-&-chaining-٭-mutable-vs-immutable-٭"></a>٭ side effects &amp; chaining ٭ mutable vs immutable ٭</h4>
+<span class="hljs-number">3</span> | minus (<span class="hljs-number">4</span>)                         <span class="hljs-comment">// -1</span></code></pre><h3 id="٭-side-effects-&-chaining-٭-mutable-vs-immutable-٭"><a class="header-link" href="#٭-side-effects-&-chaining-٭-mutable-vs-immutable-٭"></a>٭ side effects &amp; chaining ٭ mutable vs immutable ٭</h3>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> {
   <span class="hljs-keyword">map</span>, side1, appendM, <span class="hljs-built_in">append</span>, prependM, prepend,
 } from <span class="hljs-string">'stick-js'</span></code></pre><p>Chaining with the <code>.</code> will often not do what you want.</p>
@@ -427,7 +475,7 @@ one argument, hence <code>side1</code> in both caes.</p>
 
 ; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
 | append (<span class="hljs-number">5</span>)  <span class="hljs-comment">// new array [2, 3, 4, 5]</span>
-| prepend (<span class="hljs-number">1</span>) <span class="hljs-comment">// new array [1, 2, 3, 4, 5]</span></code></pre><h4 id="٭-factory-٭-synopsis-٭"><a class="header-link" href="#٭-factory-٭-synopsis-٭"></a>٭ factory ٭ synopsis ٭</h4>
+| prepend (<span class="hljs-number">1</span>) <span class="hljs-comment">// new array [1, 2, 3, 4, 5]</span></code></pre><h3 id="٭-factory-٭-synopsis-٭"><a class="header-link" href="#٭-factory-٭-synopsis-٭"></a>٭ factory ٭ synopsis ٭</h3>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> {
   <span class="hljs-keyword">factory</span>, factoryProps,
   factoryStatics,
@@ -468,7 +516,7 @@ dog.getType ()                       <span class="hljs-comment">// 'dog', same</
 dog.whoami ()                        <span class="hljs-comment">// undefined, because no default.</span>
 
 <span class="hljs-keyword">const</span> dog2 = Dog.create ({ name: <span class="hljs-string">'garfunkel'</span>, })
-dog2.whoami ()                       <span class="hljs-comment">// 'garfunkel', thanks to args to create</span></code></pre><h4 id="٭-factory-٭-with-mixins-٭-synopsis-٭"><a class="header-link" href="#٭-factory-٭-with-mixins-٭-synopsis-٭"></a>٭ factory ٭ with mixins ٭ synopsis ٭</h4>
+dog2.whoami ()                       <span class="hljs-comment">// 'garfunkel', thanks to args to create</span></code></pre><h3 id="٭-factory-٭-with-mixins-٭-synopsis-٭"><a class="header-link" href="#٭-factory-٭-with-mixins-٭-synopsis-٭"></a>٭ factory ٭ with mixins ٭ synopsis ٭</h3>
 <pre class="hljs"><code><span class="hljs-comment">// ------ animal.js:</span>
 
 <span class="hljs-keyword">import</span> {
@@ -577,7 +625,7 @@ dog | speak
 
 Dog | <span class="hljs-keyword">create</span> (<span class="hljs-comment">{ name: 'garfunkel', }</span>)
     | init
-    | cheat</code></pre><h4 id="٭-factory-٭-explained"><a class="header-link" href="#٭-factory-٭-explained"></a>٭ factory ٭ explained</h4>
+    | cheat</code></pre><h3 id="٭-factory-٭-explained"><a class="header-link" href="#٭-factory-٭-explained"></a>٭ factory ٭ explained</h3>
 <p>We provide a functional style for working with objects the way JS was
 designed to: using prototypical inheritance and Object.create. We hope to
 show you that the <code>new</code> keyword and &#39;classes&#39; and all the baggage they bring
@@ -680,7 +728,7 @@ const Dog = dogProto | factory | factoryProps (dogProps)
   | (dog =&gt; [dog.speak (), dog.breathe (), dog.move ()])
 )
 <span class="hljs-regexp">//</span> [[<span class="hljs-string">'WOOF'</span>, <span class="hljs-string">'huff'</span>, <span class="hljs-string">'gait'</span>], [<span class="hljs-string">'woof'</span>, <span class="hljs-string">'huff'</span>, <span class="hljs-string">'gait'</span>]]</code></pre><p>Note that we can call methods of both <code>Animal</code> and <code>Dog</code> now.</p>
-<h4 id="٭-factory-٭-with-mixins-٭-explained-٭"><a class="header-link" href="#٭-factory-٭-with-mixins-٭-explained-٭"></a>٭ factory ٭ with mixins ٭ explained ٭</h4>
+<h3 id="٭-factory-٭-with-mixins-٭-explained-٭"><a class="header-link" href="#٭-factory-٭-with-mixins-٭-explained-٭"></a>٭ factory ٭ with mixins ٭ explained ٭</h3>
 <pre class="hljs"><code>const Dog = dogProto | <span class="hljs-type">mixinM</span> (animalProto) | <span class="hljs-type">factory</span> | <span class="hljs-type">factoryProps</span> (dogProps)</code></pre><p>Working with mixins is tricky. At some point, there will be namespace
 conflicts and it&#39;s not always obvious which version should win out -- and
 you have to decide how you want to deal with that.</p>
@@ -709,7 +757,7 @@ only the own keys? Should it create a new object using and mutate it?</p>
 <p>You can specify these behaviors explicitly:</p>
 <pre class="hljs"><code>dogProto |<span class="hljs-string"> flattenPrototype </span>|<span class="hljs-string"> &lt;mixin functions ...&gt; </span>|
 dogProto |<span class="hljs-string"> discardPrototype </span>|<span class="hljs-string"> &lt;mixin functions ...&gt; </span>|
-dogProto |<span class="hljs-string"> Object.create    </span>|<span class="hljs-string"> &lt;mixin functions ...&gt; </span>|</code></pre><h4 id="٭-let-expressions-٭"><a class="header-link" href="#٭-let-expressions-٭"></a>٭ let expressions ٭</h4>
+dogProto |<span class="hljs-string"> Object.create    </span>|<span class="hljs-string"> &lt;mixin functions ...&gt; </span>|</code></pre><h3 id="٭-let-expressions-٭"><a class="header-link" href="#٭-let-expressions-٭"></a>٭ let expressions ٭</h3>
 <p>You can consolidate a number of assignment statements into a single let
 expression, and also limit the scope of the assignments in a way which is
 easy to read. Code which is more expression-heavy can often be much easier
@@ -739,7 +787,7 @@ const convertFahrenheit = (f) =&gt; letV (
 <span class="hljs-keyword">const</span> convertFahrenheit = fah =&gt; lets (
   _ =&gt; (fah - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,    <span class="hljs-comment">// (1) celsius</span>
   (cel) =&gt; cel + <span class="hljs-number">273</span>,         <span class="hljs-comment">// (2) kelvin</span>
-  (cel, kel) =&gt; [cel, kel], <span class="hljs-comment">// (3) result</span>
+  (cel, kel) =&gt; [cel, kel],   <span class="hljs-comment">// (3) result</span>
 )</code></pre><p><code>lets</code> expects each line to be a function. The first line is called with no
 argument. The result (1) is passed as the argument to (2). (1) and the
 result of (2) are passed as the arguments to (3), and so on. The result of
@@ -767,13 +815,14 @@ make it point-free, and we can use underscores to indicate ignored values:</p>
 ])</code></pre><p>As an exercise you could try to make the entire expression as point-free as
 possible, at the expense of everyone&#39;s sanity:</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { letS, <span class="hljs-keyword">minus</span>, divideBy, <span class="hljs-keyword">multiply</span>, add, arg1, list, tail, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+
 const convertFahrenheit = letS ([
   <span class="hljs-keyword">minus</span> (<span class="hljs-number">32</span>) &gt;&gt; divideBy (<span class="hljs-number">9</span>) &gt;&gt; <span class="hljs-keyword">multiply</span> (<span class="hljs-number">5</span>),
   arg1 &gt;&gt; add (<span class="hljs-number">273</span>),
   list &gt;&gt; tail,
 ])
 
-convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-comment">// [30, 303]</span></code></pre><h4 id="٭-exceptions-٭-try/catch-٭"><a class="header-link" href="#٭-exceptions-٭-try/catch-٭"></a>٭ exceptions ٭ try/catch ٭</h4>
+convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-comment">// [30, 303]</span></code></pre><h3 id="٭-exceptions-٭-try/catch-٭"><a class="header-link" href="#٭-exceptions-٭-try/catch-٭"></a>٭ exceptions ٭ try/catch ٭</h3>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { tryCatch, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
 const dubiousFunction = ...
@@ -820,7 +869,7 @@ you can tell what went wrong:</p>
   decorateException (<span class="hljs-string">"That didn't go well"</span>)
     &gt;&gt; tap (<span class="hljs-built_in">console</span>.warn)
     &gt;&gt; (<span class="hljs-string">'bad news'</span> | always)
-)</code></pre><h4 id="٭-cond-٭"><a class="header-link" href="#٭-cond-٭"></a>٭ cond ٭</h4>
+)</code></pre><h3 id="٭-cond-٭"><a class="header-link" href="#٭-cond-٭"></a>٭ cond ٭</h3>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> {
   cond, condN, condS, guard, guardV, sprintf1, <span class="hljs-keyword">otherwise</span>,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>Naive form:</p>
@@ -858,7 +907,7 @@ array.</p>
 | map (checkVal)
 | join (&#39; | &#39;)
 // 3 was less than 4 | 4 was 4 | 5 was more than 4</p>
-<h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
+<h3 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h3>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, whenTrue, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
 something like this:</p>
 <pre class="hljs"><code>const withConnect = connect(<span class="hljs-name">mapStateToProps</span>, mapDispatchToProps)<span class="hljs-comment">;</span>
@@ -949,7 +998,7 @@ but we can handle this nicely:</p>
 
 <span class="hljs-keyword">const</span> List = <span class="hljs-function">(<span class="hljs-params">{ children }</span>) =&gt;</span> &lt;ListS&gt;
   {children | ifOk (identity) (spinner)}
-&lt;<span class="hljs-regexp">/ListS&gt;</span></code></pre><h4 id="٭-backend-stuff-٭"><a class="header-link" href="#٭-backend-stuff-٭"></a>٭ backend stuff ٭</h4>
+&lt;<span class="hljs-regexp">/ListS&gt;</span></code></pre><h3 id="٭-backend-stuff-٭"><a class="header-link" href="#٭-backend-stuff-٭"></a>٭ backend stuff ٭</h3>
 <p>When you&#39;re using a framework like Express, you have the well-known <code>app</code>
 object that you carry around everywhere. It just so happens that nearly all
 methods of <code>app</code> return <code>app</code>, so that chaining works in the familiar way:</p>
@@ -1002,7 +1051,7 @@ app | use (bodyParser.json())
 
     | get (<span class="hljs-string">'/endpoint3'</span>, (<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> ...))
 
-    | listen (config.port) (...)</code></pre><h4 id="٭-cond-٭-1"><a class="header-link" href="#٭-cond-٭-1"></a>٭ cond ٭</h4>
+    | listen (config.port) (...)</code></pre><h3 id="٭-cond-٭-1"><a class="header-link" href="#٭-cond-٭-1"></a>٭ cond ٭</h3>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> {
   <span class="hljs-built_in">map</span>, <span class="hljs-built_in">join</span>, condS, guard, otherwise,
   sprintfN, rangeTo, lt, gt, tap, appendTo, prop,
@@ -1038,7 +1087,7 @@ app | use (bodyParser.json())
 <span class="hljs-number">10</span> | rangeTo (<span class="hljs-number">20</span>)             <span class="hljs-comment">// [10, 11, ... 19]</span>
    | <span class="hljs-built_in">map</span> (inRange ([<span class="hljs-number">13</span>, <span class="hljs-number">17</span>])) <span class="hljs-comment">// maps to tuples of [int, str]</span>
    | tap (<span class="hljs-built_in">map</span> (snd &gt;&gt; <span class="hljs-built_in">log</span>))   <span class="hljs-comment">// logs the str</span>
-   | <span class="hljs-built_in">map</span> (fst)                <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre><h3 id="performance"><a class="header-link" href="#performance"></a>performance</h3>
+   | <span class="hljs-built_in">map</span> (fst)                <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre><h2 id="performance"><a class="header-link" href="#performance"></a>performance</h2>
 <p>Stick is fast. See here for a benchmark of our factory example.</p>
 <p>Though it initially depended on Ramda, we have decided to eliminate that
 dependency by reimplementing many of the functions. While profiling the
@@ -1075,7 +1124,7 @@ myData
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">split</span> (' '),
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">map</span> (capitaliseFirstLetter),
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">join</span> (' ')</code></pre><p>merge benchmark: manual / index / ramda</p>
-<h3 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h3>
+<h2 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h2>
 <p>For speed freaks: the curried functions you import from the main module are
 written first using manual currying, and then recurried and exported. This
 is in order to allow both calling styles.</p>
@@ -1085,7 +1134,7 @@ you must remember to call it using the manual style:</p>
 <pre class="hljs"><code>import { merge, } from <span class="hljs-string">'stick-js/manual'</span>
 merge <span class="hljs-comment">(obj1, obj2)</span> <span class="hljs-comment">// will not work</span>
 obj<span class="hljs-number">2</span> | merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">// ok</span>
-merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)</span> <span class="hljs-comment">// also ok</span></code></pre><h3 id="generic-version-of-`lets`"><a class="header-link" href="#generic-version-of-`lets`"></a>Generic version of <code>lets</code></h3>
+merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)</span> <span class="hljs-comment">// also ok</span></code></pre><h2 id="generic-version-of-`lets`"><a class="header-link" href="#generic-version-of-`lets`"></a>Generic version of <code>lets</code></h2>
 <p>Here is a generic form of <code>lets</code> which takes any number of non-zero
 arguments. We removed it from stick because it depends on <code>mapAccum</code>, for
 which we do not currently have an implementation without depending on Ramda.</p>
@@ -1135,7 +1184,7 @@ contrived fibonacci example:</p>
     [ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 ]
     ...
   ]
-*/</span></code></pre><h3 id="bitwise-math"><a class="header-link" href="#bitwise-math"></a>Bitwise math</h3>
+*/</span></code></pre><h2 id="bitwise-math"><a class="header-link" href="#bitwise-math"></a>Bitwise math</h2>
 <p>Of course, we&#39;ve saved your precious bitwise operators. You can either:</p>
 <ol class="list">
 <li><p>Use the functional form</p>
@@ -1147,7 +1196,7 @@ the scope in which the calls are made. We recommend doing the bitwise math
 in a separate source file and not mixing the two styles in one file.</p>
 </li>
 </ol>
-<h3 id="why-not-use-lodash?-/-ramda/-etc."><a class="header-link" href="#why-not-use-lodash?-/-ramda/-etc."></a>Why not use lodash? / ramda/ etc.</h3>
+<h2 id="why-not-use-lodash?-/-ramda/-etc."><a class="header-link" href="#why-not-use-lodash?-/-ramda/-etc."></a>Why not use lodash? / ramda/ etc.</h2>
 <ul class="list">
 <li>you don&#39;t need to carry around the _</li>
 <li>free functions are far more flexible than dotted ones</li>

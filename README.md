@@ -945,21 +945,60 @@ If we went the other way:
 	  (cel, kel) => [cel, kel],
 	)
 
-We see that we are repeating work. With `lets`, it would be:
+We see that we are wasting work. With `lets`, it would be:
 
     // --- convert fahrenheit to celsius & kelvin
 
-	const convertFahrenheit = (f) => letV (
-	  _ => (f - 32) / 9 * 5,           // (1) celsius
-	  (cel) => c + 273,      // (2) kelvin
+	const convertFahrenheit = fah => lets (
+	  _ => (fah - 32) / 9 * 5,    // (1) celsius
+	  (cel) => cel + 273,         // (2) kelvin
 	  (cel, kel) => [cel, kel], // (3) result
 	)
 
 `lets` expects each line to be a function. The first line is called with no
 argument. The result (1) is passed as the argument to (2). (1) and the
-result of (2) are passed as the arguments to (3), and so on.
+result of (2) are passed as the arguments to (3), and so on. The result of
+the last function is the result of the expression.
 
 (For now, there can be up to 6 lines. See below for a generic version).
+
+And of course there is a stick version of `lets` called `letS`. Think of the
+'S' marker as 'stick enabled' and the 's' as 'stick disabled'. `letS`
+expects a value to be piped in. *Note*: the 'S' marker implies the 'N'
+marker: the arguments must be an array, or else it would be impossible to
+curry.
+
+    const convertFahrenheit = fah => fah | letS ([
+	  (fah) => (fah - 32) / 9 * 5,     // (1) celsius
+	  (fah, cel) => cel + 273,         // (2) kelvin
+	  (fah, cel, kel) => [cel, kel]    // (3) result
+	])
+
+This wouldn't be the most natural use of `letS`, but it shows how it works:
+Function (1) receives as a single argument the piped in value (`fah` in this case).
+Function (2) receives `fah`, and the result of (1). (3) receives `fah`, the
+results of (1) and (2), and so on. 
+
+By now we know that we can remove `fah => fah |` from the first line to
+make it point-free, and we can use underscores to indicate ignored values:
+
+    const convertFahrenheit = letS ([
+	  (fah) => (fah - 32) / 9 * 5,
+	  (_, cel) => cel + 273,
+	  (_, cel, kel) => [cel, kel],
+	])
+
+As an exercise you could try to make the entire expression as point-free as
+possible, at the expense of everyone's sanity:
+
+    import { letS, minus, divideBy, multiply, add, arg1, list, tail, } from 'stick-js'
+    const convertFahrenheit = letS ([
+	  minus (32) >> divideBy (9) >> multiply (5),
+	  arg1 >> add (273),
+	  list >> tail,
+	])
+
+	convertFahrenheit (86) // [30, 303]
 
 #### ٭ frontend stuff ٭
 

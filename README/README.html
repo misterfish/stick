@@ -733,18 +733,47 @@ const convertFahrenheit = (f) =&gt; letV (
   (f - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,      <span class="hljs-comment">// celsius</span>
   (f - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span> + <span class="hljs-number">273</span> <span class="hljs-comment">// kelvin</span>
   (cel, kel) =&gt; [cel, kel],
-)</code></pre><p>We see that we are repeating work. With <code>lets</code>, it would be:</p>
+)</code></pre><p>We see that we are wasting work. With <code>lets</code>, it would be:</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- convert fahrenheit to celsius &amp; kelvin</span>
 
-<span class="hljs-keyword">const</span> convertFahrenheit = (f) =&gt; letV (
-  _ =&gt; (f - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,           <span class="hljs-comment">// (1) celsius</span>
-  (cel) =&gt; c + <span class="hljs-number">273</span>,      <span class="hljs-comment">// (2) kelvin</span>
+<span class="hljs-keyword">const</span> convertFahrenheit = fah =&gt; lets (
+  _ =&gt; (fah - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,    <span class="hljs-comment">// (1) celsius</span>
+  (cel) =&gt; cel + <span class="hljs-number">273</span>,         <span class="hljs-comment">// (2) kelvin</span>
   (cel, kel) =&gt; [cel, kel], <span class="hljs-comment">// (3) result</span>
 )</code></pre><p><code>lets</code> expects each line to be a function. The first line is called with no
 argument. The result (1) is passed as the argument to (2). (1) and the
-result of (2) are passed as the arguments to (3), and so on.</p>
+result of (2) are passed as the arguments to (3), and so on. The result of
+the last function is the result of the expression.</p>
 <p>(For now, there can be up to 6 lines. See below for a generic version).</p>
-<h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
+<p>And of course there is a stick version of <code>lets</code> called <code>letS</code>. Think of the
+&#39;S&#39; marker as &#39;stick enabled&#39; and the &#39;s&#39; as &#39;stick disabled&#39;. <code>letS</code>
+expects a value to be piped in. <em>Note</em>: the &#39;S&#39; marker implies the &#39;N&#39;
+marker: the arguments must be an array, or else it would be impossible to
+curry.</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> convertFahrenheit = fah =&gt; fah | letS ([
+  (fah) =&gt; (fah - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,     <span class="hljs-comment">// (1) celsius</span>
+  (fah, cel) =&gt; cel + <span class="hljs-number">273</span>,         <span class="hljs-comment">// (2) kelvin</span>
+  (fah, cel, kel) =&gt; [cel, kel]    <span class="hljs-comment">// (3) result</span>
+])</code></pre><p>This wouldn&#39;t be the most natural use of <code>letS</code>, but it shows how it works:
+Function (1) receives as a single argument the piped in value (<code>fah</code> in this case).
+Function (2) receives <code>fah</code>, and the result of (1). (3) receives <code>fah</code>, the
+results of (1) and (2), and so on. </p>
+<p>By now we know that we can remove <code>fah =&gt; fah |</code> from the first line to
+make it point-free, and we can use underscores to indicate ignored values:</p>
+<pre class="hljs"><code>const convertFahrenheit = letS ([
+  (fah) =&gt; (fah - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,
+  <span class="hljs-function"><span class="hljs-params">(_, cel)</span> =&gt;</span> cel + <span class="hljs-number">273</span>,
+  <span class="hljs-function"><span class="hljs-params">(_, cel, kel)</span> =&gt;</span> [cel, kel],
+])</code></pre><p>As an exercise you could try to make the entire expression as point-free as
+possible, at the expense of everyone&#39;s sanity:</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { letS, <span class="hljs-keyword">minus</span>, divideBy, <span class="hljs-keyword">multiply</span>, add, arg1, list, tail, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+const convertFahrenheit = letS ([
+  <span class="hljs-keyword">minus</span> (<span class="hljs-number">32</span>) &gt;&gt; divideBy (<span class="hljs-number">9</span>) &gt;&gt; <span class="hljs-keyword">multiply</span> (<span class="hljs-number">5</span>),
+  arg1 &gt;&gt; add (<span class="hljs-number">273</span>),
+  list &gt;&gt; tail,
+])
+
+convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-comment">// [30, 303]</span></code></pre><h4 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h4>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, whenTrue, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
 something like this:</p>
 <pre class="hljs"><code>const withConnect = connect(<span class="hljs-name">mapStateToProps</span>, mapDispatchToProps)<span class="hljs-comment">;</span>

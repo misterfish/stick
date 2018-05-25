@@ -140,6 +140,7 @@ This would be a good time to read up on curried functions if you're not familiar
 Calling:
 
 	import { map, } from 'stick-js'
+	const double = x => x * 2
 
 	map (double, [1, 2, 3])    // [2, 4, 6] (normal style)
 	map (double) ([1, 2, 3])   // [2, 4, 6] (manual style)
@@ -159,7 +160,8 @@ below).
 	; [4, 3]
 	| sprintfN ('%s - 1 is %s')  // same.
 
-'V' means a value is expected, to disambiguate cases where a function can also work.
+'V' means a value is expected, to disambiguate cases where a function also
+fits.
 
 	import { timesV, timesF, } from 'stick-js'
 
@@ -239,11 +241,11 @@ Usage:
 
 #### ٭ point-free ٭
 
-A common pattern is when the argument to a function is passed directly into a pipe:
+A common pattern is when the argument to a function is passed immediately into a pipe:
 
 	const add1IfYouCan = x => x | ifOk (add1, 'nothing' | always)
 
-Since `x` does not appear anywhere else in the expression, we can simply remove it:
+Since `x` does not appear anywhere else in the expression, we can simply remove it, along with the function argument:
 
 	const add1IfYouCan = ifOk (add1, 'nothing' | always)
 
@@ -257,7 +259,7 @@ If the pipe chain consists of more than 1 link …
 	  | String                        // conversion using type constructor
 	  | dot ('toUpperCase')
 	  | sprintf1 ('The answer is %s')
-	  | tap (log)                     // outputs 'The answer is 1' or 'The answer is NOTHING' or ...
+	  | tap (log)                     // outputs 'The answer is 1', 'The answer is NOTHING', ...
 
 … then we remove the `x => x` and change all the `|` to `>>`
 
@@ -416,7 +418,7 @@ Or to only merge if certain conditions hold:
 (We're dying to see a port to Hungarian, too)
 
 Once you master this, the usage becomes intuitive and greatly reduces the
-need to keep checking the docs.
+need to check the docs.
 
 	import {
 	  sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
@@ -431,13 +433,13 @@ the right is the object of the preposition.
 
 Read this as ‘merge src **to tgt**’
 
-	src | mergeTo (tgt)
+	src | mergeTo (tgt)                  // { thing: 'sandwich', want: 'yes please', }
 
 The same function without the preposition means that the identifier to the right is the object of the verb ‘merge’.
 
 Read this as: ‘**merge src** to tgt’
 
-	tgt | merge (src)
+	tgt | merge (src)                    // { thing: 'sandwich', want: 'yes please', }
 
 	4 | appendTo ([1, 2, 3])             // [1, 2, 3, 4]
 	; ([1, 2, 3]) | append (4)           // [1, 2, 3, 4]
@@ -458,10 +460,10 @@ Read this as: ‘**merge src** to tgt’
 	const f = 'speak' | bindPropTo (dog)
 	f ()                                  // 'My name is Caesar'
 
-    // --- 'bind prop to object'
+    // --- 'bind prop "speak" to object'
 	'speak' | bindPropTo (dog)   | invoke // same
 
-    // --- also 'bind prop to object'
+    // --- also 'bind prop "speak" to object'
 	dog     | bindProp ('speak') | invoke // same
 
 	dog.speak | bindTo (dog) | invoke     // same
@@ -633,7 +635,7 @@ number to impress … no one.
 	animal.size // undefined
 
 You can pass an object to `create` to initialise properties. These will be
-copied in *after* the props passed to `factoryProps`.
+copied in *after* the props that were passed to `factoryProps` are.
 
     const bigBiped = Animal.create ({ size: 'big', numLegs: 2, }).init ()
 
@@ -732,8 +734,6 @@ value, is exactly our pipe pattern. So why not:
 	  | connect       (mapStateToProps, mapDispatchToProps)
 	  | injectSaga    ({ key: 'home', saga, })
 	  | injectReducer ({ key: 'home', reducer, })
-	  | injectReducer ({ key: 'ui', uiReducer, })
-	  | ...
 
 And maybe you call actions using a structure like:
 
@@ -766,9 +766,9 @@ for the presence of the props can be annoying, so how about:
 
 #### ٭ backend stuff ٭
 
-When you're using a framework like express, you have this `app` object that
-you carry around everywhere. It just so happens that nearly all methods of
-app return app, so that chaining works in the familiar way:
+When you're using a framework like Express, you have the well-known `app`
+object that you carry around everywhere. It just so happens that nearly all
+methods of `app` return `app`, so that chaining works in the familiar way:
 
 	app
 	.use (...)
@@ -782,7 +782,7 @@ app return app, so that chaining works in the familiar way:
 But there are cases when the makers were not so thoughtful, or when you
 simply don't know (or don't care) what a function or method returns. The
 pipe will free you from the limitations of the dot, and allow you to compose
-your own fluid interfaces. We'll use express here to prove that it works.
+your own fluid interfaces. We'll use Express here to prove that it works.
 See the raindrops example for how you might use this with WebGL, and there
 are many other places this can be used.
 
@@ -882,7 +882,7 @@ dependency by reimplementing many of the functions. While profiling the
 WebGL example we found that even trivial functions like `R.flip` and `R.tap`
 are surprisingly expensive.
 
-This really only becomes an issue in tight loops -- an inner loop of a
+This really only becomes an issue in critical loops -- an inner loop of a
 socket or server, an animation, a particle system where lots of objects are
 spawned per second, WebGL. For cases like these, see below.
 
@@ -956,7 +956,7 @@ Of course, we've saved your precious bitwise operators. You can either:
 the scope in which the calls are made. We recommend doing the bitwise math
 in a separate source file and not mixing the two styles in one file.
 
-### Why not use lodash?
+### Why not use lodash? / ramda/ etc.
 
 - you don't need to carry around the _
 - free functions are far more flexible than dotted ones

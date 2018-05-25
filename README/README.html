@@ -124,6 +124,7 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 </ol>
 <p>Calling:</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { <span class="hljs-built_in">map</span>, } from <span class="hljs-string">'stick-js'</span>
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> = x =&gt; x * <span class="hljs-number">2</span>
 
 <span class="hljs-built_in">map</span> (<span class="hljs-keyword">double</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])    <span class="hljs-comment">// [2, 4, 6] (normal style)</span>
 <span class="hljs-built_in">map</span> (<span class="hljs-keyword">double</span>) ([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])   <span class="hljs-comment">// [2, 4, 6] (manual style)</span>
@@ -134,7 +135,8 @@ below).</p>
 
 <span class="hljs-number">3</span> | sprintf1 (<span class="hljs-string">'4 - 1 is %s'</span>) <span class="hljs-comment">// '4 - 1 is 3'</span></code></pre><p>&#39;N&#39; is a marker meaning an array is expected.</p>
 <pre class="hljs"><code>; <span class="hljs-selector-attr">[4, 3]</span>
-| <span class="hljs-selector-tag">sprintfN</span> (<span class="hljs-string">'%s - 1 is %s'</span>)  <span class="hljs-comment">// same.</span></code></pre><p>&#39;V&#39; means a value is expected, to disambiguate cases where a function can also work.</p>
+| <span class="hljs-selector-tag">sprintfN</span> (<span class="hljs-string">'%s - 1 is %s'</span>)  <span class="hljs-comment">// same.</span></code></pre><p>&#39;V&#39; means a value is expected, to disambiguate cases where a function also
+fits.</p>
 <pre class="hljs"><code>import { timesV, timesF, } from 'stick-js'
 
 const { <span class="hljs-built_in">random</span>, } = Math
@@ -190,8 +192,8 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
 )</code></pre><p>Usage:</p>
 <pre class="hljs"><code>; <span class="hljs-meta">[</span><span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-built_in">null</span>, <span class="hljs-literal">void</span> <span class="hljs-number">8</span><span class="hljs-meta">]</span>
 | map (add1IfYouCan) // <span class="hljs-meta">[</span><span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span><span class="hljs-meta">]</span></code></pre><h4 id="٭-point-free-٭"><a class="header-link" href="#٭-point-free-٭"></a>٭ point-free ٭</h4>
-<p>A common pattern is when the argument to a function is passed directly into a pipe:</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Since <code>x</code> does not appear anywhere else in the expression, we can simply remove it:</p>
+<p>A common pattern is when the argument to a function is passed immediately into a pipe:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Since <code>x</code> does not appear anywhere else in the expression, we can simply remove it, along with the function argument:</p>
 <pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)</code></pre><p>If the pipe chain consists of more than 1 link …</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> { dot, sprintf1, tap, }
 <span class="hljs-keyword">const</span> { log, } = <span class="hljs-built_in">console</span>
@@ -201,7 +203,7 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
   | <span class="hljs-built_in">String</span>                        <span class="hljs-comment">// conversion using type constructor</span>
   | dot (<span class="hljs-string">'toUpperCase'</span>)
   | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
-  | tap (log)                     <span class="hljs-comment">// outputs 'The answer is 1' or 'The answer is NOTHING' or ...</span></code></pre><p>… then we remove the <code>x =&gt; x</code> and change all the <code>|</code> to <code>&gt;&gt;</code></p>
+  | tap (log)                     <span class="hljs-comment">// outputs 'The answer is 1', 'The answer is NOTHING', ...</span></code></pre><p>… then we remove the <code>x =&gt; x</code> and change all the <code>|</code> to <code>&gt;&gt;</code></p>
 <pre class="hljs"><code>const add1IfYouCan =
   ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)
   &gt;&gt; String
@@ -320,7 +322,7 @@ os | mergeTo (ot)                 // { va<span class="hljs-variable">l:</span> <
 os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }</code></pre><h4 id="٭-semantics-and-argument-order-are-often-based-on-english-grammar-٭"><a class="header-link" href="#٭-semantics-and-argument-order-are-often-based-on-english-grammar-٭"></a>٭ semantics and argument order are often based on English grammar ٭</h4>
 <p>(We&#39;re dying to see a port to Hungarian, too)</p>
 <p>Once you master this, the usage becomes intuitive and greatly reduces the
-need to keep checking the docs.</p>
+need to check the docs.</p>
 <pre class="hljs"><code>import {
   sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
   appendTo, append, <span class="hljs-built_in">bind</span>PropTo, <span class="hljs-built_in">bind</span>Prop, <span class="hljs-built_in">bind</span>To, <span class="hljs-built_in">bind</span>, invoke,
@@ -330,9 +332,9 @@ const tgt = { thing: <span class="hljs-string">'sandwich'</span>, want: <span cl
 const src = {                    want: <span class="hljs-string">'yes please'</span>, }</code></pre><p>When a function ends in a preposition, for example, ‘To’, the identifier to
 the right is the object of the preposition.</p>
 <p>Read this as ‘merge src <strong>to tgt</strong>’</p>
-<pre class="hljs"><code>src <span class="hljs-string">| mergeTo (tgt)</span></code></pre><p>The same function without the preposition means that the identifier to the right is the object of the verb ‘merge’.</p>
+<pre class="hljs"><code>src | mergeTo (tgt)                  // { thin<span class="hljs-variable">g:</span> <span class="hljs-string">'sandwich'</span>, wan<span class="hljs-variable">t:</span> <span class="hljs-string">'yes please'</span>, }</code></pre><p>The same function without the preposition means that the identifier to the right is the object of the verb ‘merge’.</p>
 <p>Read this as: ‘<strong>merge src</strong> to tgt’</p>
-<pre class="hljs"><code>tgt | merge (src)
+<pre class="hljs"><code>tgt | merge (src)                    // { thing: 'sandwich', want: 'yes please', }
 
 4 | appendTo ([1, 2, 3])             // [1, 2, 3, 4]
 ; ([1, 2, 3]) | append (4)           // [1, 2, 3, 4]
@@ -353,10 +355,10 @@ const </span>cat = {
 const </span>f = 'speak' | bindPropTo (dog)
 f ()                                  // 'My name is Caesar'
 
-// --- 'bind prop to object'
+// --- 'bind prop <span class="hljs-string">"speak"</span> to object'
 'speak' | bindPropTo (dog)   |<span class="hljs-built_in"> invoke </span>// same
 
-// --- also 'bind prop to object'
+// --- also 'bind prop <span class="hljs-string">"speak"</span> to object'
 dog     | bindProp ('speak') |<span class="hljs-built_in"> invoke </span>// same
 
 dog.speak | bindTo (dog) |<span class="hljs-built_in"> invoke </span>    // same
@@ -482,7 +484,7 @@ number to impress … no one.</p>
 <pre class="hljs"><code>const animal = Animal<span class="hljs-selector-class">.create</span> ()<span class="hljs-selector-class">.init</span> ()
 animal<span class="hljs-selector-class">.type</span> <span class="hljs-comment">// 'animal'</span>
 animal<span class="hljs-selector-class">.size</span> <span class="hljs-comment">// undefined</span></code></pre><p>You can pass an object to <code>create</code> to initialise properties. These will be
-copied in <em>after</em> the props passed to <code>factoryProps</code>.</p>
+copied in <em>after</em> the props that were passed to <code>factoryProps</code> are.</p>
 <pre class="hljs"><code>const bigBiped = Animal<span class="hljs-selector-class">.create</span> ({ size: <span class="hljs-string">'big'</span>, numLegs: <span class="hljs-number">2</span>, })<span class="hljs-selector-class">.init</span> ()</code></pre><p>You can also eliminate the dots entirely:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> create = dot1 (<span class="hljs-string">'create'</span>)
 <span class="hljs-keyword">const</span> init   = side (<span class="hljs-string">'init'</span>)
@@ -541,12 +543,10 @@ export default compose(
   withConnect,
 )(<span class="hljs-name">HomePage</span>)<span class="hljs-comment">;</span></code></pre><p>We should see by now that this composing of functions, invoked upon a single
 value, is exactly our pipe pattern. So why not:</p>
-<pre class="hljs"><code>export <span class="hljs-keyword">default</span> App
-  | connect       (mapStateToProps, mapDispatchToProps)
-  | injectSaga    ({ <span class="hljs-string">key:</span> <span class="hljs-string">'home'</span>, saga, })
-  | injectReducer ({ <span class="hljs-string">key:</span> <span class="hljs-string">'home'</span>, reducer, })
-  | injectReducer ({ <span class="hljs-string">key:</span> <span class="hljs-string">'ui'</span>, uiReducer, })
-  | ...</code></pre><p>And maybe you call actions using a structure like:</p>
+<pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-built_in">default</span> App
+  | <span class="hljs-built_in">connect</span>       (mapStateToProps, mapDispatchToProps)
+  | injectSaga    ({ key: <span class="hljs-string">'home'</span>, saga, })
+  | injectReducer ({ key: <span class="hljs-string">'home'</span>, reducer, })</code></pre><p>And maybe you call actions using a structure like:</p>
 <pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mapDispatchToProps</span>(<span class="hljs-params">dispatch</span>) </span>{
   <span class="hljs-keyword">return</span> {
     <span class="hljs-attr">onChangeUsername</span>: <span class="hljs-function">(<span class="hljs-params">evt</span>) =&gt;</span> dispatch(changeUsername(evt.target.value)),
@@ -566,9 +566,9 @@ for the presence of the props can be annoying, so how about:</p>
 `</span>
 
 &lt;SomeElementS width=<span class="hljs-string">'100%'</span> error={<span class="hljs-literal">true</span>} /&gt;</code></pre><h4 id="٭-backend-stuff-٭"><a class="header-link" href="#٭-backend-stuff-٭"></a>٭ backend stuff ٭</h4>
-<p>When you&#39;re using a framework like express, you have this <code>app</code> object that
-you carry around everywhere. It just so happens that nearly all methods of
-app return app, so that chaining works in the familiar way:</p>
+<p>When you&#39;re using a framework like Express, you have the well-known <code>app</code>
+object that you carry around everywhere. It just so happens that nearly all
+methods of <code>app</code> return <code>app</code>, so that chaining works in the familiar way:</p>
 <pre class="hljs"><code>app
 <span class="hljs-selector-class">.use</span> (...)
 <span class="hljs-selector-class">.all</span> (...)
@@ -579,7 +579,7 @@ app return app, so that chaining works in the familiar way:</p>
 <span class="hljs-selector-class">.listen</span> (config<span class="hljs-selector-class">.port</span>, ...)</code></pre><p>But there are cases when the makers were not so thoughtful, or when you
 simply don&#39;t know (or don&#39;t care) what a function or method returns. The
 pipe will free you from the limitations of the dot, and allow you to compose
-your own fluid interfaces. We&#39;ll use express here to prove that it works.
+your own fluid interfaces. We&#39;ll use Express here to prove that it works.
 See the raindrops example for how you might use this with WebGL, and there
 are many other places this can be used.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { side1, side2, list, appendTo, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
@@ -660,7 +660,7 @@ app | use (bodyParser.json())
 dependency by reimplementing many of the functions. While profiling the
 WebGL example we found that even trivial functions like <code>R.flip</code> and <code>R.tap</code>
 are surprisingly expensive.</p>
-<p>This really only becomes an issue in tight loops -- an inner loop of a
+<p>This really only becomes an issue in critical loops -- an inner loop of a
 socket or server, an animation, a particle system where lots of objects are
 spawned per second, WebGL. For cases like these, see below.</p>
 <p>It is true that <code>a | b</code> compiles to three function calls, whereas <code>b (a)</code> is

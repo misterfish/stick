@@ -213,7 +213,8 @@ export const defaultTo = f => x => ok (x) ? x : f ()
 
 // --- object stuff.
 
-export const prop = p => o => o [p]
+export const prop   = p => o => o [p]
+export const propOf = o => p => o [p]
 
 export const path = (xs) => (o) => {
     let j = o
@@ -442,10 +443,12 @@ export const mergeWhen = (p) => (mergerSym) => {
 
 
 // --- note: capped.
-export const map  = f => ary => ary.map     (x => f (x))
-export const each = f => ary => ary.forEach (x => f (x))
-export const filter = f => ary => ary.filter (x => f (x))
-export const reject = f => ary => ary.filter (x => ! f (x))
+export const map  = f => xs => xs.map     (x => f (x))
+export const each = f => xs => xs.forEach (x => f (x))
+
+export const reduce = f => acc => xs => xs.reduce (f, acc)
+export const filter = f => xs => xs.filter (x => f (x))
+export const reject = f => xs => xs.filter (x => ! f (x))
 
 // --- returns obj
 export const eachObj = (f) => (o) => {
@@ -758,7 +761,7 @@ export default {
     mergeInToM, mergeInM, mergeInTo, mergeIn,
     mergeWith, mergeWhen,
     addIndex, addCollection,
-    map, filter, reject,
+    map, reduce, filter, reject,
     // both, either, allN, anyN,
     each, eachObj, eachObjIn,
     reduceObj, reduceObjIn,
@@ -769,7 +772,7 @@ export default {
     applyTo1, applyTo2, applyTo3, applyTo4, applyTo5, applyToN,
     passTo, passToN,
     join, split,
-    prop,
+    prop, propOf,
     flip, flip3, flip4, flip5,
     sprintf1, sprintfN,
     repeatV, repeatF, repeatSide,

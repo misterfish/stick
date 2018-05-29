@@ -59,7 +59,7 @@ export const recurry = manual.recurry
 const _recurry = recurry
 
 export const noop = () => {}
-export const not = f => !f
+export const not = x => !x
 
 export const ok    = x => x != null
 export const notOk = x => x == null
@@ -206,6 +206,9 @@ export const has   = _recurry (2) (manual.has)
 export const hasIn = _recurry (2) (manual.hasIn)
 
 export const prop   = _recurry (2) (manual.prop)
+// xxx @test
+export const propOf = _recurry (2) (manual.propOf)
+
 // --- only traverses "typeof = 'object'" nodes; thinks like Date result in undefined.
 export const path   = _recurry (2) (manual.path)
 export const assoc  = _recurry (3) (manual.assoc)
@@ -324,6 +327,7 @@ export const mergeAllIn = xs => xs.reduce (
 export const map    = _recurry (2) (manual.map)
 export const each   = _recurry (2) (manual.each)
 
+export const reduce = _recurry (2) (manual.reduce)
 export const filter = _recurry (2) (manual.filter)
 export const reject = _recurry (2) (manual.reject)
 

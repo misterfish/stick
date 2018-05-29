@@ -1120,6 +1120,52 @@ myData
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">split</span> (' '),
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">map</span> (capitaliseFirstLetter),
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">join</span> (' ')</code></pre><p>merge benchmark: manual / index / ramda</p>
+<h1 id="working-with-functors:-maybe-(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"><a class="header-link" href="#working-with-functors:-maybe-(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"></a>Working with functors: Maybe (or how to forget about <code>null</code> and <code>undefined</code> for a while)</h1>
+<p>  import { some as Just, none as Nothing, } from &#39;bilby&#39;</p>
+<p>  const toMaybe = o =&gt; o | ifOk (
+    Just,
+    Nothing | always,
+  )</p>
+<p>  const flatMap = dot1 (&#39;flatMap&#39;)
+  const fold = dot2 (&#39;fold&#39;)</p>
+<p>  const translations = {
+      rouge: &#39;red&#39;,
+      bleu: &#39;blue&#39;,
+      vert: &#39;green&#39;,
+  }</p>
+<p>  const count = {
+      red: 5,
+      blue: 0,
+      // green missing
+  }</p>
+<p>  const formatAnswer = input =&gt; answer =&gt; [input | yellow, answer] | sprintfN (&#39;%s → %s&#39;)</p>
+<p>  const go = _ =&gt;
+    [&#39;rouge&#39;, &#39;bleu&#39;, &#39;vert&#39;, &#39;blanc&#39;]
+    | map (doit)
+    | tap (map (log))</p>
+<p>  const doit = x =&gt; x | calculate | formatAnswer (x)</p>
+<p>  const calculate = french =&gt; doLookup (french)
+    | fold (
+      answer =&gt; answer + &#39; &#39; + green (&#39;✔&#39;),
+      red (&#39;✘&#39;) | always,
+    )</p>
+<p>  const doLookup = french =&gt; french
+    | getTranslation
+    | flatMap (getCount)
+    | flatMap (getQuotient)</p>
+<p>  const getTranslation = french =&gt;
+    translations [french] | toMaybe</p>
+<p>  const getCount = english =&gt;
+    count [english] | toMaybe</p>
+<p>  const getQuotient = condS ([
+    0 | eq    | guard (_ =&gt; Nothing),
+    otherwise | guard (cnt =&gt; Just (10 / cnt)),
+  ])</p>
+<p>  go ()</p>
+<h1 id="working-with-functors:-either"><a class="header-link" href="#working-with-functors:-either"></a>Working with functors: Either</h1>
+<p>The above example, using an <code>Either</code> functor instead of <code>Maybe</code>, and a more point-free style.</p>
+<p>The advantage of <code>Either</code> is that you can see why something failed, by
+storing a string with a failure reason in the Left branch.</p>
 <h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
 <p>For speed freaks: the curried functions you import from the main module are
 written first using manual currying, and then recurried and exported. This

@@ -1581,12 +1581,13 @@ storing a string with a failure reason in the Left branch.
 	  rouge: 'red',
 	  bleu: 'blue',
 	  vert: 'green',
+	  // blanc missing
 	}
 
 	const count = {
 	  red: 5,
 	  blue: 0,
-	  // green undefined
+	  // green missing
 	}
 
 	const formatAnswer = list >> asteriskN ([yellow, id]) >> sprintfN ('%s → %s')

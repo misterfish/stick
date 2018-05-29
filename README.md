@@ -1484,7 +1484,18 @@ no-brainer to overload the operator and keep everything else the same.
 
 merge benchmark: manual / index / ramda
 
-# Working with functors: Maybe (or how to forget about `null` and `undefined` for a while)
+# Working with functors: Maybe
+### (or how to forget about `null` and `undefined` for a while)
+
+Here is an example showing how you can deal with failure paths, using the
+`Maybe` functor from `bilby`. In this toy example, we start with a French
+word, then:
+
+1) look up a translation (mocked in a table); failure path: the translation might not exist).
+2) look up a corresponding 'count' value (also mocked in a table); failure
+path: the count might not exist
+3) divide this number into 10 for some reason (failure path: the number might
+be 0)
 
 	import { some as Just, none as Nothing, } from 'bilby'
 
@@ -1497,15 +1508,16 @@ merge benchmark: manual / index / ramda
 	const fold = dot2 ('fold')
 
 	const translations = {
-		rouge: 'red',
-		bleu: 'blue',
-		vert: 'green',
+	  rouge: 'red',
+	  bleu: 'blue',
+	  vert: 'green',
+	  // blanc missing
 	}
 
 	const count = {
-		red: 5,
-		blue: 0,
-		// green missing
+	  red: 5,
+	  blue: 0,
+	  // green missing
 	}
 
 	const formatAnswer = input => answer => [input | yellow, answer] | sprintfN ('%s → %s')
@@ -1519,8 +1531,8 @@ merge benchmark: manual / index / ramda
 
 	const calculate = french => doLookup (french)
 	  | fold (
-		answer => answer + ' ' + green ('✔'),
-		red ('✘') | always,
+	    answer => answer + ' ' + green ('✔'),
+	    red ('✘') | always,
 	  )
 
 	const doLookup = french => french
@@ -1540,6 +1552,8 @@ merge benchmark: manual / index / ramda
 	])
 
 	go ()
+
+![maybe.jpg](readme-assets/maybe.jpg)
 
 # Working with functors: Either
 
@@ -1563,15 +1577,15 @@ storing a string with a failure reason in the Left branch.
 	const propOf = o => prop => o [prop]
 
 	const translations = {
-		rouge: 'red',
-		bleu: 'blue',
-		vert: 'green',
+	  rouge: 'red',
+	  bleu: 'blue',
+	  vert: 'green',
 	}
 
 	const count = {
-		red: 5,
-		blue: 0,
-		// green undefined
+	  red: 5,
+	  blue: 0,
+	  // green undefined
 	}
 
 	const formatAnswer = list >> asteriskN ([yellow, id]) >> sprintfN ('%s → %s')
@@ -1588,11 +1602,10 @@ storing a string with a failure reason in the Left branch.
 	  >> flatMap (getCount)
 	  >> flatMap (getQuotient)
 
-	const calculate = french => doLookup (french)
-	  | fold (
-		l => l + ' ' + red ('✘'),
-		r => r + ' ' + green ('✔'),
-	  )
+	const calculate = doLookup >> fold (
+	  prependTo (['✘' | red])   >> sprintfN ('%s %s'),
+	  prependTo (['✔' | green]) >> sprintfN ('%s %s'),
+	)
 
 	const doit = timesV (2)
 	  >> arrowSnd (calculate)
@@ -1605,6 +1618,7 @@ storing a string with a failure reason in the Left branch.
 
 	go ()
 
+![either.jpg](readme-assets/either.jpg)
 
 # Extra performance
 

@@ -1120,7 +1120,16 @@ myData
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">split</span> (' '),
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">map</span> (capitaliseFirstLetter),
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">join</span> (' ')</code></pre><p>merge benchmark: manual / index / ramda</p>
-<h1 id="working-with-functors:-maybe-(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"><a class="header-link" href="#working-with-functors:-maybe-(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"></a>Working with functors: Maybe (or how to forget about <code>null</code> and <code>undefined</code> for a while)</h1>
+<h1 id="working-with-functors:-maybe"><a class="header-link" href="#working-with-functors:-maybe"></a>Working with functors: Maybe</h1>
+<h3 id="(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"><a class="header-link" href="#(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"></a>(or how to forget about <code>null</code> and <code>undefined</code> for a while)</h3>
+<p>Here is an example showing how you can deal with failure paths, using the
+<code>Maybe</code> functor from <code>bilby</code>. In this toy example, we start with a French
+word, then:</p>
+<p>1) look up a translation (mocked in a table); failure path: the translation might not exist).
+2) look up a corresponding &#39;count&#39; value (also mocked in a table); failure
+path: the count might not exist
+3) divide this number into 10 for some reason (failure path: the number might
+be 0)</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { some <span class="hljs-keyword">as</span> Just, none <span class="hljs-keyword">as</span> Nothing, } <span class="hljs-keyword">from</span> <span class="hljs-string">'bilby'</span>
 
 <span class="hljs-keyword">const</span> toMaybe = <span class="hljs-function"><span class="hljs-params">o</span> =&gt;</span> o | ifOk (
@@ -1132,15 +1141,16 @@ myData
 <span class="hljs-keyword">const</span> fold = dot2 (<span class="hljs-string">'fold'</span>)
 
 <span class="hljs-keyword">const</span> translations = {
-    <span class="hljs-attr">rouge</span>: <span class="hljs-string">'red'</span>,
-    <span class="hljs-attr">bleu</span>: <span class="hljs-string">'blue'</span>,
-    <span class="hljs-attr">vert</span>: <span class="hljs-string">'green'</span>,
+  <span class="hljs-attr">rouge</span>: <span class="hljs-string">'red'</span>,
+  <span class="hljs-attr">bleu</span>: <span class="hljs-string">'blue'</span>,
+  <span class="hljs-attr">vert</span>: <span class="hljs-string">'green'</span>,
+  <span class="hljs-comment">// blanc missing</span>
 }
 
 <span class="hljs-keyword">const</span> count = {
-    <span class="hljs-attr">red</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">blue</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-comment">// green missing</span>
+  <span class="hljs-attr">red</span>: <span class="hljs-number">5</span>,
+  <span class="hljs-attr">blue</span>: <span class="hljs-number">0</span>,
+  <span class="hljs-comment">// green missing</span>
 }
 
 <span class="hljs-keyword">const</span> formatAnswer = <span class="hljs-function"><span class="hljs-params">input</span> =&gt;</span> answer =&gt; [input | yellow, answer] | sprintfN (<span class="hljs-string">'%s → %s'</span>)
@@ -1174,7 +1184,8 @@ myData
   otherwise | guard (<span class="hljs-function"><span class="hljs-params">cnt</span> =&gt;</span> Just (<span class="hljs-number">10</span> / cnt)),
 ])
 
-go ()</code></pre><h1 id="working-with-functors:-either"><a class="header-link" href="#working-with-functors:-either"></a>Working with functors: Either</h1>
+go ()</code></pre><p class="img-container"><img src="readme-assets/maybe.jpg" alt="maybe.jpg"></p>
+<h1 id="working-with-functors:-either"><a class="header-link" href="#working-with-functors:-either"></a>Working with functors: Either</h1>
 <p>The above example, using an <code>Either</code> functor instead of <code>Maybe</code>, and a more point-free style.</p>
 <p>The advantage of <code>Either</code> is that you can see why something failed, by
 storing a string with a failure reason in the Left branch.</p>
@@ -1193,18 +1204,19 @@ storing a string with a failure reason in the Left branch.</p>
 <span class="hljs-keyword">const</span> propOf = <span class="hljs-function"><span class="hljs-params">o</span> =&gt;</span> prop =&gt; o [prop]
 
 <span class="hljs-keyword">const</span> translations = {
-    <span class="hljs-attr">rouge</span>: <span class="hljs-string">'red'</span>,
-    <span class="hljs-attr">bleu</span>: <span class="hljs-string">'blue'</span>,
-    <span class="hljs-attr">vert</span>: <span class="hljs-string">'green'</span>,
+  <span class="hljs-attr">rouge</span>: <span class="hljs-string">'red'</span>,
+  <span class="hljs-attr">bleu</span>: <span class="hljs-string">'blue'</span>,
+  <span class="hljs-attr">vert</span>: <span class="hljs-string">'green'</span>,
+  <span class="hljs-comment">// blanc missing</span>
 }
 
 <span class="hljs-keyword">const</span> count = {
-    <span class="hljs-attr">red</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">blue</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-comment">// green undefined</span>
+  <span class="hljs-attr">red</span>: <span class="hljs-number">5</span>,
+  <span class="hljs-attr">blue</span>: <span class="hljs-number">0</span>,
+  <span class="hljs-comment">// green undefined</span>
 }
 
-<span class="hljs-keyword">const</span> formatAnswer = list &gt;&gt; asteriskN ([yellow, id]) &gt;&gt; sprintfN (<span class="hljs-string">'%s → %s'</span>)
+<span class="hljs-keyword">const</span> formatAnswer = list &gt;&gt; asterisk ([yellow, id]) &gt;&gt; sprintfN (<span class="hljs-string">'%s → %s'</span>)
 
 <span class="hljs-keyword">const</span> getTranslation = propOf (translations) &gt;&gt; toEither (<span class="hljs-string">'no translation'</span>)
 <span class="hljs-keyword">const</span> getCount       = propOf (count)        &gt;&gt; toEither (<span class="hljs-string">'no count'</span>)
@@ -1218,8 +1230,8 @@ storing a string with a failure reason in the Left branch.</p>
   &gt;&gt; flatMap (getCount)
   &gt;&gt; flatMap (getQuotient)
 
-<span class="hljs-keyword">const</span> calculate = <span class="hljs-function"><span class="hljs-params">french</span> =&gt;</span> doLookup (french)
-  | fold (
+<span class="hljs-keyword">const</span> calculate = doLookup
+  &gt;&gt; fold (
     <span class="hljs-function"><span class="hljs-params">l</span> =&gt;</span> l + <span class="hljs-string">' '</span> + red (<span class="hljs-string">'✘'</span>),
     r =&gt; r + <span class="hljs-string">' '</span> + green (<span class="hljs-string">'✔'</span>),
   )
@@ -1233,7 +1245,8 @@ storing a string with a failure reason in the Left branch.</p>
   | map (doit)
   | tap (map (log))
 
-go ()</code></pre><h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
+go ()</code></pre><p class="img-container"><img src="readme-assets/either.jpg" alt="either.jpg"></p>
+<h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
 <p>For speed freaks: the curried functions you import from the main module are
 written first using manual currying, and then recurried and exported. This
 is in order to allow both calling styles.</p>

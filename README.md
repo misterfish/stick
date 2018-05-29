@@ -1486,60 +1486,60 @@ merge benchmark: manual / index / ramda
 
 # Working with functors: Maybe (or how to forget about `null` and `undefined` for a while)
 
-  import { some as Just, none as Nothing, } from 'bilby'
+	import { some as Just, none as Nothing, } from 'bilby'
 
-  const toMaybe = o => o | ifOk (
-	Just,
-	Nothing | always,
-  )
-
-  const flatMap = dot1 ('flatMap')
-  const fold = dot2 ('fold')
-
-  const translations = {
-	  rouge: 'red',
-	  bleu: 'blue',
-	  vert: 'green',
-  }
-
-  const count = {
-	  red: 5,
-	  blue: 0,
-	  // green missing
-  }
-
-  const formatAnswer = input => answer => [input | yellow, answer] | sprintfN ('%s → %s')
-
-  const go = _ =>
-	['rouge', 'bleu', 'vert', 'blanc']
-	| map (doit)
-	| tap (map (log))
-
-  const doit = x => x | calculate | formatAnswer (x)
-
-  const calculate = french => doLookup (french)
-	| fold (
-	  answer => answer + ' ' + green ('✔'),
-	  red ('✘') | always,
+	const toMaybe = o => o | ifOk (
+	  Just,
+	  Nothing | always,
 	)
 
-  const doLookup = french => french
-	| getTranslation
-	| flatMap (getCount)
-	| flatMap (getQuotient)
+	const flatMap = dot1 ('flatMap')
+	const fold = dot2 ('fold')
 
-  const getTranslation = french =>
-	translations [french] | toMaybe
+	const translations = {
+		rouge: 'red',
+		bleu: 'blue',
+		vert: 'green',
+	}
 
-  const getCount = english =>
-	count [english] | toMaybe
+	const count = {
+		red: 5,
+		blue: 0,
+		// green missing
+	}
 
-  const getQuotient = condS ([
-	0 | eq    | guard (_ => Nothing),
-	otherwise | guard (cnt => Just (10 / cnt)),
-  ])
+	const formatAnswer = input => answer => [input | yellow, answer] | sprintfN ('%s → %s')
 
-  go ()
+	const go = _ =>
+	  ['rouge', 'bleu', 'vert', 'blanc']
+	  | map (doit)
+	  | tap (map (log))
+
+	const doit = x => x | calculate | formatAnswer (x)
+
+	const calculate = french => doLookup (french)
+	  | fold (
+		answer => answer + ' ' + green ('✔'),
+		red ('✘') | always,
+	  )
+
+	const doLookup = french => french
+	  | getTranslation
+	  | flatMap (getCount)
+	  | flatMap (getQuotient)
+
+	const getTranslation = french =>
+	  translations [french] | toMaybe
+
+	const getCount = english =>
+	  count [english] | toMaybe
+
+	const getQuotient = condS ([
+	  0 | eq    | guard (_ => Nothing),
+	  otherwise | guard (cnt => Just (10 / cnt)),
+	])
+
+	go ()
 
 # Working with functors: Either
 
@@ -1548,62 +1548,62 @@ The above example, using an `Either` functor instead of `Maybe`, and a more poin
 The advantage of `Either` is that you can see why something failed, by
 storing a string with a failure reason in the Left branch.
 
-  import { left as Left, right as Right, } from 'bilby'
+	import { left as Left, right as Right, } from 'bilby'
 
-  const toEither = l => ifOk (
-	Right,
-	l | Left | always,
-  )
-
-  const flatMap = dot1 ('flatMap')
-  const fold = dot2 ('fold')
-  const arrowSnd = f => ([a, b]) => [a, b | f]
-  const foldArrow = f => ([a, b]) => f (a, b)
-  // @todo remove
-  const propOf = o => prop => o [prop]
-
-  const translations = {
-	  rouge: 'red',
-	  bleu: 'blue',
-	  vert: 'green',
-  }
-
-  const count = {
-	  red: 5,
-	  blue: 0,
-	  // green undefined
-  }
-
-  const formatAnswer = list >> asteriskN ([yellow, id]) >> sprintfN ('%s → %s')
-
-  const getTranslation = propOf (translations) >> toEither ('no translation')
-  const getCount       = propOf (count)        >> toEither ('no count')
-
-  const getQuotient = condS ([
-	0 | eq    | guardV ('count was zero' | Left),
-	otherwise | guard  (divideInto (10) >> Right),
-  ])
-
-  const doLookup = getTranslation
-	>> flatMap (getCount)
-	>> flatMap (getQuotient)
-
-  const calculate = french => doLookup (french)
-	| fold (
-	  l => l + ' ' + red ('✘'),
-	  r => r + ' ' + green ('✔'),
+	const toEither = l => ifOk (
+	  Right,
+	  l | Left | always,
 	)
 
-  const doit = timesV (2)
-	>> arrowSnd (calculate)
-	>> foldArrow (formatAnswer)
+	const flatMap = dot1 ('flatMap')
+	const fold = dot2 ('fold')
+	const arrowSnd = f => ([a, b]) => [a, b | f]
+	const foldArrow = f => ([a, b]) => f (a, b)
+	// @todo remove
+	const propOf = o => prop => o [prop]
 
-  const go = _ =>
-	['rouge', 'bleu', 'vert', 'blanc']
-	| map (doit)
-	| tap (map (log))
+	const translations = {
+		rouge: 'red',
+		bleu: 'blue',
+		vert: 'green',
+	}
 
-  go ()
+	const count = {
+		red: 5,
+		blue: 0,
+		// green undefined
+	}
+
+	const formatAnswer = list >> asteriskN ([yellow, id]) >> sprintfN ('%s → %s')
+
+	const getTranslation = propOf (translations) >> toEither ('no translation')
+	const getCount       = propOf (count)        >> toEither ('no count')
+
+	const getQuotient = condS ([
+	  0 | eq    | guardV ('count was zero' | Left),
+	  otherwise | guard  (divideInto (10) >> Right),
+	])
+
+	const doLookup = getTranslation
+	  >> flatMap (getCount)
+	  >> flatMap (getQuotient)
+
+	const calculate = french => doLookup (french)
+	  | fold (
+		l => l + ' ' + red ('✘'),
+		r => r + ' ' + green ('✔'),
+	  )
+
+	const doit = timesV (2)
+	  >> arrowSnd (calculate)
+	  >> foldArrow (formatAnswer)
+
+	const go = _ =>
+	  ['rouge', 'bleu', 'vert', 'blanc']
+	  | map (doit)
+	  | tap (map (log))
+
+	go ()
 
 
 # Extra performance

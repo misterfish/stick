@@ -1125,11 +1125,13 @@ myData
 <p>Here is an example showing how you can deal with failure paths, using the
 <code>Maybe</code> functor from <code>bilby</code>. In this toy example, we start with a French
 word, then:</p>
-<p>1) look up a translation (mocked in a table); failure path: the translation might not exist).
-2) look up a corresponding &#39;count&#39; value (also mocked in a table); failure
-path: the count might not exist
-3) divide this number into 10 for some reason (failure path: the number might
-be 0)</p>
+<ol class="list">
+<li>look up a translation (mocked in a table); failure path: the translation might not exist).</li>
+<li>look up a corresponding &#39;count&#39; value (also mocked in a table); failure
+path: the count might not exist</li>
+<li>divide this number into 10 for some reason (failure path: the number might
+be 0)</li>
+</ol>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { some <span class="hljs-keyword">as</span> Just, none <span class="hljs-keyword">as</span> Nothing, } <span class="hljs-keyword">from</span> <span class="hljs-string">'bilby'</span>
 
 <span class="hljs-keyword">const</span> toMaybe = <span class="hljs-function"><span class="hljs-params">o</span> =&gt;</span> o | ifOk (

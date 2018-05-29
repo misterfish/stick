@@ -1491,11 +1491,12 @@ Here is an example showing how you can deal with failure paths, using the
 `Maybe` functor from `bilby`. In this toy example, we start with a French
 word, then:
 
-1) look up a translation (mocked in a table); failure path: the translation might not exist).
-2) look up a corresponding 'count' value (also mocked in a table); failure
+1. look up a translation (mocked in a table); failure path: the translation might not exist).
+2. look up a corresponding 'count' value (also mocked in a table); failure
 path: the count might not exist
-3) divide this number into 10 for some reason (failure path: the number might
+3. divide this number into 10 for some reason (failure path: the number might
 be 0)
+
 
 	import { some as Just, none as Nothing, } from 'bilby'
 

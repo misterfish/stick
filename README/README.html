@@ -1207,7 +1207,6 @@ storing a string with a failure reason in the Left branch.</p>
   <span class="hljs-attr">rouge</span>: <span class="hljs-string">'red'</span>,
   <span class="hljs-attr">bleu</span>: <span class="hljs-string">'blue'</span>,
   <span class="hljs-attr">vert</span>: <span class="hljs-string">'green'</span>,
-  <span class="hljs-comment">// blanc missing</span>
 }
 
 <span class="hljs-keyword">const</span> count = {
@@ -1216,7 +1215,7 @@ storing a string with a failure reason in the Left branch.</p>
   <span class="hljs-comment">// green undefined</span>
 }
 
-<span class="hljs-keyword">const</span> formatAnswer = list &gt;&gt; asterisk ([yellow, id]) &gt;&gt; sprintfN (<span class="hljs-string">'%s → %s'</span>)
+<span class="hljs-keyword">const</span> formatAnswer = list &gt;&gt; asteriskN ([yellow, id]) &gt;&gt; sprintfN (<span class="hljs-string">'%s → %s'</span>)
 
 <span class="hljs-keyword">const</span> getTranslation = propOf (translations) &gt;&gt; toEither (<span class="hljs-string">'no translation'</span>)
 <span class="hljs-keyword">const</span> getCount       = propOf (count)        &gt;&gt; toEither (<span class="hljs-string">'no count'</span>)
@@ -1230,11 +1229,10 @@ storing a string with a failure reason in the Left branch.</p>
   &gt;&gt; flatMap (getCount)
   &gt;&gt; flatMap (getQuotient)
 
-<span class="hljs-keyword">const</span> calculate = doLookup
-  &gt;&gt; fold (
-    <span class="hljs-function"><span class="hljs-params">l</span> =&gt;</span> l + <span class="hljs-string">' '</span> + red (<span class="hljs-string">'✘'</span>),
-    r =&gt; r + <span class="hljs-string">' '</span> + green (<span class="hljs-string">'✔'</span>),
-  )
+<span class="hljs-keyword">const</span> calculate = doLookup &gt;&gt; fold (
+  prependTo ([<span class="hljs-string">'✘'</span> | red])   &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
+  prependTo ([<span class="hljs-string">'✔'</span> | green]) &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
+)
 
 <span class="hljs-keyword">const</span> doit = timesV (<span class="hljs-number">2</span>)
   &gt;&gt; arrowSnd (calculate)

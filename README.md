@@ -1497,6 +1497,7 @@ path: the count might not exist
 3. divide this number into 10 for some reason (failure path: the number might
 be 0)
 
+&nbsp;
 
 	import { some as Just, none as Nothing, } from 'bilby'
 

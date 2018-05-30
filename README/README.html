@@ -178,6 +178,13 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <span class="hljs-built_in">map</span> (<span class="hljs-keyword">double</span>) ([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])   <span class="hljs-comment">// [2, 4, 6] (manual style)</span>
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>] | <span class="hljs-built_in">map</span> (<span class="hljs-keyword">double</span>) <span class="hljs-comment">// [2, 4, 6] (manual style with stick)</span></code></pre><p>For extra performance you can also limit yourself to the manual style (see
 below).</p>
+<h2 id="٭-a-note-on-style-٭"><a class="header-link" href="#٭-a-note-on-style-٭"></a>٭ a note on style ٭</h2>
+<p>We recommend using a space before the parentheses of a function call.
+Admittedly it looks pretty strange at first, but you may find that it makes
+everything much clearer when you get used to it, in particular with the
+manual currying style.</p>
+<p>You might also want to check out a vertical alignment plugin. The author
+uses <code>vim-easy-align</code> by @junegunn.</p>
 <h2 id="٭-markers-٭"><a class="header-link" href="#٭-markers-٭"></a>٭ markers ٭</h2>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { sprintfN, sprintf1, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
@@ -207,7 +214,8 @@ b === a // true
 const </span>webGLContext = { ... a complicated object ... }
 webGLContext | mergeM ({ someProp: false, }) // you probably want mutable here.</code></pre><p>And there are a few more which we&#39;ll see along the way.</p>
 <h2 id="٭-ok,-anaphoric-if-٭"><a class="header-link" href="#٭-ok,-anaphoric-if-٭"></a>٭ ok, anaphoric if ٭</h2>
-<p><code>ok (x)</code> is false if <code>x</code> is <code>null</code> or <code>undefined</code>. Everything else passes.</p>
+<p><code>ok (x)</code> is false if <code>x</code> is <code>null</code> or <code>undefined</code>. Everything else returns
+<code>true</code>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { <span class="hljs-built_in">map</span>, ok, notOk, ifOk, } from <span class="hljs-string">'stick-js'</span>
 
 const { <span class="hljs-keyword">log</span>, } = console
@@ -232,16 +240,15 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
   <span class="hljs-comment">// no value is passed.</span>
   _ =&gt; <span class="hljs-string">'nothing'</span>,
 )</code></pre><p>A variant, using a point-free add function and the <code>always</code> function:</p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> { add, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+<pre class="hljs"><code>import { <span class="hljs-keyword">add</span>, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
-<span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | add <span class="hljs-comment">// or add (1)</span>
+<span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span>                    <span class="hljs-comment">// or add (1)</span>
 
-<span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (
-  add1,
-  <span class="hljs-string">'nothing'</span> | always,
-)</code></pre><p>Usage:</p>
-<pre class="hljs"><code>; <span class="hljs-meta">[</span><span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-built_in">null</span>, <span class="hljs-literal">void</span> <span class="hljs-number">8</span><span class="hljs-meta">]</span>
-| map (add1IfYouCan) // <span class="hljs-meta">[</span><span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span><span class="hljs-meta">]</span></code></pre><h2 id="٭-point-free-٭"><a class="header-link" href="#٭-point-free-٭"></a>٭ point-free ٭</h2>
+<span class="hljs-keyword">const</span> add1IfYouCan = ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Usage:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> answer = someVar | add1IfYouCan
+
+; [<span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">void</span> <span class="hljs-number">8</span>]
+| <span class="hljs-built_in">map</span> (add1IfYouCan) <span class="hljs-comment">// [1, 11, 'nothing', 'nothing']</span></code></pre><h2 id="٭-point-free-٭"><a class="header-link" href="#٭-point-free-٭"></a>٭ point-free ٭</h2>
 <p>A common pattern is when the argument to a function is passed immediately into a pipe:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Since <code>x</code> does not appear anywhere else in the expression, we can simply remove it, along with the function argument:</p>
 <pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)</code></pre><p>If the pipe chain consists of more than 1 link …</p>
@@ -259,7 +266,7 @@ In the &#39;ok&#39;    case, the value being tested is passed to the function.</
   &gt;&gt; String                        // (<span class="hljs-number">2</span>)
   &gt;&gt; dot ('toUpperCase')           // (<span class="hljs-number">3</span>)
   &gt;&gt; sprintf1 ('The answer is %s') // (<span class="hljs-number">4</span>)
-  &gt;&gt; tap (<span class="hljs-name">log</span>)                     // (<span class="hljs-number">5</span>)</code></pre><p>The following pattern holds:</p>
+  &gt;&gt; tap (<span class="hljs-name">log</span>)                     // (<span class="hljs-number">5</span>)</code></pre><p>The following pattern always holds:</p>
 <pre class="hljs"><code>a | <span class="hljs-type">b</span> | <span class="hljs-type">c</span> = a | <span class="hljs-type">(b</span> &gt;&gt; c)</code></pre><p>So when the chains start to get long (as above), you can cut pieces out
 using this property. For example, you can refactor lines 2-4 into a new
 function:</p>
@@ -471,7 +478,20 @@ one argument, hence <code>side1</code> in both cases.</p>
 
 ; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
 | append (<span class="hljs-number">5</span>)  <span class="hljs-comment">// new array [2, 3, 4, 5]</span>
-| prepend (<span class="hljs-number">1</span>) <span class="hljs-comment">// new array [1, 2, 3, 4, 5]</span></code></pre><h2 id="٭-factory-٭-synopsis-٭"><a class="header-link" href="#٭-factory-٭-synopsis-٭"></a>٭ factory ٭ synopsis ٭</h2>
+| prepend (<span class="hljs-number">1</span>) <span class="hljs-comment">// new array [1, 2, 3, 4, 5]</span></code></pre><p>You can insert <code>tap</code> anywhere in the chain, which is guaranteed not to mess
+with your data.</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> double = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x * <span class="hljs-number">2</span>
+
+; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]
+| map (double)
+| tap (<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-built_in">console</span>.log (x))
+| join (<span class="hljs-string">','</span>)
+<span class="hljs-comment">// '2,4'</span></code></pre><p>Without the <code>tap</code>, this would have been an error, because <code>console.log</code>
+returns <code>undefined</code>.</p>
+<p><code>tap</code> is useful to signal the intention of performing side effects or IO. It
+is also really useful for debugging. And our <code>side</code> family of functions use
+<code>tap</code> under the hood.</p>
+<h2 id="٭-factory-٭-synopsis-٭"><a class="header-link" href="#٭-factory-٭-synopsis-٭"></a>٭ factory ٭ synopsis ٭</h2>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> {
   <span class="hljs-keyword">factory</span>, factoryProps,
   factoryStatics,
@@ -1128,9 +1148,9 @@ word, then:</p>
 <ol class="list">
 <li>look up a translation (mocked in a table); failure path: the translation might not exist).</li>
 <li>look up a corresponding &#39;count&#39; value (also mocked in a table); failure
-path: the count might not exist</li>
-<li>divide this number into 10 for some reason (failure path: the number might
-be 0)</li>
+path: the count might not exist.</li>
+<li>divide this number into 10 for some reason; failure path: the number might
+be 0.</li>
 </ol>
 <p>&nbsp;</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { some <span class="hljs-keyword">as</span> Just, none <span class="hljs-keyword">as</span> Nothing, } <span class="hljs-keyword">from</span> <span class="hljs-string">'bilby'</span>
@@ -1189,7 +1209,7 @@ be 0)</li>
 
 go ()</code></pre><p class="img-container"><img src="readme-assets/maybe.jpg" alt="maybe.jpg"></p>
 <h1 id="working-with-functors:-either"><a class="header-link" href="#working-with-functors:-either"></a>Working with functors: Either</h1>
-<p>The above example, using an <code>Either</code> functor instead of <code>Maybe</code>, and a more point-free style.</p>
+<p>The above example, using <code>bilby</code>&#39;s <code>Either</code> functor instead of <code>Maybe</code>, and a more point-free style.</p>
 <p>The advantage of <code>Either</code> is that you can see why something failed, by
 storing a string with a failure reason in the Left branch.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { left <span class="hljs-keyword">as</span> Left, right <span class="hljs-keyword">as</span> Right, } <span class="hljs-keyword">from</span> <span class="hljs-string">'bilby'</span>

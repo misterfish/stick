@@ -215,6 +215,16 @@ Calling:
 For extra performance you can also limit yourself to the manual style (see
 below).
 
+## ٭ a note on style ٭
+
+We recommend using a space before the parentheses of a function call.
+Admittedly it looks pretty strange at first, but you may find that it makes
+everything much clearer when you get used to it, in particular with the
+manual currying style.
+
+You might also want to check out a vertical alignment plugin. The author
+uses `vim-easy-align` by @junegunn.
+
 ## ٭ markers ٭
 
 	import { sprintfN, sprintf1, } from 'stick-js'
@@ -261,7 +271,8 @@ And there are a few more which we'll see along the way.
 
 ## ٭ ok, anaphoric if ٭
 
-`ok (x)` is false if `x` is `null` or `undefined`. Everything else passes.
+`ok (x)` is false if `x` is `null` or `undefined`. Everything else returns
+`true`.
 
 	import { map, ok, notOk, ifOk, } from 'stick-js'
 
@@ -298,14 +309,13 @@ A variant, using a point-free add function and the `always` function:
 
 	import { add, always, } from 'stick-js'
 
-	const add1 = 1 | add // or add (1)
+	const add1 = 1 | add                    // or add (1)
 
-	const add1IfYouCan = x => x | ifOk (
-	  add1,
-	  'nothing' | always,
-	)
+	const add1IfYouCan = ifOk (add1, 'nothing' | always)
 
 Usage:
+
+	const answer = someVar | add1IfYouCan
 
 	; [0, 10, null, void 8]
 	| map (add1IfYouCan) // [1, 11, 'nothing', 'nothing']
@@ -341,7 +351,7 @@ If the pipe chain consists of more than 1 link …
 	  >> sprintf1 ('The answer is %s') // (4)
 	  >> tap (log)                     // (5)
 
-The following pattern holds:
+The following pattern always holds:
 
     a | b | c = a | (b >> c)
 
@@ -627,6 +637,24 @@ one argument, hence `side1` in both cases.
 	; [2, 3, 4]
 	| append (5)  // new array [2, 3, 4, 5]
 	| prepend (1) // new array [1, 2, 3, 4, 5]
+
+You can insert `tap` anywhere in the chain, which is guaranteed not to mess
+with your data.
+
+    const double = x => x * 2
+
+    ; [1, 2]
+	| map (double)
+	| tap (x => console.log (x))
+	| join (',')
+	// '2,4'
+
+Without the `tap`, this would have been an error, because `console.log`
+returns `undefined`.
+
+`tap` is useful to signal the intention of performing side effects or IO. It
+is also really useful for debugging. And our `side` family of functions use
+`tap` under the hood.
 
 ## ٭ factory ٭ synopsis ٭
 
@@ -1493,9 +1521,9 @@ word, then:
 
 1. look up a translation (mocked in a table); failure path: the translation might not exist).
 2. look up a corresponding 'count' value (also mocked in a table); failure
-path: the count might not exist
-3. divide this number into 10 for some reason (failure path: the number might
-be 0)
+path: the count might not exist.
+3. divide this number into 10 for some reason; failure path: the number might
+be 0.
 
 &nbsp;
 
@@ -1559,7 +1587,7 @@ be 0)
 
 # Working with functors: Either
 
-The above example, using an `Either` functor instead of `Maybe`, and a more point-free style.
+The above example, using `bilby`'s `Either` functor instead of `Maybe`, and a more point-free style.
 
 The advantage of `Either` is that you can see why something failed, by
 storing a string with a failure reason in the Left branch.

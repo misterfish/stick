@@ -602,3 +602,27 @@ example
 - free functions are far more flexible than dotted ones
 - predictable semantics based on English
 - prototype stuff
+
+
+reducer gotcha:
+const isEven = modulo (2) >> eq (0)
+const isOdd = isEven >> not
+
+const peek = passTo
+const logWith = (header) => (...args) => log (... [header, ...args])
+const reduce = f => acc => xs => xs.reduce (f, acc)
+
+const reducer1 = (acc, x) => x | condS ([
+  isOdd     | guard  (_ => acc | appendM (x)),
+  otherwise | guardV (acc),
+])
+
+const reducer = (acc, x) => {
+  if (isOdd (x)) acc.push (x)
+  return acc
+}
+
+const doReducer = reduce (reducer) ([])
+
+1 | rangeTo (10) | doReducer | log
+1 | rangeTo (10) | doReducer | log

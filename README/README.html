@@ -232,28 +232,31 @@ const { <span class="hljs-keyword">log</span>, } = console
   answer = someVar + <span class="hljs-number">1</span>
 } <span class="hljs-keyword">else</span> {
   answer = <span class="hljs-string">'nothing'</span>
-}</code></pre><p>This can vastly improved using an &#39;anaphoric if&#39; and a stick idiom.
-<code>ifOk</code> takes two functions -- a &#39;then&#39; function and an &#39;else&#39; function.
-In the &#39;ok&#39;    case, the value being tested is passed to the function.</p>
+}</code></pre><p>This can vastly improved using an &#39;anaphoric if&#39; and a stick idiom:</p>
+<pre class="hljs"><code>import { <span class="hljs-keyword">add</span>, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+
+<span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span>                    <span class="hljs-comment">// or add (1)</span>
+<span class="hljs-keyword">const</span> answer = someVar | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Explanation: <code>ifOk</code> takes two functions -- a &#39;then&#39; function and an &#39;else&#39; function.
+In the &#39;ok&#39;    case, the value being tested is passed to the function. (This
+bound value is sometimes called an &#39;anaphor&#39;).</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = val =&gt; val | ifOk (
-  <span class="hljs-comment">// `that` is here `val`</span>
+  <span class="hljs-comment">// `that` refers to `val`</span>
   that =&gt; that + <span class="hljs-number">1</span>,
 
   <span class="hljs-comment">// no value is passed.</span>
   _ =&gt; <span class="hljs-string">'nothing'</span>,
-)</code></pre><p>A variant, using a point-free add function and the <code>always</code> function:</p>
-<pre class="hljs"><code>import { <span class="hljs-keyword">add</span>, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
-
-<span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span>                    <span class="hljs-comment">// or add (1)</span>
-
-<span class="hljs-keyword">const</span> add1IfYouCan = ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Usage:</p>
+)</code></pre><p>This can be further condensed, using &#39;point-free style&#39; (see below) and the <code>always</code> function:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = ifOk (<span class="hljs-number">1</span> | <span class="hljs-keyword">add</span>, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Usage:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> answer = someVar | add1IfYouCan
 
 ; [<span class="hljs-number">0</span>, <span class="hljs-number">10</span>, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">void</span> <span class="hljs-number">8</span>]
 | <span class="hljs-built_in">map</span> (add1IfYouCan) <span class="hljs-comment">// [1, 11, 'nothing', 'nothing']</span></code></pre><h2 id="٭-point-free-٭"><a class="header-link" href="#٭-point-free-٭"></a>٭ point-free ٭</h2>
 <p>A common pattern is when the argument to a function is passed immediately into a pipe:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> add1IfYouCan = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Since <code>x</code> does not appear anywhere else in the expression, we can simply remove it, along with the function argument:</p>
-<pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)</code></pre><p>If the pipe chain consists of more than 1 link …</p>
+<pre class="hljs"><code>const add1IfYouCan = ifOk (<span class="hljs-name">add1</span>, 'nothing' | always)</code></pre><p>This is often called &#39;point-free&#39; style. It means the function arguments and
+the data being passed through the pipeline have been abstracted away (and
+has nothing to do with dots, despite the name).</p>
+<p>If the pipe chain consists of more than 1 link …</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> { dot, sprintf1, tap, }
 <span class="hljs-keyword">const</span> { log, } = <span class="hljs-built_in">console</span>
 
@@ -309,6 +312,8 @@ function:</p>
 <span class="hljs-comment">// --- now compose it into an anaphoric if:</span>
 
 <span class="hljs-keyword">const</span> ifInteger = isInteger | ifPredicate
+
+<span class="hljs-comment">// --- now use it:</span>
 
 <span class="hljs-keyword">const</span> add1 = <span class="hljs-built_in">add</span> (<span class="hljs-number">1</span>)
 
@@ -1106,14 +1111,13 @@ app | use (bodyParser.json())
    | <span class="hljs-built_in">map</span> (inRange ([<span class="hljs-number">13</span>, <span class="hljs-number">17</span>])) <span class="hljs-comment">// maps to tuples of [int, str]</span>
    | tap (<span class="hljs-built_in">map</span> (snd &gt;&gt; <span class="hljs-built_in">log</span>))   <span class="hljs-comment">// logs the str</span>
    | <span class="hljs-built_in">map</span> (fst)                <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre><h1 id="performance"><a class="header-link" href="#performance"></a>performance</h1>
-<p>Stick is fast. See here for a benchmark of our factory example.</p>
+<p>Stick is fast. (@todo link benchmark)</p>
 <p>Though it initially depended on Ramda, we have decided to eliminate that
 dependency by reimplementing many of the functions. While profiling the
 WebGL example we found that even trivial functions like <code>R.flip</code> and <code>R.tap</code>
 are surprisingly expensive.</p>
-<p>This really only becomes an issue in critical loops -- an inner loop of a
-socket or server, an animation, a particle system where lots of objects are
-spawned per second, WebGL. For cases like these, see below.</p>
+<p>This really only becomes an issue in critical loops with millions of
+iterations per second.</p>
 <p>It is true that <code>a | b</code> compiles to three function calls, whereas <code>b (a)</code> is
 only one. But this is almost certainly not going to affect your app. Your JS
 runtime can call <em>a lot</em> of functions per millisecond.</p>
@@ -1142,7 +1146,7 @@ myData
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">split</span> (' '),
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">map</span> (capitaliseFirstLetter),
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">join</span> (' ')</code></pre><p>merge benchmark: manual / index / ramda</p>
-<h1 id="working-with-functors:-maybe"><a class="header-link" href="#working-with-functors:-maybe"></a>Working with functors: Maybe</h1>
+<h2 id="working-with-functors:-maybe"><a class="header-link" href="#working-with-functors:-maybe"></a>Working with functors: Maybe</h2>
 <h3 id="(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"><a class="header-link" href="#(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"></a>(or how to forget about <code>null</code> and <code>undefined</code> for a while)</h3>
 <p>Here is an example showing how you can deal with failure paths, using the
 <code>Maybe</code> functor from
@@ -1213,7 +1217,7 @@ example, we start with a French word, then:</p>
 ])
 
 go ()</code></pre><p class="img-container"><img src="readme-assets/maybe.jpg" alt="maybe.jpg"></p>
-<h1 id="working-with-functors:-either"><a class="header-link" href="#working-with-functors:-either"></a>Working with functors: Either</h1>
+<h2 id="working-with-functors:-either"><a class="header-link" href="#working-with-functors:-either"></a>Working with functors: Either</h2>
 <p>The above example, using <code>bilby</code>&#39;s <code>Either</code> functor instead of <code>Maybe</code>, and a more point-free style.</p>
 <p>The advantage of <code>Either</code> is that in addition to <code>flatMap</code> taking care of
 the failure path, you can also see why it failed. By convention the &#39;Left&#39;
@@ -1273,30 +1277,34 @@ reason.</p>
   | tap (map (log))
 
 go ()</code></pre><p class="img-container"><img src="readme-assets/either.jpg" alt="either.jpg"></p>
-<h1 id="٭-functors-/-flatmap-٭-explanation"><a class="header-link" href="#٭-functors-/-flatmap-٭-explanation"></a>٭ Functors / flatMap ٭ explanation</h1>
+<h2 id="٭-functors-/-flatmap-٭-explanation"><a class="header-link" href="#٭-functors-/-flatmap-٭-explanation"></a>٭ Functors / flatMap ٭ explanation</h2>
 <p>Think of the <code>Either</code> functor as a value in a box, where the box is either a
 &#39;Left&#39; box, meaning something went wrong, or a &#39;Right&#39; box, meaning things
 are going well.</p>
-<p>If you have a value like <code>const r = Right (2)</code></p>
+<p>If you have a value like <code>Right (2)</code></p>
 <p>and you pipe it to <code>flatMap</code>:</p>
 <pre class="hljs"><code>const <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
+const r = <span class="hljs-keyword">Right</span> (<span class="hljs-number">2</span>)
 r | <span class="hljs-type">flatMap</span> (<span class="hljs-built_in">double</span>) // <span class="hljs-keyword">Right</span> (<span class="hljs-number">4</span>)</code></pre><p>Then the resulting value is is <code>Right (4)</code>, because <code>flatMap</code> &#39;peeks&#39; inside
 the box, manipulates the value inside, and wraps it up again in the box.</p>
-<p>But it your value was a &#39;Left&#39;: <code>const l = Left (&#39;bad news&#39;)</code></p>
+<p>But it your value was a &#39;Left&#39; like <code>Left (&#39;bad news&#39;)</code></p>
 <p>and you pipe it to <code>flatMap</code>:</p>
-<pre class="hljs"><code>const <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
-r | <span class="hljs-type">flatMap</span> (<span class="hljs-built_in">double</span>) // <span class="hljs-keyword">Left</span> ('bad news')</code></pre><p>The input value is passed through untouched: <code>Left (&#39;bad news&#39;)</code>, because when <code>flatMap</code> sees a &#39;Left&#39; value, it doesn&#39;t bother to unwrap the box. It just ignores the whole <code>flatMap</code>.</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
+<span class="hljs-keyword">const</span> l = Left (<span class="hljs-string">'bad news'</span>)
+l | flatMap (<span class="hljs-built_in">double</span>) <span class="hljs-comment">// Left ('bad news')</span></code></pre><p>The result is the same as the input, because when <code>flatMap</code> sees a &#39;Left&#39; value, it doesn&#39;t bother to unwrap the box or do anything with it. It just passes the value straight through.</p>
 <p>JS programmers have seen this thousands of times before …</p>
 <pre class="hljs"><code>axios<span class="hljs-selector-class">.get</span> (<span class="hljs-string">'/some/api'</span>)
-<span class="hljs-selector-class">.then</span> (response =&gt; ...)</code></pre><p>In a promise chain, <code>then</code> will only kick in if the promise returned by axios.get resolves. If it rejects then the whole then line is skipped.</p>
-<h1 id="abstract-data-types"><a class="header-link" href="#abstract-data-types"></a>Abstract data types</h1>
+<span class="hljs-selector-class">.then</span> (response =&gt; ...)</code></pre><p>In a promise chain, <code>then</code> will only kick in if the promise returned by
+axios.get resolves. If it rejects then the whole then line is skipped. It&#39;s
+the same idea.</p>
+<h2 id="abstract-data-types"><a class="header-link" href="#abstract-data-types"></a>Abstract data types</h2>
 <p>Abstract data types can help eliminate an entire class of bugs, by making
 impossible states unrepresentable.</p>
 <p>Imagine you have something like a traffic light, which at any moment can be
 either red, yellow, green, or broken. (Or a download, which can be in
 progress, stopped, completed, failed, ...) You can use a normal object to
 represent these sorts of things, but you might find yourself carrying around
-such properties as &#39;error&#39; and &#39;state&#39; and &#39;type&#39; and using a lot of <code>if</code>
+properties like &#39;error&#39; and &#39;state&#39; and &#39;type&#39; and so on using a lot of <code>if</code>
 statements to check for illegal states.</p>
 <p>Another way is to model the data using ADTs, build the states, then branch
 using a &#39;catamorphism&#39; to resolve the states when you&#39;re ready.</p>
@@ -1308,12 +1316,12 @@ sequences.</p>
               | <span class="hljs-type">GeometricSequence</span> <span class="hljs-type">Int</span>  <span class="hljs-comment">-- y = c ** x</span>
               | <span class="hljs-type">IrregularSequence</span>
               | <span class="hljs-type">ErrorSequence</span> <span class="hljs-type">String</span>   <span class="hljs-comment">-- error with a reason</span></code></pre><p>In (pseudo-)Java maybe something like:</p>
-<pre class="hljs"><code><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Sequence</span></span>;
+<pre class="hljs"><code><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Sequence</span> </span>{}
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ArithmeticSequence</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Sequence</span> </span>{
   public <span class="hljs-type">ArithmeticSequence</span>(int n) {} <span class="hljs-comment">// y = nx</span>
 }
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GeometricSequence</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Sequence</span> </span>{
-  public <span class="hljs-type">GeometricSequence</span>(int n) {} <span class="hljs-comment">// y = c ** x</span>
+  public <span class="hljs-type">GeometricSequence</span>(int c) {} <span class="hljs-comment">// y = c ** x</span>
 }
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IrregularSequence</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Sequence</span> </span>{
   public <span class="hljs-type">IrregularSequence</span>() {}
@@ -1410,13 +1418,15 @@ sequences.</p>
   | map (doit)
   | tap (map (log))
 
-go ()</code></pre><h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
-<p>For speed freaks: the curried functions you import from the main module are
-written first using manual currying, and then recurried and exported. This
-is in order to allow both calling styles.</p>
-<p>For a speed boost you can check the docs to see if your function is exported
-by &#39;stick-js/manual&#39;. If so, you can directly import the manual version, but
-you must remember to call it using the manual style:</p>
+go ()</code></pre><p class="img-container"><img src="readme-assets/seq.jpg" alt="seq.jpg"></p>
+<h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
+<p>The curried functions you import from the main module are written first
+using manual currying, and then recurried and exported. This is in order to
+allow both calling styles.</p>
+<p>If you are squeezing performance out of a loop -- in an animation, a
+particle system, WebGL, a server -- you can check the docs to see if your
+function is exported by &#39;stick-js/manual&#39;. If so, you can directly import
+the manual version, but you must remember to call it using the manual style:</p>
 <pre class="hljs"><code>import { merge, } from <span class="hljs-string">'stick-js/manual'</span>
 merge <span class="hljs-comment">(obj1, obj2)</span> <span class="hljs-comment">// will not work</span>
 obj<span class="hljs-number">2</span> | merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">// ok</span>
@@ -1425,22 +1435,28 @@ merge <span class="hljs-comment">(obj1)</span> <span class="hljs-comment">(obj2)
 arguments. We removed it from stick because it depends on <code>mapAccum</code>, for
 which we do not currently have an implementation without depending on Ramda.</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- generic form, for any non-zero number of arguments.</span>
-<span class="hljs-keyword">const</span> lets = <span class="hljs-function">(<span class="hljs-params">...xs</span>) =&gt;</span> {
+<span class="hljs-keyword">const</span> lets = <span class="hljs-function">(<span class="hljs-params">(</span>) =&gt;</span> {
     <span class="hljs-keyword">const</span> executeStep = <span class="hljs-function"><span class="hljs-params">prevVals</span> =&gt;</span> applyToN (prevVals)
-
-    <span class="hljs-keyword">const</span> ys = xs
+    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">...xs</span>) =&gt;</span> xs
         <span class="hljs-comment">// --- acc contains running output array, up to the previous item.</span>
         | mapAccum (<span class="hljs-function">(<span class="hljs-params">acc, v</span>) =&gt;</span> executeStep (acc) (v)
             | (<span class="hljs-function"><span class="hljs-params">stepVal</span> =&gt;</span> [[...acc, stepVal], stepVal])
         ) ([])
         | prop (<span class="hljs-number">1</span>)
-
-    <span class="hljs-keyword">return</span> ys | last
-}</code></pre><p>Note: this is not fast, but it is correct. You can prove it with a 
-contrived fibonacci example:</p>
+        | last
+}) ()</code></pre><p>This is not fast, but it is correct. You can prove it with a contrived
+fibonacci example. We&#39;ll model <code>fibonacci (n)</code> as</p>
+<pre class="hljs"><code>lets (
+  _ =&gt; <span class="hljs-number">1</span>,
+  _ =&gt; <span class="hljs-number">1</span>,
+  (<span class="hljs-selector-tag">a</span>, b) =&gt; <span class="hljs-selector-tag">a</span> + <span class="hljs-selector-tag">b</span>,
+  (_, <span class="hljs-selector-tag">b</span>, c) =&gt; <span class="hljs-selector-tag">b</span> + c,
+  ...
+  (<span class="hljs-selector-tag">a</span>, <span class="hljs-selector-tag">b</span>, ...) =&gt; [<span class="hljs-selector-tag">a</span>, <span class="hljs-selector-tag">b</span>, ...],
+)</code></pre><p>&nbsp;</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { list, timesV, applyToN, rangeTo, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
-<span class="hljs-keyword">const</span> fibonacci = <span class="hljs-function">(<span class="hljs-params">x</span>) =&gt;</span> {
+<span class="hljs-keyword">const</span> fibonacci = <span class="hljs-function">(<span class="hljs-params">n</span>) =&gt;</span> {
   <span class="hljs-keyword">const</span> sumLastTwo = <span class="hljs-function">(<span class="hljs-params">xs</span>) =&gt;</span> {
     <span class="hljs-keyword">const</span> l = xs.length
     <span class="hljs-keyword">return</span> xs [l<span class="hljs-number">-1</span>] + xs [l<span class="hljs-number">-2</span>]
@@ -1451,8 +1467,7 @@ contrived fibonacci example:</p>
            l === <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : sumLastTwo (prev)
   }
   <span class="hljs-keyword">const</span> refs = entry | timesV (n + <span class="hljs-number">1</span>)
-  <span class="hljs-keyword">const</span> args = [...refs, list]
-  <span class="hljs-keyword">return</span> lets (...args)
+  <span class="hljs-keyword">return</span> lets (...refs, list)
 }
 
 <span class="hljs-number">1</span> | rangeTo (<span class="hljs-number">20</span>)

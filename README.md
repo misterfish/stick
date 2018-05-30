@@ -295,25 +295,28 @@ Something we see a lot in JS in the wild is:
 	  answer = 'nothing'
 	}
 
-This can vastly improved using an 'anaphoric if' and a stick idiom.
-`ifOk` takes two functions -- a 'then' function and an 'else' function.
-In the 'ok'	case, the value being tested is passed to the function.
+This can vastly improved using an 'anaphoric if' and a stick idiom:
+
+	import { add, always, } from 'stick-js'
+
+	const add1 = 1 | add                    // or add (1)
+	const answer = someVar | ifOk (add1, 'nothing' | always)
+
+Explanation: `ifOk` takes two functions -- a 'then' function and an 'else' function.
+In the 'ok'	case, the value being tested is passed to the function. (This
+bound value is sometimes called an 'anaphor').
 
 	const add1IfYouCan = val => val | ifOk (
-	  // `that` is here `val`
+	  // `that` refers to `val`
 	  that => that + 1,
 
 	  // no value is passed.
 	  _ => 'nothing',
 	)
 
-A variant, using a point-free add function and the `always` function:
+This can be further condensed, using 'point-free style' (see below) and the `always` function:
 
-	import { add, always, } from 'stick-js'
-
-	const add1 = 1 | add                    // or add (1)
-
-	const add1IfYouCan = ifOk (add1, 'nothing' | always)
+	const add1IfYouCan = ifOk (1 | add, 'nothing' | always)
 
 Usage:
 
@@ -331,6 +334,10 @@ A common pattern is when the argument to a function is passed immediately into a
 Since `x` does not appear anywhere else in the expression, we can simply remove it, along with the function argument:
 
 	const add1IfYouCan = ifOk (add1, 'nothing' | always)
+
+This is often called 'point-free' style. It means the function arguments and
+the data being passed through the pipeline have been abstracted away (and
+has nothing to do with dots, despite the name).
 
 If the pipe chain consists of more than 1 link …
 
@@ -412,6 +419,8 @@ The selection of `if` and `when` functions we provide is intentionally skimpy, t
 	// --- now compose it into an anaphoric if:
 
 	const ifInteger = isInteger | ifPredicate
+
+    // --- now use it:
 
 	const add1 = add (1)
 
@@ -1465,16 +1474,15 @@ are many other places this can be used.
 
 # performance
 
-Stick is fast. See here for a benchmark of our factory example.
+Stick is fast. (@todo link benchmark)
 
 Though it initially depended on Ramda, we have decided to eliminate that
 dependency by reimplementing many of the functions. While profiling the
 WebGL example we found that even trivial functions like `R.flip` and `R.tap`
 are surprisingly expensive.
 
-This really only becomes an issue in critical loops -- an inner loop of a
-socket or server, an animation, a particle system where lots of objects are
-spawned per second, WebGL. For cases like these, see below.
+This really only becomes an issue in critical loops with millions of
+iterations per second.
 
 It is true that `a | b` compiles to three function calls, whereas `b (a)` is
 only one. But this is almost certainly not going to affect your app. Your JS
@@ -1514,7 +1522,7 @@ no-brainer to overload the operator and keep everything else the same.
 
 merge benchmark: manual / index / ramda
 
-# Working with functors: Maybe
+## Working with functors: Maybe
 ### (or how to forget about `null` and `undefined` for a while)
 
 Here is an example showing how you can deal with failure paths, using the
@@ -1592,7 +1600,7 @@ example, we start with a French word, then:
 
 ![maybe.jpg](readme-assets/maybe.jpg)
 
-# Working with functors: Either
+## Working with functors: Either
 
 The above example, using `bilby`'s `Either` functor instead of `Maybe`, and a more point-free style.
 
@@ -1658,39 +1666,43 @@ reason.
 
 ![either.jpg](readme-assets/either.jpg)
 
-# ٭ Functors / flatMap ٭ explanation
+## ٭ Functors / flatMap ٭ explanation
 
 Think of the `Either` functor as a value in a box, where the box is either a
 'Left' box, meaning something went wrong, or a 'Right' box, meaning things
 are going well.
 
-If you have a value like `const r = Right (2)`
+If you have a value like `Right (2)`
 
 and you pipe it to `flatMap`:
 
 	const double = x => x * 2
+    const r = Right (2)
 	r | flatMap (double) // Right (4)
 
 Then the resulting value is is `Right (4)`, because `flatMap` 'peeks' inside
 the box, manipulates the value inside, and wraps it up again in the box.
 
-But it your value was a 'Left': `const l = Left ('bad news')`
+But it your value was a 'Left' like `Left ('bad news')`
 
 and you pipe it to `flatMap`:
 
 	const double = x => x * 2
-	r | flatMap (double) // Left ('bad news')
+	const l = Left ('bad news')
+	l | flatMap (double) // Left ('bad news')
 
-The input value is passed through untouched: `Left ('bad news')`, because when `flatMap` sees a 'Left' value, it doesn't bother to unwrap the box. It just ignores the whole `flatMap`.
+The result is the same as the input, because when `flatMap` sees a 'Left' value, it doesn't bother to unwrap the box or do anything with it. It just passes the value straight through.
 
 JS programmers have seen this thousands of times before …
 
 	axios.get ('/some/api')
 	.then (response => ...)
 
-In a promise chain, `then` will only kick in if the promise returned by axios.get resolves. If it rejects then the whole then line is skipped.
+In a promise chain, `then` will only kick in if the promise returned by
+axios.get resolves. If it rejects then the whole then line is skipped. It's
+the same idea.
 
-# Abstract data types
+## Abstract data types
 
 Abstract data types can help eliminate an entire class of bugs, by making
 impossible states unrepresentable.
@@ -1699,7 +1711,7 @@ Imagine you have something like a traffic light, which at any moment can be
 either red, yellow, green, or broken. (Or a download, which can be in
 progress, stopped, completed, failed, ...) You can use a normal object to
 represent these sorts of things, but you might find yourself carrying around
-such properties as 'error' and 'state' and 'type' and using a lot of `if`
+properties like 'error' and 'state' and 'type' and so on using a lot of `if`
 statements to check for illegal states.
 
 Another way is to model the data using ADTs, build the states, then branch
@@ -1718,12 +1730,12 @@ In Haskell our declaration would be:
 
 In (pseudo-)Java maybe something like:
 
-	abstract class Sequence;
+	abstract class Sequence {}
 	class ArithmeticSequence extends Sequence {
 	  public ArithmeticSequence(int n) {} // y = nx
 	}
 	class GeometricSequence extends Sequence {
-	  public GeometricSequence(int n) {} // y = c ** x
+	  public GeometricSequence(int c) {} // y = c ** x
 	}
 	class IrregularSequence extends Sequence {
 	  public IrregularSequence() {}
@@ -1825,21 +1837,23 @@ Using stick idioms and `daggy`:
 
 	go ()
 
+![seq.jpg](readme-assets/seq.jpg)
+
 # Extra performance
 
-For speed freaks: the curried functions you import from the main module are
-written first using manual currying, and then recurried and exported. This
-is in order to allow both calling styles.
+The curried functions you import from the main module are written first
+using manual currying, and then recurried and exported. This is in order to
+allow both calling styles.
 
-For a speed boost you can check the docs to see if your function is exported
-by 'stick-js/manual'. If so, you can directly import the manual version, but
-you must remember to call it using the manual style:
+If you are squeezing performance out of a loop -- in an animation, a
+particle system, WebGL, a server -- you can check the docs to see if your
+function is exported by 'stick-js/manual'. If so, you can directly import
+the manual version, but you must remember to call it using the manual style:
 
 	import { merge, } from 'stick-js/manual'
 	merge (obj1, obj2) // will not work
     obj2 | merge (obj1) // ok
 	merge (obj1) (obj2) // also ok
-
 
 # Generic version of `lets`
 
@@ -1848,25 +1862,34 @@ arguments. We removed it from stick because it depends on `mapAccum`, for
 which we do not currently have an implementation without depending on Ramda.
 
 	// --- generic form, for any non-zero number of arguments.
-	const lets = (...xs) => {
+    const lets = (() => {
 		const executeStep = prevVals => applyToN (prevVals)
-
-		const ys = xs
+        return (...xs) => xs
 			// --- acc contains running output array, up to the previous item.
 			| mapAccum ((acc, v) => executeStep (acc) (v)
 				| (stepVal => [[...acc, stepVal], stepVal])
 			) ([])
 			| prop (1)
+            | last
+    }) ()
 
-		return ys | last
-	}
+This is not fast, but it is correct. You can prove it with a contrived
+fibonacci example. We'll model `fibonacci (n)` as
 
-Note: this is not fast, but it is correct. You can prove it with a 
-contrived fibonacci example:
+    lets (
+	  _ => 1,
+	  _ => 1,
+	  (a, b) => a + b,
+	  (_, b, c) => b + c,
+	  ...
+	  (a, b, ...) => [a, b, ...],
+	)
+
+&nbsp;
 
     import { list, timesV, applyToN, rangeTo, } from 'stick-js'
 
-    const fibonacci = (x) => {
+    const fibonacci = (n) => {
 	  const sumLastTwo = (xs) => {
 	    const l = xs.length
 		return xs [l-1] + xs [l-2]
@@ -1877,8 +1900,7 @@ contrived fibonacci example:
 		       l === 1 ? 1 : sumLastTwo (prev)
 	  }
       const refs = entry | timesV (n + 1)
-      const args = [...refs, list]
-	  return lets (...args)
+	  return lets (...refs, list)
 	}
 
 	1 | rangeTo (20)

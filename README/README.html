@@ -1286,7 +1286,127 @@ r | <span class="hljs-type">flatMap</span> (<span class="hljs-built_in">double</
 <p>JS programmers have seen this thousands of times before …</p>
 <pre class="hljs"><code>axios<span class="hljs-selector-class">.get</span> (<span class="hljs-string">'/some/api'</span>)
 <span class="hljs-selector-class">.then</span> (response =&gt; ...)</code></pre><p>In a promise chain, <code>then</code> will only kick in if the promise returned by axios.get resolves. If it rejects then the whole then line is skipped.</p>
-<h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
+<h1 id="abstract-data-types"><a class="header-link" href="#abstract-data-types"></a>Abstract data types</h1>
+<p>Abstract data types can help eliminate an entire class of bugs, by making
+impossible states unrepresentable.</p>
+<p>Imagine you have something like a traffic light, which at any moment can be
+either red, yellow, green, or broken. (Or a download, which can be in
+progress, stopped, completed, failed, ...) You can use a normal object to
+represent these sorts of things, but you might find yourself carrying around
+such properties as &#39;error&#39; and &#39;state&#39; and &#39;type&#39; and using a lot of <code>if</code>
+statements to check for illegal states.</p>
+<p>Another way is to model the data using ADTs, build the states, then branch
+using a &#39;catamorphism&#39; to resolve the states when you&#39;re ready.</p>
+<p>In this example we use <code>daggy</code> to create an ADT representing various kinds
+of numerical sequences.</p>
+<p>In Haskell our declaration would be:</p>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">data</span> <span class="hljs-type">Sequence</span> = <span class="hljs-type">ArithmeticSequence</span> <span class="hljs-type">Int</span> <span class="hljs-comment">-- y = nx</span></span>
+              | <span class="hljs-type">GeometricSequence</span> <span class="hljs-type">Int</span>  <span class="hljs-comment">-- y = c ** x</span>
+              | <span class="hljs-type">IrregularSequence</span>
+              | <span class="hljs-type">ErrorSequence</span> <span class="hljs-type">String</span>   <span class="hljs-comment">-- error with a reason</span></code></pre><p>In (pseudo-)Java maybe something like:</p>
+<pre class="hljs"><code><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Sequence</span></span>;
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ArithmeticSequence</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Sequence</span> </span>{
+  public <span class="hljs-type">ArithmeticSequence</span>(int n) {} <span class="hljs-comment">// y = nx</span>
+}
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GeometricSequence</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Sequence</span> </span>{
+  public <span class="hljs-type">GeometricSequence</span>(int n) {} <span class="hljs-comment">// y = c ** x</span>
+}
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IrregularSequence</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Sequence</span> </span>{
+  public <span class="hljs-type">IrregularSequence</span>() {}
+}
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ErrorSequence</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Sequence</span> </span>{
+  public <span class="hljs-type">ErrorSequence</span>(<span class="hljs-type">String</span> reason) {}
+}</code></pre><p>Using stick idioms and <code>daggy</code>:</p>
+<pre class="hljs"><code><span class="hljs-comment">// --- types.js</span>
+
+<span class="hljs-keyword">import</span> daggy <span class="hljs-keyword">from</span> <span class="hljs-string">'daggy'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Sequence = daggy.taggedSum (<span class="hljs-string">'Sequence'</span>, {
+  <span class="hljs-attr">ArithmeticSequence</span>: [<span class="hljs-string">'n'</span>],
+  <span class="hljs-attr">GeometricSequence</span>: [<span class="hljs-string">'c'</span>],
+  <span class="hljs-attr">IrregularSequence</span>: [],
+  <span class="hljs-attr">ErrorSequence</span>: [<span class="hljs-string">'reason'</span>],
+})
+
+<span class="hljs-keyword">const</span> { ArithmeticSequence, GeometricSequence, IrregularSequence, ErrorSequence, } = Sequence
+
+<span class="hljs-keyword">export</span> { ArithmeticSequence, GeometricSequence, IrregularSequence, ErrorSequence, }
+
+<span class="hljs-comment">// --- sequence.js</span>
+
+<span class="hljs-keyword">const</span> testReduce = <span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> n =&gt; <span class="hljs-function">(<span class="hljs-params">acc, x</span>) =&gt;</span> f (acc, x) === n ? x : <span class="hljs-literal">null</span>
+<span class="hljs-keyword">const</span> testReduceArithmetic = minus    | testReduce
+<span class="hljs-keyword">const</span> testReduceGeometric  = divideBy | testReduce
+
+<span class="hljs-keyword">const</span> testSequence = <span class="hljs-function"><span class="hljs-params">g</span> =&gt;</span> f =&gt; <span class="hljs-function">(<span class="hljs-params">[a, b, ...rest]</span>) =&gt;</span> lets (
+  <span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> b | g (a),
+  n =&gt; rest | reduceAbort (n | f) (b) (<span class="hljs-literal">null</span>),
+  (n, reduced) =&gt; reduced === <span class="hljs-literal">null</span> ? <span class="hljs-literal">false</span> : n,
+)
+
+<span class="hljs-keyword">const</span> containsNull = <span class="hljs-literal">null</span> | contains
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> isArithmetic = testReduceArithmetic | testSequence (minus)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> isGeometric  = testReduceGeometric  | testSequence (divideBy)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> isError      = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> containsNull (x) ? <span class="hljs-string">'contains null'</span> : <span class="hljs-literal">false</span>
+
+<span class="hljs-comment">// --- util.js</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> cata = dot1 (<span class="hljs-string">'cata'</span>)
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> repeatChar = <span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> timesV (n) &gt;&gt; join (<span class="hljs-string">''</span>)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> pad = <span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> str =&gt; (n - str.length) | condS ([
+  <span class="hljs-number">0</span> | gt    | guard (<span class="hljs-function"><span class="hljs-params">pad</span> =&gt;</span> [str, <span class="hljs-string">' '</span> | repeatChar (pad)] | join (<span class="hljs-string">''</span>)),
+  otherwise | guardV (str),
+])
+
+<span class="hljs-comment">// --- index.js</span>
+
+<span class="hljs-keyword">import</span> { ArithmeticSequence, GeometricSequence, IrregularSequence, ErrorSequence, } <span class="hljs-keyword">from</span> <span class="hljs-string">'./types'</span>
+<span class="hljs-keyword">import</span> { isArithmetic, isGeometric, isError, } <span class="hljs-keyword">from</span> <span class="hljs-string">'./sequence'</span>
+<span class="hljs-keyword">import</span> { cata, repeatChar, pad, } <span class="hljs-keyword">from</span> <span class="hljs-string">'./util'</span>
+
+<span class="hljs-keyword">const</span> checkSequence = condS ([
+  isArithmetic | guard (<span class="hljs-function">(<span class="hljs-params">_, n</span>) =&gt;</span> n | ArithmeticSequence),
+  isGeometric  | guard (<span class="hljs-function">(<span class="hljs-params">_, c</span>) =&gt;</span> c | GeometricSequence),
+  containsNull | guard (<span class="hljs-function"><span class="hljs-params">()</span>     =&gt;</span> <span class="hljs-string">'contains null'</span> | ErrorSequence),
+  otherwise    | guard (<span class="hljs-function"><span class="hljs-params">()</span>     =&gt;</span> IrregularSequence),
+])
+
+<span class="hljs-keyword">const</span> format = cata ({
+  <span class="hljs-attr">ArithmeticSequence</span>: <span class="hljs-function"><span class="hljs-params">n</span>      =&gt;</span> [<span class="hljs-string">'arithmetic'</span>, n] | map (yellow) | sprintfN (<span class="hljs-string">'%s: y = %sx'</span>),
+  <span class="hljs-attr">GeometricSequence</span>:  <span class="hljs-function"><span class="hljs-params">c</span>      =&gt;</span> [<span class="hljs-string">'geometric'</span>, c]  | map (green) | sprintfN (<span class="hljs-string">'%s: y = %s ** x'</span>),
+  <span class="hljs-attr">ErrorSequence</span>:      <span class="hljs-function"><span class="hljs-params">reason</span> =&gt;</span> reason | red | sprintf1 (<span class="hljs-string">'error: %s'</span>),
+  <span class="hljs-attr">IrregularSequence</span>:  <span class="hljs-function"><span class="hljs-params">_</span>      =&gt;</span> <span class="hljs-string">'irregular sequence'</span> | brightRed,
+})
+
+<span class="hljs-keyword">const</span> repeatChar = <span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> timesV (n) &gt;&gt; join (<span class="hljs-string">''</span>)
+
+<span class="hljs-keyword">const</span> pad = <span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> str =&gt; (n - str.length) | condS ([
+  <span class="hljs-number">0</span> | gt    | guard (<span class="hljs-function"><span class="hljs-params">pad</span> =&gt;</span> [str, <span class="hljs-string">' '</span> | repeatChar (pad)] | join (<span class="hljs-string">''</span>)),
+  otherwise | guardV (str),
+])
+
+<span class="hljs-keyword">const</span> report = <span class="hljs-function"><span class="hljs-params">xs</span> =&gt;</span> resolved =&gt;
+  [xs | join (<span class="hljs-string">', '</span>) | pad (<span class="hljs-number">13</span>), resolved]
+  | sprintfN (<span class="hljs-string">'%s → %s'</span>)
+
+<span class="hljs-keyword">const</span> doit = <span class="hljs-function"><span class="hljs-params">xs</span> =&gt;</span> xs
+  | checkSequence
+  | format
+  | report (xs)
+
+<span class="hljs-keyword">const</span> go = <span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span>
+  [
+    [<span class="hljs-number">0</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>, <span class="hljs-number">12</span>],   <span class="hljs-comment">// --- arithmetic</span>
+    [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">9</span>, <span class="hljs-number">27</span>],  <span class="hljs-comment">// --- geometric</span>
+    [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">5</span>],   <span class="hljs-comment">// --- irregular</span>
+    [<span class="hljs-literal">null</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">5</span>] <span class="hljs-comment">// --- error</span>
+  ]
+  | map (doit)
+  | tap (map (log))
+
+go ()</code></pre><h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
 <p>For speed freaks: the curried functions you import from the main module are
 written first using manual currying, and then recurried and exported. This
 is in order to allow both calling styles.</p>

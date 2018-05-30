@@ -1687,6 +1687,140 @@ JS programmers have seen this thousands of times before …
 
 In a promise chain, `then` will only kick in if the promise returned by axios.get resolves. If it rejects then the whole then line is skipped.
 
+# Abstract data types
+
+Abstract data types can help eliminate an entire class of bugs, by making
+impossible states unrepresentable.
+
+Imagine you have something like a traffic light, which at any moment can be
+either red, yellow, green, or broken. (Or a download, which can be in
+progress, stopped, completed, failed, ...) You can use a normal object to
+represent these sorts of things, but you might find yourself carrying around
+such properties as 'error' and 'state' and 'type' and using a lot of `if`
+statements to check for illegal states.
+
+Another way is to model the data using ADTs, build the states, then branch
+using a 'catamorphism' to resolve the states when you're ready.
+
+In this example we use `daggy` to create an ADT representing various kinds
+of numerical sequences.
+
+In Haskell our declaration would be:
+
+	data Sequence = ArithmeticSequence Int -- y = nx
+                  | GeometricSequence Int  -- y = c ** x
+                  | IrregularSequence
+                  | ErrorSequence String   -- error with a reason
+
+In (pseudo-)Java maybe something like:
+
+	abstract class Sequence;
+	class ArithmeticSequence extends Sequence {
+	  public ArithmeticSequence(int n) {} // y = nx
+	}
+	class GeometricSequence extends Sequence {
+	  public GeometricSequence(int n) {} // y = c ** x
+	}
+	class IrregularSequence extends Sequence {
+	  public IrregularSequence() {}
+	}
+	class ErrorSequence extends Sequence {
+	  public ErrorSequence(String reason) {}
+	}
+
+Using stick idioms and `daggy`:
+
+	// --- types.js
+
+	import daggy from 'daggy'
+
+	export const Sequence = daggy.taggedSum ('Sequence', {
+	  ArithmeticSequence: ['n'],
+	  GeometricSequence: ['c'],
+	  IrregularSequence: [],
+	  ErrorSequence: ['reason'],
+	})
+
+	const { ArithmeticSequence, GeometricSequence, IrregularSequence, ErrorSequence, } = Sequence
+
+	export { ArithmeticSequence, GeometricSequence, IrregularSequence, ErrorSequence, }
+
+    // --- sequence.js
+
+	const testReduce = f => n => (acc, x) => f (acc, x) === n ? x : null
+	const testReduceArithmetic = minus    | testReduce
+	const testReduceGeometric  = divideBy | testReduce
+
+	const testSequence = g => f => ([a, b, ...rest]) => lets (
+	  _ => b | g (a),
+	  n => rest | reduceAbort (n | f) (b) (null),
+	  (n, reduced) => reduced === null ? false : n,
+	)
+
+	const containsNull = null | contains
+
+	export const isArithmetic = testReduceArithmetic | testSequence (minus)
+	export const isGeometric  = testReduceGeometric  | testSequence (divideBy)
+	export const isError      = x => containsNull (x) ? 'contains null' : false
+
+    // --- util.js
+
+	export const cata = dot1 ('cata')
+
+	export const repeatChar = n => timesV (n) >> join ('')
+	export const pad = n => str => (n - str.length) | condS ([
+	  0 | gt    | guard (pad => [str, ' ' | repeatChar (pad)] | join ('')),
+	  otherwise | guardV (str),
+	])
+
+	// --- index.js
+
+	import { ArithmeticSequence, GeometricSequence, IrregularSequence, ErrorSequence, } from './types'
+	import { isArithmetic, isGeometric, isError, } from './sequence'
+	import { cata, repeatChar, pad, } from './util'
+
+	const checkSequence = condS ([
+	  isArithmetic | guard ((_, n) => n | ArithmeticSequence),
+	  isGeometric  | guard ((_, c) => c | GeometricSequence),
+	  containsNull | guard (()     => 'contains null' | ErrorSequence),
+	  otherwise    | guard (()     => IrregularSequence),
+	])
+
+	const format = cata ({
+	  ArithmeticSequence: n      => ['arithmetic', n] | map (yellow) | sprintfN ('%s: y = %sx'),
+	  GeometricSequence:  c      => ['geometric', c]  | map (green) | sprintfN ('%s: y = %s ** x'),
+	  ErrorSequence:      reason => reason | red | sprintf1 ('error: %s'),
+	  IrregularSequence:  _      => 'irregular sequence' | brightRed,
+	})
+
+	const repeatChar = n => timesV (n) >> join ('')
+
+	const pad = n => str => (n - str.length) | condS ([
+	  0 | gt    | guard (pad => [str, ' ' | repeatChar (pad)] | join ('')),
+	  otherwise | guardV (str),
+	])
+
+	const report = xs => resolved =>
+	  [xs | join (', ') | pad (13), resolved]
+	  | sprintfN ('%s → %s')
+
+	const doit = xs => xs
+	  | checkSequence
+	  | format
+	  | report (xs)
+
+	const go = _ =>
+	  [
+		[0, 4, 8, 12],   // --- arithmetic
+		[1, 3, 9, 27],  // --- geometric
+		[0, 1, 2, 5],   // --- irregular
+		[null, 1, 2, 5] // --- error
+	  ]
+	  | map (doit)
+	  | tap (map (log))
+
+	go ()
+
 # Extra performance
 
 For speed freaks: the curried functions you import from the main module are

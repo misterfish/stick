@@ -626,3 +626,7 @@ const doReducer = reduce (reducer) ([])
 
 1 | rangeTo (10) | doReducer | log
 1 | rangeTo (10) | doReducer | log
+
+
+you will find yourself carrying around a 'type' property, and constantly
+checking for 'error'.

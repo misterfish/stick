@@ -3,8 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.mixinNM = exports.mixinPreNM = exports.mixinM = exports.mixinPreM = exports.factoryInit = exports.factoryProps = exports.ifXReplaceStrFlags = exports.ifXReplaceStr = exports.ifXReplace = exports.xReplaceStrFlags = exports.xReplaceStr = exports.xReplace = exports.xMatchStrFlags = exports.xMatchStr = exports.xMatch = exports.xMatchGlobal = exports.match = exports.neuN = exports.neu5 = exports.neu4 = exports.neu3 = exports.neu2 = exports.neu1 = exports.rangeToBy = exports.rangeFromByDesc = exports.rangeFromByAsc = exports.rangeFromBy = exports.ifReplace = exports.timesSide = exports.timesF = exports.timesV = exports.repeatSide = exports.repeatF = exports.repeatV = exports.sprintfN = exports.sprintf1 = exports.flip5 = exports.flip4 = exports.flip3 = exports.flip = exports.split = exports.join = exports.passToN = exports.passTo = exports.applyToN = exports.applyTo5 = exports.applyTo4 = exports.applyTo3 = exports.applyTo2 = exports.applyTo1 = exports.provideToN = exports.provideTo5 = exports.provideTo4 = exports.provideTo3 = exports.provideTo2 = exports.provideTo1 = exports.provideTo = exports.callOnN = exports.callOn5 = exports.callOn4 = exports.callOn3 = exports.callOn2 = exports.callOn1 = exports.callOn = exports.letS = exports.letNV = exports.asterisk = exports.ampersand = exports.reduceObjIn = exports.reduceObj = exports.addCollection = undefined;
-exports.addIndex = exports.eachObjIn = exports.eachObj = exports.reject = exports.filter = exports.each = exports.map = exports.mergeWhen = exports.mergeWith = exports.mergeIn = exports.mergeInTo = exports.mergeInM = exports.mergeInToM = exports.merge = exports.mergeTo = exports.mergeM = exports.mergeToM = exports.concatM = exports.concatToM = exports.concat = exports.concatTo = exports.prependToM = exports.prependM = exports.prepend = exports.prependTo = exports.appendM = exports.appendToM = exports.appendTo = exports.append = exports.updatePath = exports.updatePathM = exports.update = exports.updateM = exports.assocPathM = exports.assocPath = exports.assocM = exports.assoc = exports.path = exports.prop = exports.defaultTo = exports.decorateException = exports.tryCatch = exports.toThe = exports.moduloWholePart = exports.modulo = exports.subtractFrom = exports.subtract = exports.divideInto = exports.divideBy = exports.multiply = exports.add = exports.condS = exports.cond = exports.condPredicate = exports.whenBind = exports.ifBind = exports.bindTry = exports.bindTryTo = exports.bindTryProp = exports.bindTryPropTo = exports.isType = exports.bind = exports.bindTo = exports.bindProp = exports.bindPropTo = exports.bindLateProp = exports.bindLatePropTo = exports.whenHasIn = exports.ifHasIn = exports.whenHas = exports.ifHas = exports.hasIn = exports.has = exports.whenPredicateOk = exports.ifPredicateOk = exports.whenPredicate = exports.ifPredicate = exports.sideN = exports.side5 = exports.side4 = exports.side3 = exports.side2 = exports.side1 = exports.side = exports.dotN = exports.dot5 = exports.dot4 = exports.dot3 = exports.dot2 = exports.dot1 = exports.dot = exports.tap = exports.lte = exports.lt = exports.gte = exports.gt = exports.ne = exports.eq = exports.recurry = exports.roll = undefined;
+exports.mixinNM = exports.mixinPreNM = exports.mixinM = exports.mixinPreM = exports.factoryInit = exports.factoryProps = exports.ifXReplaceStrFlags = exports.ifXReplaceStr = exports.ifXReplace = exports.xReplaceStrFlags = exports.xReplaceStr = exports.xReplace = exports.xMatchStrFlags = exports.xMatchStr = exports.xMatch = exports.xMatchGlobal = exports.match = exports.neuN = exports.neu5 = exports.neu4 = exports.neu3 = exports.neu2 = exports.neu1 = exports.rangeToBy = exports.rangeFromByDesc = exports.rangeFromByAsc = exports.rangeFromBy = exports.ifReplace = exports.timesSide = exports.timesF = exports.timesV = exports.repeatSide = exports.repeatF = exports.repeatV = exports.sprintfN = exports.sprintf1 = exports.flip5 = exports.flip4 = exports.flip3 = exports.flip = exports.split = exports.join = exports.passToN = exports.passTo = exports.applyToN = exports.applyTo5 = exports.applyTo4 = exports.applyTo3 = exports.applyTo2 = exports.applyTo1 = exports.provideToN = exports.provideTo5 = exports.provideTo4 = exports.provideTo3 = exports.provideTo2 = exports.provideTo1 = exports.provideTo = exports.callOnN = exports.callOn5 = exports.callOn4 = exports.callOn3 = exports.callOn2 = exports.callOn1 = exports.callOn = exports.letS = exports.letNV = exports.asterisk5 = exports.asterisk4 = exports.asterisk3 = exports.asterisk2 = exports.asterisk1 = exports.asteriskN = exports.ampersandN = exports.reduceObjIn = exports.reduceObj = exports.addCollection = exports.addIndex = exports.eachObjIn = exports.eachObj = exports.reduceAbort = exports.contains = undefined;
+exports.find = exports.reject = exports.filter = exports.reduce = exports.each = exports.map = exports.mergeWhen = exports.mergeWith = exports.mergeIn = exports.mergeInTo = exports.mergeInM = exports.mergeInToM = exports.merge = exports.mergeTo = exports.mergeM = exports.mergeToM = exports.concatM = exports.concatToM = exports.concat = exports.concatTo = exports.prependToM = exports.prependM = exports.prepend = exports.prependTo = exports.appendM = exports.appendToM = exports.appendTo = exports.append = exports.updatePath = exports.updatePathM = exports.update = exports.updateM = exports.assocPathM = exports.assocPath = exports.assocM = exports.assoc = exports.path = exports.propOf = exports.prop = exports.defaultTo = exports.decorateException = exports.tryCatch = exports.toThe = exports.moduloWholePart = exports.modulo = exports.subtractFrom = exports.subtract = exports.divideInto = exports.divideBy = exports.multiply = exports.add = exports.condS = exports.cond = exports.condPredicate = exports.whenBind = exports.ifBind = exports.bindTry = exports.bindTryTo = exports.bindTryProp = exports.bindTryPropTo = exports.isType = exports.bind = exports.bindTo = exports.bindProp = exports.bindPropTo = exports.bindLateProp = exports.bindLatePropTo = exports.whenHasIn = exports.ifHasIn = exports.whenHas = exports.ifHas = exports.hasIn = exports.has = exports.whenPredicateOk = exports.ifPredicateOk = exports.whenPredicate = exports.ifPredicate = exports.sideN = exports.side5 = exports.side4 = exports.side3 = exports.side2 = exports.side1 = exports.side = exports.dotN = exports.dot5 = exports.dot4 = exports.dot3 = exports.dot2 = exports.dot1 = exports.dot = exports.tap = exports.lte = exports.lt = exports.gte = exports.gt = exports.ne = exports.eq = exports.recurry = exports.roll = undefined;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -588,6 +588,11 @@ var prop = exports.prop = function prop(p) {
         return o[p];
     };
 };
+var propOf = exports.propOf = function propOf(o) {
+    return function (p) {
+        return o[p];
+    };
+};
 
 var path = exports.path = function path(xs) {
     return function (o) {
@@ -998,33 +1003,116 @@ var mergeWhen = exports.mergeWhen = function mergeWhen(p) {
     };
 };
 
+// xxx find
+
 // --- note: capped.
 var map = exports.map = function map(f) {
-    return function (ary) {
-        return ary.map(function (x) {
+    return function (xs) {
+        return xs.map(function (x) {
             return f(x);
         });
     };
 };
 var each = exports.each = function each(f) {
-    return function (ary) {
-        return ary.forEach(function (x) {
+    return function (xs) {
+        return xs.forEach(function (x) {
             return f(x);
         });
     };
 };
+
+var reduce = exports.reduce = function reduce(f) {
+    return function (acc) {
+        return function (xs) {
+            return xs.reduce(f, acc);
+        };
+    };
+};
 var filter = exports.filter = function filter(f) {
-    return function (ary) {
-        return ary.filter(function (x) {
+    return function (xs) {
+        return xs.filter(function (x) {
             return f(x);
         });
     };
 };
 var reject = exports.reject = function reject(f) {
-    return function (ary) {
-        return ary.filter(function (x) {
+    return function (xs) {
+        return xs.filter(function (x) {
             return !f(x);
         });
+    };
+};
+var find = exports.find = function find(p) {
+    return function (xs) {
+        return xs.find(p);
+    };
+};
+
+var contains = exports.contains = function contains(v) {
+    return function (xs) {
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
+
+        try {
+            for (var _iterator5 = xs[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                var x = _step5.value;
+                if (x === v) return true;
+            }
+        } catch (err) {
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                    _iterator5.return();
+                }
+            } finally {
+                if (_didIteratorError5) {
+                    throw _iteratorError5;
+                }
+            }
+        }
+
+        return false;
+    };
+};
+
+var reduceAbort = exports.reduceAbort = function reduceAbort(f) {
+    return function (acc) {
+        return function (abortVal) {
+            return function (xs) {
+                var acco = acc;
+                var _iteratorNormalCompletion6 = true;
+                var _didIteratorError6 = false;
+                var _iteratorError6 = undefined;
+
+                try {
+                    for (var _iterator6 = xs[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                        var x = _step6.value;
+
+                        var g = f(acco, x);
+                        if (g === abortVal) return abortVal;
+                        acco = g;
+                    }
+                } catch (err) {
+                    _didIteratorError6 = true;
+                    _iteratorError6 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                            _iterator6.return();
+                        }
+                    } finally {
+                        if (_didIteratorError6) {
+                            throw _iteratorError6;
+                        }
+                    }
+                }
+
+                return acco;
+            };
+        };
     };
 };
 
@@ -1101,7 +1189,7 @@ var reduceObjIn = exports.reduceObjIn = function reduceObjIn(f) {
     };
 };
 
-var ampersand = exports.ampersand = function ampersand(fs) {
+var ampersandN = exports.ampersandN = function ampersandN(fs) {
     return function (x) {
         var mapper = function mapper(f) {
             return f(x);
@@ -1110,37 +1198,103 @@ var ampersand = exports.ampersand = function ampersand(fs) {
     };
 };
 
-var asterisk = exports.asterisk = function asterisk(fs) {
+var asteriskN = exports.asteriskN = function asteriskN(fs) {
     return function (xs) {
         var ret = [];
         var i = -1;
-        var _iteratorNormalCompletion5 = true;
-        var _didIteratorError5 = false;
-        var _iteratorError5 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-            for (var _iterator5 = fs[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                var f = _step5.value;
+            for (var _iterator7 = fs[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                var f = _step7.value;
 
                 var x = xs[++i];
                 ret.push(f(x));
             }
         } catch (err) {
-            _didIteratorError5 = true;
-            _iteratorError5 = err;
+            _didIteratorError7 = true;
+            _iteratorError7 = err;
         } finally {
             try {
-                if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                    _iterator5.return();
+                if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                    _iterator7.return();
                 }
             } finally {
-                if (_didIteratorError5) {
-                    throw _iteratorError5;
+                if (_didIteratorError7) {
+                    throw _iteratorError7;
                 }
             }
         }
 
         return ret;
+    };
+};
+
+var asterisk1 = exports.asterisk1 = function asterisk1(f) {
+    return function (a) {
+        return [f(a)];
+    };
+};
+var asterisk2 = exports.asterisk2 = function asterisk2(f) {
+    return function (g) {
+        return function (a) {
+            return function (b) {
+                return [f(a), g(b)];
+            };
+        };
+    };
+};
+var asterisk3 = exports.asterisk3 = function asterisk3(f) {
+    return function (g) {
+        return function (h) {
+            return function (a) {
+                return function (b) {
+                    return function (c) {
+                        return [f(a), g(b), h(c)];
+                    };
+                };
+            };
+        };
+    };
+};
+var asterisk4 = exports.asterisk4 = function asterisk4(f) {
+    return function (g) {
+        return function (h) {
+            return function (i) {
+                return function (a) {
+                    return function (b) {
+                        return function (c) {
+                            return function (d) {
+                                return [f(a), g(b), h(c), i(d)];
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+};
+var asterisk5 = exports.asterisk5 = function asterisk5(f) {
+    return function (g) {
+        return function (h) {
+            return function (i) {
+                return function (j) {
+                    return function (a) {
+                        return function (b) {
+                            return function (c) {
+                                return function (d) {
+                                    return function (e) {
+                                        return [f(a), g(b), h(c), i(d), j(e)];
+                                    };
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
     };
 };
 
@@ -1775,18 +1929,20 @@ exports.default = {
     mergeInToM: mergeInToM, mergeInM: mergeInM, mergeInTo: mergeInTo, mergeIn: mergeIn,
     mergeWith: mergeWith, mergeWhen: mergeWhen,
     addIndex: addIndex, addCollection: addCollection,
-    map: map, filter: filter, reject: reject,
+    map: map, reduce: reduce, filter: filter, reject: reject, find: find, contains: contains,
+    reduceAbort: reduceAbort,
     // both, either, allN, anyN,
     each: each, eachObj: eachObj, eachObjIn: eachObjIn,
     reduceObj: reduceObj, reduceObjIn: reduceObjIn,
-    ampersand: ampersand, asterisk: asterisk,
+    ampersandN: ampersandN,
+    asterisk1: asterisk1, asterisk2: asterisk2, asterisk3: asterisk3, asterisk4: asterisk4, asterisk5: asterisk5, asteriskN: asteriskN,
     letNV: letNV, letS: letS,
     callOn: callOn, callOn1: callOn1, callOn2: callOn2, callOn3: callOn3, callOn4: callOn4, callOn5: callOn5, callOnN: callOnN,
     provideTo: provideTo, provideTo1: provideTo1, provideTo2: provideTo2, provideTo3: provideTo3, provideTo4: provideTo4, provideTo5: provideTo5, provideToN: provideToN,
     applyTo1: applyTo1, applyTo2: applyTo2, applyTo3: applyTo3, applyTo4: applyTo4, applyTo5: applyTo5, applyToN: applyToN,
     passTo: passTo, passToN: passToN,
     join: join, split: split,
-    prop: prop,
+    prop: prop, propOf: propOf,
     flip: flip, flip3: flip3, flip4: flip4, flip5: flip5,
     sprintf1: sprintf1, sprintfN: sprintfN,
     repeatV: repeatV, repeatF: repeatF, repeatSide: repeatSide,

@@ -1146,11 +1146,15 @@ myData
 <code>Maybe</code> functor from <code>bilby</code>. In this toy example, we start with a French
 word, then:</p>
 <ol class="list">
-<li>look up a translation (mocked in a table); failure path: the translation might not exist).</li>
-<li>look up a corresponding &#39;count&#39; value (also mocked in a table); failure
-path: the count might not exist.</li>
-<li>divide this number into 10 for some reason; failure path: the number might
-be 0.</li>
+<li><p>look up a translation (mocked in a table);</p>
+<p> <em>failure path: the translation might not exist</em></p>
+</li>
+<li><p>look up a corresponding &#39;count&#39; value (also mocked in a table);</p>
+<p> <em>failure path: the count might not exist</em></p>
+</li>
+<li><p>divide this number into 10 for some reason;</p>
+<p> <em>failure path: the number might be 0</em></p>
+</li>
 </ol>
 <p>&nbsp;</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { some <span class="hljs-keyword">as</span> Just, none <span class="hljs-keyword">as</span> Nothing, } <span class="hljs-keyword">from</span> <span class="hljs-string">'bilby'</span>
@@ -1161,7 +1165,7 @@ be 0.</li>
 )
 
 <span class="hljs-keyword">const</span> flatMap = dot1 (<span class="hljs-string">'flatMap'</span>)
-<span class="hljs-keyword">const</span> fold = dot2 (<span class="hljs-string">'fold'</span>)
+<span class="hljs-keyword">const</span> fold    = dot2 (<span class="hljs-string">'fold'</span>)
 
 <span class="hljs-keyword">const</span> translations = {
   <span class="hljs-attr">rouge</span>: <span class="hljs-string">'red'</span>,
@@ -1196,11 +1200,9 @@ be 0.</li>
   | flatMap (getCount)
   | flatMap (getQuotient)
 
-<span class="hljs-keyword">const</span> getTranslation = <span class="hljs-function"><span class="hljs-params">french</span> =&gt;</span>
-  translations [french] | toMaybe
+<span class="hljs-keyword">const</span> getTranslation = <span class="hljs-function"><span class="hljs-params">french</span> =&gt;</span> translations [french] | toMaybe
 
-<span class="hljs-keyword">const</span> getCount = <span class="hljs-function"><span class="hljs-params">english</span> =&gt;</span>
-  count [english] | toMaybe
+<span class="hljs-keyword">const</span> getCount = <span class="hljs-function"><span class="hljs-params">english</span> =&gt;</span> count [english] | toMaybe
 
 <span class="hljs-keyword">const</span> getQuotient = condS ([
   <span class="hljs-number">0</span> | eq    | guard (<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> Nothing),
@@ -1210,8 +1212,10 @@ be 0.</li>
 go ()</code></pre><p class="img-container"><img src="readme-assets/maybe.jpg" alt="maybe.jpg"></p>
 <h1 id="working-with-functors:-either"><a class="header-link" href="#working-with-functors:-either"></a>Working with functors: Either</h1>
 <p>The above example, using <code>bilby</code>&#39;s <code>Either</code> functor instead of <code>Maybe</code>, and a more point-free style.</p>
-<p>The advantage of <code>Either</code> is that you can see why something failed, by
-storing a string with a failure reason in the Left branch.</p>
+<p>The advantage of <code>Either</code> is that in addition to <code>flatMap</code> taking care of
+the failure path, you can also see why it failed. By convention the &#39;Left&#39;
+branch is considered a failure, and a string stored in &#39;Left&#39; represents the
+reason.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { left <span class="hljs-keyword">as</span> Left, right <span class="hljs-keyword">as</span> Right, } <span class="hljs-keyword">from</span> <span class="hljs-string">'bilby'</span>
 
 <span class="hljs-keyword">const</span> toEither = <span class="hljs-function"><span class="hljs-params">l</span> =&gt;</span> ifOk (
@@ -1219,12 +1223,10 @@ storing a string with a failure reason in the Left branch.</p>
   l | Left | always,
 )
 
-<span class="hljs-keyword">const</span> flatMap = dot1 (<span class="hljs-string">'flatMap'</span>)
-<span class="hljs-keyword">const</span> fold = dot2 (<span class="hljs-string">'fold'</span>)
-<span class="hljs-keyword">const</span> arrowSnd = <span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> ([a, b]) =&gt; [a, b | f]
+<span class="hljs-keyword">const</span> flatMap   = dot1 (<span class="hljs-string">'flatMap'</span>)
+<span class="hljs-keyword">const</span> fold      = dot2 (<span class="hljs-string">'fold'</span>)
+<span class="hljs-keyword">const</span> arrowSnd  = <span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> ([a, b]) =&gt; [a, b | f]
 <span class="hljs-keyword">const</span> foldArrow = <span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> ([a, b]) =&gt; f (a, b)
-<span class="hljs-comment">// @todo remove</span>
-<span class="hljs-keyword">const</span> propOf = <span class="hljs-function"><span class="hljs-params">o</span> =&gt;</span> prop =&gt; o [prop]
 
 <span class="hljs-keyword">const</span> translations = {
   <span class="hljs-attr">rouge</span>: <span class="hljs-string">'red'</span>,
@@ -1239,7 +1241,7 @@ storing a string with a failure reason in the Left branch.</p>
   <span class="hljs-comment">// green missing</span>
 }
 
-<span class="hljs-keyword">const</span> formatAnswer = list &gt;&gt; asteriskN ([yellow, id]) &gt;&gt; sprintfN (<span class="hljs-string">'%s → %s'</span>)
+<span class="hljs-keyword">const</span> formatAnswer   = asterisk2 (yellow, id) &gt;&gt; sprintfN (<span class="hljs-string">'%s → %s'</span>)
 
 <span class="hljs-keyword">const</span> getTranslation = propOf (translations) &gt;&gt; toEither (<span class="hljs-string">'no translation'</span>)
 <span class="hljs-keyword">const</span> getCount       = propOf (count)        &gt;&gt; toEither (<span class="hljs-string">'no count'</span>)
@@ -1268,6 +1270,22 @@ storing a string with a failure reason in the Left branch.</p>
   | tap (map (log))
 
 go ()</code></pre><p class="img-container"><img src="readme-assets/either.jpg" alt="either.jpg"></p>
+<h1 id="٭-functors-/-flatmap-٭-explanation"><a class="header-link" href="#٭-functors-/-flatmap-٭-explanation"></a>٭ Functors / flatMap ٭ explanation</h1>
+<p>Think of the <code>Either</code> functor as a value in a box, where the box is either a
+&#39;Left&#39; box, meaning something went wrong, or a &#39;Right&#39; box, meaning things
+are going well.</p>
+<p>If you have a value like <code>const r = Right (2)</code></p>
+<p>and you pipe it to <code>flatMap</code>:</p>
+<pre class="hljs"><code>const <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
+r | <span class="hljs-type">flatMap</span> (<span class="hljs-built_in">double</span>) // <span class="hljs-keyword">Right</span> (<span class="hljs-number">4</span>)</code></pre><p>Then the resulting value is is <code>Right (4)</code>, because <code>flatMap</code> &#39;peeks&#39; inside
+the box, manipulates the value inside, and wraps it up again in the box.</p>
+<p>But it your value was a &#39;Left&#39;: <code>const l = Left (&#39;bad news&#39;)</code></p>
+<p>and you pipe it to <code>flatMap</code>:</p>
+<pre class="hljs"><code>const <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
+r | <span class="hljs-type">flatMap</span> (<span class="hljs-built_in">double</span>) // <span class="hljs-keyword">Left</span> ('bad news')</code></pre><p>The input value is passed through untouched: <code>Left (&#39;bad news&#39;)</code>, because when <code>flatMap</code> sees a &#39;Left&#39; value, it doesn&#39;t bother to unwrap the box. It just ignores the whole <code>flatMap</code>.</p>
+<p>JS programmers have seen this thousands of times before …</p>
+<pre class="hljs"><code>axios<span class="hljs-selector-class">.get</span> (<span class="hljs-string">'/some/api'</span>)
+<span class="hljs-selector-class">.then</span> (response =&gt; ...)</code></pre><p>In a promise chain, <code>then</code> will only kick in if the promise returned by axios.get resolves. If it rejects then the whole then line is skipped.</p>
 <h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
 <p>For speed freaks: the curried functions you import from the main module are
 written first using manual currying, and then recurried and exported. This

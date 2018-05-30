@@ -1519,11 +1519,17 @@ Here is an example showing how you can deal with failure paths, using the
 `Maybe` functor from `bilby`. In this toy example, we start with a French
 word, then:
 
-1. look up a translation (mocked in a table); failure path: the translation might not exist).
-2. look up a corresponding 'count' value (also mocked in a table); failure
-path: the count might not exist.
-3. divide this number into 10 for some reason; failure path: the number might
-be 0.
+1. look up a translation (mocked in a table);
+
+	*failure path: the translation might not exist*
+
+2. look up a corresponding 'count' value (also mocked in a table);
+
+	*failure path: the count might not exist*
+
+3. divide this number into 10 for some reason;
+
+	*failure path: the number might be 0*
 
 &nbsp;
 
@@ -1535,7 +1541,7 @@ be 0.
 	)
 
 	const flatMap = dot1 ('flatMap')
-	const fold = dot2 ('fold')
+	const fold    = dot2 ('fold')
 
 	const translations = {
 	  rouge: 'red',
@@ -1570,11 +1576,9 @@ be 0.
 	  | flatMap (getCount)
 	  | flatMap (getQuotient)
 
-	const getTranslation = french =>
-	  translations [french] | toMaybe
+	const getTranslation = french => translations [french] | toMaybe
 
-	const getCount = english =>
-	  count [english] | toMaybe
+	const getCount = english => count [english] | toMaybe
 
 	const getQuotient = condS ([
 	  0 | eq    | guard (_ => Nothing),
@@ -1589,8 +1593,10 @@ be 0.
 
 The above example, using `bilby`'s `Either` functor instead of `Maybe`, and a more point-free style.
 
-The advantage of `Either` is that you can see why something failed, by
-storing a string with a failure reason in the Left branch.
+The advantage of `Either` is that in addition to `flatMap` taking care of
+the failure path, you can also see why it failed. By convention the 'Left'
+branch is considered a failure, and a string stored in 'Left' represents the
+reason.
 
 	import { left as Left, right as Right, } from 'bilby'
 
@@ -1599,12 +1605,10 @@ storing a string with a failure reason in the Left branch.
 	  l | Left | always,
 	)
 
-	const flatMap = dot1 ('flatMap')
-	const fold = dot2 ('fold')
-	const arrowSnd = f => ([a, b]) => [a, b | f]
+	const flatMap   = dot1 ('flatMap')
+	const fold      = dot2 ('fold')
+	const arrowSnd  = f => ([a, b]) => [a, b | f]
 	const foldArrow = f => ([a, b]) => f (a, b)
-	// @todo remove
-	const propOf = o => prop => o [prop]
 
 	const translations = {
 	  rouge: 'red',
@@ -1619,7 +1623,7 @@ storing a string with a failure reason in the Left branch.
 	  // green missing
 	}
 
-	const formatAnswer = list >> asteriskN ([yellow, id]) >> sprintfN ('%s → %s')
+	const formatAnswer   = asterisk2 (yellow, id) >> sprintfN ('%s → %s')
 
 	const getTranslation = propOf (translations) >> toEither ('no translation')
 	const getCount       = propOf (count)        >> toEither ('no count')
@@ -1650,6 +1654,38 @@ storing a string with a failure reason in the Left branch.
 	go ()
 
 ![either.jpg](readme-assets/either.jpg)
+
+# ٭ Functors / flatMap ٭ explanation
+
+Think of the `Either` functor as a value in a box, where the box is either a
+'Left' box, meaning something went wrong, or a 'Right' box, meaning things
+are going well.
+
+If you have a value like `const r = Right (2)`
+
+and you pipe it to `flatMap`:
+
+	const double = x => x * 2
+	r | flatMap (double) // Right (4)
+
+Then the resulting value is is `Right (4)`, because `flatMap` 'peeks' inside
+the box, manipulates the value inside, and wraps it up again in the box.
+
+But it your value was a 'Left': `const l = Left ('bad news')`
+
+and you pipe it to `flatMap`:
+
+	const double = x => x * 2
+	r | flatMap (double) // Left ('bad news')
+
+The input value is passed through untouched: `Left ('bad news')`, because when `flatMap` sees a 'Left' value, it doesn't bother to unwrap the box. It just ignores the whole `flatMap`.
+
+JS programmers have seen this thousands of times before …
+
+	axios.get ('/some/api')
+	.then (response => ...)
+
+In a promise chain, `then` will only kick in if the promise returned by axios.get resolves. If it rejects then the whole then line is skipped.
 
 # Extra performance
 

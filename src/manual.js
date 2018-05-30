@@ -441,6 +441,7 @@ export const mergeWhen = (p) => (mergerSym) => {
     }
 }
 
+// xxx find
 
 // --- note: capped.
 export const map  = f => xs => xs.map     (x => f (x))
@@ -449,6 +450,22 @@ export const each = f => xs => xs.forEach (x => f (x))
 export const reduce = f => acc => xs => xs.reduce (f, acc)
 export const filter = f => xs => xs.filter (x => f (x))
 export const reject = f => xs => xs.filter (x => ! f (x))
+export const find   = p => xs => xs.find (p)
+
+export const contains = (v) => (xs) => {
+  for (const x of xs) if (x === v) return true
+  return false
+}
+
+export const reduceAbort = (f) => (acc) => (abortVal) => (xs) => {
+  let acco = acc
+  for (const x of xs) {
+    let g = f (acco, x)
+    if (g === abortVal) return abortVal
+    acco = g
+  }
+  return acco
+}
 
 // --- returns obj
 export const eachObj = (f) => (o) => {
@@ -772,7 +789,8 @@ export default {
     mergeInToM, mergeInM, mergeInTo, mergeIn,
     mergeWith, mergeWhen,
     addIndex, addCollection,
-    map, reduce, filter, reject,
+    map, reduce, filter, reject, find, contains,
+    reduceAbort,
     // both, either, allN, anyN,
     each, eachObj, eachObjIn,
     reduceObj, reduceObjIn,

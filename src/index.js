@@ -327,9 +327,13 @@ export const mergeAllIn = xs => xs.reduce (
 export const map    = _recurry (2) (manual.map)
 export const each   = _recurry (2) (manual.each)
 
-export const reduce = _recurry (2) (manual.reduce)
-export const filter = _recurry (2) (manual.filter)
-export const reject = _recurry (2) (manual.reject)
+export const reduce   = _recurry (2) (manual.reduce)
+export const filter   = _recurry (2) (manual.filter)
+export const reject   = _recurry (2) (manual.reject)
+export const find     = _recurry (2) (manual.find)
+export const contains = _recurry (2) (manual.contains)
+
+export const reduceAbort = _recurry (4) (manual.reduceAbort)
 
 // @test
 // export const both   = _recurry (3) (manual.both)

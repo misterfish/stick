@@ -1143,8 +1143,9 @@ myData
 <h1 id="working-with-functors:-maybe"><a class="header-link" href="#working-with-functors:-maybe"></a>Working with functors: Maybe</h1>
 <h3 id="(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"><a class="header-link" href="#(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"></a>(or how to forget about <code>null</code> and <code>undefined</code> for a while)</h3>
 <p>Here is an example showing how you can deal with failure paths, using the
-<code>Maybe</code> functor from <code>bilby</code>. In this toy example, we start with a French
-word, then:</p>
+<code>Maybe</code> functor from
+<a href="https://github.com/puffnfresh/bilby.js">bilby</a> by @puffnfresh. In this toy
+example, we start with a French word, then:</p>
 <ol class="list">
 <li><p>look up a translation (mocked in a table);</p>
 <p> <em>failure path: the translation might not exist</em></p>
@@ -1297,8 +1298,9 @@ such properties as &#39;error&#39; and &#39;state&#39; and &#39;type&#39; and us
 statements to check for illegal states.</p>
 <p>Another way is to model the data using ADTs, build the states, then branch
 using a &#39;catamorphism&#39; to resolve the states when you&#39;re ready.</p>
-<p>In this example we use <code>daggy</code> to create an ADT representing various kinds
-of numerical sequences.</p>
+<p>In this example we use <a href="https://github.com/fantasyland/daggy">daggy</a> by
+@fantasyland to create an ADT representing various kinds of numerical
+sequences.</p>
 <p>In Haskell our declaration would be:</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">data</span> <span class="hljs-type">Sequence</span> = <span class="hljs-type">ArithmeticSequence</span> <span class="hljs-type">Int</span> <span class="hljs-comment">-- y = nx</span></span>
               | <span class="hljs-type">GeometricSequence</span> <span class="hljs-type">Int</span>  <span class="hljs-comment">-- y = c ** x</span>

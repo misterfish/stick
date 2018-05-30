@@ -1516,8 +1516,9 @@ merge benchmark: manual / index / ramda
 ### (or how to forget about `null` and `undefined` for a while)
 
 Here is an example showing how you can deal with failure paths, using the
-`Maybe` functor from `bilby`. In this toy example, we start with a French
-word, then:
+`Maybe` functor from
+[bilby](https://github.com/puffnfresh/bilby.js) by @puffnfresh. In this toy
+example, we start with a French word, then:
 
 1. look up a translation (mocked in a table);
 
@@ -1702,8 +1703,9 @@ statements to check for illegal states.
 Another way is to model the data using ADTs, build the states, then branch
 using a 'catamorphism' to resolve the states when you're ready.
 
-In this example we use `daggy` to create an ADT representing various kinds
-of numerical sequences.
+In this example we use [daggy](https://github.com/fantasyland/daggy) by
+@fantasyland to create an ADT representing various kinds of numerical
+sequences.
 
 In Haskell our declaration would be:
 

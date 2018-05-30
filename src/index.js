@@ -393,7 +393,14 @@ export const reduceObjIn = _recurry (3) (manual.reduceObjIn)
 
 // fs `ampersand` x = map map' fs where map' f = f x
 export const ampersandN = _recurry (2) (manual.ampersandN)
-export const asteriskN = _recurry (2) (manual.asteriskN)
+
+
+export const asterisk1 = _recurry (2)  (manual.asterisk1)
+export const asterisk2 = _recurry (4)  (manual.asterisk2)
+export const asterisk3 = _recurry (6)  (manual.asterisk3)
+export const asterisk4 = _recurry (8)  (manual.asterisk4)
+export const asterisk5 = _recurry (10) (manual.asterisk5)
+export const asteriskN = _recurry (2)  (manual.asteriskN)
 
 // --------- lets / let
 

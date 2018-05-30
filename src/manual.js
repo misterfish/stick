@@ -505,15 +505,15 @@ export const asteriskN = (fs) => (xs) => {
 }
 
 export const asterisk1 = f =>
-    a =>                     [a | f]
+    a =>                     [f (a)]
 export const asterisk2 = f => g =>
-    a => b =>                [a | f, b | g]
+    a => b =>                [f (a), g (b)]
 export const asterisk3 = f => g => h =>
-    a => b => c =>           [a | f, b | g, c | h]
+    a => b => c =>           [f (a), g (b), h (c)]
 export const asterisk4 = f => g => h => i =>
-    a => b => c => d =>      [a | f, b | g, c | h, d | i]
+    a => b => c => d =>      [f (a), g (b), h (c), i (d)]
 export const asterisk5 = f => g => h => i => j =>
-    a => b => c => d => e => [a | f, b | g, c | h, d | i, e | j]
+    a => b => c => d => e => [f (a), g (b), h (c), i (d), j (e)]
 
 // ------ lets / let
 

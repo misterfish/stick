@@ -930,6 +930,49 @@ array.</p>
 | map (checkVal)
 | join (&#39; | &#39;)
 // 3 was less than 4 | 4 was 4 | 5 was more than 4</p>
+<h2 id="٭-merging-٭"><a class="header-link" href="#٭-merging-٭"></a>٭ merging ٭</h2>
+<p>We provide 8 basic merge functions, corresponding to all combinations of
+three binary choices:</p>
+<ol class="list">
+<li><em>to</em> vs. <em>from</em>           (order of arguments)</li>
+<li>&#39;<em>own</em>&#39; vs. &#39;<em>in</em>&#39;        (prototype values)</li>
+<li><em>mutable</em> vs. <em>immutable</em> (whether to clone the target first)</li>
+</ol>
+<p>There are a few conventions to keep in mind when trying to understand the
+semantics. To vs. from is just a question of switching the arguments, so we
+don&#39;t need to discuss it, but the other 4 combinations have some caveats.</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">tgt</span> | <span class="hljs-selector-tag">merge</span>    (src) <span class="hljs-comment">// (1) own, immutable</span>
+<span class="hljs-selector-tag">tgt</span> | <span class="hljs-selector-tag">mergeIn</span>  (src) <span class="hljs-comment">// (2) in,  immutable</span>
+<span class="hljs-selector-tag">tgt</span> | <span class="hljs-selector-tag">mergeM</span>   (src) <span class="hljs-comment">// (3) own, mutable</span>
+<span class="hljs-selector-tag">tgt</span> | <span class="hljs-selector-tag">mergeInM</span> (src) <span class="hljs-comment">// (4) in,  mutable</span>
+
+<span class="hljs-comment">// mergeTo, mergeInTo, mergeToM, mergeInToM: 'to' forms</span></code></pre><p>In the immutable cases, a clone is made of the target before merging. You
+must keep in mind whether the clone will use only &#39;own&#39; properties or also
+the prototype (&#39;in&#39;) properties. Case (1) corresponds to &#39;own&#39; and case (2)
+to &#39;in&#39;.</p>
+<p>No matter which it is, all copied properties will become own properties of
+the clone.*</p>
+<p>Then, properties are copied over from the source: only own properties in
+case (1), also &#39;in&#39; properties in case (2).</p>
+<p>The rule to remember in the immutable case is: &#39;own&#39; merges with &#39;own&#39; and
+&#39;in&#39; with &#39;in&#39;.</p>
+<p>In the mutable case, the target object is not cloned nor altered in any way,
+except of course that properties are copied in from the source. In
+particular this means that the &#39;own&#39; in case (3) only applies to the source:
+the prototype chain of the target will not be flattened or discarded or
+altered at all.</p>
+<p>The rule to remember in the mutable case is: the target is never altered in
+any way, besides having properties copied in. So the &#39;own&#39; / &#39;in&#39;
+distinction only applies to the source.</p>
+<p>We feel that these conventions are the most straightforward and lead to
+easily inferrable semantics.</p>
+<p>In all cases, we are only ever talking about enumerable properties.</p>
+<p>* This is good enough for most styles of functional programming in JS, many
+of which don&#39;t even bother with the distinction. People often expect
+shallow, cheap objects when programming this way. If you absolutely must
+preserve the prototype chain intact, you can use a combination of
+<code>Object.create</code>, <code>flattenPrototype(M)</code> and <code>discardPrototype(M)</code>, combined
+with the &#39;M&#39; versions of the merge functions, to get what you want.</p>
 <h2 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h2>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, whenTrue, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
 something like this:</p>

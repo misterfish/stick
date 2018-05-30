@@ -1234,6 +1234,63 @@ Wut?! This does work, strange as it looks. Try it for yourself:
 | join (' | ')
 // 3 was less than 4 | 4 was 4 | 5 was more than 4
 
+## ٭ merging ٭
+
+We provide 8 basic merge functions, corresponding to all combinations of
+three binary choices:
+
+1. *to* vs. *from*           (order of arguments)
+1. '*own*' vs. '*in*'        (prototype values)
+1. *mutable* vs. *immutable* (whether to clone the target first)
+
+There are a few conventions to keep in mind when trying to understand the
+semantics. To vs. from is just a question of switching the arguments, so we
+don't need to discuss it, but the other 4 combinations have some caveats.
+
+	tgt | merge    (src) // (1) own, immutable
+	tgt | mergeIn  (src) // (2) in,  immutable
+	tgt | mergeM   (src) // (3) own, mutable
+	tgt | mergeInM (src) // (4) in,  mutable
+
+	// mergeTo, mergeInTo, mergeToM, mergeInToM: 'to' forms
+
+In the immutable cases, a clone is made of the target before merging. You
+must keep in mind whether the clone will use only 'own' properties or also
+the prototype ('in') properties. Case (1) corresponds to 'own' and case (2)
+to 'in'.
+
+No matter which it is, all copied properties will become own properties of
+the clone.\*
+
+Then, properties are copied over from the source: only own properties in
+case (1), also 'in' properties in case (2).
+
+The rule to remember in the immutable case is: 'own' merges with 'own' and
+'in' with 'in'.
+
+In the mutable case, the target object is not cloned nor altered in any way,
+except of course that properties are copied in from the source. In
+particular this means that the 'own' in case (3) only applies to the source:
+the prototype chain of the target will not be flattened or discarded or
+altered at all.
+
+The rule to remember in the mutable case is: the target is never altered in
+any way, besides having properties copied in. So the 'own' / 'in'
+distinction only applies to the source.
+
+We feel that these conventions are the most straightforward and lead to
+easily inferrable semantics.
+
+In all cases, we are only ever talking about enumerable properties.
+
+\* This is good enough for most styles of functional programming in JS, many
+of which don't even bother with the distinction. People often expect
+shallow, cheap objects when programming this way. If you absolutely must
+preserve the prototype chain intact, you can use a combination of
+`Object.create`, `flattenPrototype(M)` and `discardPrototype(M)`, combined
+with the 'M' versions of the merge functions, to get what you want.
+
+
 ## ٭ frontend stuff ٭
 
     import { path, prop, whenTrue, always, } from 'stick-js'

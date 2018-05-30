@@ -66,7 +66,7 @@
     discard-prototype, flatten-prototype,
 
     #map-pairs, map-pairs-in,
-    ampersand, asterisk,
+    ampersand-n, asterisk-n,
 
     arg0, arg1, arg2, arg3, arg4, arg5, arg6,
 
@@ -1873,13 +1873,13 @@ describe 'eachObjIn' ->
 describe 'asterisk' ->
     test 1 ->
         [1 2 3]
-        |> asterisk [(* 2), ( + 1), (/ 2)]
+        |> asterisk-n [(* 2), ( + 1), (/ 2)]
         |> expect-to-equal [2 3 1.5]
 
 describe 'ampersand' ->
     test 1 ->
         10
-        |> ampersand [(* 2), ( + 1), (/ 2)]
+        |> ampersand-n [(* 2), ( + 1), (/ 2)]
         |> expect-to-equal [20 11 5]
 
 describe 'argx' ->

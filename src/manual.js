@@ -489,12 +489,12 @@ export const reduceObjIn = (f) => (acc) => (o) => {
     return curAcc
 }
 
-export const ampersand = (fs) => (x) => {
+export const ampersandN = (fs) => (x) => {
     const mapper = f => f (x)
     return map (mapper) (fs)
 }
 
-export const asterisk = (fs) => (xs) => {
+export const asteriskN = (fs) => (xs) => {
     const ret = []
     let i = -1
     for (const f of fs) {
@@ -503,6 +503,17 @@ export const asterisk = (fs) => (xs) => {
     }
     return ret
 }
+
+export const asterisk1 = f =>
+    a =>                     [a | f]
+export const asterisk2 = f => g =>
+    a => b =>                [a | f, b | g]
+export const asterisk3 = f => g => h =>
+    a => b => c =>           [a | f, b | g, c | h]
+export const asterisk4 = f => g => h => i =>
+    a => b => c => d =>      [a | f, b | g, c | h, d | i]
+export const asterisk5 = f => g => h => i => j =>
+    a => b => c => d => e => [a | f, b | g, c | h, d | i, e | j]
 
 // ------ lets / let
 
@@ -765,7 +776,8 @@ export default {
     // both, either, allN, anyN,
     each, eachObj, eachObjIn,
     reduceObj, reduceObjIn,
-    ampersand, asterisk,
+    ampersandN,
+    asterisk1, asterisk2, asterisk3, asterisk4, asterisk5, asteriskN,
     letNV, letS,
     callOn, callOn1, callOn2, callOn3, callOn4, callOn5, callOnN,
     provideTo, provideTo1, provideTo2, provideTo3, provideTo4, provideTo5, provideToN,

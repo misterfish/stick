@@ -65,10 +65,12 @@ library by Jussi Kalliokoski (@jussi-kalliokoski).
 
 A few examples:
 
+    import chalk from 'chalk'
+
 	; [1, 2, 3]
 	| map (x => x + 1)
 	| join ('/')
-	| green
+	| chalk.green
 	| sprintf1 ('The answer is %s')
 	| log // outputs 'The answer is 2/3/4' (colorfully)
 
@@ -403,8 +405,8 @@ The selection of `if` and `when` functions we provide is intentionally skimpy, t
 	// const isInteger = x => x | floor | eq (x)
 
 	// --- or if you're getting bored:
-	// import { timesV, asterisk, passToN, } from 'stick-js'
-	// const arrowSnd = f => timesV (2) >> asterisk ([id, f])
+	// import { timesV, asteriskN, passToN, } from 'stick-js'
+	// const arrowSnd = f => timesV (2) >> asteriskN ([id, f])
 	// const isInteger = arrowSnd (floor) >> passToN (eq)
 
 	// --- now compose it into an anaphoric if:

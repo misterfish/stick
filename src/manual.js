@@ -511,6 +511,7 @@ export const ampersandN = (fs) => (x) => {
     return map (mapper) (fs)
 }
 
+	// const arrowSnd = f => timesV (2) >> asteriskN ([id, f])
 export const asteriskN = (fs) => (xs) => {
     const ret = []
     let i = -1

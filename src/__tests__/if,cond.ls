@@ -129,7 +129,7 @@ describe 'whenPredicate' ->
     tests2 = list do
         *   desc: 'exact truth, not truthy'
             input-val: 3
-            expect-branch: 'nee'
+            expect-branch: 'ja'
             num-arms: 1
 
     do-tests describe-spec2, tests2
@@ -162,7 +162,7 @@ describe 'ifPredicate' ->
     tests2 = list do
         *   desc: 'exact truth, not truthy'
             input-val: 3
-            expect-branch: 'nee'
+            expect-branch: 'ja'
             num-arms: 2
 
     do-tests describe-spec2, tests2
@@ -176,6 +176,14 @@ describe 'ifPredicate' ->
           |> expect-to-equal 4
         3 |> when-predicate even, (+ 1)
           |> expect-to-equal void
+
+describe 'ifPredicate' ->
+    test 'predicate tested for truthy, not strict truth' ->
+        is-odd = (x) -> x % 2
+        if-odd = is-odd |> if-predicate
+        iffer = if-odd (* 2), -> 'no'
+        3 |> iffer |> expect-to-equal 6
+        4 |> iffer |> expect-to-equal 'no'
 
 describe 'ifPredicateOk' ->
     x = <[ eg bert ]>

@@ -82,7 +82,7 @@ export const side5 = prop => val1 => val2 => val3 => val4 => val5 =>
 export const sideN = prop => vs =>
     o => (dotN (prop) (vs) (o), o)
 
-export const ifPredicate = f => yes => no => x => f (x) === true ? yes (x) : no (x)
+export const ifPredicate = f => yes => no => x => f (x) ? yes (x) : no (x)
 export const whenPredicate = f => yes => ifPredicate (f) (yes) (noop)
 
 // --- passes the *result* of the predicate test to the yes/no functions instead of passing `x`.
@@ -441,22 +441,23 @@ export const mergeWhen = (p) => (mergerSym) => {
     }
 }
 
-// xxx find
-
 // --- note: capped.
 export const map  = f => xs => xs.map     (x => f (x))
 export const each = f => xs => xs.forEach (x => f (x))
 
+// @test
 export const reduce = f => acc => xs => xs.reduce (f, acc)
 export const filter = f => xs => xs.filter (x => f (x))
 export const reject = f => xs => xs.filter (x => ! f (x))
 export const find   = p => xs => xs.find (p)
 
+// @test
 export const contains = (v) => (xs) => {
   for (const x of xs) if (x === v) return true
   return false
 }
 
+// @test
 export const reduceAbort = (f) => (acc) => (abortVal) => (xs) => {
   let acco = acc
   for (const x of xs) {

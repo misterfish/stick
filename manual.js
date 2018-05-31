@@ -248,7 +248,7 @@ var ifPredicate = exports.ifPredicate = function ifPredicate(f) {
     return function (yes) {
         return function (no) {
             return function (x) {
-                return f(x) === true ? yes(x) : no(x);
+                return f(x) ? yes(x) : no(x);
             };
         };
     };
@@ -1003,8 +1003,6 @@ var mergeWhen = exports.mergeWhen = function mergeWhen(p) {
     };
 };
 
-// xxx find
-
 // --- note: capped.
 var map = exports.map = function map(f) {
     return function (xs) {
@@ -1021,6 +1019,7 @@ var each = exports.each = function each(f) {
     };
 };
 
+// @test
 var reduce = exports.reduce = function reduce(f) {
     return function (acc) {
         return function (xs) {
@@ -1048,6 +1047,7 @@ var find = exports.find = function find(p) {
     };
 };
 
+// @test
 var contains = exports.contains = function contains(v) {
     return function (xs) {
         var _iteratorNormalCompletion5 = true;
@@ -1078,6 +1078,7 @@ var contains = exports.contains = function contains(v) {
     };
 };
 
+// @test
 var reduceAbort = exports.reduceAbort = function reduceAbort(f) {
     return function (acc) {
         return function (abortVal) {
@@ -1197,6 +1198,29 @@ var ampersandN = exports.ampersandN = function ampersandN(fs) {
         return map(mapper)(fs);
     };
 };
+
+/*
+
+asteriskNN: fs => xs
+asterisk2N: f => g => xs
+asterisk2:  f => g => a => b
+
+asteriskMapNN: fs => xs
+asteriskMap2N: f => g => xs
+asteriskMap2:  f => g => a => b
+
+asteriskAppNN: xs => fs
+asteriskApp2N: a => b => fs
+asteriskApp2:  a => b => f => g
+
+
+anvilNN
+
+asterisk = anvilNN
+
+*/
+
+// const arrowSnd = f => timesV (2) >> asteriskN ([id, f])
 
 var asteriskN = exports.asteriskN = function asteriskN(fs) {
     return function (xs) {

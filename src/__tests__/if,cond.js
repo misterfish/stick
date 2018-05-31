@@ -96,7 +96,7 @@ describe('whenPredicate', function(){
   tests2 = list({
     desc: 'exact truth, not truthy',
     inputVal: 3,
-    expectBranch: 'nee',
+    expectBranch: 'ja',
     numArms: 1
   });
   return doTests(describeSpec2, tests2);
@@ -133,7 +133,7 @@ describe('ifPredicate', function(){
   tests2 = list({
     desc: 'exact truth, not truthy',
     inputVal: 3,
-    expectBranch: 'nee',
+    expectBranch: 'ja',
     numArms: 2
   });
   doTests(describeSpec2, tests2);
@@ -163,6 +163,27 @@ describe('ifPredicate', function(){
       return it + 1;
     }))(
     3));
+  });
+});
+describe('ifPredicate', function(){
+  return test('predicate tested for truthy, not strict truth', function(){
+    var isOdd, ifOdd, iffer, this$ = this;
+    isOdd = function(x){
+      return x % 2;
+    };
+    ifOdd = ifPredicate(
+    isOdd);
+    iffer = ifOdd((function(it){
+      return it * 2;
+    }), function(){
+      return 'no';
+    });
+    expectToEqual(6)(
+    iffer(
+    3));
+    return expectToEqual('no')(
+    iffer(
+    4));
   });
 });
 describe('ifPredicateOk', function(){

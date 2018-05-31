@@ -1308,11 +1308,13 @@ passes the value straight through.</p>
 a <code>Left</code> or a <code>Right</code>; or in the case of <code>Maybe</code>, a <code>Just</code> or a <code>Nothing</code>.
 Now we use <code>bilby</code>&#39;s <code>fold</code> function to resolve it:</p>
 <pre class="hljs"><code>myEither | fold (
-  <span class="hljs-regexp">//</span> --- the <span class="hljs-string">'left'</span> <span class="hljs-keyword">case</span>, something went wrong.
-  prependTo ([<span class="hljs-string">'✘'</span> | red])   &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
+  <span class="hljs-comment">// --- the 'left' case, something went wrong.</span>
+  <span class="hljs-comment">// the first %s will be the reason and the second will be a red cross.</span>
+  prependTo ([<span class="hljs-string">'✘'</span> | <span class="hljs-built_in">red</span>])   &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
 
-  <span class="hljs-regexp">//</span> --- the <span class="hljs-string">'right'</span> <span class="hljs-keyword">case</span>, good to go.
-  prependTo ([<span class="hljs-string">'✔'</span> | green]) &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
+  <span class="hljs-comment">// --- the 'right' case, good to go.</span>
+  <span class="hljs-comment">// the first %s will be the answer and the second will be a green check.</span>
+  prependTo ([<span class="hljs-string">'✔'</span> | <span class="hljs-built_in">green</span>]) &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
 )</code></pre><p>JS programmers have seen this thousands of times before …</p>
 <pre class="hljs"><code>axios<span class="hljs-selector-class">.get</span> (<span class="hljs-string">'/some/api'</span>)
 <span class="hljs-selector-class">.then</span> (response =&gt; ...)</code></pre><p>In a promise chain, <code>then</code> will only kick in if the promise returned by

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+
+bindir=$(realpath "$(dirname "$0")")
+
+. "$bindir"/functions.bash
+. "$bindir"/vars
+
+USAGE="Usage: $0"
+
+cmd "$bindir"/build
+cwd "$rootdir" npm publish

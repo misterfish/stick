@@ -218,9 +218,9 @@ This would be a good time to read up on curried functions if you're not familiar
 
 2. and this sort as 'normal':
 
-		const g = R.curry ((a, b, c) => a + b + c) // call like f (1) (2) (3) or f (1, 2, 3)
-	                                               // or f (1, 2, 3)
-                                                   // or f (1) (2, 3)
+		const g = R.curry ((a, b, c) => a + b + c) // call like g (1) (2) (3) or g (1, 2, 3)
+	                                               // or g (1, 2, 3)
+                                                   // or g (1) (2, 3)
                                                    // etc.
 
 Calling:

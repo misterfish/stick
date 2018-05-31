@@ -1530,56 +1530,6 @@ are many other places this can be used.
 
 		| listen (config.port) (...)
 
-# performance
-
-Stick is fast. (@todo link benchmark)
-
-Though it initially depended on Ramda, we have decided to eliminate that
-dependency by reimplementing many of the functions. While profiling the
-WebGL example we found that even trivial functions like `R.flip` and `R.tap`
-are surprisingly expensive.
-
-This really only becomes an issue in critical loops with millions of
-iterations per second.
-
-It is true that `a | b` compiles to three function calls, whereas `b (a)` is
-only one. But this is almost certainly not going to affect your app. Your JS
-runtime can call *a lot* of functions per millisecond.
-
-Nonetheless you are encouraged to mix and match our functions with whichever
-functional libraries you like -- Ramda, Lodash/FP, or anything else, as it
-suits you.
-
-	import { map, } from 'ramda'
-	import { filter, } from 'lodash/fp'
-	import { ifPredicate, } from 'stick-js'
-
-The stick idiom will still work, as long as the functions are curried and
-data-last.
-
-Furthermore Ramda is probably perfectly fine for your app, and its functions
-often provide type-checking and error messages (we don't), and many of their
-functions are more sophisticated. `R.map` works on functors and
-transformers, for example -- ours doesn't.
-
-And, it is our belief that if you are already using the `flow` pattern in
-Lodash/FP or the `pipe` function in Ramda, that it will really be a
-no-brainer to overload the operator and keep everything else the same.
-
-    _.flow (
-	  _.split (' '),
-	  _.map (capitaliseFirstLetter),
-	  _.join (' '),
-	) (myData)
-
-	// ->
-	myData
-	| _.split (' '),
-	| _.map (capitaliseFirstLetter),
-	| _.join (' ')
-
-merge benchmark: manual / index / ramda
-
 ## Working with functors: Maybe
 ### (or how to forget about `null` and `undefined` for a while)
 
@@ -1995,6 +1945,54 @@ And make it point-free:
 	const isInteger = arrowSnd (floor) >> passToN (eq)
 
 Your turn :D
+
+# Performance
+
+Stick is fast. (@todo link benchmark)
+
+Though it initially depended on Ramda, we have decided to eliminate that
+dependency by reimplementing many of the functions. While profiling the
+WebGL example we found that even trivial functions like `R.flip` and `R.tap`
+are surprisingly expensive.
+
+This really only becomes an issue in critical loops with millions of
+iterations per second.
+
+It is true that `a | b` compiles to three function calls, whereas `b (a)` is
+only one. But this is almost certainly not going to affect your app. Your JS
+runtime can call *a lot* of functions per millisecond.
+
+Nonetheless you are encouraged to mix and match our functions with whichever
+functional libraries you like -- Ramda, Lodash/FP, or anything else, as it
+suits you.
+
+	import { map, } from 'ramda'
+	import { filter, } from 'lodash/fp'
+	import { ifPredicate, } from 'stick-js'
+
+The stick idiom will still work, as long as the functions are curried and
+data-last.
+
+Furthermore Ramda is probably perfectly fine for your app, and its functions
+often provide type-checking and error messages (we don't), and many of their
+functions are more sophisticated. `R.map` works on functors and
+transformers, for example -- ours doesn't.
+
+And, it is our belief that if you are already using the `flow` pattern in
+Lodash/FP or the `pipe` function in Ramda, that it will really be a
+no-brainer to overload the operator and keep everything else the same.
+
+    _.flow (
+	  _.split (' '),
+	  _.map (capitaliseFirstLetter),
+	  _.join (' '),
+	) (myData)
+
+	// ->
+	myData
+	| _.split (' '),
+	| _.map (capitaliseFirstLetter),
+	| _.join (' ')
 
 # Extra performance
 

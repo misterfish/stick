@@ -139,7 +139,7 @@ And much more.
 
 	// --- /header
 
-		map, join,
+		map, join, sprintf1,
 	} from 'stick-js'
 
 	import { green, } from 'chalk'

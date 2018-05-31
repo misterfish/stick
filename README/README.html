@@ -1327,7 +1327,7 @@ reason.</p>
   | tap (map (log))
 
 go ()</code></pre><p class="img-container"><img src="readme-assets/either.jpg" alt="either.jpg"></p>
-<h2 id="٭-functors-/-flatmap-٭-explanation"><a class="header-link" href="#٭-functors-/-flatmap-٭-explanation"></a>٭ Functors / flatMap ٭ explanation</h2>
+<h2 id="٭-functors-/-flatmap-٭-explanation"><a class="header-link" href="#٭-functors-/-flatmap-٭-explanation"></a>٭ functors / flatMap ٭ explanation</h2>
 <p>Think of the <code>Either</code> functor as a value in a box, where the box is either a
 &#39;Left&#39; box, meaning something went wrong, or a &#39;Right&#39; box, meaning things
 are going well.</p>
@@ -1365,10 +1365,10 @@ the same idea.</p>
 impossible states unrepresentable.</p>
 <p>Imagine you have something like a traffic light, which at any moment can be
 either red, yellow, green, or broken. (Or a download, which can be in
-progress, stopped, completed, failed, ...) You can use a normal object to
-represent these sorts of things, but you might find yourself carrying around
-properties like &#39;error&#39; and &#39;state&#39; and &#39;type&#39; and so on using a lot of <code>if</code>
-statements to check for illegal states.</p>
+progress, stopped, completed, failed; or an API call, etc.)</p>
+<p>You can use a normal object to represent these sorts of things, but you
+might find yourself carrying around properties like &#39;error&#39; and &#39;state&#39; and
+&#39;type&#39; and so on using a lot of <code>if</code> statements to check for illegal states.</p>
 <p>Another way is to model the data using ADTs, build the states, then branch
 using a &#39;catamorphism&#39; to resolve the states when you&#39;re ready.</p>
 <p>In this example we use <a href="https://github.com/fantasyland/daggy">daggy</a> by

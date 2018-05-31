@@ -1722,7 +1722,7 @@ reason.
 
 ![either.jpg](readme-assets/either.jpg)
 
-## ٭ Functors / flatMap ٭ explanation
+## ٭ functors / flatMap ٭ explanation
 
 Think of the `Either` functor as a value in a box, where the box is either a
 'Left' box, meaning something went wrong, or a 'Right' box, meaning things

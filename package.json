@@ -6,6 +6,7 @@
     "url": "http://github.com/misterfish/stick.git"
   },
   "license": "MIT",
+  "description": "Fast toolkit for functional programming in JS using the pipe operator",
   "author": {
     "name": "Allen Haim",
     "email": "allen@netherrealm.net"

@@ -335,7 +335,11 @@ function:</p>
 ))
 | log
 
-; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>] | map (isOddInteger) | log</code></pre><h2 id="٭-compositional-decoration-٭"><a class="header-link" href="#٭-compositional-decoration-٭"></a>٭ compositional decoration ٭</h2>
+; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>] | map (isOddInteger) | log</code></pre><p>Note that <code>ifPredicate</code> and <code>whenPredicate</code> match on truthiness, not strict
+truth. Rationale: that is how the native <code>filter</code> works, and JS&#39;s <code>if</code>
+operator, and many other tools in e.g. <code>Ramda</code>; and it&#39;s trivial to convert
+a truthy expression to a strict one.</p>
+<h2 id="٭-compositional-decoration-٭"><a class="header-link" href="#٭-compositional-decoration-٭"></a>٭ compositional decoration ٭</h2>
 <p>Our <code>map</code> function is capped at one argument, meaning the map routine only
 gets the value and not the index or the collection.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { map, addIndex, addCollection, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>

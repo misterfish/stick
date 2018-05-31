@@ -447,6 +447,11 @@ More complicated predicates:
 
 	; [3.5, 4, 5, 5.5] | map (isOddInteger) | log
 
+Note that `ifPredicate` and `whenPredicate` match on truthiness, not strict
+truth. Rationale: that is how the native `filter` works, and JS's `if`
+operator, and many other tools in e.g. `Ramda`; and it's trivial to convert
+a truthy expression to a strict one.
+
 ## ٭ compositional decoration ٭
 
 Our `map` function is capped at one argument, meaning the map routine only

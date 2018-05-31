@@ -391,7 +391,7 @@ os | mergeTo (ot)                 // { va<span class="hljs-variable">l:</span> <
 os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">vi</span><span class="hljs-variable">l:</span> <span class="hljs-number">3</span>, vo<span class="hljs-variable">l:</span> <span class="hljs-number">25</span>,  <span class="hljs-keyword">ve</span><span class="hljs-variable">l:</span> <span class="hljs-number">42</span>, }</code></pre><h2 id="٭-semantics-and-argument-order-are-based-where-possible-on-english-grammar-٭"><a class="header-link" href="#٭-semantics-and-argument-order-are-based-where-possible-on-english-grammar-٭"></a>٭ semantics and argument order are based where possible on English grammar ٭</h2>
 <p>(We&#39;re dying to see a port to Hungarian, too)</p>
 <p>Once you master this, the usage becomes intuitive and greatly reduces the
-need to check the docs.</p>
+need to look things up.</p>
 <p>(Motivation: what&#39;s the argument order of <code>append</code>, <code>times</code>, and <code>subtract</code> in your favorite library?)</p>
 <pre class="hljs"><code>import {
   sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
@@ -1358,7 +1358,7 @@ Now we use <code>bilby</code>&#39;s <code>fold</code> function to resolve it:</p
 )</code></pre><p>JS programmers have seen this thousands of times before …</p>
 <pre class="hljs"><code>axios<span class="hljs-selector-class">.get</span> (<span class="hljs-string">'/some/api'</span>)
 <span class="hljs-selector-class">.then</span> (response =&gt; ...)</code></pre><p>In a promise chain, <code>then</code> will only kick in if the promise returned by
-axios.get resolves. If it rejects then the whole then line is skipped. It&#39;s
+<code>axios.get</code> resolves. If it rejects then the whole then line is skipped. It&#39;s
 the same idea.</p>
 <h2 id="abstract-data-types"><a class="header-link" href="#abstract-data-types"></a>Abstract data types</h2>
 <p>Abstract data types can help eliminate an entire class of bugs, by making

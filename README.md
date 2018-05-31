@@ -1771,7 +1771,7 @@ JS programmers have seen this thousands of times before …
 	.then (response => ...)
 
 In a promise chain, `then` will only kick in if the promise returned by
-axios.get resolves. If it rejects then the whole then line is skipped. It's
+`axios.get` resolves. If it rejects then the whole then line is skipped. It's
 the same idea.
 
 ## Abstract data types
@@ -1781,10 +1781,11 @@ impossible states unrepresentable.
 
 Imagine you have something like a traffic light, which at any moment can be
 either red, yellow, green, or broken. (Or a download, which can be in
-progress, stopped, completed, failed, ...) You can use a normal object to
-represent these sorts of things, but you might find yourself carrying around
-properties like 'error' and 'state' and 'type' and so on using a lot of `if`
-statements to check for illegal states.
+progress, stopped, completed, failed; or an API call, etc.)
+
+You can use a normal object to represent these sorts of things, but you
+might find yourself carrying around properties like 'error' and 'state' and
+'type' and so on using a lot of `if` statements to check for illegal states.
 
 Another way is to model the data using ADTs, build the states, then branch
 using a 'catamorphism' to resolve the states when you're ready.

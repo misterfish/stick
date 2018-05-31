@@ -45,16 +45,16 @@ node lib/index.js</code></pre><h2 id="٭-webpack"><a class="header-link" href="#
 <span class="hljs-attr">      test:</span> /\.js$/,
 <span class="hljs-attr">      exclude:</span> /node_modules/,
 <span class="hljs-attr">      use:</span> {
-<span class="hljs-attr">      loader:</span> <span class="hljs-string">'babel-loader'</span>,
-<span class="hljs-attr">      options:</span> {
-<span class="hljs-attr">        presets:</span> [[
-        <span class="hljs-string">"env"</span>,
-        { <span class="hljs-string">"modules"</span>: <span class="hljs-literal">false</span> },
-        ]],
-<span class="hljs-attr">        plugins:</span> [
-        <span class="hljs-string">'operator-overload'</span>,
-        ]
-      }
+<span class="hljs-attr">        loader:</span> <span class="hljs-string">'babel-loader'</span>,
+<span class="hljs-attr">        options:</span> {
+<span class="hljs-attr">          presets:</span> [[
+            <span class="hljs-string">"env"</span>,
+            { <span class="hljs-string">"modules"</span>: <span class="hljs-literal">false</span> },
+          ]],
+<span class="hljs-attr">          plugins:</span> [
+            <span class="hljs-string">'operator-overload'</span>,
+          ],
+        },
       },
     },
     ...
@@ -79,7 +79,7 @@ etc.), or mix and match as you like.</p>
 <p>The overloading is made possible thanks to the great
 <a href="https://github.com/jussi-kalliokoski/babel-plugin-operator-overload">babel-plugin-operator-overload</a>
 library by Jussi Kalliokoski (@jussi-kalliokoski).</p>
-<h1 id="tl;dr"><a class="header-link" href="#tl;dr"></a>TL;DR</h1>
+<h1 id="tl;-dr"><a class="header-link" href="#tl;-dr"></a>TL; DR</h1>
 <p>A few examples:</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> chalk from <span class="hljs-string">'chalk'</span>
 
@@ -807,20 +807,21 @@ dogProto |<span class="hljs-string"> discardPrototype </span>|<span class="hljs-
 dogProto |<span class="hljs-string"> Object.create    </span>|<span class="hljs-string"> &lt;mixin functions ...&gt; </span>|</code></pre><h2 id="٭-let-expressions-٭"><a class="header-link" href="#٭-let-expressions-٭"></a>٭ let expressions ٭</h2>
 <p>You can consolidate a number of assignment statements into a single let
 expression, and also limit the scope of the assignments in a way which is
-easy to read. Code which is more expression-heavy can often be much easier
-to follow at a glance &amp; refactor, especially considering that each statement
-is a possible side-effect inducing timebomb.</p>
+easy to read. Code which is based on expressions rather than blocks of
+statements can often be much easier to follow at a glance &amp; refactor,
+especially considering that each statement is a possible side-effect
+inducing timebomb.</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- convert a celsius value to both fahrenheit &amp; kelvin.</span>
 
 const convertCelsius = (c) =&gt; letV (
-  c / <span class="hljs-number">5</span> * <span class="hljs-number">9</span> + <span class="hljs-number">32</span>, <span class="hljs-comment">// fahrenheit</span>
-  c - <span class="hljs-number">273</span>,   <span class="hljs-comment">// kelvin</span>
+  c / <span class="hljs-number">5</span> * <span class="hljs-number">9</span> + <span class="hljs-number">32</span>,           <span class="hljs-comment">// fahrenheit</span>
+  c - <span class="hljs-number">273</span>,                  <span class="hljs-comment">// kelvin</span>
   (fah, kel) =&gt; [fah, kel],
 )</code></pre><p><code>letV</code> takes an arbitrary number of values, and expects the last one to be a
 function. It simply passes the values in order to the function.</p>
 <p>There is an &#39;N&#39; form (<code>letVN</code>, which takes an array of values and one
 function).</p>
-<p>Far more useful is <code>lets</code> and <code>letS</code>. (Think &#39;let*&#39; in racket).</p>
+<p>Far more useful is <code>lets</code> and <code>letS</code>. (Think <code>let\*</code> in racket).</p>
 <p>If we went the other way:</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- convert fahrenheit to celsius &amp; kelvin</span>
 
@@ -828,7 +829,9 @@ const convertFahrenheit = (f) =&gt; letV (
   (f - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span>,      <span class="hljs-comment">// celsius</span>
   (f - <span class="hljs-number">32</span>) / <span class="hljs-number">9</span> * <span class="hljs-number">5</span> + <span class="hljs-number">273</span> <span class="hljs-comment">// kelvin</span>
   (cel, kel) =&gt; [cel, kel],
-)</code></pre><p>We see that we are wasting work. With <code>lets</code>, it would be:</p>
+)</code></pre><p>We see that we are wasting work, but there is no way to capture that
+intermediate expression to avoid calculating it again. With <code>lets</code>, however,
+we can:</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- convert fahrenheit to celsius &amp; kelvin</span>
 
 <span class="hljs-keyword">const</span> convertFahrenheit = fah =&gt; lets (
@@ -943,7 +946,8 @@ array.</p>
   lt (<span class="hljs-number">4</span>)    | <span class="hljs-type">guard</span> (val =&gt; val | <span class="hljs-type">sprintf1</span> ('%s was less than <span class="hljs-number">4</span>')),
   gt (<span class="hljs-number">4</span>)    | <span class="hljs-type">guard</span> (val =&gt; val | <span class="hljs-type">sprintf1</span> ('%s was more than <span class="hljs-number">4</span>')),
   otherwise | <span class="hljs-type">guardV</span> (<span class="hljs-string">"error, this shouldn't happen"</span>),
-])</code></pre><p>Cleaning it up a bit, and inverting the parentheses in the test expressions:</p>
+])</code></pre><p>Cleaning it up a bit, and inverting the parenthetical test expression to use
+sticks:</p>
 <pre class="hljs"><code>const checkVal = condS ([
   <span class="hljs-number">4</span> | eq    | guard  (<span class="hljs-name">sprintf1</span> ('%s was <span class="hljs-number">4</span>')),
   <span class="hljs-number">4</span> | lt    | guard  (<span class="hljs-name">sprintf1</span> ('%s was less than <span class="hljs-number">4</span>')),

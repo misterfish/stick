@@ -41,16 +41,16 @@
 	      test: /\.js$/,
 	      exclude: /node_modules/,
 	      use: {
-	      loader: 'babel-loader',
-	      options: {
-	        presets: [[
-	        "env",
-	        { "modules": false },
-	        ]],
-	        plugins: [
-	        'operator-overload',
-	        ]
-	      }
+	        loader: 'babel-loader',
+	        options: {
+	          presets: [[
+	            "env",
+	            { "modules": false },
+	          ]],
+	          plugins: [
+	            'operator-overload',
+	          ],
+	        },
 	      },
 	    },
 		...
@@ -79,7 +79,7 @@ The overloading is made possible thanks to the great
 [babel-plugin-operator-overload](https://github.com/jussi-kalliokoski/babel-plugin-operator-overload)
 library by Jussi Kalliokoski (@jussi-kalliokoski).
 
-# TL;DR
+# TL; DR
 
 A few examples:
 
@@ -1046,15 +1046,16 @@ You can specify these behaviors explicitly:
 
 You can consolidate a number of assignment statements into a single let
 expression, and also limit the scope of the assignments in a way which is
-easy to read. Code which is more expression-heavy can often be much easier
-to follow at a glance & refactor, especially considering that each statement
-is a possible side-effect inducing timebomb.
+easy to read. Code which is based on expressions rather than blocks of
+statements can often be much easier to follow at a glance & refactor,
+especially considering that each statement is a possible side-effect
+inducing timebomb.
 
     // --- convert a celsius value to both fahrenheit & kelvin.
 
     const convertCelsius = (c) => letV (
-	  c / 5 * 9 + 32, // fahrenheit
-	  c - 273,   // kelvin
+	  c / 5 * 9 + 32,           // fahrenheit
+	  c - 273,                  // kelvin
 	  (fah, kel) => [fah, kel],
 	)
 
@@ -1064,7 +1065,7 @@ function. It simply passes the values in order to the function.
 There is an 'N' form (`letVN`, which takes an array of values and one
 function).
 
-Far more useful is `lets` and `letS`. (Think 'let\*' in racket).
+Far more useful is `lets` and `letS`. (Think `let\*` in racket).
 
 If we went the other way:
 
@@ -1076,7 +1077,9 @@ If we went the other way:
 	  (cel, kel) => [cel, kel],
 	)
 
-We see that we are wasting work. With `lets`, it would be:
+We see that we are wasting work, but there is no way to capture that
+intermediate expression to avoid calculating it again. With `lets`, however,
+we can:
 
     // --- convert fahrenheit to celsius & kelvin
 
@@ -1243,7 +1246,8 @@ array.
 	  otherwise | guardV ("error, this shouldn't happen"),
 	])
 
-Cleaning it up a bit, and inverting the parentheses in the test expressions:
+Cleaning it up a bit, and inverting the parenthetical test expression to use
+sticks:
 
     const checkVal = condS ([
 	  4 | eq    | guard  (sprintf1 ('%s was 4')),

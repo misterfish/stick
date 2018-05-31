@@ -515,7 +515,7 @@ Or to only merge if certain conditions hold:
 Once you master this, the usage becomes intuitive and greatly reduces the
 need to check the docs.
 
-(What's the argument order of `append`, `times`, and `subtract` in your favorite library?)
+(Motivation: what's the argument order of `append`, `times`, and `subtract` in your favorite library?)
 
 	import {
 	  sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
@@ -594,7 +594,7 @@ Some other miscellaneous examples.
 	// --- '3 to the 4th'
 	3 | toThe (4)                         // 81
 
-	// --- '3 divided by 6'
+	// --- 'divide 3 by 6' or '3 divided by 6'
 	3 | divideBy (6)                      // 0.5
 
 	// --- 'divide 3 into 6'
@@ -650,18 +650,19 @@ one argument, hence `side1` in both cases.
 	| prepend (1) // new array [1, 2, 3, 4, 5]
 
 You can insert `tap` anywhere in the chain, which is guaranteed not to mess
-with your data.
+with the pipeline no matter what it returns:
 
     const double = x => x * 2
 
     ; [1, 2]
-	| map (double)
-	| tap (x => console.log (x))
+	| map (double)               // [2, 4]
+	| tap (x => console.log (x)) // still [2, 4], performs side-effect (printing)
+	| tap (x => [100, 200])      // still [2, 4], for demonstration only
 	| join (',')
 	// '2,4'
 
-Without the `tap`, this would have been an error, because `console.log`
-returns `undefined`.
+Without the first `tap`, this would have been an error, because
+`console.log` returns `undefined`.
 
 `tap` is useful to signal the intention of performing side effects or IO. It
 is also really useful for debugging. And our `side` family of functions use
@@ -1279,17 +1280,17 @@ any way, besides having properties copied in. So the 'own' / 'in'
 distinction only applies to the source.
 
 We feel that these conventions are the most straightforward and lead to
-easily inferrable semantics.
+easily inferrable behavior.
 
 In all cases, we are only ever talking about enumerable properties.
 
 \* This is good enough for most styles of functional programming in JS, many
 of which don't even bother with the distinction. People often expect
 shallow, cheap objects when programming this way. If you absolutely must
-preserve the prototype chain intact, you can use a combination of
-`Object.create`, `flattenPrototype(M)` and `discardPrototype(M)`, combined
-with the 'M' versions of the merge functions, to get what you want.
-
+preserve the prototype chain intact, you'll have to find a way to clone it
+yourself, then use the 'M' versions of our merge functions on your cloned
+object. You might also get away with using `Object.create` on it first,
+which will of course create one more link in the prototype chain.
 
 ## ٭ frontend stuff ٭
 
@@ -1311,7 +1312,7 @@ something like this:
 We should see by now that this composing of functions, invoked upon a single
 value, is exactly our pipe pattern. So why not:
 
-	export default App
+	export default HomePage
 	  | connect       (mapStateToProps, mapDispatchToProps)
 	  | injectSaga    ({ key: 'home', saga, })
 	  | injectReducer ({ key: 'home', reducer, })
@@ -1332,7 +1333,7 @@ Why not:
 
 Try it yourself and see :D
 
-If you use styled components, perhaps you pass optional props in. Checking
+If you use `styled components`, perhaps you pass optional props in. Checking
 for the presence of the props can be annoying, so how about:
 
 	const SomeElementS = styled.div`
@@ -1345,7 +1346,7 @@ for the presence of the props can be annoying, so how about:
 
 	<SomeElementS width='100%' error={true} />
 
-If you use saga, perhaps you have something like this:
+If you use `saga`, perhaps you have something like this:
 
 	export function* getRepos() {
 	  const username = yield select(makeSelectUsername());
@@ -1372,9 +1373,10 @@ How about this:
 	  }
 	}
 
-Try it yourself and see :D
+Try it yourself and see :D Note that we can't use our `tryCatch` function
+here, because of the `yield` in the `catch` clause.
 
-If you use reselect, this is fine:
+If you use `reselect`, this is fine:
 
 	const selectHome = (state) => state.get('home');
 	const makeSelectUsername = () => createSelector(
@@ -1382,12 +1384,12 @@ If you use reselect, this is fine:
 	  (homeState) => homeState.get('username')
 	);
 
-But this is lit:
+But how about this:
 
     const get = dot1 ('get')
 
 	const selectHome = get ('home')
-	const makeSelectUsername = () => createSelector(
+	const makeSelectUsername = () => createSelector (
 	  selectHome,
 	  get ('username'),
 	)
@@ -1424,7 +1426,7 @@ but we can handle this nicely:
 
 When you're using a framework like Express, you have the well-known `app`
 object that you carry around everywhere. It just so happens that nearly all
-methods of `app` return `app`, so that chaining works in the familiar way:
+methods of `app` return `this`, so that chaining works in the familiar way:
 
 	app
 	.use (...)
@@ -1479,55 +1481,6 @@ are many other places this can be used.
 		| get ('/endpoint3', ((req, res) => ...))
 
 		| listen (config.port) (...)
-
-
-## ٭ cond ٭
-
-	import {
-	  map, join, condS, guard, otherwise,
-	  sprintfN, rangeTo, lt, gt, tap, appendTo, prop,
-	} from 'stick-js'
-
-	import { curry, }              from 'ramda'
-	import { yellow, green, red, } from 'chalk'
-
-	const { log, } = console
-
-	const cmpStr = curry ((str, color, tgtStr, x) => [x, str | color, tgtStr]
-	  | sprintfN ('%s is %s %s')
-	)
-
-	const lessThanStr     = cmpStr ('less than', yellow)
-	const greaterThanStr  = cmpStr ('greater than', red)
-	const inBetweenString = ([ low, high ]) => cmpStr ('in between', green, [low, high] | join (' and '))
-
-    // --- this is intentionally complex for illustration
-	const getCmpStr = curry ((low, high, x) => x
-	  | condS ([
-		low  | lt | guard ((low | lessThanStr)           >> appendTo ([-1])),
-		high | gt | guard ((high | greaterThanStr)       >> appendTo ([1])),
-		otherwise | guard (inBetweenString ([low, high]) >> appendTo ([0])),
-	  ])
-	)
-
-	const inRange = ([low, high]) => x => getCmpStr (low, high, x)
-
-	const snd = prop (1)
-	const fst = prop (0)
-
-	10 | rangeTo (20)             // [10, 11, ... 19]
-       | map (inRange ([13, 17])) // maps to tuples of [int, str]
-       | tap (map (snd >> log))   // logs the str
-       | map (fst)                // [-1, -1, ... 0, ... 1, 1]
-
-
-
-
-
-
-
-
-
 
 # performance
 
@@ -1748,7 +1701,23 @@ and you pipe it to `flatMap`:
 	const l = Left ('bad news')
 	l | flatMap (double) // Left ('bad news')
 
-The result is the same as the input, because when `flatMap` sees a 'Left' value, it doesn't bother to unwrap the box or do anything with it. It just passes the value straight through.
+The result is the same as the input, because when `flatMap` sees a 'Left'
+value, it doesn't bother to unwrap the box or do anything with it. It just
+passes the value straight through.
+
+At the end of the chain, we are left with an `Either` which either contains
+a `Left` or a `Right`; or in the case of `Maybe`, a `Just` or a `Nothing`.
+Now we use `bilby`'s `fold` function to resolve it:
+
+	myEither | fold (
+	  // --- the 'left' case, something went wrong.
+	  // the first %s will be the reason and the second will be a red cross.
+	  prependTo (['✘' | red])   >> sprintfN ('%s %s'),
+
+	  // --- the 'right' case, good to go.
+	  // the first %s will be the answer and the second will be a green check.
+	  prependTo (['✔' | green]) >> sprintfN ('%s %s'),
+	)
 
 JS programmers have seen this thousands of times before …
 

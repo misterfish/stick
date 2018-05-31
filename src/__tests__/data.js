@@ -3439,7 +3439,7 @@ describe('data stuff', function(){
 });
 describe('discard / flatten prototype', function(){
   describe('discardPrototype', function(){
-    var base, base2, obj;
+    var base, base2, obj, after;
     base = {
       baseVal: 10
     };
@@ -3447,12 +3447,17 @@ describe('discard / flatten prototype', function(){
     obj = Object.create(base2);
     expectToEqual(10)(
     obj.baseVal);
+    after = discardPrototype(
+    obj);
+    expectNotToBe(obj)(
+    after);
+    expectToEqual(false)(
+    'baseVal' in after);
     return expectToEqual(void 8)(
-    discardPrototype(
-    obj).baseVal);
+    after.baseVal);
   });
   return describe('flattenPrototype', function(){
-    var x$, base, y$, base2, z$, obj;
+    var x$, base, y$, base2, z$, obj, after;
     x$ = base = Object.create({
       baseVal: 10
     });
@@ -3463,14 +3468,17 @@ describe('discard / flatten prototype', function(){
     z$.legs = 'noo';
     expectToEqual(10)(
     obj.baseVal);
+    after = flattenPrototype(
+    obj);
+    expectToEqual(true)(
+    'baseVal' in after);
     return expectToEqual({
       baseVal: 10,
       feets: 'sometimes',
       hands: 'mostways',
       legs: 'noo'
     })(
-    flattenPrototype(
-    obj));
+    after);
   });
 });
 describe('mapPairs', function(){

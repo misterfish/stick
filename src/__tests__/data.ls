@@ -1801,7 +1801,12 @@ describe 'discard / flatten prototype' ->
         base2 = Object.create base
         obj = Object.create base2
         obj.base-val |> expect-to-equal 10
-        (obj |> discard-prototype).base-val |> expect-to-equal void
+        after = obj |> discard-prototype
+        after |> expect-not-to-be obj
+
+        # --- of (LS) = in (JS)
+        ('baseVal' of after) |> expect-to-equal false
+        after.base-val |> expect-to-equal void
 
     describe 'flattenPrototype' ->
         base = Object.create base-val: 10
@@ -1811,7 +1816,10 @@ describe 'discard / flatten prototype' ->
         obj = Object.create base2
             ..legs = 'noo'
         obj.base-val |> expect-to-equal 10
-        (obj |> flatten-prototype) |> expect-to-equal do
+        after = obj |> flatten-prototype
+        # --- of (LS) = in (JS)
+        ('baseVal' of after) |> expect-to-equal true
+        after |> expect-to-equal do
             base-val: 10 feets: 'sometimes' hands: 'mostways' legs: 'noo'
 
 # --- not sure how useful this is.

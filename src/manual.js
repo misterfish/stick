@@ -511,7 +511,31 @@ export const ampersandN = (fs) => (x) => {
     return map (mapper) (fs)
 }
 
+/*
+
+asteriskNN: fs => xs
+asterisk2N: f => g => xs
+asterisk2:  f => g => a => b
+
+asteriskMapNN: fs => xs
+asteriskMap2N: f => g => xs
+asteriskMap2:  f => g => a => b
+
+asteriskAppNN: xs => fs
+asteriskApp2N: a => b => fs
+asteriskApp2:  a => b => f => g
+
+
+anvilNN
+
+asterisk = anvilNN
+
+*/
+
+
+
 	// const arrowSnd = f => timesV (2) >> asteriskN ([id, f])
+
 export const asteriskN = (fs) => (xs) => {
     const ret = []
     let i = -1

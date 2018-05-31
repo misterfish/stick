@@ -630,3 +630,57 @@ const doReducer = reduce (reducer) ([])
 
 you will find yourself carrying around a 'type' property, and constantly
 checking for 'error'.
+
+
+
+flattenPrototypeM is not easy: we can copy the values to the surface,
+but if someone later deletes one of them, the deeper value will poke through
+again, which is weird.
+
+discardPrototypeM is not easy, becaues we can't `delete` prototype vals.
+
+## ٭ cond ٭
+
+	import {
+	  map, join, condS, guard, otherwise,
+	  sprintfN, rangeTo, lt, gt, tap, appendTo, prop,
+	} from 'stick-js'
+
+	import { curry, }              from 'ramda'
+	import { yellow, green, red, } from 'chalk'
+
+	const { log, } = console
+
+	const cmpStr = curry ((str, color, tgtStr, x) => [x, str | color, tgtStr]
+	  | sprintfN ('%s is %s %s')
+	)
+
+	const lessThanStr     = cmpStr ('less than', yellow)
+	const greaterThanStr  = cmpStr ('greater than', red)
+	const inBetweenString = ([ low, high ]) => cmpStr ('in between', green, [low, high] | join (' and '))
+
+    // --- this is intentionally complex for illustration
+	const getCmpStr = curry ((low, high, x) => x
+	  | condS ([
+		low  | lt | guard ((low | lessThanStr)           >> appendTo ([-1])),
+		high | gt | guard ((high | greaterThanStr)       >> appendTo ([1])),
+		otherwise | guard (inBetweenString ([low, high]) >> appendTo ([0])),
+	  ])
+	)
+
+	const inRange = ([low, high]) => x => getCmpStr (low, high, x)
+
+	const snd = prop (1)
+	const fst = prop (0)
+
+	10 | rangeTo (20)             // [10, 11, ... 19]
+       | map (inRange ([13, 17])) // maps to tuples of [int, str]
+       | tap (map (snd >> log))   // logs the str
+       | map (fst)                // [-1, -1, ... 0, ... 1, 1]
+
+
+
+
+
+
+

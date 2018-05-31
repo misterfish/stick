@@ -387,7 +387,7 @@ os | mergeToWhenSrcIsInteger (ot) // { va<span class="hljs-variable">l:</span> <
 <p>(We&#39;re dying to see a port to Hungarian, too)</p>
 <p>Once you master this, the usage becomes intuitive and greatly reduces the
 need to check the docs.</p>
-<p>(What&#39;s the argument order of <code>append</code>, <code>times</code>, and <code>subtract</code> in your favorite library?)</p>
+<p>(Motivation: what&#39;s the argument order of <code>append</code>, <code>times</code>, and <code>subtract</code> in your favorite library?)</p>
 <pre class="hljs"><code>import {
   sprintfN, sprintf1, mergeTo, merge, prependTo, prepend,
   appendTo, append, <span class="hljs-built_in">bind</span>PropTo, <span class="hljs-built_in">bind</span>Prop, <span class="hljs-built_in">bind</span>To, <span class="hljs-built_in">bind</span>, invoke,
@@ -445,7 +445,7 @@ cat       | provideTo (dog.speak)     // <span class="hljs-symbol">'My</span> na
 <pre class="hljs"><code><span class="hljs-comment">// --- '3 to the 4th'</span>
 <span class="hljs-number">3</span> | toThe (<span class="hljs-number">4</span>)                         <span class="hljs-comment">// 81</span>
 
-<span class="hljs-comment">// --- '3 divided by 6'</span>
+<span class="hljs-comment">// --- 'divide 3 by 6' or '3 divided by 6'</span>
 <span class="hljs-number">3</span> | divideBy (<span class="hljs-number">6</span>)                      <span class="hljs-comment">// 0.5</span>
 
 <span class="hljs-comment">// --- 'divide 3 into 6'</span>
@@ -486,15 +486,16 @@ one argument, hence <code>side1</code> in both cases.</p>
 ; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]
 | append (<span class="hljs-number">5</span>)  <span class="hljs-comment">// new array [2, 3, 4, 5]</span>
 | prepend (<span class="hljs-number">1</span>) <span class="hljs-comment">// new array [1, 2, 3, 4, 5]</span></code></pre><p>You can insert <code>tap</code> anywhere in the chain, which is guaranteed not to mess
-with your data.</p>
+with the pipeline no matter what it returns:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> double = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x * <span class="hljs-number">2</span>
 
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]
-| map (double)
-| tap (<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-built_in">console</span>.log (x))
+| map (double)               <span class="hljs-comment">// [2, 4]</span>
+| tap (<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-built_in">console</span>.log (x)) <span class="hljs-comment">// still [2, 4], performs side-effect (printing)</span>
+| tap (<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> [<span class="hljs-number">100</span>, <span class="hljs-number">200</span>])      <span class="hljs-comment">// still [2, 4], for demonstration only</span>
 | join (<span class="hljs-string">','</span>)
-<span class="hljs-comment">// '2,4'</span></code></pre><p>Without the <code>tap</code>, this would have been an error, because <code>console.log</code>
-returns <code>undefined</code>.</p>
+<span class="hljs-comment">// '2,4'</span></code></pre><p>Without the first <code>tap</code>, this would have been an error, because
+<code>console.log</code> returns <code>undefined</code>.</p>
 <p><code>tap</code> is useful to signal the intention of performing side effects or IO. It
 is also really useful for debugging. And our <code>side</code> family of functions use
 <code>tap</code> under the hood.</p>
@@ -965,14 +966,15 @@ altered at all.</p>
 any way, besides having properties copied in. So the &#39;own&#39; / &#39;in&#39;
 distinction only applies to the source.</p>
 <p>We feel that these conventions are the most straightforward and lead to
-easily inferrable semantics.</p>
+easily inferrable behavior.</p>
 <p>In all cases, we are only ever talking about enumerable properties.</p>
 <p>* This is good enough for most styles of functional programming in JS, many
 of which don&#39;t even bother with the distinction. People often expect
 shallow, cheap objects when programming this way. If you absolutely must
-preserve the prototype chain intact, you can use a combination of
-<code>Object.create</code>, <code>flattenPrototype(M)</code> and <code>discardPrototype(M)</code>, combined
-with the &#39;M&#39; versions of the merge functions, to get what you want.</p>
+preserve the prototype chain intact, you&#39;ll have to find a way to clone it
+yourself, then use the &#39;M&#39; versions of our merge functions on your cloned
+object. You might also get away with using <code>Object.create</code> on it first,
+which will of course create one more link in the prototype chain.</p>
 <h2 id="٭-frontend-stuff-٭"><a class="header-link" href="#٭-frontend-stuff-٭"></a>٭ frontend stuff ٭</h2>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { path, prop, whenTrue, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span></code></pre><p>If you use react/redux, perhaps with saga, chances are your modules end in
 something like this:</p>
@@ -986,7 +988,7 @@ export default compose(
   withConnect,
 )(<span class="hljs-name">HomePage</span>)<span class="hljs-comment">;</span></code></pre><p>We should see by now that this composing of functions, invoked upon a single
 value, is exactly our pipe pattern. So why not:</p>
-<pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-built_in">default</span> App
+<pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-built_in">default</span> HomePage
   | <span class="hljs-built_in">connect</span>       (mapStateToProps, mapDispatchToProps)
   | injectSaga    ({ key: <span class="hljs-string">'home'</span>, saga, })
   | injectReducer ({ key: <span class="hljs-string">'home'</span>, reducer, })</code></pre><p>And maybe you call actions using a structure like:</p>
@@ -998,7 +1000,7 @@ value, is exactly our pipe pattern. So why not:</p>
 <pre class="hljs"><code><span class="hljs-keyword">export</span> const mapDispatchToProps = <span class="hljs-function"><span class="hljs-params">(dispatch)</span> =&gt;</span> ({
   onChangeUsername: path ([<span class="hljs-string">'target'</span>, <span class="hljs-string">'value'</span>] &gt;&gt; changeUsername &gt;&gt; dispatch,
 })</code></pre><p>Try it yourself and see :D</p>
-<p>If you use styled components, perhaps you pass optional props in. Checking
+<p>If you use <code>styled components</code>, perhaps you pass optional props in. Checking
 for the presence of the props can be annoying, so how about:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> SomeElementS = styled.div<span class="hljs-string">`
   top: 5%;
@@ -1008,7 +1010,7 @@ for the presence of the props can be annoying, so how about:</p>
   <span class="hljs-subst">${ prop (<span class="hljs-string">'error'</span>)  &gt;&gt; whenTrue (<span class="hljs-string">'color: red;'</span> | always) }</span>
 `</span>
 
-&lt;SomeElementS width=<span class="hljs-string">'100%'</span> error={<span class="hljs-literal">true</span>} /&gt;</code></pre><p>If you use saga, perhaps you have something like this:</p>
+&lt;SomeElementS width=<span class="hljs-string">'100%'</span> error={<span class="hljs-literal">true</span>} /&gt;</code></pre><p>If you use <code>saga</code>, perhaps you have something like this:</p>
 <pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">getRepos</span>(<span class="hljs-params"></span>) </span>{
   <span class="hljs-keyword">const</span> username = <span class="hljs-keyword">yield</span> select(makeSelectUsername());
   <span class="hljs-keyword">const</span> requestURL = <span class="hljs-string">`https://api.github.com/users/<span class="hljs-subst">${username}</span>/repos`</span>;
@@ -1029,17 +1031,18 @@ for the presence of the props can be annoying, so how about:</p>
   } <span class="hljs-keyword">catch</span> (err) {
     <span class="hljs-keyword">yield</span> err | repoLoadingError | put
   }
-}</code></pre><p>Try it yourself and see :D</p>
-<p>If you use reselect, this is fine:</p>
+}</code></pre><p>Try it yourself and see :D Note that we can&#39;t use our <code>tryCatch</code> function
+here, because of the <code>yield</code> in the <code>catch</code> clause.</p>
+<p>If you use <code>reselect</code>, this is fine:</p>
 <pre class="hljs"><code>const selectHome = <span class="hljs-function"><span class="hljs-params">(state)</span> =&gt;</span> state.get(<span class="hljs-string">'home'</span>);
 const makeSelectUsername = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> createSelector(
   selectHome,
   <span class="hljs-function"><span class="hljs-params">(homeState)</span> =&gt;</span> homeState.get(<span class="hljs-string">'username'</span>)
-);</code></pre><p>But this is lit:</p>
+);</code></pre><p>But how about this:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> <span class="hljs-keyword">get</span> = dot1 (<span class="hljs-string">'get'</span>)
 
 <span class="hljs-keyword">const</span> selectHome = <span class="hljs-keyword">get</span> (<span class="hljs-string">'home'</span>)
-<span class="hljs-keyword">const</span> makeSelectUsername = () =&gt; createSelector(
+<span class="hljs-keyword">const</span> makeSelectUsername = () =&gt; createSelector (
   selectHome,
   <span class="hljs-keyword">get</span> (<span class="hljs-string">'username'</span>),
 )</code></pre><p>When composing selectors, something like this works nicely to make sure the
@@ -1067,7 +1070,7 @@ but we can handle this nicely:</p>
 &lt;<span class="hljs-regexp">/ListS&gt;</span></code></pre><h2 id="٭-backend-stuff-٭"><a class="header-link" href="#٭-backend-stuff-٭"></a>٭ backend stuff ٭</h2>
 <p>When you&#39;re using a framework like Express, you have the well-known <code>app</code>
 object that you carry around everywhere. It just so happens that nearly all
-methods of <code>app</code> return <code>app</code>, so that chaining works in the familiar way:</p>
+methods of <code>app</code> return <code>this</code>, so that chaining works in the familiar way:</p>
 <pre class="hljs"><code>app
 <span class="hljs-selector-class">.use</span> (...)
 <span class="hljs-selector-class">.all</span> (...)
@@ -1117,43 +1120,7 @@ app | use (bodyParser.json())
 
     | get (<span class="hljs-string">'/endpoint3'</span>, (<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> ...))
 
-    | listen (config.port) (...)</code></pre><h2 id="٭-cond-٭-1"><a class="header-link" href="#٭-cond-٭-1"></a>٭ cond ٭</h2>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> {
-  <span class="hljs-built_in">map</span>, <span class="hljs-built_in">join</span>, condS, guard, otherwise,
-  sprintfN, rangeTo, lt, gt, tap, appendTo, prop,
-} from <span class="hljs-string">'stick-js'</span>
-
-<span class="hljs-keyword">import</span> { curry, }              from <span class="hljs-string">'ramda'</span>
-<span class="hljs-keyword">import</span> { yellow, <span class="hljs-built_in">green</span>, <span class="hljs-built_in">red</span>, } from <span class="hljs-string">'chalk'</span>
-
-<span class="hljs-keyword">const</span> { <span class="hljs-built_in">log</span>, } = console
-
-<span class="hljs-keyword">const</span> cmpStr = curry ((<span class="hljs-built_in">str</span>, <span class="hljs-built_in">color</span>, tgtStr, x) =&gt; [x, <span class="hljs-built_in">str</span> | <span class="hljs-built_in">color</span>, tgtStr]
-  | sprintfN (<span class="hljs-string">'%s is %s %s'</span>)
-)
-
-<span class="hljs-keyword">const</span> lessThanStr     = cmpStr (<span class="hljs-string">'less than'</span>, yellow)
-<span class="hljs-keyword">const</span> greaterThanStr  = cmpStr (<span class="hljs-string">'greater than'</span>, <span class="hljs-built_in">red</span>)
-<span class="hljs-keyword">const</span> inBetweenString = ([ low, high ]) =&gt; cmpStr (<span class="hljs-string">'in between'</span>, <span class="hljs-built_in">green</span>, [low, high] | <span class="hljs-built_in">join</span> (<span class="hljs-string">' and '</span>))
-
-<span class="hljs-comment">// --- this is intentionally complex for illustration</span>
-<span class="hljs-keyword">const</span> getCmpStr = curry ((low, high, x) =&gt; x
-  | condS ([
-    low  | lt | guard ((low | lessThanStr)           &gt;&gt; appendTo ([<span class="hljs-number">-1</span>])),
-    high | gt | guard ((high | greaterThanStr)       &gt;&gt; appendTo ([<span class="hljs-number">1</span>])),
-    otherwise | guard (inBetweenString ([low, high]) &gt;&gt; appendTo ([<span class="hljs-number">0</span>])),
-  ])
-)
-
-<span class="hljs-keyword">const</span> inRange = ([low, high]) =&gt; x =&gt; getCmpStr (low, high, x)
-
-<span class="hljs-keyword">const</span> snd = prop (<span class="hljs-number">1</span>)
-<span class="hljs-keyword">const</span> fst = prop (<span class="hljs-number">0</span>)
-
-<span class="hljs-number">10</span> | rangeTo (<span class="hljs-number">20</span>)             <span class="hljs-comment">// [10, 11, ... 19]</span>
-   | <span class="hljs-built_in">map</span> (inRange ([<span class="hljs-number">13</span>, <span class="hljs-number">17</span>])) <span class="hljs-comment">// maps to tuples of [int, str]</span>
-   | tap (<span class="hljs-built_in">map</span> (snd &gt;&gt; <span class="hljs-built_in">log</span>))   <span class="hljs-comment">// logs the str</span>
-   | <span class="hljs-built_in">map</span> (fst)                <span class="hljs-comment">// [-1, -1, ... 0, ... 1, 1]</span></code></pre><h1 id="performance"><a class="header-link" href="#performance"></a>performance</h1>
+    | listen (config.port) (...)</code></pre><h1 id="performance"><a class="header-link" href="#performance"></a>performance</h1>
 <p>Stick is fast. (@todo link benchmark)</p>
 <p>Though it initially depended on Ramda, we have decided to eliminate that
 dependency by reimplementing many of the functions. While profiling the
@@ -1334,8 +1301,19 @@ the box, manipulates the value inside, and wraps it up again in the box.</p>
 <p>and you pipe it to <code>flatMap</code>:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
 <span class="hljs-keyword">const</span> l = Left (<span class="hljs-string">'bad news'</span>)
-l | flatMap (<span class="hljs-built_in">double</span>) <span class="hljs-comment">// Left ('bad news')</span></code></pre><p>The result is the same as the input, because when <code>flatMap</code> sees a &#39;Left&#39; value, it doesn&#39;t bother to unwrap the box or do anything with it. It just passes the value straight through.</p>
-<p>JS programmers have seen this thousands of times before …</p>
+l | flatMap (<span class="hljs-built_in">double</span>) <span class="hljs-comment">// Left ('bad news')</span></code></pre><p>The result is the same as the input, because when <code>flatMap</code> sees a &#39;Left&#39;
+value, it doesn&#39;t bother to unwrap the box or do anything with it. It just
+passes the value straight through.</p>
+<p>At the end of the chain, we are left with an <code>Either</code> which either contains
+a <code>Left</code> or a <code>Right</code>; or in the case of <code>Maybe</code>, a <code>Just</code> or a <code>Nothing</code>.
+Now we use <code>bilby</code>&#39;s <code>fold</code> function to resolve it:</p>
+<pre class="hljs"><code>myEither | fold (
+  <span class="hljs-regexp">//</span> --- the <span class="hljs-string">'left'</span> <span class="hljs-keyword">case</span>, something went wrong.
+  prependTo ([<span class="hljs-string">'✘'</span> | red])   &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
+
+  <span class="hljs-regexp">//</span> --- the <span class="hljs-string">'right'</span> <span class="hljs-keyword">case</span>, good to go.
+  prependTo ([<span class="hljs-string">'✔'</span> | green]) &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
+)</code></pre><p>JS programmers have seen this thousands of times before …</p>
 <pre class="hljs"><code>axios<span class="hljs-selector-class">.get</span> (<span class="hljs-string">'/some/api'</span>)
 <span class="hljs-selector-class">.then</span> (response =&gt; ...)</code></pre><p>In a promise chain, <code>then</code> will only kick in if the promise returned by
 axios.get resolves. If it rejects then the whole then line is skipped. It&#39;s

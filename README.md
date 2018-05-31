@@ -1321,10 +1321,10 @@ don't need to discuss it, but the other 4 combinations have some caveats.
 
 	// mergeTo, mergeInTo, mergeToM, mergeInToM: 'to' forms
 
-In the immutable cases, a clone is made of the target before merging. You
-must keep in mind whether the clone will use only 'own' properties or also
-the prototype ('in') properties. Case (1) corresponds to 'own' and case (2)
-to 'in'.
+In the immutable cases, a shallow clone is made of the target before
+merging. You must keep in mind whether the clone will use only 'own'
+properties or also the prototype ('in') properties. Case (1) corresponds to
+'own' and case (2) to 'in'.
 
 No matter which it is, all copied properties will become own properties of
 the clone.\*

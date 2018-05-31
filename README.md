@@ -2040,14 +2040,14 @@ which we do not currently have an implementation without depending on Ramda.
 
 	// --- generic form, for any non-zero number of arguments.
     const lets = (() => {
-		const executeStep = prevVals => applyToN (prevVals)
-        return (...xs) => xs
-			// --- acc contains running output array, up to the previous item.
-			| mapAccum ((acc, v) => executeStep (acc) (v)
-				| (stepVal => [[...acc, stepVal], stepVal])
-			) ([])
-			| prop (1)
-            | last
+	  const executeStep = prevVals => applyToN (prevVals)
+	  return (...xs) => xs
+	    // --- acc contains running output array, up to the previous item.
+	    | mapAccum ((acc, v) => executeStep (acc) (v)
+	      | (stepVal => [[...acc, stepVal], stepVal])
+	    ) ([])
+	    | prop (1)
+	    | last
     }) ()
 
 This is not fast, but it is correct. You can prove it with a contrived

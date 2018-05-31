@@ -1006,10 +1006,10 @@ don&#39;t need to discuss it, but the other 4 combinations have some caveats.</p
 <span class="hljs-selector-tag">tgt</span> | <span class="hljs-selector-tag">mergeM</span>   (src) <span class="hljs-comment">// (3) own, mutable</span>
 <span class="hljs-selector-tag">tgt</span> | <span class="hljs-selector-tag">mergeInM</span> (src) <span class="hljs-comment">// (4) in,  mutable</span>
 
-<span class="hljs-comment">// mergeTo, mergeInTo, mergeToM, mergeInToM: 'to' forms</span></code></pre><p>In the immutable cases, a clone is made of the target before merging. You
-must keep in mind whether the clone will use only &#39;own&#39; properties or also
-the prototype (&#39;in&#39;) properties. Case (1) corresponds to &#39;own&#39; and case (2)
-to &#39;in&#39;.</p>
+<span class="hljs-comment">// mergeTo, mergeInTo, mergeToM, mergeInToM: 'to' forms</span></code></pre><p>In the immutable cases, a shallow clone is made of the target before
+merging. You must keep in mind whether the clone will use only &#39;own&#39;
+properties or also the prototype (&#39;in&#39;) properties. Case (1) corresponds to
+&#39;own&#39; and case (2) to &#39;in&#39;.</p>
 <p>No matter which it is, all copied properties will become own properties of
 the clone.*</p>
 <p>Then, properties are copied over from the source: only own properties in
@@ -1561,14 +1561,14 @@ arguments. We removed it from stick because it depends on <code>mapAccum</code>,
 which we do not currently have an implementation without depending on Ramda.</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- generic form, for any non-zero number of arguments.</span>
 <span class="hljs-keyword">const</span> lets = <span class="hljs-function">(<span class="hljs-params">(</span>) =&gt;</span> {
-    <span class="hljs-keyword">const</span> executeStep = <span class="hljs-function"><span class="hljs-params">prevVals</span> =&gt;</span> applyToN (prevVals)
-    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">...xs</span>) =&gt;</span> xs
-        <span class="hljs-comment">// --- acc contains running output array, up to the previous item.</span>
-        | mapAccum (<span class="hljs-function">(<span class="hljs-params">acc, v</span>) =&gt;</span> executeStep (acc) (v)
-            | (<span class="hljs-function"><span class="hljs-params">stepVal</span> =&gt;</span> [[...acc, stepVal], stepVal])
-        ) ([])
-        | prop (<span class="hljs-number">1</span>)
-        | last
+  <span class="hljs-keyword">const</span> executeStep = <span class="hljs-function"><span class="hljs-params">prevVals</span> =&gt;</span> applyToN (prevVals)
+  <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">...xs</span>) =&gt;</span> xs
+    <span class="hljs-comment">// --- acc contains running output array, up to the previous item.</span>
+    | mapAccum (<span class="hljs-function">(<span class="hljs-params">acc, v</span>) =&gt;</span> executeStep (acc) (v)
+      | (<span class="hljs-function"><span class="hljs-params">stepVal</span> =&gt;</span> [[...acc, stepVal], stepVal])
+    ) ([])
+    | prop (<span class="hljs-number">1</span>)
+    | last
 }) ()</code></pre><p>This is not fast, but it is correct. You can prove it with a contrived
 fibonacci example. We&#39;ll model <code>fibonacci (n)</code> as</p>
 <pre class="hljs"><code>lets (

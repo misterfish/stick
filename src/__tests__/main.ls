@@ -796,38 +796,38 @@ describe 'ifReplace*' ->
             'sandmishes' 't'
         ]
         do-test 'tandmithet' 3 true (ja, nee) ->
-            target |> (if-x-replace ja, nee, re, replacement)
+            target |> (if-x-replace re, replacement, ja, nee)
     test 'ifXReplace not succesful' ->
         [re, target, replacement] = [
             new RegExp ' xxxx ' 'g'
             'sandmishes' 't'
         ]
         do-test 'sandmishes' 0 false (ja, nee) ->
-            target |> (if-x-replace ja, nee, re, replacement)
+            target |> (if-x-replace re, replacement, ja, nee)
     test 'ifXReplaceStr succesful' ->
         [re-str, target, replacement] = [
             ' s ' 'sandmishes' 't'
         ]
         do-test 'tandmishes' 1 true (ja, nee) ->
-            target |> (if-x-replace-str ja, nee, re-str, replacement)
+            target |> (if-x-replace-str re-str, replacement, ja, nee)
     test 'ifXReplaceStr not succesful' ->
         [re-str, target, replacement] = [
             ' xxxx ' 'sandmishes' 't'
         ]
         do-test 'sandmishes' 0 false (ja, nee) ->
-            target |> (if-x-replace-str ja, nee, re-str, replacement)
+            target |> (if-x-replace-str re-str, replacement, ja, nee)
     test 'ifXReplaceStrFlags succesful' ->
         [re-str, target, replacement] = [
             ' s ' 'sandmishes' 't'
         ]
         do-test 'tandmithet' 3 true (ja, nee) ->
-            target |> (if-x-replace-str-flags ja, nee, re-str, 'g', replacement)
+            target |> (if-x-replace-str-flags re-str, 'g', replacement, ja, nee)
     test 'ifXReplaceStrFlags not succesful' ->
         [re-str, target, replacement] = [
             ' xxxx ' 'sandmishes' 't'
         ]
         do-test 'sandmishes' 0 false (ja, nee) ->
-            target |> (if-x-replace-str-flags ja, nee, re-str, 'g', replacement)
+            target |> (if-x-replace-str-flags re-str, 'g', replacement, ja, nee)
 
 describe 'repeat, times' ->
     y = y: void

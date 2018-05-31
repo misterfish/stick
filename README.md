@@ -1240,6 +1240,46 @@ Wut?! This does work, strange as it looks. Try it for yourself:
 | join (' | ')
 // 3 was less than 4 | 4 was 4 | 5 was more than 4
 
+## ٭ extended regexes ٭
+
+We provide regex functions which fit the idiom and mostly have an 'X' in the
+name (think /x if you know `perl`).
+
+These are 'extended regexes', in which whitespace is ignored. Note that we
+do not skip comments in the regex, only whitespace, even inside character
+classes. Use `\s` if you really want to match on whitespace.
+
+	'egbert' | xMatch (/ (eg) (..) [rs] /)
+	// [ 'egber', 'eg', 'be', index: 0, input: 'egbert' ]
+
+	const vowels = []
+	const mapper = appendToM (vowels)
+	'egbert druppelvanger' | xMatchGlobal (/ [ae] /) (mapper)
+	vowels // [ 'e', 'e', 'e', 'a', 'e' ]
+
+	'egbert' | xMatchStr (' (eg) (..) [rs] ')
+	// [ 'egber', 'eg', 'be', index: 0, input: 'egbert' ]
+
+	'egbert\ndruppelvanger' | xMatchStrFlags (' ^ d ') ('s')
+	// null
+
+	'egbert\ndruppelvanger' | xMatchStrFlags (' ^ d ') ('m')
+	// [ 'd', index: 7, input: 'egbert\ndruppelvanger' ]
+
+	const toUpper = dot ('toUpperCase')
+
+	const ifReplaceVowels = ifXReplace (/ ([aeiou]) /) ('x')
+	'egbert' | ifReplaceVowels (toUpper) ('bad' | always)
+	// XGBXRT
+
+	const ifReplaceVowelsGlobal = ifXReplace (/ ([aeiou]) /g) ('x')
+	'egbert' | ifReplaceVowelsGlobal (toUpper) ('bad' | always)
+	// XGBXRT
+
+	const ifReplaceVowelsGlobalAlt = ifXReplaceStrFlags (' ([aeiou]) ') ('g') ('x')
+	'egbert' | ifReplaceVowelsGlobalAlt (toUpper) ('bad' | always)
+	// XGBXRT
+
 ## ٭ merging ٭
 
 We provide 8 basic merge functions, corresponding to all combinations of

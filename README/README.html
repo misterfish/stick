@@ -935,7 +935,42 @@ array.</p>
 | map (checkVal)
 | join (&#39; | &#39;)
 // 3 was less than 4 | 4 was 4 | 5 was more than 4</p>
-<h2 id="٭-merging-٭"><a class="header-link" href="#٭-merging-٭"></a>٭ merging ٭</h2>
+<h2 id="٭-extended-regexes-٭"><a class="header-link" href="#٭-extended-regexes-٭"></a>٭ extended regexes ٭</h2>
+<p>We provide regex functions which fit the idiom and mostly have an &#39;X&#39; in the
+name (think /x if you know perl).</p>
+<p>These are &#39;extended regexes&#39;, in which whitespace is ignored. Note that we
+do not skip comments in the regex, only whitespace, even inside character
+classes. Use <code>\s</code> if you really want to match on whitespace.</p>
+<pre class="hljs"><code><span class="hljs-string">'egbert'</span> | xMatch (<span class="hljs-regexp">/ (eg) (..) [rs] /</span>)
+<span class="hljs-regexp">//</span> [ <span class="hljs-string">'egber'</span>, <span class="hljs-string">'eg'</span>, <span class="hljs-string">'be'</span>, index: <span class="hljs-number">0</span>, input: <span class="hljs-string">'egbert'</span> ]
+
+const vowels = []
+const mapper = appendToM (vowels)
+<span class="hljs-string">'egbert druppelvanger'</span> | xMatchGlobal (<span class="hljs-regexp">/ [ae] /</span>) (mapper)
+vowels <span class="hljs-regexp">//</span> [ <span class="hljs-string">'e'</span>, <span class="hljs-string">'e'</span>, <span class="hljs-string">'e'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'e'</span> ]
+
+<span class="hljs-string">'egbert'</span> | xMatchStr (<span class="hljs-string">' (eg) (..) [rs] '</span>)
+<span class="hljs-regexp">//</span> [ <span class="hljs-string">'egber'</span>, <span class="hljs-string">'eg'</span>, <span class="hljs-string">'be'</span>, index: <span class="hljs-number">0</span>, input: <span class="hljs-string">'egbert'</span> ]
+
+<span class="hljs-string">'egbert\ndruppelvanger'</span> | xMatchStrFlags (<span class="hljs-string">' ^ d '</span>) (<span class="hljs-string">'s'</span>)
+<span class="hljs-regexp">//</span> null
+
+<span class="hljs-string">'egbert\ndruppelvanger'</span> | xMatchStrFlags (<span class="hljs-string">' ^ d '</span>) (<span class="hljs-string">'m'</span>)
+<span class="hljs-regexp">//</span> [ <span class="hljs-string">'d'</span>, index: <span class="hljs-number">7</span>, input: <span class="hljs-string">'egbert\ndruppelvanger'</span> ]
+
+const toUpper = dot (<span class="hljs-string">'toUpperCase'</span>)
+
+const ifReplaceVowels = ifXReplace (<span class="hljs-regexp">/ ([aeiou]) /</span>) (<span class="hljs-string">'x'</span>)
+<span class="hljs-string">'egbert'</span> | ifReplaceVowels (toUpper) (<span class="hljs-string">'bad'</span> | always)
+<span class="hljs-regexp">//</span> XGBXRT
+
+const ifReplaceVowelsGlobal = ifXReplace (<span class="hljs-regexp">/ ([aeiou]) /g</span>) (<span class="hljs-string">'x'</span>)
+<span class="hljs-string">'egbert'</span> | ifReplaceVowelsGlobal (toUpper) (<span class="hljs-string">'bad'</span> | always)
+<span class="hljs-regexp">//</span> XGBXRT
+
+const ifReplaceVowelsGlobalAlt = ifXReplaceStrFlags (<span class="hljs-string">' ([aeiou]) '</span>) (<span class="hljs-string">'g'</span>) (<span class="hljs-string">'x'</span>)
+<span class="hljs-string">'egbert'</span> | ifReplaceVowelsGlobalAlt (toUpper) (<span class="hljs-string">'bad'</span> | always)
+<span class="hljs-regexp">//</span> XGBXRT</code></pre><h2 id="٭-merging-٭"><a class="header-link" href="#٭-merging-٭"></a>٭ merging ٭</h2>
 <p>We provide 8 basic merge functions, corresponding to all combinations of
 three binary choices:</p>
 <ol class="list">

@@ -1231,7 +1231,7 @@ describe('ifReplace*', function(){
     var ref$, re, target, replacement;
     ref$ = [new RegExp(' s ', 'g'), 'sandmishes', 't'], re = ref$[0], target = ref$[1], replacement = ref$[2];
     return doTest('tandmithet', 3, true, function(ja, nee){
-      return ifXReplace(ja, nee, re, replacement)(
+      return ifXReplace(re, replacement, ja, nee)(
       target);
     });
   });
@@ -1239,7 +1239,7 @@ describe('ifReplace*', function(){
     var ref$, re, target, replacement;
     ref$ = [new RegExp(' xxxx ', 'g'), 'sandmishes', 't'], re = ref$[0], target = ref$[1], replacement = ref$[2];
     return doTest('sandmishes', 0, false, function(ja, nee){
-      return ifXReplace(ja, nee, re, replacement)(
+      return ifXReplace(re, replacement, ja, nee)(
       target);
     });
   });
@@ -1247,7 +1247,7 @@ describe('ifReplace*', function(){
     var ref$, reStr, target, replacement;
     ref$ = [' s ', 'sandmishes', 't'], reStr = ref$[0], target = ref$[1], replacement = ref$[2];
     return doTest('tandmishes', 1, true, function(ja, nee){
-      return ifXReplaceStr(ja, nee, reStr, replacement)(
+      return ifXReplaceStr(reStr, replacement, ja, nee)(
       target);
     });
   });
@@ -1255,7 +1255,7 @@ describe('ifReplace*', function(){
     var ref$, reStr, target, replacement;
     ref$ = [' xxxx ', 'sandmishes', 't'], reStr = ref$[0], target = ref$[1], replacement = ref$[2];
     return doTest('sandmishes', 0, false, function(ja, nee){
-      return ifXReplaceStr(ja, nee, reStr, replacement)(
+      return ifXReplaceStr(reStr, replacement, ja, nee)(
       target);
     });
   });
@@ -1263,7 +1263,7 @@ describe('ifReplace*', function(){
     var ref$, reStr, target, replacement;
     ref$ = [' s ', 'sandmishes', 't'], reStr = ref$[0], target = ref$[1], replacement = ref$[2];
     return doTest('tandmithet', 3, true, function(ja, nee){
-      return ifXReplaceStrFlags(ja, nee, reStr, 'g', replacement)(
+      return ifXReplaceStrFlags(reStr, 'g', replacement, ja, nee)(
       target);
     });
   });
@@ -1271,7 +1271,7 @@ describe('ifReplace*', function(){
     var ref$, reStr, target, replacement;
     ref$ = [' xxxx ', 'sandmishes', 't'], reStr = ref$[0], target = ref$[1], replacement = ref$[2];
     return doTest('sandmishes', 0, false, function(ja, nee){
-      return ifXReplaceStrFlags(ja, nee, reStr, 'g', replacement)(
+      return ifXReplaceStrFlags(reStr, 'g', replacement, ja, nee)(
       target);
     });
   });

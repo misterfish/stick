@@ -1282,7 +1282,9 @@ reason.</p>
   &gt;&gt; flatMap (getQuotient)
 
 <span class="hljs-keyword">const</span> calculate = doLookup &gt;&gt; fold (
+  <span class="hljs-comment">// --- Left (failureReason)</span>
   prependTo ([<span class="hljs-string">'✘'</span> | red])   &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
+  <span class="hljs-comment">// --- Right (answer)</span>
   prependTo ([<span class="hljs-string">'✔'</span> | green]) &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
 )
 

@@ -76,8 +76,8 @@ library by Jussi Kalliokoski (@jussi-kalliokoski).</p>
 
 ; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4.2</span>]
 | map (ifInteger (
-  <span class="hljs-number">1</span> | add,
-  <span class="hljs-string">'nothing'</span> | always,
+  <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x + <span class="hljs-number">1</span>,
+  always (<span class="hljs-string">'nothing'</span>),
 ))
 <span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre><hr>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> convertFahrenheit = fah =&gt; lets (
@@ -88,7 +88,7 @@ library by Jussi Kalliokoski (@jussi-kalliokoski).</p>
 
 convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-comment">// [30, 303]</span></code></pre><hr>
 <pre class="hljs"><code>const checkVal = condS ([
-  <span class="hljs-number">4</span> | e<span class="hljs-string">q    | guard  (sprintf1 ('%s was 4')),
+  <span class="hljs-number">4</span> | e<span class="hljs-string">q    | guard  (sprintf1 ('%s was exactly 4')),
   4 |</span> <span class="hljs-keyword">lt</span>    | guard  (sprintf1 (<span class="hljs-string">'%s was less than 4'</span>)),
   <span class="hljs-number">4</span> | <span class="hljs-keyword">gt</span>    | guard  (sprintf1 (<span class="hljs-string">'%s was more than 4'</span>)),
   otherwise | guardV (<span class="hljs-string">"error, this shouldn't happen"</span>),
@@ -97,7 +97,7 @@ convertFahrenheit (<span class="hljs-number">86</span>) <span class="hljs-commen
 ; [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
 | <span class="hljs-keyword">map</span> (checkVal)
 | <span class="hljs-keyword">join</span> (<span class="hljs-string">' | '</span>)
-// <span class="hljs-number">3</span> was less than <span class="hljs-number">4</span> | <span class="hljs-number">4</span> was <span class="hljs-number">4</span> | <span class="hljs-number">5</span> was more than <span class="hljs-number">4</span></code></pre><hr>
+// <span class="hljs-number">3</span> was less than <span class="hljs-number">4</span> | <span class="hljs-number">4</span> was exactly <span class="hljs-number">4</span> | <span class="hljs-number">5</span> was more than <span class="hljs-number">4</span></code></pre><hr>
 <pre class="hljs"><code><span class="hljs-comment">// ------ dog.js</span>
 <span class="hljs-keyword">const</span> proto = { speak () { <span class="hljs-string">'Hi from '</span> + <span class="hljs-keyword">this</span>.name }}
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> proto | <span class="hljs-keyword">factory</span>
@@ -158,7 +158,7 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 
 <span class="hljs-string">'just a perfect day'</span>
   | split (<span class="hljs-string">' '</span>)                 <span class="hljs-comment">// split (' ') is a function</span>
-  | map (capitaliseFirstLetter) <span class="hljs-comment">// map (capitaliseFirstLetter) is a function</span>
+  | map (capitaliseFirstLetter) <span class="hljs-comment">// map (capitaliseFirstLetter) is also a function</span>
   | join (<span class="hljs-string">' '</span>)                  <span class="hljs-comment">// ... you get the picture.</span>
 <span class="hljs-comment">// 'Just A Perfect Day'</span></code></pre><h2 id="٭-currying-styles-٭"><a class="header-link" href="#٭-currying-styles-٭"></a>٭ currying styles ٭</h2>
 <p>All curried functions provided by stick-js can be called using either of 2 currying styles.</p>
@@ -182,7 +182,7 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 below).</p>
 <h2 id="٭-a-note-on-style-٭"><a class="header-link" href="#٭-a-note-on-style-٭"></a>٭ a note on style ٭</h2>
 <p>We recommend using a space before the parentheses of a function call.
-Admittedly it looks pretty strange at first, but you may find that it makes
+Admittedly it looks pretty strange at first, but we find that it makes
 everything much clearer when you get used to it, in particular with the
 manual currying style.</p>
 <p>You might also want to check out a vertical alignment plugin. The author
@@ -202,7 +202,7 @@ const { <span class="hljs-built_in">random</span>, } = Math
 <span class="hljs-built_in">random</span> | timesF (<span class="hljs-number">4</span>)          // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]
 <span class="hljs-built_in">random</span> | timesV (<span class="hljs-number">4</span>)          // [<span class="hljs-built_in">random</span>, <span class="hljs-built_in">random</span>, <span class="hljs-built_in">random</span>, <span class="hljs-built_in">random</span>]</code></pre><p>Note that the last one stores the function in the array.</p>
 <pre class="hljs"><code><span class="hljs-built_in">random</span> | timesV (<span class="hljs-number">4</span>) | <span class="hljs-built_in">map</span> (invoke) // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]</code></pre><p>&#39;M&#39; means the data is being mutated. In JS we absolutely can not pretend
-everything is immutable.</p>
+everything is immutable and we work with mutable data all the time.</p>
 <pre class="hljs"><code>import { appendTo, appendToM, } from 'stick-js'
 <span class="hljs-built_in">
 const </span>a = [1, 2, 3]<span class="hljs-built_in">
@@ -216,7 +216,7 @@ b === a // true
 const </span>webGLContext = { ... a complicated object ... }
 webGLContext | mergeM ({ someProp: false, }) // you probably want mutable here.</code></pre><p>And there are a few more which we&#39;ll see along the way.</p>
 <h2 id="٭-ok,-anaphoric-if-٭"><a class="header-link" href="#٭-ok,-anaphoric-if-٭"></a>٭ ok, anaphoric if ٭</h2>
-<p><code>ok (x)</code> is false if <code>x</code> is <code>null</code> or <code>undefined</code>. Everything else returns
+<p><code>ok (x)</code> is false if <code>x</code> is <code>null</code> or <code>undefined</code>. Every other input returns
 <code>true</code>.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { <span class="hljs-built_in">map</span>, ok, notOk, ifOk, } from <span class="hljs-string">'stick-js'</span>
 
@@ -235,7 +235,7 @@ const { <span class="hljs-keyword">log</span>, } = console
 }</code></pre><p>This can vastly improved using an &#39;anaphoric if&#39; and a stick idiom:</p>
 <pre class="hljs"><code>import { <span class="hljs-keyword">add</span>, always, } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
 
-<span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span>                    <span class="hljs-comment">// or add (1)</span>
+<span class="hljs-keyword">const</span> add1 = <span class="hljs-number">1</span> | <span class="hljs-keyword">add</span>                                     <span class="hljs-comment">// or add (1)</span>
 <span class="hljs-keyword">const</span> answer = someVar | ifOk (add1, <span class="hljs-string">'nothing'</span> | always)</code></pre><p>Explanation: <code>ifOk</code> takes two functions -- a &#39;then&#39; function and an &#39;else&#39; function.
 In the &#39;ok&#39;    case, the value being tested is passed to the function. (This
 bound value is sometimes called an &#39;anaphor&#39;).</p>
@@ -320,10 +320,10 @@ function:</p>
 ; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4.2</span>]
 | <span class="hljs-built_in">map</span> (ifInteger (add1, <span class="hljs-string">'nothing'</span> | always))
   <span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre><p>More complicated predicates:</p>
-<pre class="hljs"><code><span class="hljs-comment">// --- @todo use `allN`</span>
-<span class="hljs-keyword">const</span> both = <span class="hljs-function">(<span class="hljs-params">f, g</span>) =&gt;</span> x =&gt; f (x) &amp;&amp; g (x) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>
+<pre class="hljs"><code>// --- <span class="hljs-meta">@todo</span> use <span class="hljs-string">`allN`</span>
+<span class="hljs-keyword">const</span> both = (f, g) =&gt; x =&gt; f (x) &amp;&amp; g (x)
 
-<span class="hljs-keyword">const</span> isOdd = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x % <span class="hljs-number">2</span>
+<span class="hljs-keyword">const</span> isOdd = x =&gt; x % <span class="hljs-number">2</span>
 
 <span class="hljs-keyword">const</span> isOddInteger = both (isInteger, isOdd)
 <span class="hljs-keyword">const</span> ifOddInteger = isOddInteger | ifPredicate
@@ -331,11 +331,12 @@ function:</p>
 ; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>]
 | map (ifOddInteger (
   add1,
-  <span class="hljs-string">'nothing'</span> | always,
+  '<span class="hljs-literal">nothing</span>' | always,
 ))
-| log
+// ['<span class="hljs-literal">nothing</span>', '<span class="hljs-literal">nothing</span>', <span class="hljs-number">6</span>, '<span class="hljs-literal">nothing</span>']
 
-; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>] | map (isOddInteger) | log</code></pre><p>Note that <code>ifPredicate</code> and <code>whenPredicate</code> match on truthiness, not strict
+; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>] | map (isOddInteger)
+// [<span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>]</code></pre><p>Note that <code>ifPredicate</code> and <code>whenPredicate</code> match on truthiness, not strict
 truth. Rationale: that is how the native <code>filter</code> works, and JS&#39;s <code>if</code>
 operator, and many other tools in e.g. <code>Ramda</code>; and it&#39;s trivial to convert
 a truthy expression to a strict one.</p>
@@ -937,7 +938,7 @@ array.</p>
 // 3 was less than 4 | 4 was 4 | 5 was more than 4</p>
 <h2 id="٭-extended-regexes-٭"><a class="header-link" href="#٭-extended-regexes-٭"></a>٭ extended regexes ٭</h2>
 <p>We provide regex functions which fit the idiom and mostly have an &#39;X&#39; in the
-name (think /x if you know perl).</p>
+name (think /x if you know <code>perl</code>).</p>
 <p>These are &#39;extended regexes&#39;, in which whitespace is ignored. Note that we
 do not skip comments in the regex, only whitespace, even inside character
 classes. Use <code>\s</code> if you really want to match on whitespace.</p>
@@ -1481,6 +1482,45 @@ sequences.</p>
   | tap (map (log))
 
 go ()</code></pre><p class="img-container"><img src="readme-assets/seq.jpg" alt="seq.jpg"></p>
+<h2 id="point-free-techniques"><a class="header-link" href="#point-free-techniques"></a>Point-free techniques</h2>
+<p>We had an <code>isInteger</code> function above as:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> { floor, } = <span class="hljs-built_in">Math</span>
+<span class="hljs-keyword">const</span> isInteger = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x
+  | floor
+  | eq (x)</code></pre><p>If a number equals its own floor, it&#39;s an integer.</p>
+<p>For a challenge you could try to make this point-free. The difficult part is
+wresting the <code>x</code> free out of the 3rd line.</p>
+<p>We can use the concept of &#39;arrows&#39;, though in a far less rigorous form than people might be used to.</p>
+<p>First spread the first line <code>x</code> into an array <code>[x, x]</code></p>
+<pre class="hljs"><code><span class="hljs-keyword">x</span> | timesV (<span class="hljs-number">2</span>) // [<span class="hljs-keyword">x</span>, <span class="hljs-keyword">x</span>]</code></pre><p>Now use the <code>asteriskN</code> function, which works by taking an array of values
+and an array of functions, lining them up, and applying the functions to the
+corresponding value.</p>
+<p>So we can do an asterisk of <code>[x, x]</code> with <code>[id, floor]</code>, where <code>id</code> is the identity function.</p>
+<pre class="hljs"><code><span class="hljs-string">[id, floor]</span>
+ ↓    ↓
+<span class="hljs-string">[x,   x   ]</span></code></pre><p>and get <code>[id (x), floor (x)]</code>, or <code>[x, floor (x)]</code></p>
+<p>Now look at the <code>passToN</code> function:</p>
+<pre class="hljs"><code><span class="hljs-comment">; [a, b, ...] | passToN (f)</span></code></pre><p>yields <code>f (a, b, ...)</code></p>
+<p>If we take our result and pipe it to <code>passToN (eq)</code>, we get:</p>
+<pre class="hljs"><code>; [x, <span class="hljs-built-in">floor</span> (x)]
+| passToN (<span class="hljs-keyword">eq</span>)</code></pre><p>which is</p>
+<pre class="hljs"><code>e<span class="hljs-string">q (x, floor (x)</span>)</code></pre><p>which is true if &amp; only if <code>x === floor (x)</code>, in other words, if &amp;
+only if x is an integer.</p>
+<p>Putting it together:</p>
+<pre class="hljs"><code>const isInteger = x =&gt; x
+  | <span class="hljs-type">timesV</span> (<span class="hljs-number">2</span>)
+  | <span class="hljs-type">asteriskN</span> ([id, floor])
+  | <span class="hljs-type">passToN</span> (eq)</code></pre><p>Applying the reduction <code>a | b | c → a | (b &gt;&gt; c)</code></p>
+<pre class="hljs"><code>const isInteger = x =&gt; x
+  | <span class="hljs-type">(timesV</span> (<span class="hljs-number">2</span>) &gt;&gt; asteriskN ([id, floor]))
+  | <span class="hljs-type">passToN</span> (eq)</code></pre><p>And that long line is useful enough to merit its own function, which takes a
+function (in our case <code>floor</code>) to apply to a value in second position. We&#39;ll
+call it <code>arrowSnd</code>:</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> arrowSnd = <span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> timesV (<span class="hljs-number">2</span>) &gt;&gt; asteriskN ([id, f])</code></pre><p>And stick it back in:</p>
+<pre class="hljs"><code>const isInteger = x =&gt; x
+  | <span class="hljs-type">arrowSnd</span> (floor)
+  | <span class="hljs-type">passToN</span> (eq)</code></pre><p>And make it point-free:</p>
+<pre class="hljs"><code>const isInteger = arrowSnd (<span class="hljs-name">floor</span>) &gt;&gt; passToN (<span class="hljs-name">eq</span>)</code></pre><p>Your turn :D</p>
 <h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
 <p>The curried functions you import from the main module are written first
 using manual currying, and then recurried and exported. This is in order to

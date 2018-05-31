@@ -81,8 +81,8 @@ A few examples:
 
 	; [3.5, 4, 4.2]
 	| map (ifInteger (
-	  1 | add,
-	  'nothing' | always,
+	  x => x + 1,
+	  always ('nothing'),
 	))
 	// ['nothing', 5, 'nothing']
 
@@ -99,7 +99,7 @@ A few examples:
 ----------
 
 	const checkVal = condS ([
-	  4 | eq    | guard  (sprintf1 ('%s was 4')),
+	  4 | eq    | guard  (sprintf1 ('%s was exactly 4')),
 	  4 | lt    | guard  (sprintf1 ('%s was less than 4')),
 	  4 | gt    | guard  (sprintf1 ('%s was more than 4')),
 	  otherwise | guardV ("error, this shouldn't happen"),
@@ -108,7 +108,7 @@ A few examples:
 	; [3, 4, 5]
 	| map (checkVal)
 	| join (' | ')
-	// 3 was less than 4 | 4 was 4 | 5 was more than 4
+	// 3 was less than 4 | 4 was exactly 4 | 5 was more than 4
 
 ----------
 
@@ -184,7 +184,7 @@ can: see below).
 
 	'just a perfect day'
 	  | split (' ')                 // split (' ') is a function
-	  | map (capitaliseFirstLetter) // map (capitaliseFirstLetter) is a function
+	  | map (capitaliseFirstLetter) // map (capitaliseFirstLetter) is also a function
 	  | join (' ')                  // ... you get the picture.
     // 'Just A Perfect Day'
 
@@ -220,7 +220,7 @@ below).
 ## ٭ a note on style ٭
 
 We recommend using a space before the parentheses of a function call.
-Admittedly it looks pretty strange at first, but you may find that it makes
+Admittedly it looks pretty strange at first, but we find that it makes
 everything much clearer when you get used to it, in particular with the
 manual currying style.
 
@@ -254,7 +254,7 @@ Note that the last one stores the function in the array.
     random | timesV (4) | map (invoke) // [<random-num>, <random-num>, <random-num>, <random-num>]
 
 'M' means the data is being mutated. In JS we absolutely can not pretend
-everything is immutable.
+everything is immutable and we work with mutable data all the time.
 
     import { appendTo, appendToM, } from 'stick-js'
 
@@ -273,7 +273,7 @@ And there are a few more which we'll see along the way.
 
 ## ٭ ok, anaphoric if ٭
 
-`ok (x)` is false if `x` is `null` or `undefined`. Everything else returns
+`ok (x)` is false if `x` is `null` or `undefined`. Every other input returns
 `true`.
 
 	import { map, ok, notOk, ifOk, } from 'stick-js'
@@ -299,7 +299,7 @@ This can vastly improved using an 'anaphoric if' and a stick idiom:
 
 	import { add, always, } from 'stick-js'
 
-	const add1 = 1 | add                    // or add (1)
+	const add1 = 1 | add                                     // or add (1)
 	const answer = someVar | ifOk (add1, 'nothing' | always)
 
 Explanation: `ifOk` takes two functions -- a 'then' function and an 'else' function.
@@ -431,7 +431,7 @@ The selection of `if` and `when` functions we provide is intentionally skimpy, t
 More complicated predicates:
 
 	// --- @todo use `allN`
-	const both = (f, g) => x => f (x) && g (x) ? true : false
+	const both = (f, g) => x => f (x) && g (x)
 
 	const isOdd = x => x % 2
 
@@ -443,9 +443,10 @@ More complicated predicates:
 	  add1,
 	  'nothing' | always,
 	))
-	| log
+	// ['nothing', 'nothing', 6, 'nothing']
 
-	; [3.5, 4, 5, 5.5] | map (isOddInteger) | log
+	; [3.5, 4, 5, 5.5] | map (isOddInteger)
+	// [false, false, true, false]
 
 Note that `ifPredicate` and `whenPredicate` match on truthiness, not strict
 truth. Rationale: that is how the native `filter` works, and JS's `if`
@@ -1909,6 +1910,87 @@ Using stick idioms and `daggy`:
 	go ()
 
 ![seq.jpg](readme-assets/seq.jpg)
+
+## Point-free techniques
+
+We had an `isInteger` function above as:
+
+	const { floor, } = Math
+	const isInteger = x => x
+	  | floor
+	  | eq (x)
+
+If a number equals its own floor, it's an integer.
+
+For a challenge you could try to make this point-free. The difficult part is
+wresting the `x` free out of the 3rd line.
+
+We can use the concept of 'arrows', though in a far less rigorous form than people might be used to.
+
+First spread the first line `x` into an array `[x, x]`
+
+	x | timesV (2) // [x, x]
+
+Now use the `asteriskN` function, which works by taking an array of values
+and an array of functions, lining them up, and applying the functions to the
+corresponding value.
+
+So we can do an asterisk of `[x, x]` with `[id, floor]`, where `id` is the identity function.
+
+	[id, floor]
+	 ↓    ↓
+	[x,   x   ]
+
+and get `[id (x), floor (x)]`, or `[x, floor (x)]`
+
+Now look at the `passToN` function:
+
+	; [a, b, ...] | passToN (f)
+
+yields `f (a, b, ...)`
+
+If we take our result and pipe it to `passToN (eq)`, we get:
+
+	; [x, floor (x)]
+	| passToN (eq)
+
+which is
+
+	eq (x, floor (x))
+
+which is true if &amp; only if `x === floor (x)`, in other words, if &amp;
+only if x is an integer.
+
+Putting it together:
+
+	const isInteger = x => x
+	  | timesV (2)
+	  | asteriskN ([id, floor])
+	  | passToN (eq)
+
+Applying the reduction `a | b | c → a | (b >> c)`
+
+	const isInteger = x => x
+	  | (timesV (2) >> asteriskN ([id, floor]))
+	  | passToN (eq)
+
+And that long line is useful enough to merit its own function, which takes a
+function (in our case `floor`) to apply to a value in second position. We'll
+call it `arrowSnd`:
+
+	const arrowSnd = f => timesV (2) >> asteriskN ([id, f])
+
+And stick it back in:
+
+	const isInteger = x => x
+	  | arrowSnd (floor)
+	  | passToN (eq)
+
+And make it point-free:
+
+	const isInteger = arrowSnd (floor) >> passToN (eq)
+
+Your turn :D
 
 # Extra performance
 

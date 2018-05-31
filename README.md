@@ -519,7 +519,7 @@ Or to only merge if certain conditions hold:
 (We're dying to see a port to Hungarian, too)
 
 Once you master this, the usage becomes intuitive and greatly reduces the
-need to check the docs.
+need to look things up.
 
 (Motivation: what's the argument order of `append`, `times`, and `subtract` in your favorite library?)
 

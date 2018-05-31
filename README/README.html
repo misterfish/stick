@@ -1215,7 +1215,9 @@ example, we start with a French word, then:</p>
 
 <span class="hljs-keyword">const</span> calculate = <span class="hljs-function"><span class="hljs-params">french</span> =&gt;</span> doLookup (french)
   | fold (
-    <span class="hljs-function"><span class="hljs-params">answer</span> =&gt;</span> answer + <span class="hljs-string">' '</span> + green (<span class="hljs-string">'✔'</span>),
+    <span class="hljs-comment">// --- Just (answer)</span>
+    answer =&gt; answer + <span class="hljs-string">' '</span> + green (<span class="hljs-string">'✔'</span>),
+    <span class="hljs-comment">// --- Nothing.</span>
     red (<span class="hljs-string">'✘'</span>) | always,
   )
 
@@ -1523,8 +1525,7 @@ no-brainer to overload the operator and keep everything else the same.</p>
 myData
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">split</span> (' '),
 | <span class="hljs-symbol">_</span>.<span class="hljs-built_in">map</span> (capitaliseFirstLetter),
-| <span class="hljs-symbol">_</span>.<span class="hljs-built_in">join</span> (' ')</code></pre><p>merge benchmark: manual / index / ramda</p>
-<h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
+| <span class="hljs-symbol">_</span>.<span class="hljs-built_in">join</span> (' ')</code></pre><h1 id="extra-performance"><a class="header-link" href="#extra-performance"></a>Extra performance</h1>
 <p>The curried functions you import from the main module are written first
 using manual currying, and then recurried and exported. This is in order to
 allow both calling styles.</p>

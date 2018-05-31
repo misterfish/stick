@@ -1587,7 +1587,9 @@ example, we start with a French word, then:
 
 	const calculate = french => doLookup (french)
 	  | fold (
+	    // --- Just (answer)
 	    answer => answer + ' ' + green ('✔'),
+	    // --- Nothing.
 	    red ('✘') | always,
 	  )
 
@@ -1658,7 +1660,9 @@ reason.
 	  >> flatMap (getQuotient)
 
 	const calculate = doLookup >> fold (
+	  // --- Left (failureReason)
 	  prependTo (['✘' | red])   >> sprintfN ('%s %s'),
+	  // --- Right (answer)
 	  prependTo (['✔' | green]) >> sprintfN ('%s %s'),
 	)
 

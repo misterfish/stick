@@ -1262,7 +1262,7 @@ Wut?! This does work, strange as it looks. Try it for yourself:
 ## ٭ extended regexes ٭
 
 We provide regex functions which fit the idiom and mostly have an 'X' in the
-name (think /x if you know `perl`).
+name (think /x if you know Perl).
 
 These are 'extended regexes', in which whitespace is ignored. Note that we
 do not skip comments in the regex, only whitespace, even inside character

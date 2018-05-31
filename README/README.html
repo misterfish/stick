@@ -950,11 +950,10 @@ array.</p>
   <span class="hljs-number">4</span> | gt    | guard  (<span class="hljs-name">sprintf1</span> ('%s was more than <span class="hljs-number">4</span>')),
   otherwise | guardV (<span class="hljs-string">"error, this shouldn't happen"</span>),
 ])</code></pre><p>Wut?! This does work, strange as it looks. Try it for yourself:</p>
-<p>; [3, 4, 5]
-| map (checkVal)
-| join (&#39; | &#39;)
-// 3 was less than 4 | 4 was 4 | 5 was more than 4</p>
-<h2 id="٭-extended-regexes-٭"><a class="header-link" href="#٭-extended-regexes-٭"></a>٭ extended regexes ٭</h2>
+<pre class="hljs"><code>; [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+| <span class="hljs-type">map</span> (checkVal)
+| <span class="hljs-type">join</span> (' | <span class="hljs-type">')
+// 3</span> was less than <span class="hljs-number">4</span> | <span class="hljs-type">4</span> was <span class="hljs-number">4</span> | <span class="hljs-type">5</span> was more than <span class="hljs-number">4</span></code></pre><h2 id="٭-extended-regexes-٭"><a class="header-link" href="#٭-extended-regexes-٭"></a>٭ extended regexes ٭</h2>
 <p>We provide regex functions which fit the idiom and mostly have an &#39;X&#39; in the
 name (think /x if you know <code>perl</code>).</p>
 <p>These are &#39;extended regexes&#39;, in which whitespace is ignored. Note that we

@@ -1589,7 +1589,7 @@ example, we start with a French word, then:
 1. look up a translation (mocked in a table);
 
 	*failure path: the translation might not exist*
-	*(or the network is down, a mouse ate through the cable, etc.)
+	*(or the network is down, a mouse ate through the cable, etc.)*
 
 2. look up a corresponding 'count' value (also mocked in a table);
 

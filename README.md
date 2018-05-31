@@ -10,8 +10,26 @@
 	]}
 	EOT
 
+    // --- src/index.js
+
+		defineBinaryOperator ('|',  (...args) => pipe         (...args))
+		defineBinaryOperator ('<<', (...args) => compose      (...args))
+		defineBinaryOperator ('>>', (...args) => composeRight (...args))
+
+		import { pipe, compose, composeRight, map, join, sprintf1 } from 'stick-js'
+		import { green } from 'chalk'
+
+		; [1, 2, 3]
+		| map (x => x + 1)
+		| join ('/')
+		| green
+		| sprintf1 ('The answer is %s')
+		| console.log
+
+	// ---
+
 	node_modules/.bin/babel -d lib src
-	node lib/<entry-file>.js
+	node lib/index.js
 
 ## ٭ webpack
 

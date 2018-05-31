@@ -687,6 +687,6 @@ discardPrototypeM is not easy, becaues we can't `delete` prototype vals.
 
 
 I don't know about you but I can never remember how `both`, `all`,
-`allPass`, `and` work.
+`allPass`, and `and` work.
 
 

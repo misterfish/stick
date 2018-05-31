@@ -10,7 +10,7 @@
   </head>
 <body><h1 id="usage"><a class="header-link" href="#usage"></a>Usage</h1>
 <h2 id="٭-node"><a class="header-link" href="#٭-node"></a>٭ node</h2>
-<pre class="hljs"><code>npm i stick-js <span class="hljs-comment"># or yarn</span>
+<pre class="hljs"><code><span class="hljs-built_in">npm</span> i stick-js <span class="hljs-comment"># or yarn</span>
 
 cat &gt;.babelrc &lt;&lt;EOT
 {<span class="hljs-string">"presets"</span>: [<span class="hljs-string">"babel-preset-es2015"</span>, <span class="hljs-string">"stage-0"</span>], <span class="hljs-string">"plugins"</span>: [
@@ -18,8 +18,26 @@ cat &gt;.babelrc &lt;&lt;EOT
 ]}
 EOT
 
-node_modules/.bin/babel -d <span class="hljs-class"><span class="hljs-keyword">lib</span> <span class="hljs-title">src</span></span>
-node <span class="hljs-class"><span class="hljs-keyword">lib</span>/&lt;<span class="hljs-title">entry</span>-<span class="hljs-title">file</span>&gt;.<span class="hljs-title">js</span></span></code></pre><h2 id="٭-webpack"><a class="header-link" href="#٭-webpack"></a>٭ webpack</h2>
+<span class="hljs-regexp">//</span> --- src/index.js
+
+    defineBinaryOperator (<span class="hljs-string">'|'</span>,  <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> pipe         (...args))
+    defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> compose      (...args))
+    defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeRight (...args))
+
+    <span class="hljs-keyword">import</span> { pipe, compose, composeRight, map, join, sprintf1 } <span class="hljs-keyword">from</span> <span class="hljs-string">'stick-js'</span>
+    <span class="hljs-keyword">import</span> { green } <span class="hljs-keyword">from</span> <span class="hljs-string">'chalk'</span>
+
+    ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
+    | map (x =&gt; x + <span class="hljs-number">1</span>)
+    | join (<span class="hljs-string">'/'</span>)
+    | green
+    | sprintf1 (<span class="hljs-string">'The answer is %s'</span>)
+    | <span class="hljs-built_in">console</span>.log
+
+<span class="hljs-regexp">//</span> ---
+
+node_modules/.bin/babel -d lib src
+node lib/index.js</code></pre><h2 id="٭-webpack"><a class="header-link" href="#٭-webpack"></a>٭ webpack</h2>
 <h3 id="webpack-config:"><a class="header-link" href="#webpack-config:"></a>webpack config:</h3>
 <pre class="hljs"><code><span class="hljs-attr">module:</span> {
 <span class="hljs-attr">  rules:</span> [

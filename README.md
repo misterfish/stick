@@ -1254,10 +1254,10 @@ Cleaning it up a bit, and inverting the parentheses in the test expressions:
 
 Wut?! This does work, strange as it looks. Try it for yourself:
 
-; [3, 4, 5]
-| map (checkVal)
-| join (' | ')
-// 3 was less than 4 | 4 was 4 | 5 was more than 4
+	; [3, 4, 5]
+	| map (checkVal)
+	| join (' | ')
+	// 3 was less than 4 | 4 was 4 | 5 was more than 4
 
 ## ٭ extended regexes ٭
 

@@ -950,6 +950,7 @@ const mapper = appendToM (vowels)
 <span class="hljs-string">'egbert druppelvanger'</span> | xMatchGlobal (<span class="hljs-regexp">/ [ae] /</span>) (mapper)
 vowels <span class="hljs-regexp">//</span> [ <span class="hljs-string">'e'</span>, <span class="hljs-string">'e'</span>, <span class="hljs-string">'e'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'e'</span> ]
 
+<span class="hljs-regexp">//</span> --- same, using a regex string instead of a RegExp literal.
 <span class="hljs-string">'egbert'</span> | xMatchStr (<span class="hljs-string">' (eg) (..) [rs] '</span>)
 <span class="hljs-regexp">//</span> [ <span class="hljs-string">'egber'</span>, <span class="hljs-string">'eg'</span>, <span class="hljs-string">'be'</span>, index: <span class="hljs-number">0</span>, input: <span class="hljs-string">'egbert'</span> ]
 
@@ -969,6 +970,7 @@ const ifReplaceVowelsGlobal = ifXReplace (<span class="hljs-regexp">/ ([aeiou]) 
 <span class="hljs-string">'egbert'</span> | ifReplaceVowelsGlobal (toUpper) (<span class="hljs-string">'bad'</span> | always)
 <span class="hljs-regexp">//</span> XGBXRT
 
+<span class="hljs-regexp">//</span> --- same, using a regex string instead of a RegExp literal.
 const ifReplaceVowelsGlobalAlt = ifXReplaceStrFlags (<span class="hljs-string">' ([aeiou]) '</span>) (<span class="hljs-string">'g'</span>) (<span class="hljs-string">'x'</span>)
 <span class="hljs-string">'egbert'</span> | ifReplaceVowelsGlobalAlt (toUpper) (<span class="hljs-string">'bad'</span> | always)
 <span class="hljs-regexp">//</span> XGBXRT</code></pre><h2 id="٭-merging-٭"><a class="header-link" href="#٭-merging-٭"></a>٭ merging ٭</h2>
@@ -1205,7 +1207,7 @@ example, we start with a French word, then:</p>
 <ol class="list">
 <li><p>look up a translation (mocked in a table);</p>
 <p> <em>failure path: the translation might not exist</em>
- *(or the network is down, a mouse ate through the cable, etc.)</p>
+ <em>(or the network is down, a mouse ate through the cable, etc.)</em></p>
 </li>
 <li><p>look up a corresponding &#39;count&#39; value (also mocked in a table);</p>
 <p> <em>failure path: the count might not exist</em></p>

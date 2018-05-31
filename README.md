@@ -1258,6 +1258,7 @@ classes. Use `\s` if you really want to match on whitespace.
 	'egbert druppelvanger' | xMatchGlobal (/ [ae] /) (mapper)
 	vowels // [ 'e', 'e', 'e', 'a', 'e' ]
 
+    // --- same, using a regex string instead of a RegExp literal.
 	'egbert' | xMatchStr (' (eg) (..) [rs] ')
 	// [ 'egber', 'eg', 'be', index: 0, input: 'egbert' ]
 
@@ -1277,6 +1278,7 @@ classes. Use `\s` if you really want to match on whitespace.
 	'egbert' | ifReplaceVowelsGlobal (toUpper) ('bad' | always)
 	// XGBXRT
 
+    // --- same, using a regex string instead of a RegExp literal.
 	const ifReplaceVowelsGlobalAlt = ifXReplaceStrFlags (' ([aeiou]) ') ('g') ('x')
 	'egbert' | ifReplaceVowelsGlobalAlt (toUpper) ('bad' | always)
 	// XGBXRT

@@ -185,9 +185,10 @@ defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, (...args) =&g
 <li><p>we will refer to this sort of function and calling style as &#39;manual&#39;:</p>
 <pre class="hljs"><code> const f = <span class="hljs-selector-tag">a</span> =&gt; <span class="hljs-selector-tag">b</span> =&gt; c =&gt; <span class="hljs-selector-tag">a</span> + <span class="hljs-selector-tag">b</span> + c          <span class="hljs-comment">// call like f (1) (2) (3)</span></code></pre></li>
 <li><p>and this sort as &#39;normal&#39;:</p>
-<pre class="hljs"><code> const g = R<span class="hljs-selector-class">.curry</span> ((<span class="hljs-selector-tag">a</span>, <span class="hljs-selector-tag">b</span>, c) =&gt; <span class="hljs-selector-tag">a</span> + <span class="hljs-selector-tag">b</span> + c) <span class="hljs-comment">// call like f (1) (2) (3) or f (1, 2, 3)</span>
-                                            <span class="hljs-comment">// or f (1, 2, 3)</span>
-                                            <span class="hljs-comment">// or f (1) (2, 3)</span>
+<pre class="hljs"><code> const g = R<span class="hljs-selector-class">.curry</span> ((<span class="hljs-selector-tag">a</span>, <span class="hljs-selector-tag">b</span>, c) =&gt; <span class="hljs-selector-tag">a</span> + <span class="hljs-selector-tag">b</span> + c) <span class="hljs-comment">// call like g (1) (2) (3)</span>
+                                            <span class="hljs-comment">// or g (1, 2, 3)</span>
+                                            <span class="hljs-comment">// or g (1, 2, 3)</span>
+                                            <span class="hljs-comment">// or g (1) (2, 3)</span>
                                             <span class="hljs-comment">// etc.</span></code></pre></li>
 </ol>
 <p>Calling:</p>
@@ -219,8 +220,7 @@ const { <span class="hljs-built_in">random</span>, } = Math
 <span class="hljs-number">3</span>      | timesV (<span class="hljs-number">4</span>)          // [<span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>]
 <span class="hljs-built_in">random</span> | timesF (<span class="hljs-number">4</span>)          // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]
 <span class="hljs-built_in">random</span> | timesV (<span class="hljs-number">4</span>)          // [<span class="hljs-built_in">random</span>, <span class="hljs-built_in">random</span>, <span class="hljs-built_in">random</span>, <span class="hljs-built_in">random</span>]</code></pre><p>Note that the last one stores the function in the array.</p>
-<pre class="hljs"><code><span class="hljs-built_in">random</span> | timesV (<span class="hljs-number">4</span>) | <span class="hljs-built_in">map</span> (invoke) // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]</code></pre><p>&#39;M&#39; means the data is being mutated. In JS we absolutely can not pretend
-everything is immutable and we work with mutable data all the time.</p>
+<pre class="hljs"><code><span class="hljs-built_in">random</span> | timesV (<span class="hljs-number">4</span>) | <span class="hljs-built_in">map</span> (invoke) // [&lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;, &lt;<span class="hljs-built_in">random</span>-<span class="hljs-built_in">num</span>&gt;]</code></pre><p>&#39;M&#39; means the data is being mutated. In JS we of course work with mutable data all the time.</p>
 <pre class="hljs"><code>import { appendTo, appendToM, } from 'stick-js'
 <span class="hljs-built_in">
 const </span>a = [1, 2, 3]<span class="hljs-built_in">
@@ -244,7 +244,7 @@ const { <span class="hljs-keyword">log</span>, } = console
 | map (ok)    // <span class="hljs-meta">[</span><span class="hljs-literal">true</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span><span class="hljs-meta">]</span>
 
 ; <span class="hljs-meta">[</span><span class="hljs-number">0</span>, <span class="hljs-literal">false</span>, <span class="hljs-string">''</span>, <span class="hljs-built_in">null</span>, <span class="hljs-literal">void</span> <span class="hljs-number">8</span><span class="hljs-meta">]</span>
-| map (notOk) // <span class="hljs-meta">[</span><span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">true</span><span class="hljs-meta">]</span></code></pre><p>Something we see a lot in JS in the wild is:</p>
+| map (notOk) // <span class="hljs-meta">[</span><span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">true</span><span class="hljs-meta">]</span></code></pre><p>Something we see a lot in JS is:</p>
 <pre class="hljs"><code><span class="hljs-keyword">let</span> answer
 <span class="hljs-keyword">if</span> (someVar !== <span class="hljs-literal">undefined</span> &amp;&amp; someVar !== <span class="hljs-literal">null</span>) {
   answer = someVar + <span class="hljs-number">1</span>
@@ -365,7 +365,7 @@ gets the value and not the index or the collection.</p>
 
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
 | map (<span class="hljs-function"><span class="hljs-params">(x, idx)</span> =&gt;</span> idx) <span class="hljs-regexp">//</span> [<span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>]</code></pre><p>But:</p>
-<pre class="hljs"><code>const mapWithIndex = map | <span class="hljs-type">addIndex</span>
+<pre class="hljs"><code>const mapWithIndex      = map | <span class="hljs-type">addIndex</span>
 const mapWithCollection = map | <span class="hljs-type">addCollection</span>
 
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]
@@ -1183,10 +1183,10 @@ app | use (bodyParser.json())
 
     | get (<span class="hljs-string">'/endpoint3'</span>, (<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> ...))
 
-    | listen (config.port) (...)</code></pre><h2 id="working-with-functors:-maybe"><a class="header-link" href="#working-with-functors:-maybe"></a>Working with functors: Maybe</h2>
+    | listen (config.port) (...)</code></pre><h2 id="working-with-`maybe`"><a class="header-link" href="#working-with-`maybe`"></a>Working with <code>Maybe</code></h2>
 <h3 id="(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"><a class="header-link" href="#(or-how-to-forget-about-`null`-and-`undefined`-for-a-while)"></a>(or how to forget about <code>null</code> and <code>undefined</code> for a while)</h3>
-<p>Here is an example showing how you can deal with failure paths, using the
-<code>Maybe</code> functor from
+<p>Here is an example showing how you can deal with failure paths, using 
+<code>Maybe</code> from
 <a href="https://github.com/puffnfresh/bilby.js">bilby</a> by @puffnfresh. In this toy
 example, we start with a French word, then:</p>
 <ol class="list">
@@ -1257,8 +1257,9 @@ example, we start with a French word, then:</p>
 ])
 
 go ()</code></pre><p class="img-container"><img src="readme-assets/maybe.jpg" alt="maybe.jpg"></p>
-<h2 id="working-with-functors:-either"><a class="header-link" href="#working-with-functors:-either"></a>Working with functors: Either</h2>
-<p>The above example, using <code>bilby</code>&#39;s <code>Either</code> functor instead of <code>Maybe</code>, and a more point-free style.</p>
+<h2 id="working-with-either"><a class="header-link" href="#working-with-either"></a>Working with Either</h2>
+<p>The above example, using <code>bilby</code>&#39;s <code>Either</code> instead of <code>Maybe</code>, and a more
+point-free style.</p>
 <p>The advantage of <code>Either</code> is that in addition to <code>flatMap</code> taking care of
 the failure path, you can also see why it failed. By convention the &#39;Left&#39;
 branch is considered a failure, and a string stored in &#39;Left&#39; represents the

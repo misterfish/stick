@@ -690,3 +690,55 @@ I don't know about you but I can never remember how `both`, `all`,
 `allPass`, and `and` work.
 
 
+## ٭ functors / flatMap ٭ explanation
+
+Think of the `Either` functor as a value in a box, where the box is either a
+'Left' box, meaning something went wrong, or a 'Right' box, meaning things
+are going well.
+
+If you have a value like `Right (2)`
+
+and you pipe it to `flatMap`:
+
+	const double = x => x * 2
+    const r = Right (2)
+	r | flatMap (double) // Right (4)
+
+Then the resulting value is is `Right (4)`, because `flatMap` 'peeks' inside
+the box, manipulates the value inside, and wraps it up again in the box.
+
+But it your value was a 'Left' like `Left ('bad news')`
+
+and you pipe it to `flatMap`:
+
+	const double = x => x * 2
+	const l = Left ('bad news')
+	l | flatMap (double) // Left ('bad news')
+
+The result is the same as the input, because when `flatMap` sees a 'Left'
+value, it doesn't bother to unwrap the box or do anything with it. It just
+passes the value straight through.
+
+At the end of the chain, we are left with an `Either` which either contains
+a `Left` or a `Right`; or in the case of `Maybe`, a `Just` or a `Nothing`.
+Now we use `bilby`'s `fold` function to resolve it:
+
+	myEither | fold (
+	  // --- the 'left' case, something went wrong.
+	  // the first %s will be the reason and the second will be a red cross.
+	  prependTo (['✘' | red])   >> sprintfN ('%s %s'),
+
+	  // --- the 'right' case, good to go.
+	  // the first %s will be the answer and the second will be a green check.
+	  prependTo (['✔' | green]) >> sprintfN ('%s %s'),
+	)
+
+JS programmers have seen this thousands of times before …
+
+	axios.get ('/some/api')
+	.then (response => ...)
+
+In a promise chain, `then` will only kick in if the promise returned by
+`axios.get` resolves. If it rejects then the whole then line is skipped. It's
+the same idea.
+

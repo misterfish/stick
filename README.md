@@ -218,7 +218,8 @@ This would be a good time to read up on curried functions if you're not familiar
 
 2. and this sort as 'normal':
 
-		const g = R.curry ((a, b, c) => a + b + c) // call like g (1) (2) (3) or g (1, 2, 3)
+		const g = R.curry ((a, b, c) => a + b + c) // call like g (1) (2) (3)
+		                                           // or g (1, 2, 3)
 	                                               // or g (1, 2, 3)
                                                    // or g (1) (2, 3)
                                                    // etc.
@@ -271,8 +272,7 @@ Note that the last one stores the function in the array.
 
     random | timesV (4) | map (invoke) // [<random-num>, <random-num>, <random-num>, <random-num>]
 
-'M' means the data is being mutated. In JS we absolutely can not pretend
-everything is immutable and we work with mutable data all the time.
+'M' means the data is being mutated. In JS we of course work with mutable data all the time.
 
     import { appendTo, appendToM, } from 'stick-js'
 
@@ -304,7 +304,7 @@ And there are a few more which we'll see along the way.
 	; [0, false, '', null, void 8]
 	| map (notOk) // [false, false, false, true, true]
 
-Something we see a lot in JS in the wild is:
+Something we see a lot in JS is:
 
 	let answer
 	if (someVar !== undefined && someVar !== null) {
@@ -483,7 +483,7 @@ gets the value and not the index or the collection.
 
 But:
 
-	const mapWithIndex = map | addIndex
+	const mapWithIndex      = map | addIndex
 	const mapWithCollection = map | addCollection
 
 	; [4, 5, 6]
@@ -1552,11 +1552,11 @@ are many other places this can be used.
 
 		| listen (config.port) (...)
 
-## Working with functors: Maybe
+## Working with `Maybe`
 ### (or how to forget about `null` and `undefined` for a while)
 
-Here is an example showing how you can deal with failure paths, using the
-`Maybe` functor from
+Here is an example showing how you can deal with failure paths, using 
+`Maybe` from
 [bilby](https://github.com/puffnfresh/bilby.js) by @puffnfresh. In this toy
 example, we start with a French word, then:
 
@@ -1633,9 +1633,10 @@ example, we start with a French word, then:
 
 ![maybe.jpg](readme-assets/maybe.jpg)
 
-## Working with functors: Either
+## Working with Either
 
-The above example, using `bilby`'s `Either` functor instead of `Maybe`, and a more point-free style.
+The above example, using `bilby`'s `Either` instead of `Maybe`, and a more
+point-free style.
 
 The advantage of `Either` is that in addition to `flatMap` taking care of
 the failure path, you can also see why it failed. By convention the 'Left'
@@ -1700,58 +1701,6 @@ reason.
 	go ()
 
 ![either.jpg](readme-assets/either.jpg)
-
-## ٭ functors / flatMap ٭ explanation
-
-Think of the `Either` functor as a value in a box, where the box is either a
-'Left' box, meaning something went wrong, or a 'Right' box, meaning things
-are going well.
-
-If you have a value like `Right (2)`
-
-and you pipe it to `flatMap`:
-
-	const double = x => x * 2
-    const r = Right (2)
-	r | flatMap (double) // Right (4)
-
-Then the resulting value is is `Right (4)`, because `flatMap` 'peeks' inside
-the box, manipulates the value inside, and wraps it up again in the box.
-
-But it your value was a 'Left' like `Left ('bad news')`
-
-and you pipe it to `flatMap`:
-
-	const double = x => x * 2
-	const l = Left ('bad news')
-	l | flatMap (double) // Left ('bad news')
-
-The result is the same as the input, because when `flatMap` sees a 'Left'
-value, it doesn't bother to unwrap the box or do anything with it. It just
-passes the value straight through.
-
-At the end of the chain, we are left with an `Either` which either contains
-a `Left` or a `Right`; or in the case of `Maybe`, a `Just` or a `Nothing`.
-Now we use `bilby`'s `fold` function to resolve it:
-
-	myEither | fold (
-	  // --- the 'left' case, something went wrong.
-	  // the first %s will be the reason and the second will be a red cross.
-	  prependTo (['✘' | red])   >> sprintfN ('%s %s'),
-
-	  // --- the 'right' case, good to go.
-	  // the first %s will be the answer and the second will be a green check.
-	  prependTo (['✔' | green]) >> sprintfN ('%s %s'),
-	)
-
-JS programmers have seen this thousands of times before …
-
-	axios.get ('/some/api')
-	.then (response => ...)
-
-In a promise chain, `then` will only kick in if the promise returned by
-`axios.get` resolves. If it rejects then the whole then line is skipped. It's
-the same idea.
 
 ## Abstract data types
 

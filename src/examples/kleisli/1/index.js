@@ -110,7 +110,7 @@ console.log ('hello')
 //;( (k (step1) >> k (step2))) .call (some (3))
 // const composed = k (k (step2, 'step2').compose (step1, 'step1'), 'composed')
 //const composed = k (step1 >> k (step2))
-const composed = (id >> k (step1) >> k (step2) >> k (step3))
+const composed = id >> k (step1) >> k (step2) >> k (step3)
 
 composed (some (3))
 | getOrElse ('none')

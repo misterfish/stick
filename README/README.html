@@ -1320,39 +1320,6 @@ reason.</p>
   | tap (map (log))
 
 go ()</code></pre><p class="img-container"><img src="readme-assets/either.jpg" alt="either.jpg"></p>
-<h2 id="٭-functors-/-flatmap-٭-explanation"><a class="header-link" href="#٭-functors-/-flatmap-٭-explanation"></a>٭ functors / flatMap ٭ explanation</h2>
-<p>Think of the <code>Either</code> functor as a value in a box, where the box is either a
-&#39;Left&#39; box, meaning something went wrong, or a &#39;Right&#39; box, meaning things
-are going well.</p>
-<p>If you have a value like <code>Right (2)</code></p>
-<p>and you pipe it to <code>flatMap</code>:</p>
-<pre class="hljs"><code>const <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
-const r = <span class="hljs-keyword">Right</span> (<span class="hljs-number">2</span>)
-r | <span class="hljs-type">flatMap</span> (<span class="hljs-built_in">double</span>) // <span class="hljs-keyword">Right</span> (<span class="hljs-number">4</span>)</code></pre><p>Then the resulting value is is <code>Right (4)</code>, because <code>flatMap</code> &#39;peeks&#39; inside
-the box, manipulates the value inside, and wraps it up again in the box.</p>
-<p>But it your value was a &#39;Left&#39; like <code>Left (&#39;bad news&#39;)</code></p>
-<p>and you pipe it to <code>flatMap</code>:</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> <span class="hljs-built_in">double</span> = x =&gt; x * <span class="hljs-number">2</span>
-<span class="hljs-keyword">const</span> l = Left (<span class="hljs-string">'bad news'</span>)
-l | flatMap (<span class="hljs-built_in">double</span>) <span class="hljs-comment">// Left ('bad news')</span></code></pre><p>The result is the same as the input, because when <code>flatMap</code> sees a &#39;Left&#39;
-value, it doesn&#39;t bother to unwrap the box or do anything with it. It just
-passes the value straight through.</p>
-<p>At the end of the chain, we are left with an <code>Either</code> which either contains
-a <code>Left</code> or a <code>Right</code>; or in the case of <code>Maybe</code>, a <code>Just</code> or a <code>Nothing</code>.
-Now we use <code>bilby</code>&#39;s <code>fold</code> function to resolve it:</p>
-<pre class="hljs"><code>myEither | fold (
-  <span class="hljs-comment">// --- the 'left' case, something went wrong.</span>
-  <span class="hljs-comment">// the first %s will be the reason and the second will be a red cross.</span>
-  prependTo ([<span class="hljs-string">'✘'</span> | <span class="hljs-built_in">red</span>])   &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
-
-  <span class="hljs-comment">// --- the 'right' case, good to go.</span>
-  <span class="hljs-comment">// the first %s will be the answer and the second will be a green check.</span>
-  prependTo ([<span class="hljs-string">'✔'</span> | <span class="hljs-built_in">green</span>]) &gt;&gt; sprintfN (<span class="hljs-string">'%s %s'</span>),
-)</code></pre><p>JS programmers have seen this thousands of times before …</p>
-<pre class="hljs"><code>axios<span class="hljs-selector-class">.get</span> (<span class="hljs-string">'/some/api'</span>)
-<span class="hljs-selector-class">.then</span> (response =&gt; ...)</code></pre><p>In a promise chain, <code>then</code> will only kick in if the promise returned by
-<code>axios.get</code> resolves. If it rejects then the whole then line is skipped. It&#39;s
-the same idea.</p>
 <h2 id="abstract-data-types"><a class="header-link" href="#abstract-data-types"></a>Abstract data types</h2>
 <p>Abstract data types can help eliminate an entire class of bugs, by making
 impossible states unrepresentable.</p>

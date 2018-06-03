@@ -2,19 +2,6 @@ defineBinaryOperator ('|',  (...args) => pipe         (...args))
 defineBinaryOperator ('<<', (...args) => compose      (...args))
 defineBinaryOperator ('>>', (...args) => composeRight (...args))
 
-import ramda, {
-    not, either, both, any, all, allPass, anyPass,
-    isEmpty, fromPairs, toPairs,
-    reduceRight, chain, splitAt, curry, zip, contains,
-    forEach as each, forEachObjIndexed as eachObj,
-    take, mapAccum,
-} from 'ramda'
-
-import fishLib, {
-    log, info, warn, error, green, yellow, magenta, brightRed, cyan, brightBlue,
-    sprintf, forceColors, getopt, shellQuote,
-} from 'fish-lib'
-
 import {
     pipe, compose, composeRight,
     ok, ifOk, ifPredicate, whenOk, whenPredicate,

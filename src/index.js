@@ -6,6 +6,11 @@ export const pipe         = (a, b)    => b (a)
 export const composeRight = (a, b)    => (...args) => b (a (...args))
 export const compose      = (a, b)    => (...args) => a (b (...args))
 
+// --- @experimental
+export const composeAsMethodsRight = (b, a) => a.compose (b)
+export const composeAsMethods      = (a, b) => a.compose (b)
+
+
 import {
     bitwiseAnd, bitwiseOr, bitwiseXor, bitwiseNot,
     bitwiseLeft, bitwiseRight, bitwiseRightZeroFill,
@@ -26,9 +31,9 @@ import manual from './manual'
 const { hasOwnProperty: hasOwn, toString: oStr, } = {}
 
 // --- takes a manually curried function like
-// f = a => b => c => d => { body }
+// f = a => b => ... => z => { body }
 // and returns a new function g which can be called as:
-// g (a, b, c, d)
+// g (a, b, ..., z)
 //
 // g is curried, but only allows the manual calling style.
 //

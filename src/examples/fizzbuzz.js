@@ -42,7 +42,7 @@ import {
     lt, gt, eq, ne, lte, gte,
     factory, factoryProps,
     rangeTo,
-} from 'stick'
+} from '../index'
 
 // const { log, } = console
 const bothN = ([a, b]) => both (a, b)

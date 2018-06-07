@@ -891,4 +891,6 @@ export default {
     factoryProps, factoryInit,
     mixinM, mixinPreM,
     mixinNM, mixinPreNM,
+    againstAll, againstAny, allAgainst, anyAgainst,
+    againstBoth, againstEither,
 }

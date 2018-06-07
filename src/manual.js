@@ -784,6 +784,51 @@ export const mixinNM = (ms) => (proto) => ms.reduce (
     proto,
 )
 
+// ------ all/any.
+
+// --- no point in using an N marker, because non-n is only possible once you know the predicate.
+
+// --- returns the return value of the last function, if they all pass.
+export const againstAll = (fs) => (x) => {
+	let y = false
+	for (const f of fs) {
+		y = f (x)
+		if (!y) return false
+	}
+	return y
+}
+
+// --- returns the return value of the first function which returns truthy.
+export const againstAny = (fs) => (x) => {
+	let y
+	for (const f of fs) {
+		y = f (x)
+		if ( y) return y
+	}
+	return false
+}
+
+export const allAgainst = (f) => (xs) => {
+	let y = false
+	for (const x of xs) {
+		y = f (x)
+		if (!y) return false
+	}
+	return y
+}
+
+export const anyAgainst = (f) => (xs) => {
+	let y
+	for (const x of xs) {
+		y = f (x)
+		if ( y) return y
+	}
+	return false
+}
+
+export const againstBoth   = f => g => x => f (x) && g (x)
+export const againstEither = f => g => x => f (x) || g (x)
+
 export default {
     roll, recurry,
     eq, ne, gt, gte, lt, lte,

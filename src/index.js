@@ -1057,6 +1057,20 @@ const mapTuplesInWithFilter = (p) => (f) => (o) => {
     return ret
 }
 
+// --- @test
+export const againstAll = _recurry (2) (manual.againstAll)
+export const againstAny = _recurry (2) (manual.againstAny)
+export const allAgainst = _recurry (2) (manual.allAgainst)
+export const anyAgainst = _recurry (2) (manual.anyAgainst)
+
+// export const bothAgainst   = p => list >> allAgainst (p)
+export const bothAgainst   = (p, ...args) => allAgainst (p) (args)
+// export const eitherAgainst = p => list >> anyAgainst (p)
+export const eitherAgainst = (p, ...args) => anyAgainst (p) (args)
+
+export const againstBoth = _recurry (3) (manual.againstBoth)
+export const againstEither = _recurry (3) (manual.againstEither)
+
 export default {
     mergeToM, mergeM,
     mergeTo, merge,

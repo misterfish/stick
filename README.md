@@ -1316,27 +1316,33 @@ classes. Use `\s` if you really want to match on whitespace.
 
 ## ٭ all ٭ any ٭
 
+If you're like the author you have a hard time remembering how Ramda's
+`all`, `any`, `both`, `either`, `and`, `or`, `anyPass`, and so on work. Does
+the 'all' refer to all the functions? or all the values? and so on.
+
+Our solution to making the semantics clearer and enriching the functionality
+of these functions centers around the preposition 'against': you match
+a value *against* a predicate.
+
 	const isOdd = x => isInteger (x) && (x % 2 !== 0)
 	const isLt3 = 3 | lt
 
-	; [1, 2, 3, 4, 5] | ramda.all (isOdd) // false
-	; [1, 3, 5] | ramda.all (isOdd) // true
+	// --- return `true` if input is truthy, `false` otherwise.
+	const truthy = id
+	// const truthy = Boolean // also works
+
+Match *all* values against the predicate *`isOdd`*
 
 	; [1, 2, 3, 4, 5] | allAgainst (isOdd) // false
 	; [1, 3, 5] | allAgainst (isOdd) // true
 
-	const truthy = id
-	const allTruthy = allAgainst (truthy)
-	const allTruthy2 = list >> allAgainst (truthy)
+Match *all* values against the predicate *`truthy`*
 
+	const allTruthy = allAgainst (truthy)
 	; [1, 2, 3, 4, 5, null] | allTruthy // false
 	; [1, 2, 3, 4, 5] | allTruthy  // 5
-	allTruthy2 (1, 2, 3, 4, 5) // 5
 
-	1   | ramda.allPass ([isOdd, isLt3]) // true
-	1.1 | ramda.allPass ([isOdd, isLt3]) // false
-	2   | ramda.allPass ([isOdd, isLt3]) // false
-	3   | ramda.allPass ([isOdd, isLt3]) // false
+The value matches *all* the predicates
 
 	const isOddAndLt3 = againstAll ([isOdd, isLt3])
 	1   | isOddAndLt3 // true
@@ -1344,29 +1350,38 @@ classes. Use `\s` if you really want to match on whitespace.
 	2   | isOddAndLt3 // false
 	3   | isOddAndLt3 // false
 
+The value matches *any* of the predicates
+
 	const isOddOrLt3 = againstAny ([isOdd, isLt3])
 	2   | isOddOrLt3 // true
 	3   | isOddOrLt3 // true
 	4   | isOddOrLt3 // false
 	5   | isOddOrLt3 // true
 
-	// we don't provide backwards versions.
-	// e.g. [isOdd, isLt3] | xxx (1)
+We can also match multiple values against multiple predicates, in various
+combinations of 'all' and 'any' (Ramda doesn't have this out of the box --
+corrections welcome)
 
-	// ramda doesn't have these: multiple values + multiple predicates
+All the values are odd and less than 3.
 
 	const allOddAndLt3 = allAgainst (isOddAndLt3)
 	; [1, 2, 3, 4, 5] | allOddAndLt3 // false
 	; [1, 3, 5] | allOddAndLt3 // true
 
+All the values are odd and less than 3.
+
 	const allOddOrLt3 = allAgainst (isOddOrLt3)
 	; [1, 2, 3, 4, 5] | allOddOrLt3 // false
 	; [2, 3, 5] | allOddOrLt3 // true
+
+Any of the vales are odd and less than 3.
 
 	const anyOddAndLt3 = anyAgainst (isOddAndLt3)
 	; [3, 4, 5] | anyOddAndLt3 // false
 	; [2, 4, 5] | anyOddAndLt3 // false
 	; [1, 4, 5] | anyOddAndLt3 // true
+
+Any of the vales are odd or less than 3.
 
 	const anyOddOrLt3 = anyAgainst (isOddOrLt3)
 	; [4, 6] | anyOddOrLt3 // false
@@ -1375,13 +1390,15 @@ classes. Use `\s` if you really want to match on whitespace.
 	; [2, 6] | anyOddOrLt3 // true
 	; [1, 6] | anyOddOrLt3 // true
 
-	export const bothAgainst   = p => list >> allAgainst (p)
-	export const eitherAgainst = p => list >> anyAgainst (p)
-	export const againstBoth   = f => g => x => f (x) && g (x)
-	export const againstEither = f => g => x => f (x) || g (x)
+Both values are truthy /  either value is odd. Note that these forms take
+spread out arguments, not an array (so they are sugar for `allAgainst` /
+`anyAgainst`)
 
 	const bothTruthy = bothAgainst (truthy)
 	const eitherOdd = eitherAgainst (isOdd)
+
+	const isOddAndLt3Alt = againstBoth (isOdd) (isLt3)
+	const isOddOrLt3Alt = againstEither (isOdd) (isLt3)
 
 	// --- i.e. ; [null, 3] | allTruthy
 	bothTruthy (null, 3) // false
@@ -1391,48 +1408,15 @@ classes. Use `\s` if you really want to match on whitespace.
 	eitherOdd (null, 2) // false
 	eitherOdd (2, 4) // false
 
-	const isOddAndLt3Alt = againstBoth (isOdd) (isLt3)
 	1   | isOddAndLt3Alt // true
 	1.1 | isOddAndLt3Alt // false
 	2   | isOddAndLt3Alt // false
 	3   | isOddAndLt3Alt // false
 
-	const isOddOrLt3Alt = againstEither (isOdd) (isLt3)
 	2   | isOddOrLt3Alt // true
 	3   | isOddOrLt3Alt // true
 	4   | isOddOrLt3Alt // false
 	5   | isOddOrLt3Alt // true
-
-	const bothTruthy = bothAgainst (truthy)
-	const eitherOdd = eitherAgainst (isOdd)
-
-	// --- i.e. ; [null, 3] | allTruthy
-	bothTruthy (null, 3) // false
-	bothTruthy (1, 3) // 3
-
-	eitherOdd (1, 2) // true
-	eitherOdd (null, 2) // false
-	eitherOdd (2, 4) // false
-
-	const isOddAndLt3Alt = againstBoth (isOdd) (isLt3)
-	1   | isOddAndLt3Alt // true
-	1.1 | isOddAndLt3Alt // false
-	2   | isOddAndLt3Alt // false
-	3   | isOddAndLt3Alt // false
-
-	const isOddOrLt3Alt = againstEither (isOdd) (isLt3)
-	2   | isOddOrLt3Alt // true
-	3   | isOddOrLt3Alt // true
-	4   | isOddOrLt3Alt // false
-	5   | isOddOrLt3Alt // true
-
-
-
-
-
-
-
-
 
 ## ٭ merging ٭
 

@@ -1005,72 +1005,59 @@ const ifReplaceVowelsGlobal = ifXReplace (<span class="hljs-regexp">/ ([aeiou]) 
 const ifReplaceVowelsGlobalAlt = ifXReplaceStrFlags (<span class="hljs-string">' ([aeiou]) '</span>) (<span class="hljs-string">'g'</span>) (<span class="hljs-string">'x'</span>)
 <span class="hljs-string">'egbert'</span> | ifReplaceVowelsGlobalAlt (toUpper) (<span class="hljs-string">'bad'</span> | always)
 <span class="hljs-regexp">//</span> XGBXRT</code></pre><h2 id="٭-all-٭-any-٭"><a class="header-link" href="#٭-all-٭-any-٭"></a>٭ all ٭ any ٭</h2>
-<pre class="hljs"><code>const isOdd = x =&gt; isInteger (x) &amp;&amp; (x % <span class="hljs-number">2</span> !== <span class="hljs-number">0</span>)
-const isLt3 = <span class="hljs-number">3</span> | lt
+<p>If you&#39;re like the author you have a hard time remembering how Ramda&#39;s
+<code>all</code>, <code>any</code>, <code>both</code>, <code>either</code>, <code>and</code>, <code>or</code>, <code>anyPass</code>, and so on work. Does
+the &#39;all&#39; refer to all the functions? or all the values? and so on.</p>
+<p>Our solution to making the semantics clearer and enriching the functionality
+of these functions centers around the preposition &#39;against&#39;: you match
+a value <em>against</em> a predicate.</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> isOdd = x =&gt; isInteger (x) &amp;&amp; (x % <span class="hljs-number">2</span> !== <span class="hljs-number">0</span>)
+<span class="hljs-keyword">const</span> isLt3 = <span class="hljs-number">3</span> | lt
 
-; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | ramda.all (isOdd) <span class="hljs-comment">// false</span>
-; [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | ramda.all (isOdd) <span class="hljs-comment">// true</span>
-
-; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | allAgainst (isOdd) <span class="hljs-comment">// false</span>
-; [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | allAgainst (isOdd) <span class="hljs-comment">// true</span>
-
-const truthy = id
-const allTruthy = allAgainst (truthy)
-const allTruthy2 = <span class="hljs-type">list</span> &gt;&gt; allAgainst (truthy)
-
+// --- <span class="hljs-keyword">return</span> `<span class="hljs-literal">true</span>` <span class="hljs-keyword">if</span> input <span class="hljs-keyword">is</span> truthy, `<span class="hljs-literal">false</span>` otherwise.
+<span class="hljs-keyword">const</span> truthy = id
+// <span class="hljs-keyword">const</span> truthy = <span class="hljs-type">Boolean</span> // also works</code></pre><p>Match <em>all</em> values against the predicate <em><code>isOdd</code></em></p>
+<pre class="hljs"><code>; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | allAgainst (isOdd) <span class="hljs-comment">// false</span>
+; [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | allAgainst (isOdd) <span class="hljs-comment">// true</span></code></pre><p>Match <em>all</em> values against the predicate <em><code>truthy</code></em></p>
+<pre class="hljs"><code>const allTruthy = allAgainst (truthy)
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, null] | allTruthy <span class="hljs-comment">// false</span>
-; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | allTruthy  <span class="hljs-comment">// 5</span>
-allTruthy2 (<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>) <span class="hljs-comment">// 5</span>
-
-<span class="hljs-number">1</span>   | ramda.allPass ([isOdd, isLt3]) <span class="hljs-comment">// true</span>
-<span class="hljs-number">1.1</span> | ramda.allPass ([isOdd, isLt3]) <span class="hljs-comment">// false</span>
-<span class="hljs-number">2</span>   | ramda.allPass ([isOdd, isLt3]) <span class="hljs-comment">// false</span>
-<span class="hljs-number">3</span>   | ramda.allPass ([isOdd, isLt3]) <span class="hljs-comment">// false</span>
-
-const isOddAndLt3 = againstAll ([isOdd, isLt3])
+; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | allTruthy  <span class="hljs-comment">// 5</span></code></pre><p>The value matches <em>all</em> the predicates</p>
+<pre class="hljs"><code>const isOddAndLt3 = againstAll ([isOdd, isLt3])
 <span class="hljs-number">1</span>   | isOddAndLt3 <span class="hljs-comment">// true</span>
 <span class="hljs-number">1.1</span> | isOddAndLt3 <span class="hljs-comment">// false</span>
 <span class="hljs-number">2</span>   | isOddAndLt3 <span class="hljs-comment">// false</span>
-<span class="hljs-number">3</span>   | isOddAndLt3 <span class="hljs-comment">// false</span>
-
-const isOddOrLt3 = againstAny ([isOdd, isLt3])
+<span class="hljs-number">3</span>   | isOddAndLt3 <span class="hljs-comment">// false</span></code></pre><p>The value matches <em>any</em> of the predicates</p>
+<pre class="hljs"><code>const isOddOrLt3 = againstAny ([isOdd, isLt3])
 <span class="hljs-number">2</span>   | isOddOrLt3 <span class="hljs-comment">// true</span>
 <span class="hljs-number">3</span>   | isOddOrLt3 <span class="hljs-comment">// true</span>
 <span class="hljs-number">4</span>   | isOddOrLt3 <span class="hljs-comment">// false</span>
-<span class="hljs-number">5</span>   | isOddOrLt3 <span class="hljs-comment">// true</span>
-
-<span class="hljs-comment">// we don't provide backwards versions.</span>
-<span class="hljs-comment">// e.g. [isOdd, isLt3] | xxx (1)</span>
-
-<span class="hljs-comment">// ramda doesn't have these: multiple values + multiple predicates</span>
-
-const allOddAndLt3 = allAgainst (isOddAndLt3)
+<span class="hljs-number">5</span>   | isOddOrLt3 <span class="hljs-comment">// true</span></code></pre><p>We can also match multiple values against multiple predicates, in various
+combinations of &#39;all&#39; and &#39;any&#39; (Ramda doesn&#39;t have this out of the box --
+corrections welcome)</p>
+<p>All the values are odd and less than 3.</p>
+<pre class="hljs"><code>const allOddAndLt3 = allAgainst (isOddAndLt3)
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | allOddAndLt3 <span class="hljs-comment">// false</span>
-; [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | allOddAndLt3 <span class="hljs-comment">// true</span>
-
-const allOddOrLt3 = allAgainst (isOddOrLt3)
+; [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | allOddAndLt3 <span class="hljs-comment">// true</span></code></pre><p>All the values are odd and less than 3.</p>
+<pre class="hljs"><code>const allOddOrLt3 = allAgainst (isOddOrLt3)
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | allOddOrLt3 <span class="hljs-comment">// false</span>
-; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | allOddOrLt3 <span class="hljs-comment">// true</span>
-
-const anyOddAndLt3 = anyAgainst (isOddAndLt3)
+; [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | allOddOrLt3 <span class="hljs-comment">// true</span></code></pre><p>Any of the vales are odd and less than 3.</p>
+<pre class="hljs"><code>const anyOddAndLt3 = anyAgainst (isOddAndLt3)
 ; [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | anyOddAndLt3 <span class="hljs-comment">// false</span>
 ; [<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | anyOddAndLt3 <span class="hljs-comment">// false</span>
-; [<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | anyOddAndLt3 <span class="hljs-comment">// true</span>
-
-const anyOddOrLt3 = anyAgainst (isOddOrLt3)
+; [<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | anyOddAndLt3 <span class="hljs-comment">// true</span></code></pre><p>Any of the vales are odd or less than 3.</p>
+<pre class="hljs"><code>const anyOddOrLt3 = anyAgainst (isOddOrLt3)
 ; [<span class="hljs-number">4</span>, <span class="hljs-number">6</span>] | anyOddOrLt3 <span class="hljs-comment">// false</span>
 ; [<span class="hljs-number">3</span>, <span class="hljs-number">6</span>] | anyOddOrLt3 <span class="hljs-comment">// true</span>
 ; [<span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | anyOddOrLt3 <span class="hljs-comment">// true</span>
 ; [<span class="hljs-number">2</span>, <span class="hljs-number">6</span>] | anyOddOrLt3 <span class="hljs-comment">// true</span>
-; [<span class="hljs-number">1</span>, <span class="hljs-number">6</span>] | anyOddOrLt3 <span class="hljs-comment">// true</span>
-
-export const bothAgainst   = p =&gt; <span class="hljs-type">list</span> &gt;&gt; allAgainst (p)
-export const eitherAgainst = p =&gt; <span class="hljs-type">list</span> &gt;&gt; anyAgainst (p)
-export const againstBoth   = f =&gt; g =&gt; x =&gt; f (x) &amp;&amp; g (x)
-export const againstEither = f =&gt; g =&gt; x =&gt; f (x) || g (x)
-
-const bothTruthy = bothAgainst (truthy)
+; [<span class="hljs-number">1</span>, <span class="hljs-number">6</span>] | anyOddOrLt3 <span class="hljs-comment">// true</span></code></pre><p>Both values are truthy /  either value is odd. Note that these forms take
+spread out arguments, not an array (so they are sugar for <code>allAgainst</code> /
+<code>anyAgainst</code>)</p>
+<pre class="hljs"><code>const bothTruthy = bothAgainst (truthy)
 const eitherOdd = eitherAgainst (isOdd)
+
+const isOddAndLt3Alt = againstBoth (isOdd) (isLt3)
+const isOddOrLt3Alt = againstEither (isOdd) (isLt3)
 
 <span class="hljs-comment">// --- i.e. ; [null, 3] | allTruthy</span>
 bothTruthy (null, <span class="hljs-number">3</span>) <span class="hljs-comment">// false</span>
@@ -1080,36 +1067,11 @@ eitherOdd (<span class="hljs-number">1</span>, <span class="hljs-number">2</span
 eitherOdd (null, <span class="hljs-number">2</span>) <span class="hljs-comment">// false</span>
 eitherOdd (<span class="hljs-number">2</span>, <span class="hljs-number">4</span>) <span class="hljs-comment">// false</span>
 
-const isOddAndLt3Alt = againstBoth (isOdd) (isLt3)
 <span class="hljs-number">1</span>   | isOddAndLt3Alt <span class="hljs-comment">// true</span>
 <span class="hljs-number">1.1</span> | isOddAndLt3Alt <span class="hljs-comment">// false</span>
 <span class="hljs-number">2</span>   | isOddAndLt3Alt <span class="hljs-comment">// false</span>
 <span class="hljs-number">3</span>   | isOddAndLt3Alt <span class="hljs-comment">// false</span>
 
-const isOddOrLt3Alt = againstEither (isOdd) (isLt3)
-<span class="hljs-number">2</span>   | isOddOrLt3Alt <span class="hljs-comment">// true</span>
-<span class="hljs-number">3</span>   | isOddOrLt3Alt <span class="hljs-comment">// true</span>
-<span class="hljs-number">4</span>   | isOddOrLt3Alt <span class="hljs-comment">// false</span>
-<span class="hljs-number">5</span>   | isOddOrLt3Alt <span class="hljs-comment">// true</span>
-
-const bothTruthy = bothAgainst (truthy)
-const eitherOdd = eitherAgainst (isOdd)
-
-<span class="hljs-comment">// --- i.e. ; [null, 3] | allTruthy</span>
-bothTruthy (null, <span class="hljs-number">3</span>) <span class="hljs-comment">// false</span>
-bothTruthy (<span class="hljs-number">1</span>, <span class="hljs-number">3</span>) <span class="hljs-comment">// 3</span>
-
-eitherOdd (<span class="hljs-number">1</span>, <span class="hljs-number">2</span>) <span class="hljs-comment">// true</span>
-eitherOdd (null, <span class="hljs-number">2</span>) <span class="hljs-comment">// false</span>
-eitherOdd (<span class="hljs-number">2</span>, <span class="hljs-number">4</span>) <span class="hljs-comment">// false</span>
-
-const isOddAndLt3Alt = againstBoth (isOdd) (isLt3)
-<span class="hljs-number">1</span>   | isOddAndLt3Alt <span class="hljs-comment">// true</span>
-<span class="hljs-number">1.1</span> | isOddAndLt3Alt <span class="hljs-comment">// false</span>
-<span class="hljs-number">2</span>   | isOddAndLt3Alt <span class="hljs-comment">// false</span>
-<span class="hljs-number">3</span>   | isOddAndLt3Alt <span class="hljs-comment">// false</span>
-
-const isOddOrLt3Alt = againstEither (isOdd) (isLt3)
 <span class="hljs-number">2</span>   | isOddOrLt3Alt <span class="hljs-comment">// true</span>
 <span class="hljs-number">3</span>   | isOddOrLt3Alt <span class="hljs-comment">// true</span>
 <span class="hljs-number">4</span>   | isOddOrLt3Alt <span class="hljs-comment">// false</span>

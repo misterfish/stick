@@ -66,7 +66,12 @@ node lib/index.js</code></pre><h2 id="٭-webpack"><a class="header-link" href="#
 proposal
 <a href="https://github.com/tc39/proposal-pipeline-operator">TC39/proposal-pipeline-operator</a>
 is still being fleshed out.</p>
-<p>Note that we use <code>|</code>, not <code>|&gt;</code>, which is not only easier to overload but
+</li>
+<li><p>Companion operators <code>&gt;&gt;</code> and <code>&lt;&lt;</code> for composing. Often a pipeline can be
+made more interesting and reusable by abstracting away the data to leave a
+&#39;point-free&#39; form. See below for many examples of this.</p>
+</li>
+<li><p>Note that we use <code>|</code>, not <code>|&gt;</code>, which is not only easier to overload but
 far more pleasant to work with, and which will still work even if/when the
 proposal is accepted.</p>
 </li>
@@ -74,6 +79,11 @@ proposal is accepted.</p>
 idioms which they facilitate.</p>
 <p>You can use our functions, or your own favorite library (Ramda, lodash/fp,
 etc.), or mix and match as you like.</p>
+</li>
+<li><p>Practical examples and advice which will hopefully be of use to TC39,
+after using these idioms in many projects for about a year. In particular,
+that composition operators should be considered in addition to a pipeline
+operator.</p>
 </li>
 </ul>
 <p>The overloading is made possible thanks to the great

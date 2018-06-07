@@ -65,7 +65,11 @@
   [TC39/proposal-pipeline-operator](https://github.com/tc39/proposal-pipeline-operator)
   is still being fleshed out.
 
-  Note that we use `|`, not `|>`, which is not only easier to overload but
+- Companion operators `>>` and `<<` for composing. Often a pipeline can be
+  made more interesting and reusable by abstracting away the data to leave a
+  'point-free' form. See below for many examples of this.
+
+- Note that we use `|`, not `|>`, which is not only easier to overload but
   far more pleasant to work with, and which will still work even if/when the
   proposal is accepted.
 
@@ -74,6 +78,11 @@
 
   You can use our functions, or your own favorite library (Ramda, lodash/fp,
   etc.), or mix and match as you like.
+
+- Practical examples and advice which will hopefully be of use to TC39,
+  after using these idioms in many projects for about a year. In particular,
+  that composition operators should be considered in addition to a pipeline
+  operator.
 
 The overloading is made possible thanks to the great
 [babel-plugin-operator-overload](https://github.com/jussi-kalliokoski/babel-plugin-operator-overload)

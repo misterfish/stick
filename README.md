@@ -1314,6 +1314,126 @@ classes. Use `\s` if you really want to match on whitespace.
 	'egbert' | ifReplaceVowelsGlobalAlt (toUpper) ('bad' | always)
 	// XGBXRT
 
+## ٭ all ٭ any ٭
+
+	const isOdd = x => isInteger (x) && (x % 2 !== 0)
+	const isLt3 = 3 | lt
+
+	; [1, 2, 3, 4, 5] | ramda.all (isOdd) // false
+	; [1, 3, 5] | ramda.all (isOdd) // true
+
+	; [1, 2, 3, 4, 5] | allAgainst (isOdd) // false
+	; [1, 3, 5] | allAgainst (isOdd) // true
+
+	const truthy = id
+	const allTruthy = allAgainst (truthy)
+	const allTruthy2 = list >> allAgainst (truthy)
+
+	; [1, 2, 3, 4, 5, null] | allTruthy // false
+	; [1, 2, 3, 4, 5] | allTruthy  // 5
+	allTruthy2 (1, 2, 3, 4, 5) // 5
+
+	1   | ramda.allPass ([isOdd, isLt3]) // true
+	1.1 | ramda.allPass ([isOdd, isLt3]) // false
+	2   | ramda.allPass ([isOdd, isLt3]) // false
+	3   | ramda.allPass ([isOdd, isLt3]) // false
+
+	const isOddAndLt3 = againstAll ([isOdd, isLt3])
+	1   | isOddAndLt3 // true
+	1.1 | isOddAndLt3 // false
+	2   | isOddAndLt3 // false
+	3   | isOddAndLt3 // false
+
+	const isOddOrLt3 = againstAny ([isOdd, isLt3])
+	2   | isOddOrLt3 // true
+	3   | isOddOrLt3 // true
+	4   | isOddOrLt3 // false
+	5   | isOddOrLt3 // true
+
+	// we don't provide backwards versions.
+	// e.g. [isOdd, isLt3] | xxx (1)
+
+	// ramda doesn't have these: multiple values + multiple predicates
+
+	const allOddAndLt3 = allAgainst (isOddAndLt3)
+	; [1, 2, 3, 4, 5] | allOddAndLt3 // false
+	; [1, 3, 5] | allOddAndLt3 // true
+
+	const allOddOrLt3 = allAgainst (isOddOrLt3)
+	; [1, 2, 3, 4, 5] | allOddOrLt3 // false
+	; [2, 3, 5] | allOddOrLt3 // true
+
+	const anyOddAndLt3 = anyAgainst (isOddAndLt3)
+	; [3, 4, 5] | anyOddAndLt3 // false
+	; [2, 4, 5] | anyOddAndLt3 // false
+	; [1, 4, 5] | anyOddAndLt3 // true
+
+	const anyOddOrLt3 = anyAgainst (isOddOrLt3)
+	; [4, 6] | anyOddOrLt3 // false
+	; [3, 6] | anyOddOrLt3 // true
+	; [3, 5] | anyOddOrLt3 // true
+	; [2, 6] | anyOddOrLt3 // true
+	; [1, 6] | anyOddOrLt3 // true
+
+	export const bothAgainst   = p => list >> allAgainst (p)
+	export const eitherAgainst = p => list >> anyAgainst (p)
+	export const againstBoth   = f => g => x => f (x) && g (x)
+	export const againstEither = f => g => x => f (x) || g (x)
+
+	const bothTruthy = bothAgainst (truthy)
+	const eitherOdd = eitherAgainst (isOdd)
+
+	// --- i.e. ; [null, 3] | allTruthy
+	bothTruthy (null, 3) // false
+	bothTruthy (1, 3) // 3
+
+	eitherOdd (1, 2) // true
+	eitherOdd (null, 2) // false
+	eitherOdd (2, 4) // false
+
+	const isOddAndLt3Alt = againstBoth (isOdd) (isLt3)
+	1   | isOddAndLt3Alt // true
+	1.1 | isOddAndLt3Alt // false
+	2   | isOddAndLt3Alt // false
+	3   | isOddAndLt3Alt // false
+
+	const isOddOrLt3Alt = againstEither (isOdd) (isLt3)
+	2   | isOddOrLt3Alt // true
+	3   | isOddOrLt3Alt // true
+	4   | isOddOrLt3Alt // false
+	5   | isOddOrLt3Alt // true
+
+	const bothTruthy = bothAgainst (truthy)
+	const eitherOdd = eitherAgainst (isOdd)
+
+	// --- i.e. ; [null, 3] | allTruthy
+	bothTruthy (null, 3) // false
+	bothTruthy (1, 3) // 3
+
+	eitherOdd (1, 2) // true
+	eitherOdd (null, 2) // false
+	eitherOdd (2, 4) // false
+
+	const isOddAndLt3Alt = againstBoth (isOdd) (isLt3)
+	1   | isOddAndLt3Alt // true
+	1.1 | isOddAndLt3Alt // false
+	2   | isOddAndLt3Alt // false
+	3   | isOddAndLt3Alt // false
+
+	const isOddOrLt3Alt = againstEither (isOdd) (isLt3)
+	2   | isOddOrLt3Alt // true
+	3   | isOddOrLt3Alt // true
+	4   | isOddOrLt3Alt // false
+	5   | isOddOrLt3Alt // true
+
+
+
+
+
+
+
+
+
 ## ٭ merging ٭
 
 We provide 8 basic merge functions, corresponding to all combinations of

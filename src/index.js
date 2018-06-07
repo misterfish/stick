@@ -10,7 +10,6 @@ export const compose      = (a, b)    => (...args) => a (b (...args))
 export const composeAsMethodsRight = (b, a) => a.compose (b)
 export const composeAsMethods      = (a, b) => a.compose (b)
 
-
 import {
     bitwiseAnd, bitwiseOr, bitwiseXor, bitwiseNot,
     bitwiseLeft, bitwiseRight, bitwiseRightZeroFill,
@@ -1063,10 +1062,12 @@ export const againstAny = _recurry (2) (manual.againstAny)
 export const allAgainst = _recurry (2) (manual.allAgainst)
 export const anyAgainst = _recurry (2) (manual.anyAgainst)
 
+// --- @experimental
 // export const bothAgainst   = p => list >> allAgainst (p)
-export const bothAgainst   = (p, ...args) => allAgainst (p) (args)
+export const bothAgainst   = (p) => (...args) => allAgainst (p) (args)
+// --- @experimental
 // export const eitherAgainst = p => list >> anyAgainst (p)
-export const eitherAgainst = (p, ...args) => anyAgainst (p) (args)
+export const eitherAgainst = (p) => (...args) => anyAgainst (p) (args)
 
 export const againstBoth = _recurry (3) (manual.againstBoth)
 export const againstEither = _recurry (3) (manual.againstEither)

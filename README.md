@@ -81,8 +81,8 @@
 
 - Practical examples and advice which will hopefully be of use to TC39,
   after using these idioms in many projects for about a year. In particular,
-  that composition operators should be considered in addition to a pipeline
-  operator.
+  we hope to make a strong case that composition operators should be
+  considered in addition to a pipeline operator.
 
 The overloading is made possible thanks to the great
 [babel-plugin-operator-overload](https://github.com/jussi-kalliokoski/babel-plugin-operator-overload)

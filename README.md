@@ -74,7 +74,10 @@
   proposal is accepted.
 
 - A toolkit of functions centered around this pattern, and a number of
-  idioms which they facilitate.
+  idioms which they facilitate; in particular, we provide several ways to
+  replace blocks of statements by referentially transparent expressions
+  which ought to be intuitive to anyone coming from a functional programming
+  background.
 
   You can use our functions, or your own favorite library (Ramda, lodash/fp,
   etc.), or mix and match as you like.
@@ -1056,9 +1059,9 @@ You can specify these behaviors explicitly:
 You can consolidate a number of assignment statements into a single let
 expression, and also limit the scope of the assignments in a way which is
 easy to read. Code which is based on expressions rather than blocks of
-statements can often be much easier to follow at a glance & refactor,
-especially considering that each statement is a possible side-effect
-inducing timebomb.
+statements can be made referentially transparent, and therefore much easier
+to read & refactor, especially considering that each statement is a possible
+side-effect inducing timebomb.
 
     // --- convert a celsius value to both fahrenheit & kelvin.
 
@@ -1331,12 +1334,12 @@ a value *against* a predicate.
 	const truthy = id
 	// const truthy = Boolean // also works
 
-Match *all* values against the predicate *`isOdd`*
+Match *all* values *against* the predicate `isOdd`
 
 	; [1, 2, 3, 4, 5] | allAgainst (isOdd) // false
 	; [1, 3, 5] | allAgainst (isOdd) // true
 
-Match *all* values against the predicate *`truthy`*
+Match *all* values *against* the predicate `truthy`
 
 	const allTruthy = allAgainst (truthy)
 	; [1, 2, 3, 4, 5, null] | allTruthy // false
@@ -1428,7 +1431,7 @@ three binary choices:
 1. *mutable* vs. *immutable* (whether to clone the target first)
 
 There are a few conventions to keep in mind when trying to understand the
-semantics. To vs. from is just a question of switching the arguments, so we
+semantics. *To* vs. *from* is just a question of switching the arguments, so we
 don't need to discuss it, but the other 4 combinations have some caveats.
 
 	tgt | merge    (src) // (1) own, immutable
@@ -2033,6 +2036,98 @@ And make it point-free:
 	const isInteger = arrowSnd (floor) >> passToN (eq)
 
 Your turn :D
+
+## ٭ Kleisli composition, generic ٭
+
+(Based on a conversation with @puffnfresh).
+
+Let us limit ourselves to only composition, not piping. In keeping with the
+left-to-right sense of most of our examples, we'll take our `>>` operator,
+and ask:
+
+- can we continue composing the way we have up until now;
+- and, can we also do Kleisli composition …
+- without introducing a new operator?
+
+Solutions 1) and 2) involve desugaring `a >> b` to `b.compose (a)`, instead
+of `compose (b, a)` as we have been doing.
+
+Solution 3) is to keep desugaring it as we have been until now.
+
+In 1), `b` is an *object* with a method `compose`. It will be the result of
+`Object.create` on a 'kleisli prototype' object. We must also add `compose`
+to `Function.prototype` so that the ordinary compositions work.
+
+In 2), `b` is a function, and we again we splice `compose` into
+`Function.prototype`.
+
+In all 3 of these cases we need a way to prepare functions so that the
+correct `.compose` call is used (cases 1 and 2), or so that `compose` works
+as it should (case 3). We will use a function called `k` to enhance a
+normally composing function (`f`) into a Kleisli-composing one (`k (f)`).
+
+A final requirement for this experiment is that `k (f)` be simply callable
+using JS syntax, not requiring a separate `.call` or something similar.
+
+We'll start with `some (x)` where `x` is an integer, (using `bilby.some`),
+and pass it through `step1` Kleisli-composed with `step2`.
+
+	// --- some (x+1) if x>=0, else none.
+	const step1 = ifLt0 (none | always, inc >> some)
+	// --- some (x+1) if x is even, else none.
+	const step2 = ifOdd (none | always, inc >> some)
+
+Here are the results of some experiments. All examples result in ['none',
+'none', 3, 'none]. See the examples for the implementations.
+
+1a) Requires `id` at the beginning of the chain -- not nice.
+
+	const transform = id >> k (step1) >> k (step2)
+
+    ; -1 | rangeTo (3)
+         | map (some >> transform >> getOrElse ('none'))
+
+1b) We can get rid of `id`, but we have to put the `some` into the chain.
+
+	const transform = some
+	  >> k (step1)
+	  >> k (step2)
+
+	; -1 | rangeTo (3)
+		 | map (transform >> getOrElse ('none'))
+
+1c) We can get rid of `id`, and put `some` back where we like it, but the
+chain requires an extra `k` around the whole thing.
+
+	const transform = k (step1 >> k (step2))
+
+	; -1 | rangeTo (3)
+		 | map (some >> transform >> getOrElse ('none'))
+
+2a-c) All the same possibilities.
+
+2d) Finally, the first form which we consider usable:
+
+	const transform = k (step1) >> k (step2)
+
+	; -1 | rangeTo (3)
+		 | map (some >> transform >> getOrElse ('none'))
+
+Version 3) is the simplest of all and doesn't require patching any
+prototypes. It allows us to replicate the form from 2d) using precisely the
+idiom we've been using all along.
+
+We simply define `k` as `dot1 ('flatMap')`, and desugar `a >> b` as `compose
+(b, a)` as before:
+
+    const k = dot1 ('flatMap')
+
+	const transform = k (step1) >> k (step2)
+
+	; -1 | rangeTo (3)
+		 | map (some >> transform >> getOrElse ('none'))
+		 | log
+
 
 # Performance
 

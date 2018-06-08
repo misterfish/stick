@@ -76,7 +76,10 @@ far more pleasant to work with, and which will still work even if/when the
 proposal is accepted.</p>
 </li>
 <li><p>A toolkit of functions centered around this pattern, and a number of
-idioms which they facilitate.</p>
+idioms which they facilitate; in particular, we provide several ways to
+replace blocks of statements by referentially transparent expressions
+which ought to be intuitive to anyone coming from a functional programming
+background.</p>
 <p>You can use our functions, or your own favorite library (Ramda, lodash/fp,
 etc.), or mix and match as you like.</p>
 </li>
@@ -818,9 +821,9 @@ dogProto |<span class="hljs-string"> Object.create    </span>|<span class="hljs-
 <p>You can consolidate a number of assignment statements into a single let
 expression, and also limit the scope of the assignments in a way which is
 easy to read. Code which is based on expressions rather than blocks of
-statements can often be much easier to follow at a glance &amp; refactor,
-especially considering that each statement is a possible side-effect
-inducing timebomb.</p>
+statements can be made referentially transparent, and therefore much easier
+to read &amp; refactor, especially considering that each statement is a possible
+side-effect inducing timebomb.</p>
 <pre class="hljs"><code><span class="hljs-comment">// --- convert a celsius value to both fahrenheit &amp; kelvin.</span>
 
 const convertCelsius = (c) =&gt; letV (
@@ -1016,9 +1019,9 @@ a value <em>against</em> a predicate.</p>
 
 // --- <span class="hljs-keyword">return</span> `<span class="hljs-literal">true</span>` <span class="hljs-keyword">if</span> input <span class="hljs-keyword">is</span> truthy, `<span class="hljs-literal">false</span>` otherwise.
 <span class="hljs-keyword">const</span> truthy = id
-// <span class="hljs-keyword">const</span> truthy = <span class="hljs-type">Boolean</span> // also works</code></pre><p>Match <em>all</em> values against the predicate <em><code>isOdd</code></em></p>
+// <span class="hljs-keyword">const</span> truthy = <span class="hljs-type">Boolean</span> // also works</code></pre><p>Match <em>all</em> values <em>against</em> the predicate <code>isOdd</code></p>
 <pre class="hljs"><code>; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | allAgainst (isOdd) <span class="hljs-comment">// false</span>
-; [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | allAgainst (isOdd) <span class="hljs-comment">// true</span></code></pre><p>Match <em>all</em> values against the predicate <em><code>truthy</code></em></p>
+; [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>] | allAgainst (isOdd) <span class="hljs-comment">// true</span></code></pre><p>Match <em>all</em> values <em>against</em> the predicate <code>truthy</code></p>
 <pre class="hljs"><code>const allTruthy = allAgainst (truthy)
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, null] | allTruthy <span class="hljs-comment">// false</span>
 ; [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>] | allTruthy  <span class="hljs-comment">// 5</span></code></pre><p>The value matches <em>all</em> the predicates</p>
@@ -1084,7 +1087,7 @@ three binary choices:</p>
 <li><em>mutable</em> vs. <em>immutable</em> (whether to clone the target first)</li>
 </ol>
 <p>There are a few conventions to keep in mind when trying to understand the
-semantics. To vs. from is just a question of switching the arguments, so we
+semantics. <em>To</em> vs. <em>from</em> is just a question of switching the arguments, so we
 don&#39;t need to discuss it, but the other 4 combinations have some caveats.</p>
 <pre class="hljs"><code><span class="hljs-selector-tag">tgt</span> | <span class="hljs-selector-tag">merge</span>    (src) <span class="hljs-comment">// (1) own, immutable</span>
 <span class="hljs-selector-tag">tgt</span> | <span class="hljs-selector-tag">mergeIn</span>  (src) <span class="hljs-comment">// (2) in,  immutable</span>
@@ -1562,7 +1565,69 @@ call it <code>arrowSnd</code>:</p>
   | <span class="hljs-type">arrowSnd</span> (floor)
   | <span class="hljs-type">passToN</span> (eq)</code></pre><p>And make it point-free:</p>
 <pre class="hljs"><code>const isInteger = arrowSnd (<span class="hljs-name">floor</span>) &gt;&gt; passToN (<span class="hljs-name">eq</span>)</code></pre><p>Your turn :D</p>
-<h1 id="performance"><a class="header-link" href="#performance"></a>Performance</h1>
+<h2 id="٭-kleisli-composition,-generic-٭"><a class="header-link" href="#٭-kleisli-composition,-generic-٭"></a>٭ Kleisli composition, generic ٭</h2>
+<p>(Based on a conversation with @puffnfresh).</p>
+<p>Let us limit ourselves to only composition, not piping. In keeping with the
+left-to-right sense of most of our examples, we&#39;ll take our <code>&gt;&gt;</code> operator,
+and ask:</p>
+<ul class="list">
+<li>can we continue composing the way we have up until now;</li>
+<li>and, can we also do Kleisli composition …</li>
+<li>without introducing a new operator?</li>
+</ul>
+<p>Solutions 1) and 2) involve desugaring <code>a &gt;&gt; b</code> to <code>b.compose (a)</code>, instead
+of <code>compose (b, a)</code> as we have been doing.</p>
+<p>Solution 3) is to keep desugaring it as we have been until now.</p>
+<p>In 1), <code>b</code> is an <em>object</em> with a method <code>compose</code>. It will be the result of
+<code>Object.create</code> on a &#39;kleisli prototype&#39; object. We must also add <code>compose</code>
+to <code>Function.prototype</code> so that the ordinary compositions work.</p>
+<p>In 2), <code>b</code> is a function, and we again we splice <code>compose</code> into
+<code>Function.prototype</code>.</p>
+<p>In all 3 of these cases we need a way to prepare functions so that the
+correct <code>.compose</code> call is used (cases 1 and 2), or so that <code>compose</code> works
+as it should (case 3). We will use a function called <code>k</code> to enhance a
+normally composing function (<code>f</code>) into a Kleisli-composing one (<code>k (f)</code>).</p>
+<p>A final requirement for this experiment is that <code>k (f)</code> be simply callable
+using JS syntax, not requiring a separate <code>.call</code> or something similar.</p>
+<p>We&#39;ll start with <code>some (x)</code> where <code>x</code> is an integer, (using <code>bilby.some</code>),
+and pass it through <code>step1</code> Kleisli-composed with <code>step2</code>.</p>
+<pre class="hljs"><code>// --- <span class="hljs-built_in">some</span> (x+<span class="hljs-number">1</span>) <span class="hljs-keyword">if</span> x&gt;=<span class="hljs-number">0</span>, <span class="hljs-keyword">else</span> none.
+const step1 = ifLt0 (none | always, inc &gt;&gt; <span class="hljs-built_in">some</span>)
+// --- <span class="hljs-built_in">some</span> (x+<span class="hljs-number">1</span>) <span class="hljs-keyword">if</span> x <span class="hljs-built_in">is</span> <span class="hljs-built_in">even</span>, <span class="hljs-keyword">else</span> none.
+const step2 = ifOdd (none | always, inc &gt;&gt; <span class="hljs-built_in">some</span>)</code></pre><p>Here are the results of some experiments. All examples result in [&#39;none&#39;,
+&#39;none&#39;, 3, &#39;none]. See the examples for the implementations.</p>
+<p>1a) Requires <code>id</code> at the beginning of the chain -- not nice.</p>
+<pre class="hljs"><code>const transform = id <span class="hljs-meta">&gt;&gt; </span>k (step1) &gt;&gt; k (step2)
+
+; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
+     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))</code></pre><p>1b) We can get rid of <code>id</code>, but we have to put the <code>some</code> into the chain.</p>
+<pre class="hljs"><code>const transform = some
+  <span class="hljs-meta">&gt;&gt; </span>k (step1)
+  <span class="hljs-meta">&gt;&gt; </span>k (step2)
+
+; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
+     |</span> map (transform <span class="hljs-meta">&gt;&gt; </span>getOrElse (<span class="hljs-string">'none'</span>))</code></pre><p>1c) We can get rid of <code>id</code>, and put <code>some</code> back where we like it, but the
+chain requires an extra <code>k</code> around the whole thing.</p>
+<pre class="hljs"><code>const transform = k (step1 <span class="hljs-meta">&gt;&gt; </span>k (step2))
+
+; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
+     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))</code></pre><p>2a-c) All the same possibilities.</p>
+<p>2d) Finally, the first form which we consider usable:</p>
+<pre class="hljs"><code>const transform = k (step1) <span class="hljs-meta">&gt;&gt; </span>k (step2)
+
+; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
+     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))</code></pre><p>Version 3) is the simplest of all and doesn&#39;t require patching any
+prototypes. It allows us to replicate the form from 2d) using precisely the
+idiom we&#39;ve been using all along.</p>
+<p>We simply define <code>k</code> as <code>dot1 (&#39;flatMap&#39;)</code>, and desugar <code>a &gt;&gt; b</code> as <code>compose
+(b, a)</code> as before:</p>
+<pre class="hljs"><code>const k = dot1 (<span class="hljs-string">'flatMap'</span>)
+
+const transform = k (step1) <span class="hljs-meta">&gt;&gt; </span>k (step2)
+
+; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
+     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))
+     <span class="hljs-params">| log</span></code></pre><h1 id="performance"><a class="header-link" href="#performance"></a>Performance</h1>
 <p>Stick is fast. (@todo link benchmark)</p>
 <p>Though it initially depended on Ramda, we have decided to eliminate that
 dependency by reimplementing many of the functions. While profiling the

@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 
 defineBinaryOperator ('|',  (...args) => pipe         (...args))
-// defineBinaryOperator ('<<', (...args) => compose      (...args))
-// defineBinaryOperator ('>>', (...args) => composeRight (...args))
-
-defineBinaryOperator ('>>', (...args) => composeAsMethodsRight (...args))
+defineBinaryOperator ('<<', (...args) => compose      (...args))
+defineBinaryOperator ('>>', (...args) => composeRight (...args))
 
 import ramda, {
     not, either, both, any, all, allPass, anyPass,
@@ -45,57 +43,28 @@ import {
     modulo,
     passTo1,
     rangeTo,
-    composeAsMethodsRight,
-    composeAsMethods,
 } from '../../../index'
-
-import { k, } from './kleisli'
 
 import { some, none, } from 'bilby'
 
 const flatMap = dot1 ('flatMap')
 const getOrElse = dot1 ('getOrElse')
 
+const k = flatMap
+
 const inc = add (1)
-const double = multiply (2)
-const kinc = k (inc)
-const kdouble = k (double)
-
-// const incThenDouble = kdouble >> kinc
-// log (incThenDouble.call (2))
-
-enhanceFunction ()
-// ; (inc >> double).call (null, 2) // 6
-// | log
 
 const isOdd = modulo (2) >> ne (0)
 const ifLt0 = 0 | lt | ifPredicate
 const ifOdd = isOdd | ifPredicate
 
-const logWith = (header) => (...args) => log (... [header, ...args])
-
 const step1 = ifLt0 (none | always, inc >> some)
 const step2 = ifOdd (none | always, inc >> some)
 
-// works, 1-style
-// const doit =
-//      some
-//   >> k (step1)
-//   >> k (step2)
+const transform =
+     k (step1)
+  >> k (step2)
 
-// --- um looks familiar
-//const doit = k (step1) >> k (step2)
-const doit = k (step1 >> k (step2))
-
-; [(-3), (1), (2)] | map (some >> doit >> getOrElse ('none'))
-                   | map (log)
-
-function enhanceFunction () {
-    const proto = {
-        compose (b) {
-            return (...args) => this (b (...args))
-        },
-    }
-    // Function.prototype | mergeM (proto)
-    mergeM (proto) (Function.prototype)
-}
+; -1 | rangeTo (3)
+     | map (some >> transform >> getOrElse ('none'))
+     | log

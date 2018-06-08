@@ -2,14 +2,6 @@ defineBinaryOperator ('|',  (...args) => pipe         (...args))
 defineBinaryOperator ('<<', (...args) => compose      (...args))
 defineBinaryOperator ('>>', (...args) => composeRight (...args))
 
-import ramda, {
-    not, either, both, any, all, allPass, anyPass,
-    isEmpty, fromPairs, toPairs,
-    reduceRight, chain, splitAt, curry, zip, contains,
-    forEach as each, forEachObjIndexed as eachObj,
-    take, mapAccum,
-} from 'ramda'
-
 import {
     pipe, compose, composeRight,
     ok, ifOk, ifPredicate, whenOk, whenPredicate,
@@ -34,14 +26,50 @@ import {
     factory, factoryProps,
 } from '../../../index'
 
-export const k = (f, tag = 'none') => {
-    const cc = fx => fx.flatMap (x => f (x))
-    const pose = g => {
-        console.log ('g', g)
-        return fx => {
-            console.log ('fx', fx)
-            return fx.flatMap (x => f (g (x)))
+const init = dot2 ('init')
+const create = dot ('create')
+
+const flatMap = dot1 ('flatMap')
+
+let IDX = -1
+
+// a k function, when .call'd, should transparently flatmap.
+// composing one or more functions is optional, and yields a new k function.
+const proto = {
+    init (f, tag)       { return this | mergeM ({
+        tag,
+        _f: f,
+        idx: ++IDX,
+    })},
+    // call (...args) { return this._f (...args) },
+    call (fx) {
+        // console.log ('idx, fx', this.tag, fx)
+        return fx.flatMap (x => {
+            // console.log ('inside flatmap, x', x)
+            // console.log ('inside flatmap, this._f', this._f)
+            // console.log ('inside flatmap, this._f (x)', this.tag, this._f (x))
+            return this._f (x)
+        })
+    },
+    compose (b) {
+        // console.log ('compose, b', b)
+        //return k ((...args) => {
+        return (...args) => {
+            // b is a normal function
+            // this is a magic one
+
+            // console.log ('inside composed, args:', args)
+            // console.log ('b', b)
+            const bb = b (...args)
+            // console.log ('bb, bb.getOrElse ("none")', bb.getOrElse ("none"))
+            const called = this.call (bb)
+            // console.log ('called', called)
+            return called
         }
-    }
-    return cc
+    },
 }
+
+const Kleisli = proto | factory
+
+export const k = (f, tag = 'none') => Kleisli | create | init (f, tag)
+export default Kleisli

@@ -1,17 +1,13 @@
-defineBinaryOperator ('|',  (...args) => pipe         (...args))
-defineBinaryOperator ('<<', (...args) => compose      (...args))
-defineBinaryOperator ('>>', (...args) => composeRight (...args))
+#!/usr/bin/env node
 
-import ramda, {
-    not, either, both, any, all, allPass, anyPass,
-    isEmpty, fromPairs, toPairs,
-    reduceRight, chain, splitAt, curry, zip, contains,
-    forEach as each, forEachObjIndexed as eachObj,
-    take, mapAccum,
-} from 'ramda'
+defineBinaryOperator ('|',  (...args) => pipe         (...args))
+defineBinaryOperator ('>>', (...args) => composeAsMethodsRight (...args))
+
+const { log, } = console
 
 import {
     pipe, compose, composeRight,
+    composeAsMethodsRight,
     ok, ifOk, ifPredicate, whenOk, whenPredicate,
     id, tap, recurry, roll,
     map, filter, reject, reduce, flip, flip3,
@@ -32,16 +28,33 @@ import {
     die, raise, decorateException, exception,
     lt, gt, eq, ne, lte, gte,
     factory, factoryProps,
-} from '../../../index'
+    add, multiply,
+    modulo,
+    passTo1,
+    rangeTo,
+} from '../../../../index'
 
-export const k = (f, tag = 'none') => {
-    const cc = fx => fx.flatMap (x => f (x))
-    const pose = g => {
-        console.log ('g', g)
-        return fx => {
-            console.log ('fx', fx)
-            return fx.flatMap (x => f (g (x)))
-        }
-    }
-    return cc
-}
+import { some, none, } from 'bilby'
+
+import { enhanceFunction, } from '../../enhance-function'
+import { k, } from '../kleisli'
+
+enhanceFunction ()
+
+const getOrElse = dot1 ('getOrElse')
+const inc = add (1)
+const isOdd = modulo (2) >> ne (0)
+const ifLt0 = 0 | lt | ifPredicate
+const ifOdd = isOdd | ifPredicate
+
+const step1 = ifLt0 (none | always, inc >> some)
+const step2 = ifOdd (none | always, inc >> some)
+
+const transform = id
+    >> k (step1)
+    >> k (step2)
+
+; -1 | rangeTo (3)
+     | map (some >> transform >> getOrElse ('none'))
+     | log
+

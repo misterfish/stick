@@ -39,50 +39,31 @@ import {
     factory, factoryProps,
 } from '../../../index'
 
-const init = dot2 ('init')
+const init = dot1 ('init')
 const create = dot ('create')
 
 const flatMap = dot1 ('flatMap')
 
-let IDX = -1
+// --- flatMap should happen during `call`, not `compose`, so that a chain consisting of a single
+// function works as expected.
+// --- we'll refer to `k` style functions as 'magic'
 
-// a k function, when .call'd, should transparently flatmap.
-// composing one or more functions is optional, and yields a new k function.
 const proto = {
-    init (f, tag)       { return this | mergeM ({
-        tag,
-        _f: f,
-        idx: ++IDX,
-    })},
-    // call (...args) { return this._f (...args) },
-    call (fx) {
-        // console.log ('idx, fx', this.tag, fx)
-        return fx.flatMap (x => {
-            // console.log ('inside flatmap, x', x)
-            // console.log ('inside flatmap, this._f', this._f)
-            // console.log ('inside flatmap, this._f (x)', this.tag, this._f (x))
-            return this._f (x)
+    init (f) {
+        return this | mergeM ({
+            _f: f,
         })
     },
+    call (fx) {
+        return fx.flatMap (x => this._f (x))
+    },
     compose (b) {
-        // console.log ('compose, b', b)
-        //return k ((...args) => {
-        return (...args) => {
-            // b is a normal function
-            // this is a magic one
-
-            // console.log ('inside composed, args:', args)
-            // console.log ('b', b)
-            const bb = b (...args)
-            // console.log ('bb, bb.getOrElse ("none")', bb.getOrElse ("none"))
-            const called = this.call (bb)
-            // console.log ('called', called)
-            return called
-        }
+        // --- `b` is a normal function
+        // --- `this` is a magic one
+        return (...args) => this.call (b (...args))
     },
 }
 
 const Kleisli = proto | factory
 
-export const k = (f, tag = 'none') => Kleisli | create | init (f, tag)
-export default Kleisli
+export const k = f => Kleisli | create | init (f)

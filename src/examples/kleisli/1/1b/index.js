@@ -1,24 +1,13 @@
 #!/usr/bin/env node
 
 defineBinaryOperator ('|',  (...args) => pipe         (...args))
-defineBinaryOperator ('<<', (...args) => compose      (...args))
-defineBinaryOperator ('>>', (...args) => composeRight (...args))
+defineBinaryOperator ('>>', (...args) => composeAsMethodsRight (...args))
 
-import ramda, {
-    not, either, both, any, all, allPass, anyPass,
-    isEmpty, fromPairs, toPairs,
-    reduceRight, chain, splitAt, curry, zip, contains,
-    forEach as each, forEachObjIndexed as eachObj,
-    take, mapAccum,
-} from 'ramda'
-
-import fishLib, {
-    log, info, warn, error, green, yellow, magenta, brightRed, cyan, brightBlue,
-    sprintf, forceColors, getopt, shellQuote,
-} from 'fish-lib'
+const { log, } = console
 
 import {
     pipe, compose, composeRight,
+    composeAsMethodsRight,
     ok, ifOk, ifPredicate, whenOk, whenPredicate,
     id, tap, recurry, roll,
     map, filter, reject, reduce, flip, flip3,
@@ -43,19 +32,18 @@ import {
     modulo,
     passTo1,
     rangeTo,
-} from '../../../index'
+} from '../../../../index'
 
 import { some, none, } from 'bilby'
 
-const flatMap = dot1 ('flatMap')
+import { enhanceFunction, } from '../../enhance-function'
+import { k, } from '../kleisli'
+
+enhanceFunction ()
+
 const getOrElse = dot1 ('getOrElse')
 
-const k = flatMap
-
 const inc = add (1)
-const double = multiply (2)
-const kinc = k (inc)
-const kdouble = k (double)
 
 const isOdd = modulo (2) >> ne (0)
 const ifLt0 = 0 | lt | ifPredicate
@@ -64,11 +52,10 @@ const ifOdd = isOdd | ifPredicate
 const step1 = ifLt0 (none | always, inc >> some)
 const step2 = ifOdd (none | always, inc >> some)
 
-const doit =
-     k (step1)
+const transform = some
+  >> k (step1)
   >> k (step2)
 
-; -5 | rangeTo (5)
-     | map (some)
-     | map (doit >> getOrElse ('none'))
+; -1 | rangeTo (3)
+     | map (transform >> getOrElse ('none'))
      | log

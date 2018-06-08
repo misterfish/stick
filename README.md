@@ -75,9 +75,8 @@
 
 - A toolkit of functions centered around this pattern, and a number of
   idioms which they facilitate; in particular, we provide several ways to
-  replace blocks of statements by referentially transparent expressions
-  which ought to be intuitive to anyone coming from a functional programming
-  background.
+  replace blocks of statements by referentially transparent expressions,
+  and work with prototypes, factories, mutable and immutable data, and more.
 
   You can use our functions, or your own favorite library (Ramda, lodash/fp,
   etc.), or mix and match as you like.

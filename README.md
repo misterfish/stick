@@ -1819,8 +1819,8 @@ reason.
 
 ## Abstract data types
 
-Abstract data types can help eliminate an entire class of bugs, by making
-impossible states unrepresentable.
+Abstract (or 'algebraic') data types can help eliminate an entire class of
+bugs, by making impossible states unrepresentable.
 
 Imagine you have something like a traffic light, which at any moment can be
 either red, yellow, green, or broken. (Or a download, which can be in

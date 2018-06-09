@@ -1595,8 +1595,6 @@ to <code>Function.prototype</code> so that the ordinary compositions work.</p>
 correct <code>.compose</code> call is used (cases 1 and 2), or so that <code>compose</code> works
 as it should (case 3). We will use a function called <code>k</code> to enhance a
 normally composing function (<code>f</code>) into a Kleisli-composing one (<code>k (f)</code>).</p>
-<p>A final requirement for this experiment is that <code>k (f)</code> be simply callable
-using JS syntax, not requiring a separate <code>.call</code> or something similar.</p>
 <p>We&#39;ll start with <code>some (x)</code> where <code>x</code> is an integer, (using <code>bilby.some</code>),
 and pass it through <code>step1</code> Kleisli-composed with <code>step2</code>.</p>
 <pre class="hljs"><code>// --- <span class="hljs-built_in">some</span> (x+<span class="hljs-number">1</span>) <span class="hljs-keyword">if</span> x&gt;=<span class="hljs-number">0</span>, <span class="hljs-keyword">else</span> none.

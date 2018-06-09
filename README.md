@@ -279,11 +279,11 @@ fits.
 	random | timesF (4)          // [<random-num>, <random-num>, <random-num>, <random-num>]
 	random | timesV (4)          // [random, random, random, random]
 
-Note that the last one stores the function in the array.
+Note that the last one stores the function 4 times in the array.
 
     random | timesV (4) | map (invoke) // [<random-num>, <random-num>, <random-num>, <random-num>]
 
-'M' means the data is being mutated. In JS we of course work with mutable data all the time.
+'M' means the data is being mutated. In JS we of course work with mutable data all the time, and this will never change.
 
     import { appendTo, appendToM, } from 'stick-js'
 
@@ -994,8 +994,8 @@ Create it, add dog methods, and make a new factory:
 	const Dog = dogProto | factory | factoryProps (dogProps)
 
     ; [true, false]
-	| map ((loudness) => Dog
-	  | create ({ loud: loudness, })
+	| map ((isLoud) => Dog
+	  | create ({ loud: isLoud, })
 	  | (dog => [dog.speak (), dog.breathe (), dog.move ()])
 	)
 	// [['WOOF', 'huff', 'gait'], ['woof', 'huff', 'gait']]
@@ -1011,7 +1011,7 @@ conflicts and it's not always obvious which version should win out -- and
 you have to decide how you want to deal with that.
 
 But you have all the tools now to specify exactly how you want it to work.
-Now you have what JS is known for giving you a lot of: freedom.
+This is where JS shines: freedom.
 
     const Dog = dogProto | mixinPreM (animalProto) | factory | factoryProps (dogProps)
 	const dog1 = Dog | create ({})
@@ -1059,8 +1059,8 @@ You can consolidate a number of assignment statements into a single let
 expression, and also limit the scope of the assignments in a way which is
 easy to read. Code which is based on expressions rather than blocks of
 statements can be made referentially transparent, and therefore much easier
-to read & refactor, especially considering that each statement is a possible
-side-effect inducing timebomb.
+to read, refactor, & prove the correctness of, especially considering that
+each statement is a possible side-effect inducing timebomb.
 
     // --- convert a celsius value to both fahrenheit & kelvin.
 

@@ -2266,12 +2266,12 @@ fibonacci example. We'll model `fibonacci (n)` as
     const fibonacci = (n) => {
 	  const sumLastTwo = (xs) => {
 	    const l = xs.length
-		return xs [l-1] + xs [l-2]
+	    return xs [l-1] + xs [l-2]
 	  }
 	  const entry = (...prev) => {
 	    const l = prev.length
-		return l === 0 ? 1 :
-		       l === 1 ? 1 : sumLastTwo (prev)
+	    return l === 0 ? 1 :
+	           l === 1 ? 1 : sumLastTwo (prev)
 	  }
       const refs = entry | timesV (n + 1)
 	  return lets (...refs, list)

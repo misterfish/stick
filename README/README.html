@@ -1629,9 +1629,7 @@ chain requires an extra <code>k</code> around the whole thing.</p>
 <pre class="hljs"><code>const transform = k (step1 <span class="hljs-meta">&gt;&gt; </span>k (step2))
 
 ; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
-     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))
-
-     /<span class="hljs-regexp">/ ['nothing', 'nothing', 6, 'nothing']</span></code></pre><p>2a-c) All the same possibilities.</p>
+     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))</code></pre><p>2a-c) All the same possibilities.</p>
 <p>2d) Finally, the first form which we consider usable:</p>
 <pre class="hljs"><code>const transform = k (step1) <span class="hljs-meta">&gt;&gt; </span>k (step2)
 

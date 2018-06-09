@@ -709,7 +709,7 @@ assign some methods and/or properties. If you wish you can use
 more values, use <code>Object.create</code> again, and so on.</p>
 <p>(Nothing will stop you from using <code>Object.create</code> on an object with
 non-method properties in it, and it will probably do what you want, but it&#39;s
-best avoided).</p>
+best avoided -- add your properties to the last object in the chain).</p>
 <p>We encapsulate this process with the notion of a factory, which is an object
 which knows how to spawn objects of a certain sort.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { <span class="hljs-keyword">factory</span>, } from <span class="hljs-string">'stick-js'</span>
@@ -918,10 +918,10 @@ you can tell what went wrong:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> throwError = <span class="hljs-function"><span class="hljs-params">reason</span> =&gt;</span> reason | die
 
 <span class="hljs-comment">// or just</span>
-<span class="hljs-comment">// const error = die</span></code></pre><p>Now we can improve this common code:</p>
+<span class="hljs-comment">// const throwError = die</span></code></pre><p>Now we can improve this common code:</p>
 <pre class="hljs"><code><span class="hljs-keyword">let</span> answer
 <span class="hljs-keyword">try</span> {
-    answer = dubiousFunction ()
+    answer = dubiousFunction () + <span class="hljs-number">10</span>
 } <span class="hljs-keyword">catch</span> (e) {
     console.warn (e)
     answer = <span class="hljs-string">'bad news'</span>

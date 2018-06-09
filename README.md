@@ -1196,13 +1196,13 @@ But we can trick it like this:
     const throwError = reason => reason | die
 
 	// or just
-	// const error = die
+	// const throwError = die
 
 Now we can improve this common code:
 
     let answer
 	try {
-	    answer = dubiousFunction ()
+	    answer = dubiousFunction () + 10
 	} catch (e) {
 	    console.warn (e)
 	    answer = 'bad news'
@@ -1215,7 +1215,7 @@ Like this:
 	  (e) => {
 	      e | decorateException ("That didn't go well")
 	        | console.warn
-		  return 'bad news'
+	      return 'bad news'
 	  },
 	}
 

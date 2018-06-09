@@ -586,7 +586,7 @@ export const isSymbol   = isType ('Symbol')
 export const isInteger = x => x === Math.floor (x)
 
 // --- excl, so it's like ramda.
-// --- note that `by` should be negative to count down.
+// --- note that `by` should be negative to count down -- we always add.
 
 export const rangeFromBy     = _recurry (3) (manual.rangeFromBy)
 export const rangeFromByAsc  = _recurry (3) (manual.rangeFromByAsc)

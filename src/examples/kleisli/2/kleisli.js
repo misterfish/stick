@@ -34,14 +34,4 @@ import {
     factory, factoryProps,
 } from '../../../index'
 
-export const k = (f, tag = 'none') => {
-    const cc = fx => fx.flatMap (x => f (x))
-    const pose = g => {
-        console.log ('g', g)
-        return fx => {
-            console.log ('fx', fx)
-            return fx.flatMap (x => f (g (x)))
-        }
-    }
-    return cc
-}
+export const k = f => fx => fx.flatMap (x => f (x))

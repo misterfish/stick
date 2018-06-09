@@ -2040,16 +2040,30 @@ Your turn :D
 
 (Based on a conversation with @puffnfresh).
 
-Let us limit ourselves to only composition, not piping. In keeping with the
-left-to-right sense of most of our examples, we'll take our `>>` operator,
+Let us consider the `>>` operator (though you can use `<<` if you prefer),
 and ask:
 
-- can we continue composing the way we have up until now;
-- and, can we also do Kleisli composition …
-- without introducing a new operator?
+1. can we continue using it to compose the way we have up until now;
+1. and, can we also do Kleisli composition …
+1. without introducing a new operator?
 
-Solutions 1) and 2) involve desugaring `a >> b` to `b.compose (a)`, instead
-of `compose (b, a)` as we have been doing.
+We explore 3 ways of doing this.
+
+stick provides the functions `composeAsMethods` and `composeAsMethodsRight`.
+
+By changing the header to:
+
+	defineBinaryOperator ('>>', (...args) => composeAsMethodsRight (...args))
+	defineBinaryOperator ('<<', (...args) => composeAsMethods      (...args))
+
+Then `a >> b` will desugar to `b.compose (a)`, instead of to `compose (b,
+a)` as we have been doing.
+
+Is is then up to you to ensure that `b` has a method called `.compose`. `b`
+could be a custom object, or it can be a function, keeping in mind that
+functions are also objects whose prototype is called Function.prototype.
+
+Solutions 1) and 2) use this technique.
 
 Solution 3) is to keep desugaring it as we have been until now.
 
@@ -2057,7 +2071,7 @@ In 1), `b` is an *object* with a method `compose`. It will be the result of
 `Object.create` on a 'kleisli prototype' object. We must also add `compose`
 to `Function.prototype` so that the ordinary compositions work.
 
-In 2), `b` is a function, and we again we splice `compose` into
+In 2), `b` is a function, and we must again splice `compose` into
 `Function.prototype`.
 
 In all 3 of these cases we need a way to prepare functions so that the
@@ -2076,8 +2090,11 @@ and pass it through `step1` Kleisli-composed with `step2`.
 	// --- some (x+1) if x is even, else none.
 	const step2 = ifOdd (none | always, inc >> some)
 
-Here are the results of some experiments. All examples result in ['none',
-'none', 3, 'none]. See the examples for the implementations.
+Here are the results of some experiments.
+
+All examples result in `['none', 'none', 3, 'none']`.
+
+See the source for the implementations, omitted here.
 
 1a) Requires `id` at the beginning of the chain -- not nice.
 
@@ -2102,6 +2119,7 @@ chain requires an extra `k` around the whole thing.
 
 	; -1 | rangeTo (3)
 		 | map (some >> transform >> getOrElse ('none'))
+	// ['nothing', 'nothing', 6, 'nothing']
 
 2a-c) All the same possibilities.
 
@@ -2111,6 +2129,10 @@ chain requires an extra `k` around the whole thing.
 
 	; -1 | rangeTo (3)
 		 | map (some >> transform >> getOrElse ('none'))
+
+2) is perhaps the least interesting of the three, because `.compose` doesn't
+even get called in the case of the `k()` functions. But it does lead us to
+version 3:
 
 Version 3) is the simplest of all and doesn't require patching any
 prototypes. It allows us to replicate the form from 2d) using precisely the
@@ -2125,8 +2147,8 @@ We simply define `k` as `dot1 ('flatMap')`, and desugar `a >> b` as `compose
 
 	; -1 | rangeTo (3)
 		 | map (some >> transform >> getOrElse ('none'))
-		 | log
-
+		 // ['none', 'none', 3, 'none']
+		 // QED
 
 # Performance
 

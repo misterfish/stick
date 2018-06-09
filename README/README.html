@@ -1566,21 +1566,28 @@ call it <code>arrowSnd</code>:</p>
 <pre class="hljs"><code>const isInteger = arrowSnd (<span class="hljs-name">floor</span>) &gt;&gt; passToN (<span class="hljs-name">eq</span>)</code></pre><p>Your turn :D</p>
 <h2 id="٭-kleisli-composition,-generic-٭"><a class="header-link" href="#٭-kleisli-composition,-generic-٭"></a>٭ Kleisli composition, generic ٭</h2>
 <p>(Based on a conversation with @puffnfresh).</p>
-<p>Let us limit ourselves to only composition, not piping. In keeping with the
-left-to-right sense of most of our examples, we&#39;ll take our <code>&gt;&gt;</code> operator,
+<p>Let us consider the <code>&gt;&gt;</code> operator (though you can use <code>&lt;&lt;</code> if you prefer),
 and ask:</p>
-<ul class="list">
-<li>can we continue composing the way we have up until now;</li>
+<ol class="list">
+<li>can we continue using it to compose the way we have up until now;</li>
 <li>and, can we also do Kleisli composition …</li>
 <li>without introducing a new operator?</li>
-</ul>
-<p>Solutions 1) and 2) involve desugaring <code>a &gt;&gt; b</code> to <code>b.compose (a)</code>, instead
-of <code>compose (b, a)</code> as we have been doing.</p>
+</ol>
+<p>We explore 3 ways of doing this.</p>
+<p>stick provides the functions <code>composeAsMethods</code> and <code>composeAsMethodsRight</code>.</p>
+<p>By changing the header to:</p>
+<pre class="hljs"><code>defineBinaryOperator (<span class="hljs-string">'&gt;&gt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeAsMethodsRight (...args))
+defineBinaryOperator (<span class="hljs-string">'&lt;&lt;'</span>, <span class="hljs-function"><span class="hljs-params">(...args)</span> =&gt;</span> composeAsMethods      (...args))</code></pre><p>Then <code>a &gt;&gt; b</code> will desugar to <code>b.compose (a)</code>, instead of to <code>compose (b,
+a)</code> as we have been doing.</p>
+<p>Is is then up to you to ensure that <code>b</code> has a method called <code>.compose</code>. <code>b</code>
+could be a custom object, or it can be a function, keeping in mind that
+functions are also objects whose prototype is called Function.prototype.</p>
+<p>Solutions 1) and 2) use this technique.</p>
 <p>Solution 3) is to keep desugaring it as we have been until now.</p>
 <p>In 1), <code>b</code> is an <em>object</em> with a method <code>compose</code>. It will be the result of
 <code>Object.create</code> on a &#39;kleisli prototype&#39; object. We must also add <code>compose</code>
 to <code>Function.prototype</code> so that the ordinary compositions work.</p>
-<p>In 2), <code>b</code> is a function, and we again we splice <code>compose</code> into
+<p>In 2), <code>b</code> is a function, and we must again splice <code>compose</code> into
 <code>Function.prototype</code>.</p>
 <p>In all 3 of these cases we need a way to prepare functions so that the
 correct <code>.compose</code> call is used (cases 1 and 2), or so that <code>compose</code> works
@@ -1593,8 +1600,9 @@ and pass it through <code>step1</code> Kleisli-composed with <code>step2</code>.
 <pre class="hljs"><code>// --- <span class="hljs-built_in">some</span> (x+<span class="hljs-number">1</span>) <span class="hljs-keyword">if</span> x&gt;=<span class="hljs-number">0</span>, <span class="hljs-keyword">else</span> none.
 const step1 = ifLt0 (none | always, inc &gt;&gt; <span class="hljs-built_in">some</span>)
 // --- <span class="hljs-built_in">some</span> (x+<span class="hljs-number">1</span>) <span class="hljs-keyword">if</span> x <span class="hljs-built_in">is</span> <span class="hljs-built_in">even</span>, <span class="hljs-keyword">else</span> none.
-const step2 = ifOdd (none | always, inc &gt;&gt; <span class="hljs-built_in">some</span>)</code></pre><p>Here are the results of some experiments. All examples result in [&#39;none&#39;,
-&#39;none&#39;, 3, &#39;none]. See the examples for the implementations.</p>
+const step2 = ifOdd (none | always, inc &gt;&gt; <span class="hljs-built_in">some</span>)</code></pre><p>Here are the results of some experiments.</p>
+<p>All examples result in <code>[&#39;none&#39;, &#39;none&#39;, 3, &#39;none&#39;]</code>.</p>
+<p>See the source for the implementations, omitted here.</p>
 <p>1a) Requires <code>id</code> at the beginning of the chain -- not nice.</p>
 <pre class="hljs"><code>const transform = id <span class="hljs-meta">&gt;&gt; </span>k (step1) &gt;&gt; k (step2)
 
@@ -1610,23 +1618,28 @@ chain requires an extra <code>k</code> around the whole thing.</p>
 <pre class="hljs"><code>const transform = k (step1 <span class="hljs-meta">&gt;&gt; </span>k (step2))
 
 ; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
-     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))</code></pre><p>2a-c) All the same possibilities.</p>
+     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))
+/<span class="hljs-regexp">/ ['nothing', 'nothing', 6, 'nothing']</span></code></pre><p>2a-c) All the same possibilities.</p>
 <p>2d) Finally, the first form which we consider usable:</p>
 <pre class="hljs"><code>const transform = k (step1) <span class="hljs-meta">&gt;&gt; </span>k (step2)
 
 ; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
-     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))</code></pre><p>Version 3) is the simplest of all and doesn&#39;t require patching any
+     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))</code></pre><p>2) is perhaps the least interesting of the three, because <code>.compose</code> doesn&#39;t
+even get called in the case of the <code>k()</code> functions. But it does lead us to
+version 3:</p>
+<p>Version 3) is the simplest of all and doesn&#39;t require patching any
 prototypes. It allows us to replicate the form from 2d) using precisely the
 idiom we&#39;ve been using all along.</p>
 <p>We simply define <code>k</code> as <code>dot1 (&#39;flatMap&#39;)</code>, and desugar <code>a &gt;&gt; b</code> as <code>compose
 (b, a)</code> as before:</p>
-<pre class="hljs"><code>const k = dot1 (<span class="hljs-string">'flatMap'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">const</span> k = dot1 (<span class="hljs-string">'flatMap'</span>)
 
-const transform = k (step1) <span class="hljs-meta">&gt;&gt; </span>k (step2)
+<span class="hljs-keyword">const</span> transform = k (step1) &gt;&gt; k (step2)
 
-; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
-     |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))
-     <span class="hljs-params">| log</span></code></pre><h1 id="performance"><a class="header-link" href="#performance"></a>Performance</h1>
+; <span class="hljs-number">-1</span> | rangeTo (<span class="hljs-number">3</span>)
+     | <span class="hljs-built_in">map</span> (some &gt;&gt; transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))
+     <span class="hljs-comment">// ['none', 'none', 3, 'none']</span>
+     <span class="hljs-comment">// QED</span></code></pre><h1 id="performance"><a class="header-link" href="#performance"></a>Performance</h1>
 <p>Stick is fast. (@todo link benchmark)</p>
 <p>Though it initially depended on Ramda, we have decided to eliminate that
 dependency by reimplementing many of the functions. While profiling the

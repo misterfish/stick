@@ -974,10 +974,10 @@ sticks:</p>
   <span class="hljs-number">4</span> | gt    | guard  (<span class="hljs-name">sprintf1</span> ('%s was more than <span class="hljs-number">4</span>')),
   otherwise | guardV (<span class="hljs-string">"error, this shouldn't happen"</span>),
 ])</code></pre><p>Wut?! This does work, strange as it looks. Try it for yourself:</p>
-<pre class="hljs"><code>; [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+<pre class="hljs"><code>; [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, {}]
 | <span class="hljs-type">map</span> (checkVal)
 | <span class="hljs-type">join</span> (' | <span class="hljs-type">')
-// 3</span> was less than <span class="hljs-number">4</span> | <span class="hljs-type">4</span> was <span class="hljs-number">4</span> | <span class="hljs-type">5</span> was more than <span class="hljs-number">4</span></code></pre><h2 id="٭-extended-regexes-٭"><a class="header-link" href="#٭-extended-regexes-٭"></a>٭ extended regexes ٭</h2>
+// 3</span> was less than <span class="hljs-number">4</span> | <span class="hljs-type">4</span> was <span class="hljs-number">4</span> | <span class="hljs-type">5</span> was more than <span class="hljs-number">4</span> | <span class="hljs-type">error</span>, this shouldn't happen</code></pre><h2 id="٭-extended-regexes-٭"><a class="header-link" href="#٭-extended-regexes-٭"></a>٭ extended regexes ٭</h2>
 <p>We provide regex functions which fit the idiom and mostly have an &#39;X&#39; in the
 name (think /x if you know Perl).</p>
 <p>These are &#39;extended regexes&#39;, in which whitespace is ignored. Note that we
@@ -986,14 +986,14 @@ classes. Use <code>\s</code> if you really want to match on whitespace.</p>
 <pre class="hljs"><code><span class="hljs-string">'egbert'</span> | xMatch (<span class="hljs-regexp">/ (eg) (..) [rs] /</span>)
 <span class="hljs-regexp">//</span> [ <span class="hljs-string">'egber'</span>, <span class="hljs-string">'eg'</span>, <span class="hljs-string">'be'</span>, index: <span class="hljs-number">0</span>, input: <span class="hljs-string">'egbert'</span> ]
 
+<span class="hljs-regexp">//</span> --- same, using a regex string instead of a RegExp literal.
+<span class="hljs-string">'egbert'</span> | xMatchStr (<span class="hljs-string">' (eg) (..) [rs] '</span>)
+<span class="hljs-regexp">//</span> [ <span class="hljs-string">'egber'</span>, <span class="hljs-string">'eg'</span>, <span class="hljs-string">'be'</span>, index: <span class="hljs-number">0</span>, input: <span class="hljs-string">'egbert'</span> ]
+
 const vowels = []
 const mapper = appendToM (vowels)
 <span class="hljs-string">'egbert druppelvanger'</span> | xMatchGlobal (<span class="hljs-regexp">/ [ae] /</span>) (mapper)
 vowels <span class="hljs-regexp">//</span> [ <span class="hljs-string">'e'</span>, <span class="hljs-string">'e'</span>, <span class="hljs-string">'e'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'e'</span> ]
-
-<span class="hljs-regexp">//</span> --- same, using a regex string instead of a RegExp literal.
-<span class="hljs-string">'egbert'</span> | xMatchStr (<span class="hljs-string">' (eg) (..) [rs] '</span>)
-<span class="hljs-regexp">//</span> [ <span class="hljs-string">'egber'</span>, <span class="hljs-string">'eg'</span>, <span class="hljs-string">'be'</span>, index: <span class="hljs-number">0</span>, input: <span class="hljs-string">'egbert'</span> ]
 
 <span class="hljs-string">'egbert\ndruppelvanger'</span> | xMatchStrFlags (<span class="hljs-string">' ^ d '</span>) (<span class="hljs-string">'s'</span>)
 <span class="hljs-regexp">//</span> null

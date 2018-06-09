@@ -1300,14 +1300,14 @@ classes. Use `\s` if you really want to match on whitespace.
 	'egbert' | xMatch (/ (eg) (..) [rs] /)
 	// [ 'egber', 'eg', 'be', index: 0, input: 'egbert' ]
 
+    // --- same, using a regex string instead of a RegExp literal.
+	'egbert' | xMatchStr (' (eg) (..) [rs] ')
+	// [ 'egber', 'eg', 'be', index: 0, input: 'egbert' ]
+
 	const vowels = []
 	const mapper = appendToM (vowels)
 	'egbert druppelvanger' | xMatchGlobal (/ [ae] /) (mapper)
 	vowels // [ 'e', 'e', 'e', 'a', 'e' ]
-
-    // --- same, using a regex string instead of a RegExp literal.
-	'egbert' | xMatchStr (' (eg) (..) [rs] ')
-	// [ 'egber', 'eg', 'be', index: 0, input: 'egbert' ]
 
 	'egbert\ndruppelvanger' | xMatchStrFlags (' ^ d ') ('s')
 	// null
@@ -1572,8 +1572,8 @@ How about this:
 	  }
 	}
 
-Try it yourself and see :D Note that we can't use our `tryCatch` function
-here, because of the `yield` in the `catch` clause.
+Note that we can't use our `tryCatch` function here, because of the `yield`
+in the `catch` clause.
 
 If you use `reselect`, this is fine:
 

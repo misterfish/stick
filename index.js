@@ -3,10 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.mapTuplesIn = exports.mapTuples = exports.mapValuesIn = exports.mapKeysIn = exports.mapValues = exports.mapKeys = exports.valuesIn = exports.values = exports.mapAsValuesIn = exports.mapAsValues = exports.keysIn = exports.keys = exports.mapAsKeysIn = exports.mapAsKeys = exports.withFilter = exports.defaultToV = exports.otherwise = exports.guardV = exports.guard = exports.condPredicate = exports.condElse = exports.F = undefined;
-exports.T = exports.always = exports.blush = exports.toThe = exports.moduloWholePart = exports.modulo = exports.divideInto = exports.divideBy = exports.multiply = exports.plus = exports.add = exports.minus = exports.subtractFrom = exports.subtract = exports.bindLateProp = exports.bindLatePropTo = exports.bind = exports.bindTo = exports.bindTry = exports.bindTryTo = exports.bindTryProp = exports.bindTryPropTo = exports.bindProp = exports.bindPropTo = exports.factoryStatics = exports.factory = exports.factoryInit = exports.factoryProps = exports.mixinNM = exports.mixinPreNM = exports.mixinM = exports.mixinPreM = exports.arg6 = exports.arg5 = exports.arg4 = exports.arg3 = exports.arg2 = exports.arg1 = exports.arg0 = exports.flattenPrototype = exports.discardPrototype = exports.ifXReplaceStrFlags = exports.ifXReplaceStr = exports.ifXReplace = exports.ifReplace = exports.xReplaceStrFlags = exports.xReplaceStr = exports.xReplace = exports.xMatchStrFlags = exports.xMatchStr = exports.xMatchGlobal = exports.xMatch = exports.match = exports.xRegExpStr = exports.xRegExpFlags = exports.xRegExp = exports.neuN = exports.neu5 = exports.neu4 = exports.neu3 = exports.neu2 = exports.neu1 = exports.neu = exports.list = exports.compactOk = exports.compact = exports.rangeFrom = exports.rangeTo = exports.rangeToByDesc = exports.rangeToByAsc = exports.rangeToBy = exports.rangeFromByDesc = exports.rangeFromByAsc = exports.rangeFromBy = exports.isInteger = exports.isSymbol = exports.isString = exports.isBoolean = exports.isRegExp = exports.isNumber = exports.isObject = exports.isArray = exports.isFunction = exports.isType = exports.getType = exports.timesSide = exports.timesF = exports.timesV = exports.repeatSide = exports.repeatF = exports.repeatV = exports.zipAll = exports.sprintfN = exports.sprintf1 = exports.flip5 = exports.flip4 = exports.flip3 = exports.flip = exports.passToN = exports.passTo = undefined;
-exports.applyToN = exports.applyTo5 = exports.applyTo4 = exports.applyTo3 = exports.applyTo2 = exports.applyTo1 = exports.invoke = exports.provideToN = exports.provideTo5 = exports.provideTo4 = exports.provideTo3 = exports.provideTo2 = exports.provideTo1 = exports.provideTo = exports.callOnN = exports.callOn5 = exports.callOn4 = exports.callOn3 = exports.callOn2 = exports.callOn1 = exports.callOn = exports.letS = exports.lets = exports.letN = exports.lets6 = exports.lets5 = exports.lets4 = exports.lets3 = exports.lets2 = exports.lets1 = exports.letNV = exports.letV = exports.asteriskN = exports.asterisk5 = exports.asterisk4 = exports.asterisk3 = exports.asterisk2 = exports.asterisk1 = exports.ampersandN = exports.reduceObjIn = exports.reduceObj = exports.eachObjIn = exports.eachObj = exports.addCollection = exports.addIndex = exports.tail = exports.head = exports.last = exports.reduceAbort = exports.contains = exports.find = exports.reject = exports.filter = exports.reduce = exports.each = exports.map = exports.mergeAllIn = exports.mergeWith = exports.mergeWhen = exports.mergeInSym = exports.mergeInMSym = exports.mergeInToSym = exports.mergeInToMSym = exports.mergeSym = exports.mergeMSym = exports.mergeToSym = exports.mergeToMSym = exports.mergeInTo = exports.mergeIn = exports.mergeInM = exports.mergeInToM = exports.mergeToM = exports.mergeM = exports.merge = exports.mergeTo = exports.concatM = exports.concatToM = exports.precat = exports.precatTo = exports.concat = exports.concatTo = exports.prependToM = exports.prependM = exports.prepend = exports.prependTo = exports.appendToM = exports.appendM = exports.appendTo = exports.append = exports.updatePath = exports.updatePathM = exports.update = exports.updateM = exports.assocPathM = exports.assocPath = exports.assocM = exports.assoc = exports.path = exports.propOf = exports.prop = undefined;
-exports.hasIn = exports.has = exports.join = exports.split = exports.defaultTo__ = exports.defaultTo = exports.cascade = exports.die = exports.decorateException = exports.raise = exports.exception = exports.tryCatch = exports.tryCatch__ = exports.condS = exports.condN = exports.cond = exports.ifBind__ = exports.ifHasIn__ = exports.ifHas__ = exports.ifFunction__ = exports.ifNo__ = exports.ifYes__ = exports.ifFalse__ = exports.ifTrue__ = exports.ifNotOk__ = exports.ifOk__ = exports.ifPredicate__ = exports.whenBind = exports.ifBind = exports.whenHasIn = exports.ifHasIn = exports.whenHas = exports.ifHas = exports.whenFalsy = exports.ifFalsy = exports.whenTruthy = exports.ifTruthy = exports.whenNo = exports.ifNo = exports.whenYes = exports.ifYes = exports.whenFalse = exports.ifFalse = exports.whenTrue = exports.ifTrue = exports.whenNotOk = exports.ifNotOk = exports.whenOk = exports.ifOk = exports.whenPredicateOk = exports.ifPredicateOk = exports.whenPredicate = exports.ifPredicate = exports.isFalsy = exports.isTruthy = exports.isNo = exports.isYes = exports.isFalse = exports.isTrue = exports.sideN = exports.side5 = exports.side4 = exports.side3 = exports.side2 = exports.side1 = exports.side = exports.dotN = exports.dot5 = exports.dot4 = exports.dot3 = exports.dot2 = exports.dot1 = exports.dot = exports.tap = exports.id = exports.lte = exports.lt = exports.gte = exports.gt = exports.ne = exports.eq = exports.notOk = exports.ok = exports.not = exports.noop = exports.recurry = exports.roll = exports.bitwiseRightZeroFillBy = exports.bitwiseRightBy = exports.bitwiseLeftBy = exports.bitwiseRightZeroFill = exports.bitwiseRight = exports.bitwiseLeft = exports.bitwiseNot = exports.bitwiseXor = exports.bitwiseOr = exports.bitwiseAnd = exports.compose = exports.composeRight = exports.pipe = undefined;
+exports.againstEither = exports.againstBoth = exports.eitherAgainst = exports.bothAgainst = exports.anyAgainst = exports.allAgainst = exports.againstAny = exports.againstAll = exports.mapTuplesIn = exports.mapTuples = exports.mapValuesIn = exports.mapKeysIn = exports.mapValues = exports.mapKeys = exports.valuesIn = exports.values = exports.mapAsValuesIn = exports.mapAsValues = exports.keysIn = exports.keys = exports.mapAsKeysIn = exports.mapAsKeys = exports.withFilter = exports.defaultToV = exports.otherwise = exports.guardV = exports.guard = exports.condPredicate = exports.condElse = exports.F = exports.T = exports.always = undefined;
+exports.blush = exports.toThe = exports.moduloWholePart = exports.modulo = exports.divideInto = exports.divideBy = exports.multiply = exports.plus = exports.add = exports.minus = exports.subtractFrom = exports.subtract = exports.bindLateProp = exports.bindLatePropTo = exports.bind = exports.bindTo = exports.bindTry = exports.bindTryTo = exports.bindTryProp = exports.bindTryPropTo = exports.bindProp = exports.bindPropTo = exports.factoryStatics = exports.factory = exports.factoryInit = exports.factoryProps = exports.mixinNM = exports.mixinPreNM = exports.mixinM = exports.mixinPreM = exports.arg6 = exports.arg5 = exports.arg4 = exports.arg3 = exports.arg2 = exports.arg1 = exports.arg0 = exports.flattenPrototype = exports.discardPrototype = exports.ifXReplaceStrFlags = exports.ifXReplaceStr = exports.ifXReplace = exports.ifReplace = exports.xReplaceStrFlags = exports.xReplaceStr = exports.xReplace = exports.xMatchStrFlags = exports.xMatchStr = exports.xMatchGlobal = exports.xMatch = exports.match = exports.xRegExpStr = exports.xRegExpFlags = exports.xRegExp = exports.neuN = exports.neu5 = exports.neu4 = exports.neu3 = exports.neu2 = exports.neu1 = exports.neu = exports.list = exports.compactOk = exports.compact = exports.rangeFrom = exports.rangeTo = exports.rangeToByDesc = exports.rangeToByAsc = exports.rangeToBy = exports.rangeFromByDesc = exports.rangeFromByAsc = exports.rangeFromBy = exports.isInteger = exports.isSymbol = exports.isString = exports.isBoolean = exports.isRegExp = exports.isNumber = exports.isObject = exports.isArray = exports.isFunction = exports.isType = exports.getType = exports.timesSide = exports.timesF = exports.timesV = exports.repeatSide = exports.repeatF = exports.repeatV = exports.zipAll = exports.sprintfN = exports.sprintf1 = exports.flip5 = exports.flip4 = exports.flip3 = exports.flip = exports.passToN = exports.passTo = exports.applyToN = exports.applyTo5 = undefined;
+exports.applyTo4 = exports.applyTo3 = exports.applyTo2 = exports.applyTo1 = exports.invoke = exports.provideToN = exports.provideTo5 = exports.provideTo4 = exports.provideTo3 = exports.provideTo2 = exports.provideTo1 = exports.provideTo = exports.callOnN = exports.callOn5 = exports.callOn4 = exports.callOn3 = exports.callOn2 = exports.callOn1 = exports.callOn = exports.letS = exports.lets = exports.letN = exports.lets6 = exports.lets5 = exports.lets4 = exports.lets3 = exports.lets2 = exports.lets1 = exports.letNV = exports.letV = exports.asteriskN = exports.asterisk5 = exports.asterisk4 = exports.asterisk3 = exports.asterisk2 = exports.asterisk1 = exports.ampersandN = exports.reduceObjIn = exports.reduceObj = exports.eachObjIn = exports.eachObj = exports.addCollection = exports.addIndex = exports.tail = exports.head = exports.last = exports.reduceAbort = exports.contains = exports.find = exports.reject = exports.filter = exports.reduce = exports.each = exports.map = exports.mergeAllIn = exports.mergeWith = exports.mergeWhen = exports.mergeInSym = exports.mergeInMSym = exports.mergeInToSym = exports.mergeInToMSym = exports.mergeSym = exports.mergeMSym = exports.mergeToSym = exports.mergeToMSym = exports.mergeInTo = exports.mergeIn = exports.mergeInM = exports.mergeInToM = exports.mergeToM = exports.mergeM = exports.merge = exports.mergeTo = exports.concatM = exports.concatToM = exports.precat = exports.precatTo = exports.concat = exports.concatTo = exports.prependToM = exports.prependM = exports.prepend = exports.prependTo = exports.appendToM = exports.appendM = exports.appendTo = exports.append = exports.updatePath = exports.updatePathM = exports.update = exports.updateM = exports.assocPathM = exports.assocPath = exports.assocM = exports.assoc = exports.path = exports.propOf = exports.prop = exports.hasIn = exports.has = undefined;
+exports.join = exports.split = exports.defaultTo__ = exports.defaultTo = exports.cascade = exports.die = exports.decorateException = exports.raise = exports.exception = exports.tryCatch = exports.tryCatch__ = exports.condS = exports.condN = exports.cond = exports.ifBind__ = exports.ifHasIn__ = exports.ifHas__ = exports.ifFunction__ = exports.ifNo__ = exports.ifYes__ = exports.ifFalse__ = exports.ifTrue__ = exports.ifNotOk__ = exports.ifOk__ = exports.ifPredicate__ = exports.whenBind = exports.ifBind = exports.whenHasIn = exports.ifHasIn = exports.whenHas = exports.ifHas = exports.whenFalsy = exports.ifFalsy = exports.whenTruthy = exports.ifTruthy = exports.whenNo = exports.ifNo = exports.whenYes = exports.ifYes = exports.whenFalse = exports.ifFalse = exports.whenTrue = exports.ifTrue = exports.whenNotOk = exports.ifNotOk = exports.whenOk = exports.ifOk = exports.whenPredicateOk = exports.ifPredicateOk = exports.whenPredicate = exports.ifPredicate = exports.isFalsy = exports.isTruthy = exports.isNo = exports.isYes = exports.isFalse = exports.isTrue = exports.sideN = exports.side5 = exports.side4 = exports.side3 = exports.side2 = exports.side1 = exports.side = exports.dotN = exports.dot5 = exports.dot4 = exports.dot3 = exports.dot2 = exports.dot1 = exports.dot = exports.tap = exports.id = exports.lte = exports.lt = exports.gte = exports.gt = exports.ne = exports.eq = exports.notOk = exports.ok = exports.not = exports.noop = exports.recurry = exports.roll = exports.bitwiseRightZeroFillBy = exports.bitwiseRightBy = exports.bitwiseLeftBy = exports.bitwiseRightZeroFill = exports.bitwiseRight = exports.bitwiseLeft = exports.bitwiseNot = exports.bitwiseXor = exports.bitwiseOr = exports.bitwiseAnd = exports.composeAsMethods = exports.composeAsMethodsRight = exports.compose = exports.composeRight = exports.pipe = undefined;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -46,6 +46,14 @@ var compose = exports.compose = function compose(a, b) {
     };
 };
 
+// --- @experimental
+var composeAsMethodsRight = exports.composeAsMethodsRight = function composeAsMethodsRight(b, a) {
+    return a.compose(b);
+};
+var composeAsMethods = exports.composeAsMethods = function composeAsMethods(a, b) {
+    return a.compose(b);
+};
+
 // import { doe, } from './monad'
 
 exports.bitwiseAnd = _operator.bitwiseAnd;
@@ -63,9 +71,9 @@ var _ref = {},
     oStr = _ref.toString;
 
 // --- takes a manually curried function like
-// f = a => b => c => d => { body }
+// f = a => b => ... => z => { body }
 // and returns a new function g which can be called as:
-// g (a, b, c, d)
+// g (a, b, ..., z)
 //
 // g is curried, but only allows the manual calling style.
 //
@@ -706,7 +714,7 @@ var isInteger = exports.isInteger = function isInteger(x) {
 };
 
 // --- excl, so it's like ramda.
-// --- note that `by` should be negative to count down.
+// --- note that `by` should be negative to count down -- we always add.
 
 var rangeFromBy = exports.rangeFromBy = _recurry(3)(_manual2.default.rangeFromBy);
 var rangeFromByAsc = exports.rangeFromByAsc = _recurry(3)(_manual2.default.rangeFromByAsc);
@@ -1293,6 +1301,38 @@ var mapTuplesInWithFilter = function mapTuplesInWithFilter(p) {
         };
     };
 };
+
+// --- @test
+var againstAll = exports.againstAll = _recurry(2)(_manual2.default.againstAll);
+var againstAny = exports.againstAny = _recurry(2)(_manual2.default.againstAny);
+var allAgainst = exports.allAgainst = _recurry(2)(_manual2.default.allAgainst);
+var anyAgainst = exports.anyAgainst = _recurry(2)(_manual2.default.anyAgainst);
+
+// --- @experimental
+// export const bothAgainst   = p => list >> allAgainst (p)
+var bothAgainst = exports.bothAgainst = function bothAgainst(p) {
+    return function () {
+        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+            args[_key6] = arguments[_key6];
+        }
+
+        return allAgainst(p)(args);
+    };
+};
+// --- @experimental
+// export const eitherAgainst = p => list >> anyAgainst (p)
+var eitherAgainst = exports.eitherAgainst = function eitherAgainst(p) {
+    return function () {
+        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+            args[_key7] = arguments[_key7];
+        }
+
+        return anyAgainst(p)(args);
+    };
+};
+
+var againstBoth = exports.againstBoth = _recurry(3)(_manual2.default.againstBoth);
+var againstEither = exports.againstEither = _recurry(3)(_manual2.default.againstEither);
 
 exports.default = {
     mergeToM: mergeToM, mergeM: mergeM,

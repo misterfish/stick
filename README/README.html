@@ -350,26 +350,30 @@ function:</p>
 ; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">4.2</span>]
 | <span class="hljs-built_in">map</span> (ifInteger (add1, <span class="hljs-string">'nothing'</span> | always))
   <span class="hljs-comment">// ['nothing', 5, 'nothing']</span></code></pre><p>More complicated predicates:</p>
-<pre class="hljs"><code>// --- <span class="hljs-meta">@todo</span> use <span class="hljs-string">`allN`</span>
-<span class="hljs-keyword">const</span> both = (f, g) =&gt; x =&gt; f (x) &amp;&amp; g (x)
+<pre class="hljs"><code><span class="hljs-keyword">const</span> both = (f, g) =&gt; againstAll ([f, g])
 
 <span class="hljs-keyword">const</span> isOdd = x =&gt; x % <span class="hljs-number">2</span>
 
 <span class="hljs-keyword">const</span> isOddInteger = both (isInteger, isOdd)
 <span class="hljs-keyword">const</span> ifOddInteger = isOddInteger | ifPredicate
 
-; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>]
+<span class="hljs-comment">; [3.5, 4, 5, 5.5]</span>
 | map (ifOddInteger (
   add1,
-  '<span class="hljs-literal">nothing</span>' | always,
+  <span class="hljs-string">'nothing'</span> | always,
 ))
-// ['<span class="hljs-literal">nothing</span>', '<span class="hljs-literal">nothing</span>', <span class="hljs-number">6</span>, '<span class="hljs-literal">nothing</span>']
+// [<span class="hljs-string">'nothing'</span>, <span class="hljs-string">'nothing'</span>, <span class="hljs-number">6</span>, <span class="hljs-string">'nothing'</span>]
 
-; [<span class="hljs-number">3.5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5.5</span>] | map (isOddInteger)
-// [<span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>]</code></pre><p>Note that <code>ifPredicate</code> and <code>whenPredicate</code> match on truthiness, not strict
+<span class="hljs-comment">; [3.5, 4, 5, 5.5] | map (isOddInteger)</span>
+// [<span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-number">1</span>, <span class="hljs-literal">false</span>]</code></pre><p>Note that <code>againstAll</code> returns the return value of the last matching
+function, hence <code>1</code> in the last example. This is because it can be useful to
+have that value, and it&#39;s analogous to how the short-circuit <code>&amp;&amp;</code> works.</p>
+<p>To convert a truthy expression to a strict one: simply compose it with the
+type constructor <code>Boolean</code>.</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> both = <span class="hljs-function">(<span class="hljs-params">f, g</span>) =&gt;</span> againstAll ([f, g]) &gt;&gt; <span class="hljs-built_in">Boolean</span></code></pre><p>Note that <code>ifPredicate</code> and <code>whenPredicate</code> match on truthiness, not strict
 truth. Rationale: that is how the native <code>filter</code> works, and JS&#39;s <code>if</code>
-operator, and many other tools in e.g. <code>Ramda</code>; and it&#39;s trivial to convert
-a truthy expression to a strict one.</p>
+operator, and many other tools in e.g. Ramda. And converting truthy to
+strict Boolean is trivial.</p>
 <h2 id="٭-compositional-decoration-٭"><a class="header-link" href="#٭-compositional-decoration-٭"></a>٭ compositional decoration ٭</h2>
 <p>Our <code>map</code> function is capped at one argument, meaning the map routine only
 gets the value and not the index or the collection.</p>

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.mixinNM = exports.mixinPreNM = exports.mixinM = exports.mixinPreM = exports.factoryInit = exports.factoryProps = exports.ifXReplaceStrFlags = exports.ifXReplaceStr = exports.ifXReplace = exports.xReplaceStrFlags = exports.xReplaceStr = exports.xReplace = exports.xMatchStrFlags = exports.xMatchStr = exports.xMatch = exports.xMatchGlobal = exports.match = exports.neuN = exports.neu5 = exports.neu4 = exports.neu3 = exports.neu2 = exports.neu1 = exports.rangeToBy = exports.rangeFromByDesc = exports.rangeFromByAsc = exports.rangeFromBy = exports.ifReplace = exports.timesSide = exports.timesF = exports.timesV = exports.repeatSide = exports.repeatF = exports.repeatV = exports.sprintfN = exports.sprintf1 = exports.flip5 = exports.flip4 = exports.flip3 = exports.flip = exports.split = exports.join = exports.passToN = exports.passTo = exports.applyToN = exports.applyTo5 = exports.applyTo4 = exports.applyTo3 = exports.applyTo2 = exports.applyTo1 = exports.provideToN = exports.provideTo5 = exports.provideTo4 = exports.provideTo3 = exports.provideTo2 = exports.provideTo1 = exports.provideTo = exports.callOnN = exports.callOn5 = exports.callOn4 = exports.callOn3 = exports.callOn2 = exports.callOn1 = exports.callOn = exports.letS = exports.letNV = exports.asterisk5 = exports.asterisk4 = exports.asterisk3 = exports.asterisk2 = exports.asterisk1 = exports.asteriskN = exports.ampersandN = exports.reduceObjIn = exports.reduceObj = exports.addCollection = exports.addIndex = exports.eachObjIn = exports.eachObj = exports.reduceAbort = exports.contains = undefined;
+exports.againstEither = exports.againstBoth = exports.anyAgainst = exports.allAgainst = exports.againstAny = exports.againstAll = exports.mixinNM = exports.mixinPreNM = exports.mixinM = exports.mixinPreM = exports.factoryInit = exports.factoryProps = exports.ifXReplaceStrFlags = exports.ifXReplaceStr = exports.ifXReplace = exports.xReplaceStrFlags = exports.xReplaceStr = exports.xReplace = exports.xMatchStrFlags = exports.xMatchStr = exports.xMatch = exports.xMatchGlobal = exports.match = exports.neuN = exports.neu5 = exports.neu4 = exports.neu3 = exports.neu2 = exports.neu1 = exports.rangeToBy = exports.rangeFromByDesc = exports.rangeFromByAsc = exports.rangeFromBy = exports.ifReplace = exports.timesSide = exports.timesF = exports.timesV = exports.repeatSide = exports.repeatF = exports.repeatV = exports.sprintfN = exports.sprintf1 = exports.flip5 = exports.flip4 = exports.flip3 = exports.flip = exports.split = exports.join = exports.passToN = exports.passTo = exports.applyToN = exports.applyTo5 = exports.applyTo4 = exports.applyTo3 = exports.applyTo2 = exports.applyTo1 = exports.provideToN = exports.provideTo5 = exports.provideTo4 = exports.provideTo3 = exports.provideTo2 = exports.provideTo1 = exports.provideTo = exports.callOnN = exports.callOn5 = exports.callOn4 = exports.callOn3 = exports.callOn2 = exports.callOn1 = exports.callOn = exports.letS = exports.letNV = exports.asterisk5 = exports.asterisk4 = exports.asterisk3 = exports.asterisk2 = exports.asterisk1 = exports.asteriskN = exports.ampersandN = exports.reduceObjIn = exports.reduceObj = exports.addCollection = exports.addIndex = exports.eachObjIn = exports.eachObj = exports.reduceAbort = exports.contains = undefined;
 exports.find = exports.reject = exports.filter = exports.reduce = exports.each = exports.map = exports.mergeWhen = exports.mergeWith = exports.mergeIn = exports.mergeInTo = exports.mergeInM = exports.mergeInToM = exports.merge = exports.mergeTo = exports.mergeM = exports.mergeToM = exports.concatM = exports.concatToM = exports.concat = exports.concatTo = exports.prependToM = exports.prependM = exports.prepend = exports.prependTo = exports.appendM = exports.appendToM = exports.appendTo = exports.append = exports.updatePath = exports.updatePathM = exports.update = exports.updateM = exports.assocPathM = exports.assocPath = exports.assocM = exports.assoc = exports.path = exports.propOf = exports.prop = exports.defaultTo = exports.decorateException = exports.tryCatch = exports.toThe = exports.moduloWholePart = exports.modulo = exports.subtractFrom = exports.subtract = exports.divideInto = exports.divideBy = exports.multiply = exports.add = exports.condS = exports.cond = exports.condPredicate = exports.whenBind = exports.ifBind = exports.bindTry = exports.bindTryTo = exports.bindTryProp = exports.bindTryPropTo = exports.isType = exports.bind = exports.bindTo = exports.bindProp = exports.bindPropTo = exports.bindLateProp = exports.bindLatePropTo = exports.whenHasIn = exports.ifHasIn = exports.whenHas = exports.ifHas = exports.hasIn = exports.has = exports.whenPredicateOk = exports.ifPredicateOk = exports.whenPredicate = exports.ifPredicate = exports.sideN = exports.side5 = exports.side4 = exports.side3 = exports.side2 = exports.side1 = exports.side = exports.dotN = exports.dot5 = exports.dot4 = exports.dot3 = exports.dot2 = exports.dot1 = exports.dot = exports.tap = exports.lte = exports.lt = exports.gte = exports.gt = exports.ne = exports.eq = exports.recurry = exports.roll = undefined;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
@@ -1922,6 +1922,159 @@ var mixinNM = exports.mixinNM = function mixinNM(ms) {
     };
 };
 
+// ------ all/any.
+
+// --- no point in using an N marker, because non-n is only possible once you know the predicate.
+
+// --- returns the return value of the last function, if they all pass.
+var againstAll = exports.againstAll = function againstAll(fs) {
+    return function (x) {
+        var y = false;
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
+
+        try {
+            for (var _iterator8 = fs[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                var f = _step8.value;
+
+                y = f(x);
+                if (!y) return false;
+            }
+        } catch (err) {
+            _didIteratorError8 = true;
+            _iteratorError8 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                    _iterator8.return();
+                }
+            } finally {
+                if (_didIteratorError8) {
+                    throw _iteratorError8;
+                }
+            }
+        }
+
+        return y;
+    };
+};
+
+// --- returns the return value of the first function which returns truthy.
+var againstAny = exports.againstAny = function againstAny(fs) {
+    return function (x) {
+        var y = void 0;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
+
+        try {
+            for (var _iterator9 = fs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                var f = _step9.value;
+
+                y = f(x);
+                if (y) return y;
+            }
+        } catch (err) {
+            _didIteratorError9 = true;
+            _iteratorError9 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                    _iterator9.return();
+                }
+            } finally {
+                if (_didIteratorError9) {
+                    throw _iteratorError9;
+                }
+            }
+        }
+
+        return false;
+    };
+};
+
+var allAgainst = exports.allAgainst = function allAgainst(f) {
+    return function (xs) {
+        var y = false;
+        var _iteratorNormalCompletion10 = true;
+        var _didIteratorError10 = false;
+        var _iteratorError10 = undefined;
+
+        try {
+            for (var _iterator10 = xs[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                var x = _step10.value;
+
+                y = f(x);
+                if (!y) return false;
+            }
+        } catch (err) {
+            _didIteratorError10 = true;
+            _iteratorError10 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                    _iterator10.return();
+                }
+            } finally {
+                if (_didIteratorError10) {
+                    throw _iteratorError10;
+                }
+            }
+        }
+
+        return y;
+    };
+};
+
+var anyAgainst = exports.anyAgainst = function anyAgainst(f) {
+    return function (xs) {
+        var y = void 0;
+        var _iteratorNormalCompletion11 = true;
+        var _didIteratorError11 = false;
+        var _iteratorError11 = undefined;
+
+        try {
+            for (var _iterator11 = xs[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                var x = _step11.value;
+
+                y = f(x);
+                if (y) return y;
+            }
+        } catch (err) {
+            _didIteratorError11 = true;
+            _iteratorError11 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                    _iterator11.return();
+                }
+            } finally {
+                if (_didIteratorError11) {
+                    throw _iteratorError11;
+                }
+            }
+        }
+
+        return false;
+    };
+};
+
+var againstBoth = exports.againstBoth = function againstBoth(f) {
+    return function (g) {
+        return function (x) {
+            return f(x) && g(x);
+        };
+    };
+};
+var againstEither = exports.againstEither = function againstEither(f) {
+    return function (g) {
+        return function (x) {
+            return f(x) || g(x);
+        };
+    };
+};
+
 exports.default = {
     roll: roll, recurry: recurry,
     eq: eq, ne: ne, gt: gt, gte: gte, lt: lt, lte: lte,
@@ -1983,5 +2136,7 @@ exports.default = {
     ifXReplace: ifXReplace, ifXReplaceStr: ifXReplaceStr, ifXReplaceStrFlags: ifXReplaceStrFlags,
     factoryProps: factoryProps, factoryInit: factoryInit,
     mixinM: mixinM, mixinPreM: mixinPreM,
-    mixinNM: mixinNM, mixinPreNM: mixinPreNM
+    mixinNM: mixinNM, mixinPreNM: mixinPreNM,
+    againstAll: againstAll, againstAny: againstAny, allAgainst: allAgainst, anyAgainst: anyAgainst,
+    againstBoth: againstBoth, againstEither: againstEither
 };

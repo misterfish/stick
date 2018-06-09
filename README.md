@@ -459,8 +459,7 @@ The selection of `if` and `when` functions we provide is intentionally skimpy, t
 
 More complicated predicates:
 
-	// --- @todo use `allN`
-	const both = (f, g) => x => f (x) && g (x)
+	const both = (f, g) => againstAll ([f, g])
 
 	const isOdd = x => x % 2
 
@@ -475,12 +474,21 @@ More complicated predicates:
 	// ['nothing', 'nothing', 6, 'nothing']
 
 	; [3.5, 4, 5, 5.5] | map (isOddInteger)
-	// [false, false, true, false]
+	// [false, false, 1, false]
+
+Note that `againstAll` returns the return value of the last matching
+function, hence `1` in the last example. This is because it can be useful to
+have that value, and it's analogous to how the short-circuit `&&` works.
+
+To convert a truthy expression to a strict one: simply compose it with the
+type constructor `Boolean`.
+
+    const both = (f, g) => againstAll ([f, g]) >> Boolean
 
 Note that `ifPredicate` and `whenPredicate` match on truthiness, not strict
 truth. Rationale: that is how the native `filter` works, and JS's `if`
-operator, and many other tools in e.g. `Ramda`; and it's trivial to convert
-a truthy expression to a strict one.
+operator, and many other tools in e.g. Ramda. And converting truthy to
+strict Boolean is trivial.
 
 ## ٭ compositional decoration ٭
 

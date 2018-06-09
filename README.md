@@ -1078,7 +1078,7 @@ function).
 
 Far more useful is `lets` and `letS`. (Think `let\*` in racket).
 
-If we went the other way:
+If we went the other way, from Fahrenheit to Celsius & Kelvin:
 
     // --- convert fahrenheit to celsius & kelvin
 
@@ -1101,9 +1101,9 @@ we can:
 	)
 
 `lets` expects each line to be a function. The first line is called with no
-argument. The result (1) is passed as the argument to (2). (1) and the
-result of (2) are passed as the arguments to (3), and so on. The result of
-the last function is the result of the expression.
+argument. The result (1) is passed as the argument to (2). The result of (1)
+and the result of (2) are passed as the arguments to (3), and so on. The
+result of the expression is the result of the last function.
 
 (For now, there can be up to 6 lines. See below for a generic version).
 
@@ -1826,9 +1826,12 @@ Imagine you have something like a traffic light, which at any moment can be
 either red, yellow, green, or broken. (Or a download, which can be in
 progress, stopped, completed, failed; or an API call, etc.)
 
-You can use a normal object to represent these sorts of things, but you
-might find yourself carrying around properties like 'error' and 'state' and
-'type' and so on using a lot of `if` statements to check for illegal states.
+You can use a normal object to represent these sorts of things, which JS
+programmers do all the time of course. The problem is that as the problem
+domain becomes more complex, it gets increasingly harder to verify the
+correctness of such a so-called 'product type'. You will probably find
+yourself carrying around properties like 'error' and 'state' and 'type' and
+so on using a lot of `if` statements to check for illegal states.
 
 Another way is to model the data using ADTs, build the states, then branch
 using a 'catamorphism' to resolve the states when you're ready.

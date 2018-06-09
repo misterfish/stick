@@ -231,7 +231,7 @@ This would be a good time to read up on curried functions if you're not familiar
 
 		const g = R.curry ((a, b, c) => a + b + c) // call like g (1) (2) (3)
 		                                           // or g (1, 2, 3)
-	                                               // or g (1, 2, 3)
+	                                               // or g (1, 2) (3)
                                                    // or g (1) (2, 3)
                                                    // etc.
 

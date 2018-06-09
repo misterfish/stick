@@ -774,13 +774,13 @@ is also really useful for debugging. And our `side` family of functions use
 
     const proto = {
 	  init () {
-		...
-		return this
+	    ...
+	    return this
 	  },
 	  move () {
 	    return this.numLegs | ifOdd (
-		  _ => 'hobble',
-		  _ => 'gait',
+	      _ => 'hobble',
+	      _ => 'gait',
 	    )
 	  },
 	  breathe () { return 'huff' },
@@ -855,10 +855,10 @@ Stick idioms:
 
     const breathe = dot ('breathe')
 	const getType = dot ('getType')
-	const speak = dot ('speak')
-	const cheat = dot1 ('cheat')
-	const init = side ('init')
-	const create = dot1 ('create')
+	const speak   = dot ('speak')
+	const cheat   = dot1 ('cheat')
+	const init    = side ('init')
+	const create  = dot1 ('create')
 
 	const dog = Dog
 	  | create ({ name: 'garfunkel', })
@@ -893,12 +893,16 @@ consisting of only functions.
 	}
 
 To make an `animal` instance, you pass this prototype object to Object.create,
-then assign properties. If you wish you can treat one of these instances as
-a prototype for a new kind of object, a `dog` for example, copy in some
-more functions, use Object.create again, and so on.
+then assign properties. If you wish you can treat one of these objects as a
+prototype for a new kind of object, a `dog` for example, copy in some more
+functions, use Object.create again, and so on.
+
+(Nothing will stop you from using `Object.create` on an object with
+non-method properties in it, and it will probably do what you want, but it's
+best avoided).
 
 We encapsulate this process with the notion of a factory, which is an object
-which knows how to spawn objects of a certain type.
+which knows how to spawn objects of a certain sort.
 
     import { factory, } from 'stick-js'
 

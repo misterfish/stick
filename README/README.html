@@ -674,10 +674,10 @@ dog.speak ()                                    <span class="hljs-comment">// 'D
 dog.cheat (<span class="hljs-string">'a bit'</span>)                             <span class="hljs-comment">// 'I cheat a bit' (from cheater)</span></code></pre><p>Stick idioms:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> breathe = dot (<span class="hljs-string">'breathe'</span>)
 <span class="hljs-keyword">const</span> getType = dot (<span class="hljs-string">'getType'</span>)
-<span class="hljs-keyword">const</span> speak = dot (<span class="hljs-string">'speak'</span>)
-<span class="hljs-keyword">const</span> cheat = dot1 (<span class="hljs-string">'cheat'</span>)
-<span class="hljs-keyword">const</span> init = side (<span class="hljs-string">'init'</span>)
-<span class="hljs-keyword">const</span> <span class="hljs-keyword">create</span> = dot1 (<span class="hljs-string">'create'</span>)
+<span class="hljs-keyword">const</span> speak   = dot (<span class="hljs-string">'speak'</span>)
+<span class="hljs-keyword">const</span> cheat   = dot1 (<span class="hljs-string">'cheat'</span>)
+<span class="hljs-keyword">const</span> init    = side (<span class="hljs-string">'init'</span>)
+<span class="hljs-keyword">const</span> <span class="hljs-keyword">create</span>  = dot1 (<span class="hljs-string">'create'</span>)
 
 <span class="hljs-keyword">const</span> dog = Dog
   | <span class="hljs-keyword">create</span> (<span class="hljs-comment">{ name: 'garfunkel', }</span>)
@@ -704,11 +704,14 @@ consisting of only functions.</p>
   speak () { <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span> },
   ...
 }</code></pre><p>To make an <code>animal</code> instance, you pass this prototype object to Object.create,
-then assign properties. If you wish you can treat one of these instances as
-a prototype for a new kind of object, a <code>dog</code> for example, copy in some
-more functions, use Object.create again, and so on.</p>
+then assign properties. If you wish you can treat one of these objects as a
+prototype for a new kind of object, a <code>dog</code> for example, copy in some more
+functions, use Object.create again, and so on.</p>
+<p>(Nothing will stop you from using <code>Object.create</code> on an object with
+non-method properties in it, and it will probably do what you want, but it&#39;s
+best avoided).</p>
 <p>We encapsulate this process with the notion of a factory, which is an object
-which knows how to spawn objects of a certain type.</p>
+which knows how to spawn objects of a certain sort.</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> { <span class="hljs-keyword">factory</span>, } from <span class="hljs-string">'stick-js'</span>
 
 <span class="hljs-keyword">const</span> animalProto = {

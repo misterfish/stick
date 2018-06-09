@@ -2046,6 +2046,8 @@ and ask:
 1. can we continue using it to compose the way we have up until now;
 1. and, can we also do Kleisli composition …
 1. without introducing a new operator?
+1. and, can we continue to call all of our functions using familiar `()`
+syntax (and not requiring something like `.call()`)
 
 We explore 3 ways of doing this.
 
@@ -2078,9 +2080,6 @@ In all 3 of these cases we need a way to prepare functions so that the
 correct `.compose` call is used (cases 1 and 2), or so that `compose` works
 as it should (case 3). We will use a function called `k` to enhance a
 normally composing function (`f`) into a Kleisli-composing one (`k (f)`).
-
-A final requirement for this experiment is that `k (f)` be simply callable
-using JS syntax, not requiring a separate `.call` or something similar.
 
 We'll start with `some (x)` where `x` is an integer, (using `bilby.some`),
 and pass it through `step1` Kleisli-composed with `step2`.

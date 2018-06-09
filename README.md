@@ -485,6 +485,8 @@ type constructor `Boolean`.
 
     const both = (f, g) => againstAll ([f, g]) >> Boolean
 
+Or, you could add `=== true` to the end of the `isOdd` function.
+
 Note that `ifPredicate` and `whenPredicate` match on truthiness, not strict
 truth. Rationale: that is how the native `filter` works, and JS's `if`
 operator, and many other tools in e.g. Ramda. And converting truthy to
@@ -776,10 +778,10 @@ is also really useful for debugging. And our `side` family of functions use
 		return this
 	  },
 	  move () {
-		return this.numLegs | ifOdd (
+	    return this.numLegs | ifOdd (
 		  _ => 'hobble',
 		  _ => 'gait',
-		)
+	    )
 	  },
 	  breathe () { return 'huff' },
 	  speak ()   { 'not implemented' | die },

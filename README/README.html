@@ -370,7 +370,8 @@ function, hence <code>1</code> in the last example. This is because it can be us
 have that value, and it&#39;s analogous to how the short-circuit <code>&amp;&amp;</code> works.</p>
 <p>To convert a truthy expression to a strict one: simply compose it with the
 type constructor <code>Boolean</code>.</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> both = <span class="hljs-function">(<span class="hljs-params">f, g</span>) =&gt;</span> againstAll ([f, g]) &gt;&gt; <span class="hljs-built_in">Boolean</span></code></pre><p>Note that <code>ifPredicate</code> and <code>whenPredicate</code> match on truthiness, not strict
+<pre class="hljs"><code><span class="hljs-keyword">const</span> both = <span class="hljs-function">(<span class="hljs-params">f, g</span>) =&gt;</span> againstAll ([f, g]) &gt;&gt; <span class="hljs-built_in">Boolean</span></code></pre><p>Or, you could add <code>=== true</code> to the end of the <code>isOdd</code> function.</p>
+<p>Note that <code>ifPredicate</code> and <code>whenPredicate</code> match on truthiness, not strict
 truth. Rationale: that is how the native <code>filter</code> works, and JS&#39;s <code>if</code>
 operator, and many other tools in e.g. Ramda. And converting truthy to
 strict Boolean is trivial.</p>

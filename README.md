@@ -2126,7 +2126,7 @@ See the source for the implementations, omitted here.
 	  >> k (step2)
 
 	; -1 | rangeTo (3)
-		 | map (transform >> getOrElse ('none'))
+	     | map (transform >> getOrElse ('none'))
 
 1c) We can get rid of `id`, and put `some` back where we like it, but the
 chain requires an extra `k` around the whole thing.
@@ -2134,8 +2134,7 @@ chain requires an extra `k` around the whole thing.
 	const transform = k (step1 >> k (step2))
 
 	; -1 | rangeTo (3)
-		 | map (some >> transform >> getOrElse ('none'))
-	// ['nothing', 'nothing', 6, 'nothing']
+	     | map (some >> transform >> getOrElse ('none'))
 
 2a-c) All the same possibilities.
 
@@ -2144,7 +2143,7 @@ chain requires an extra `k` around the whole thing.
 	const transform = k (step1) >> k (step2)
 
 	; -1 | rangeTo (3)
-		 | map (some >> transform >> getOrElse ('none'))
+	     | map (some >> transform >> getOrElse ('none'))
 
 2) is perhaps the least interesting of the three, because `.compose` doesn't
 even get called in the case of the `k()` functions. But it does lead us to
@@ -2162,7 +2161,7 @@ We simply define `k` as `dot1 ('flatMap')`, and desugar `a >> b` as `compose
 	const transform = k (step1) >> k (step2)
 
 	; -1 | rangeTo (3)
-		 | map (some >> transform >> getOrElse ('none'))
+	     | map (some >> transform >> getOrElse ('none'))
 		 // ['none', 'none', 3, 'none']
 		 // QED
 

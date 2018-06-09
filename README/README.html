@@ -1185,8 +1185,8 @@ for the presence of the props can be annoying, so how about:</p>
   } <span class="hljs-keyword">catch</span> (err) {
     <span class="hljs-keyword">yield</span> err | repoLoadingError | put
   }
-}</code></pre><p>Try it yourself and see :D Note that we can&#39;t use our <code>tryCatch</code> function
-here, because of the <code>yield</code> in the <code>catch</code> clause.</p>
+}</code></pre><p>Note that we can&#39;t use our <code>tryCatch</code> function here, because of the <code>yield</code>
+in the <code>catch</code> clause.</p>
 <p>If you use <code>reselect</code>, this is fine:</p>
 <pre class="hljs"><code>const selectHome = <span class="hljs-function"><span class="hljs-params">(state)</span> =&gt;</span> state.get(<span class="hljs-string">'home'</span>);
 const makeSelectUsername = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> createSelector(
@@ -1630,7 +1630,8 @@ chain requires an extra <code>k</code> around the whole thing.</p>
 
 ; -<span class="hljs-number">1</span> <span class="hljs-params">| rangeTo (3)
      |</span> map (some <span class="hljs-meta">&gt;&gt; </span>transform &gt;&gt; getOrElse (<span class="hljs-string">'none'</span>))
-/<span class="hljs-regexp">/ ['nothing', 'nothing', 6, 'nothing']</span></code></pre><p>2a-c) All the same possibilities.</p>
+
+     /<span class="hljs-regexp">/ ['nothing', 'nothing', 6, 'nothing']</span></code></pre><p>2a-c) All the same possibilities.</p>
 <p>2d) Finally, the first form which we consider usable:</p>
 <pre class="hljs"><code>const transform = k (step1) <span class="hljs-meta">&gt;&gt; </span>k (step2)
 

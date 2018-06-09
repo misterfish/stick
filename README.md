@@ -892,14 +892,14 @@ consisting of only functions.
 	  ...
 	}
 
-To make an `animal` instance, you pass this prototype object to Object.create,
-then assign properties. If you wish you can treat one of these objects as a
-prototype for a new kind of object, a `dog` for example, copy in some more
-functions, use Object.create again, and so on.
+To make an `animal` instance, you pass this prototype object to `Object.create`,
+assign some methods and/or properties. If you wish you can use
+`Object.create` again (and again) before assigning properties, copy in some
+more values, use `Object.create` again, and so on.
 
 (Nothing will stop you from using `Object.create` on an object with
 non-method properties in it, and it will probably do what you want, but it's
-best avoided).
+best avoided -- add your properties to the last object in the chain).
 
 We encapsulate this process with the notion of a factory, which is an object
 which knows how to spawn objects of a certain sort.

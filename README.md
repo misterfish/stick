@@ -283,7 +283,7 @@ Note that the last one stores the function 4 times in the array.
 
     random | timesV (4) | map (invoke) // [<random-num>, <random-num>, <random-num>, <random-num>]
 
-'M' means the data is being mutated. In JS we of course work with mutable data all the time, and this will never change.
+'M' means the data is being mutated. In JS we of course work with mutable data all the time.
 
     import { appendTo, appendToM, } from 'stick-js'
 

@@ -339,12 +339,6 @@ export const contains = _recurry (2) (manual.contains)
 
 export const reduceAbort = _recurry (4) (manual.reduceAbort)
 
-// @test
-// export const both   = _recurry (3) (manual.both)
-// export const either = _recurry (3) (manual.either)
-// export const allN   = _recurry (2) (manual.allN  )
-// export const anyN   = _recurry (2) (manual.anyN  )
-
 // --- undef on empty array, like ramda
 export const last = xs => xs [xs.length - 1]
 // @test

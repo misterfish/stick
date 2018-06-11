@@ -192,6 +192,13 @@ export const toThe = e => b => Math.pow (b, e)
 
 // ------ exceptions
 
+// --- consider adding tryCatchS:
+// export const tryCatchS = (good) => (bad) => (f) => (v) => {
+//  ... successVal = f (v)
+// }
+// but, the third argument is sometimes `id`
+// so: tryCatchF, etc.?
+
 export const tryCatch = (good) => (bad) => (f) => {
 	let successVal
 	try {
@@ -864,7 +871,6 @@ export default {
     addIndex, addCollection,
     map, reduce, filter, reject, find, contains,
     reduceAbort,
-    // both, either, allN, anyN,
     each, eachObj, eachObjIn,
     reduceObj, reduceObjIn,
     ampersandN,

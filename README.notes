@@ -742,3 +742,21 @@ In a promise chain, `then` will only kick in if the promise returned by
 `axios.get` resolves. If it rejects then the whole then line is skipped. It's
 the same idea.
 
+
+
+
+
+// In my favorite library I can do either
+//  path (['a', 'b', 'c'])
+// or
+//  path ('a.b.c')
+//
+// We don't provide this, because 1) in order to keep things snappy we want functions that take one
+// kind of thing and don't require an `if` on each invocation, and 2) to encourage you to make your
+// own. Once you get this in your system you will write something like
+//
+//  const pathDot = split ('.') >> path
+//
+// almost as second nature.
+//
+// ; ({ a: { b: { c: 42 }}}) | pathDot ('a.b.c') // 42

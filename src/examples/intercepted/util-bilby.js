@@ -9,6 +9,7 @@ import {
     ifOk, always, id, noop,
     head, tail,
     bindPropTo,
+    die, concatTo,
 } from '../../index'
 
 import {
@@ -52,3 +53,8 @@ export const sequenceM = (pure) => {
 }
 
 export const cata = dot1 ('cata')
+
+export const foldRight = decorate => fold (
+    l => l | concatTo (decorate + ' ') | die,
+    id,
+)

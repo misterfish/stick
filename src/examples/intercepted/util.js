@@ -122,3 +122,14 @@ export const either = (f, g) => againstEither (f, g)
 
 export const pathDot = split ('.') >> path
 
+export const uniqueWith = (f) => (xs) => {
+    const ret = []
+    const s = new Set
+    for (const x of xs) {
+        const xx = f (x)
+        if (s.has (xx)) continue
+        ret.push (x)
+        s.add (f (x))
+    }
+    return ret
+}

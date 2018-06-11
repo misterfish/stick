@@ -35,10 +35,10 @@ import {
     tryCatchS,
     length,
     mapX,
-//     mapObj,
     substring, ellipsisAfter,
     on,
     pathDot,
+    uniqueWith,
 } from './util'
 
 import {
@@ -52,6 +52,7 @@ import {
     fold, flatMap,
     toEither,
     sequenceM,
+    foldRight,
 } from './util-bilby'
 
 import {
@@ -127,18 +128,6 @@ const processPage = str => str
     ))
     | flatMap (processPodcasts)
 
-const uniqueWith = (f) => (xs) => {
-    const ret = []
-    const s = new Set
-    for (const x of xs) {
-        const xx = f (x)
-        if (s.has (xx)) continue
-        ret.push (x)
-        s.add (f (x))
-    }
-    return ret
-}
-
 const processPodcasts = podcasts => podcasts
     | pathDot ('resources.platform.Podcast.intercepted.episodes.edges')
     | map (prop ('node'))
@@ -157,9 +146,8 @@ const processPodcasts = podcasts => podcasts
     )
     | ifSingletonLeft (
         prop (0),
-        // --- Right twice?
+        // --- results in Right (Right (...))
         Right,
-        //id,
     )
 
 const titleToTag = dot ('toLowerCase')
@@ -180,16 +168,13 @@ const go = url => url
     | tap (hideCursor)
     | tap (_ => startSpinner ('getting metadata'))
     | then (tap (stopSpinner))
+
+    // --- not possible to kill this step with ctl-c unfortunately xxx
+    | then (tap (_ => log ('\nparsing ... (this might take a while)')))
+
     | then (
         processPage
-        >> fold (
-            l => {
-                // xxx
-                console.log ('bad', l)
-                throw new Error ('wuowowowow')
-            },
-            id,
-        )
+        >> foldRight ("Couldn't process page")
         >> doDownloads
     )
     | then (report ())

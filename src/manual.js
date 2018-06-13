@@ -196,8 +196,6 @@ export const toThe = e => b => Math.pow (b, e)
 // export const tryCatchS = (good) => (bad) => (f) => (v) => {
 //  ... successVal = f (v)
 // }
-// but, the third argument is sometimes `id`
-// so: tryCatchF, etc.?
 
 export const tryCatch = (good) => (bad) => (f) => {
 	let successVal
@@ -288,6 +286,8 @@ export const prependToM   = tgt => src => (tgt.unshift (src), tgt)
 
 export const concatTo    = tgt => src => tgt.concat (src)
 export const concat  = src => tgt => tgt.concat (src)
+
+// xxx: only arrays
 export const concatToM   = tgt => src => (tgt.push (...src), tgt)
 export const concatM = src => tgt => (tgt.push (...src), tgt)
 

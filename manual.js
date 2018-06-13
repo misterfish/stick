@@ -550,6 +550,11 @@ var toThe = exports.toThe = function toThe(e) {
 
 // ------ exceptions
 
+// --- consider adding tryCatchS:
+// export const tryCatchS = (good) => (bad) => (f) => (v) => {
+//  ... successVal = f (v)
+// }
+
 var tryCatch = exports.tryCatch = function tryCatch(good) {
     return function (bad) {
         return function (f) {
@@ -768,6 +773,8 @@ var concat = exports.concat = function concat(src) {
         return tgt.concat(src);
     };
 };
+
+// xxx: only arrays
 var concatToM = exports.concatToM = function concatToM(tgt) {
     return function (src) {
         return tgt.push.apply(tgt, _toConsumableArray(src)), tgt;
@@ -2110,7 +2117,6 @@ exports.default = {
     addIndex: addIndex, addCollection: addCollection,
     map: map, reduce: reduce, filter: filter, reject: reject, find: find, contains: contains,
     reduceAbort: reduceAbort,
-    // both, either, allN, anyN,
     each: each, eachObj: eachObj, eachObjIn: eachObjIn,
     reduceObj: reduceObj, reduceObjIn: reduceObjIn,
     ampersandN: ampersandN,

@@ -442,12 +442,6 @@ var contains = exports.contains = _recurry(2)(_manual2.default.contains);
 
 var reduceAbort = exports.reduceAbort = _recurry(4)(_manual2.default.reduceAbort);
 
-// @test
-// export const both   = _recurry (3) (manual.both)
-// export const either = _recurry (3) (manual.either)
-// export const allN   = _recurry (2) (manual.allN  )
-// export const anyN   = _recurry (2) (manual.anyN  )
-
 // --- undef on empty array, like ramda
 var last = exports.last = function last(xs) {
     return xs[xs.length - 1];

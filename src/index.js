@@ -1066,6 +1066,12 @@ export const eitherAgainst = (p) => (...args) => anyAgainst (p) (args)
 export const againstBoth = _recurry (3) (manual.againstBoth)
 export const againstEither = _recurry (3) (manual.againstEither)
 
+// xxx
+// const min = a => b => Math.min (a, b)
+// const max = a => b => Math.max (a, b)
+
+
+
 export default {
     mergeToM, mergeM,
     mergeTo, merge,

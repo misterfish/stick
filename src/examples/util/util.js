@@ -20,6 +20,8 @@ import {
     tryCatch,
     path,
     split,
+    isType,
+    ifPredicate,
 } from '../../index'
 
 // --- beware circular reference: don't use these in point-free functions.
@@ -133,3 +135,17 @@ export const uniqueWith = (f) => (xs) => {
     }
     return ret
 }
+
+export const ifType = isType >> ifPredicate
+
+export const errString = prop ('message')
+export const errFull = ifType ('Error') (
+    prop ('stack'),
+    id,
+)
+
+export const resolveP = (...args) => Promise.resolve (...args)
+export const rejectP  = (...args) => Promise.reject (...args)
+export const allP     = (...args) => Promise.all (...args)
+export const startP   = ()        => null | resolveP
+

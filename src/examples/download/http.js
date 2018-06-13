@@ -9,36 +9,37 @@ import ramda, {
     none,
 } from 'ramda'
 
+import { http, https } from 'follow-redirects'
+
 import {
     pipe, compose, composeRight,
     not, prop, tap, id, always, add,
     ok, ifOk, whenOk,
     dot, dot1, side,
-    condS, guard, otherwise,
+    cond, condS, guard, otherwise,
     sprintf1, noop, lets,
     eq, die, exception, arg1,
     divideBy, guardV,
     notOk,
+    T,
 } from '../../index'
-
-import { http, https } from 'follow-redirects'
 
 import {
     tryCatchS, on,
-} from './util'
+} from '../util/util'
 
 import {
     appendToFile,
-} from './util-io'
+} from '../util/util-io'
 
 import {
     Just, Nothing,
     flatMap,
-} from './util-bilby'
+} from '../util/util-bilby'
 
 import {
     dag,
-} from './util-daggy'
+} from '../util/util-daggy'
 
 export const end = side ('end')
 
@@ -92,18 +93,25 @@ export const download = ({ source, filename, onAlreadyDone = noop, onEnd = noop,
         prop ('statusCode'),
         arg1 >> prop ('content-length') >> whenOk (Number),
         id,
-        (res, headers, statusCode, contentLength) => null | condS ([
+        (res, headers, statusCode, contentLength) => cond (
             (_ => contentLength | notOk) | guard (_ => 'no content length' | exception | onError),
             // --- on a partial download, contentLength is just the part left.
             (_ => contentLength === 0 && bytesDownloadedInitial !== 0) | guard (onAlreadyDone),
             (_ => none (statusCode | eq) ([200, 206])) | guard (_ => (('status ' + statusCode) | exception | onError)),
             otherwise | guard (_ => downloader ({ res, contentLength, writeToDisk, onData, onEnd, onError, })),
-        ])
+        )
     )
+
+    // --- to keep it simple we always request a range beginning at `bytesDownloadedInitial`
+    // this means that if the file is already fully downloaded, the range is technically
+    // invalid.
+    // servers are supposed to respond with 416 in this case, but other servers ignore this (which
+    // is good for us)
 
     const headers = {
         Range: bytesDownloadedInitial | add (0) | sprintf1 ('bytes=%d-'),
     }
+
     request (protocol) ({ hostname, port, path, headers, method: 'GET' }, cb)
     | on ('error') (onError)
     | end

@@ -25,7 +25,7 @@ import {
     split,
 } from '../../index'
 
-import { startDownloads, } from './download'
+import { startDownloads, } from '../download/download'
 
 import {
     lazyFindPred,
@@ -39,12 +39,12 @@ import {
     on,
     pathDot,
     uniqueWith,
-} from './util'
+} from '../util/util'
 
 import {
     ifLongerThan, ifSingletonLeft,
     ifNegativeOne, ifAllOk,
-} from './util-pred'
+} from '../util/util-pred'
 
 import {
     Left, Right,
@@ -53,7 +53,7 @@ import {
     toEither,
     sequenceM,
     foldRight,
-} from './util-bilby'
+} from '../util/util-bilby'
 
 import {
     sys,
@@ -61,15 +61,13 @@ import {
     green, red, brightRed,
     startSpinner, stopSpinner,
     showCursor, hideCursor,
-} from './util-io'
+} from '../util/util-io'
 
 import {
     next, done, value,
-} from './util-gen'
+} from '../util/util-gen'
 
-const config = {
-    url: 'https://theintercept.com/podcasts/',
-}
+import config from './config'
 
 const getPage = url => sys ('curl', ['-s', url])
 
@@ -113,11 +111,11 @@ const findStoreJSON = (str, endIdx) => [[0, '']]
         "couldn't snip JSON" | Left | always,
     )
 
-// xxx const PAT = ''
+const PAT = / window.initialStoreTree \s+ = \s+ /
 
 const processPage = str => str
-    | xMatch (/ window.initialStoreTree \s+ = \s+ /)
-    | toEither ("can't find (PAT) in " + str)
+    | xMatch (config.pattern)
+    | toEither ([config.pattern.source, str] | sprintfN ("can't find %s in %s"))
     | flatMap (m => lets (
         _ => m | prop ('index'),
         _ => m | prop (0) | length,

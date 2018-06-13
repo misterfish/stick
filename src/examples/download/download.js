@@ -11,6 +11,8 @@ import {
     sprintf1, sprintfN,
     bindPropTo,
     lt, notOk, guardV, timesF,
+    reduce,
+    assoc,
 } from '../../index'
 
 import {
@@ -26,26 +28,26 @@ import {
     download,
 } from './http'
 
-import { Left, Right, } from './util-bilby'
+import { Left, Right, fold, } from '../util/util-bilby'
 
 import {
     dag,
-} from './util-daggy'
+} from '../util/util-daggy'
 
 import {
     fromJS,
     update, updateIn,
     get, getIn,
     push as iPush,
-} from './util-immutable'
+} from '../util/util-immutable'
 
 import {
-    length, mapX, padTo, either,
-} from './util'
+    then, length, mapX, padTo, either,
+} from '../util/util'
 
 import {
-    goUp,
-} from './util-io'
+    goUp, red, green,
+} from '../util/util-io'
 
 // xxx
 const countNewLines = 0 | always
@@ -138,12 +140,28 @@ export const startDownloads = (downloads) => {
         | allP
 }
 
+export const report = _ => reduce ((acc, resultE) => {
+    return resultE | fold (
+        _ => acc | assoc ('numError') (acc.numError + 1),
+        _ => acc | assoc ('numOk') (acc.numOk + 1),
+    )}) ({ numError: 0, numOk: 0, })
+    >> (({ numError, numOk, }) => [numOk | String | green, numError | String | red])
+    >> sprintfN ('%s ok / %s error')
+    >> tap (log)
+
+
 const mockDownloads = _ => [
-    { tag: 'episode-27', source: 'http://traffic.megaphone.fm/PPY6458293736.mp3', filename: 'Intercepted - Season 3 - Episode 27 - the-super-bowl-of-racism.mp3', },
-    { tag: 'episode-28', source: 'http://traffic.megaphone.fm/PPY8078356160.mp3', filename: 'Intercepted - Season 3 - Episode 28 - merican-psycho.mp3', },
-    { tag: 'episode-29', source: 'http://traffic.megaphone.fm/PPY7212168126.mp3', filename: 'Intercepted - Season 3 - Episode 29 - for-whom-the-trump-trolls.mp3', },
+    { tag: 'episode-10', source: 'http://localhost:3003/static/episode-10.mp3', filename: 'Episode 10.mp3', },
+    { tag: 'episode-11', source: 'http://localhost:3003/static/episode-11.mp3', filename: 'Episode 11.mp3', },
+    { tag: 'episode-12', source: 'http://localhost:3003/static/episode-12.mp3', filename: 'Episode 12.mp3', },
+    { tag: 'episode-13', source: 'http://localhost:3003/static/episode-13.mp3', filename: 'Episode 13.mp3', },
+    { tag: 'episode-14', source: 'http://localhost:3003/static/episode-14.mp3', filename: 'Episode 14.mp3', },
+    { tag: 'episode-15', source: 'http://localhost:3003/static/episode-15.mp3', filename: 'Episode 15.mp3', },
+    { tag: 'episode-16', source: 'http://localhost:3003/static/episode-16.mp3', filename: 'Episode 16.mp3', },
+    { tag: 'episode-17', source: 'http://localhost:3003/static/episode-17.mp3', filename: 'Episode 17.mp3', },
+    { tag: 'episode-18', source: 'http://localhost:3003/static/episode-18.mp3', filename: 'Episode 18.mp3', },
+    { tag: 'episode-19', source: 'http://localhost:3003/static/episode-19.mp3', filename: 'Episode 19.mp3', },
+    { tag: 'episode-404', source: 'http://localhost:3003/static/404', filename: 'Episode 404.mp3', },
 ]
 
-const toString = dot ('toString')
-
-// mockDownloads () | startDownloads
+mockDownloads () | startDownloads | then (report ())

@@ -17,15 +17,15 @@ import daggy from 'daggy'
 
 import {
     padTo,
-} from './util'
+} from '../util/util'
 
 import {
     blue, yellow, green, brightRed, red,
-} from './util-io'
+} from '../util/util-io'
 
 import {
     cata,
-} from './util-bilby'
+} from '../util/util-bilby'
 
 export const Download = daggy.tagged ('Download', [
     'tag', 'source', 'filename', 'status',

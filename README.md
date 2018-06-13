@@ -168,8 +168,8 @@ demo](https://tympanus.net/Development/RainEffect/) by Lucas Bebber
 raindrops on glass, ported to use a more functional style and stick idioms.
 
 The example called 'intercepted' is the most advanced: it puts together a
-lot of the ideas explained below, and adds lazy lists, composing using
-promises, and a 'frontend app' in the console analogous to React & Redux.
+lot of the ideas explained below, and adds lazy lists, composing
+promise-based functions, and a 'frontend app' in the console analogous to React & Redux.
 
 # Overview
 

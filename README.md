@@ -588,14 +588,14 @@ need to look things up.
 	const tgt = { thing: 'sandwich', want: 'no thanks',  }
 	const src = {                    want: 'yes please', }
 
-When a function ends in a preposition, for example, ‘To’, the identifier to
+When a function name ends in a preposition, for example, ‘To’, the identifier to
 the right is the object of the preposition.
 
 Read this as ‘merge src **to tgt**’
 
 	src | mergeTo (tgt)                  // { thing: 'sandwich', want: 'yes please', }
 
-The same function without the preposition means that the identifier to the right is the object of the verb ‘merge’.
+The same function name without the preposition means that the identifier to the right is the object of the verb ‘merge’.
 
 Read this as: ‘**merge src** to tgt’
 

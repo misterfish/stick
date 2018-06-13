@@ -146,8 +146,8 @@ demo</a> by Lucas Bebber
 (@lbebber), which simulates
 raindrops on glass, ported to use a more functional style and stick idioms.</p>
 <p>The example called &#39;intercepted&#39; is the most advanced: it puts together a
-lot of the ideas explained below, and adds lazy lists, composing using
-promises, and a &#39;frontend app&#39; in the console analogous to React &amp; Redux.</p>
+lot of the ideas explained below, and adds lazy lists, composing
+promise-based functions, and a &#39;frontend app&#39; in the console analogous to React &amp; Redux.</p>
 <h1 id="overview"><a class="header-link" href="#overview"></a>Overview</h1>
 <h2 id="٭-basic-example-٭"><a class="header-link" href="#٭-basic-example-٭"></a>٭ basic example ٭</h2>
 <pre class="hljs"><code><span class="hljs-regexp">//</span> --- source files must begin with <span class="hljs-keyword">this</span> header.
@@ -446,7 +446,7 @@ need to look things up.</p>
 } from <span class="hljs-string">'stick-js'</span>
 
 const tgt = { thing: <span class="hljs-string">'sandwich'</span>, want: <span class="hljs-string">'no thanks'</span>,  }
-const src = {                    want: <span class="hljs-string">'yes please'</span>, }</code></pre><p>When a function ends in a preposition, for example, ‘To’, the identifier to
+const src = {                    want: <span class="hljs-string">'yes please'</span>, }</code></pre><p>When a function name ends in a preposition, for example, ‘To’, the identifier to
 the right is the object of the preposition.</p>
 <p>Read this as ‘merge src <strong>to tgt</strong>’</p>
 <pre class="hljs"><code>src | mergeTo (tgt)                  // { thin<span class="hljs-variable">g:</span> <span class="hljs-string">'sandwich'</span>, wan<span class="hljs-variable">t:</span> <span class="hljs-string">'yes please'</span>, }</code></pre><p>The same function without the preposition means that the identifier to the right is the object of the verb ‘merge’.</p>

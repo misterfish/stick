@@ -153,6 +153,24 @@ A few examples:
 
 And much more.
 
+----------
+
+# Examples
+
+There are many examples in the src/examples folder.
+
+The WebGL example lives in its [own repository](https://github.com/misterfish/rain-webgl-stick), and you can see it running
+[here](http://rain-stick.mister-fish.net).
+
+It is based on the amazing [raindrops
+demo](https://tympanus.net/Development/RainEffect/) by Lucas Bebber
+(@lbebber), which simulates
+raindrops on glass, ported to use a more functional style and stick idioms.
+
+The example called 'intercepted' is the most advanced: it puts together a
+lot of the ideas explained below, and adds lazy lists, composing using
+promises, and a 'frontend app' in the console analogous to React & Redux.
+
 # Overview
 
 ## ٭ basic example ٭

@@ -25,7 +25,7 @@ import {
     split,
 } from '../../index'
 
-import { startDownloads, } from '../download/download'
+import { startDownloads, report, } from '../download/download'
 
 import {
     lazyFindPred,
@@ -77,15 +77,6 @@ const doDownloads = mapX ((x, idx) => x | fold (
 ))
     >> compactOk
     >> startDownloads
-
-const report = _ => reduce ((acc, resultE) => {
-    return resultE | fold (
-    _ => acc | assoc ('numError') (acc.numError + 1),
-    _ => acc | assoc ('numOk') (acc.numOk + 1),
-)}) ({ numError: 0, numOk: 0, })
-    >> (({ numError, numOk, }) => [numOk | String | green, numError | String | red])
-    >> sprintfN ('%s ok / %s error')
-    >> tap (log)
 
 const exit = 'exit' | bindPropTo (process)
 

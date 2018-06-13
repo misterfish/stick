@@ -164,4 +164,4 @@ const mockDownloads = _ => [
     { tag: 'episode-404', source: 'http://localhost:3003/static/404', filename: 'Episode 404.mp3', },
 ]
 
-mockDownloads () | startDownloads | then (report ())
+// mockDownloads () | startDownloads | then (report ())

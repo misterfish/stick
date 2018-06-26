@@ -1,9 +1,9 @@
 {
   "name": "stick-js",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "repository": {
     "type": "git",
-    "url": "http://github.com/misterfish/stick.git"
+    "url": "http://gitlab.com/alleycatcc/stick.git"
   },
   "license": "MIT",
   "description": "Fast toolkit for functional programming in JS using the pipe operator",

@@ -3,8 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.againstEither = exports.againstBoth = exports.anyAgainst = exports.allAgainst = exports.againstAny = exports.againstAll = exports.mixinNM = exports.mixinPreNM = exports.mixinM = exports.mixinPreM = exports.factoryInit = exports.factoryProps = exports.ifXReplaceStrFlags = exports.ifXReplaceStr = exports.ifXReplace = exports.xReplaceStrFlags = exports.xReplaceStr = exports.xReplace = exports.xMatchStrFlags = exports.xMatchStr = exports.xMatch = exports.xMatchGlobal = exports.match = exports.neuN = exports.neu5 = exports.neu4 = exports.neu3 = exports.neu2 = exports.neu1 = exports.rangeToBy = exports.rangeFromByDesc = exports.rangeFromByAsc = exports.rangeFromBy = exports.ifReplace = exports.timesSide = exports.timesF = exports.timesV = exports.repeatSide = exports.repeatF = exports.repeatV = exports.sprintfN = exports.sprintf1 = exports.flip5 = exports.flip4 = exports.flip3 = exports.flip = exports.split = exports.join = exports.passToN = exports.passTo = exports.applyToN = exports.applyTo5 = exports.applyTo4 = exports.applyTo3 = exports.applyTo2 = exports.applyTo1 = exports.provideToN = exports.provideTo5 = exports.provideTo4 = exports.provideTo3 = exports.provideTo2 = exports.provideTo1 = exports.provideTo = exports.callOnN = exports.callOn5 = exports.callOn4 = exports.callOn3 = exports.callOn2 = exports.callOn1 = exports.callOn = exports.letS = exports.letNV = exports.asterisk5 = exports.asterisk4 = exports.asterisk3 = exports.asterisk2 = exports.asterisk1 = exports.asteriskN = exports.ampersandN = exports.reduceObjIn = exports.reduceObj = exports.addCollection = exports.addIndex = exports.eachObjIn = exports.eachObj = exports.reduceAbort = exports.contains = undefined;
-exports.find = exports.reject = exports.filter = exports.reduce = exports.each = exports.map = exports.mergeWhen = exports.mergeWith = exports.mergeIn = exports.mergeInTo = exports.mergeInM = exports.mergeInToM = exports.merge = exports.mergeTo = exports.mergeM = exports.mergeToM = exports.concatM = exports.concatToM = exports.concat = exports.concatTo = exports.prependToM = exports.prependM = exports.prepend = exports.prependTo = exports.appendM = exports.appendToM = exports.appendTo = exports.append = exports.updatePath = exports.updatePathM = exports.update = exports.updateM = exports.assocPathM = exports.assocPath = exports.assocM = exports.assoc = exports.path = exports.propOf = exports.prop = exports.defaultTo = exports.decorateException = exports.tryCatch = exports.toThe = exports.moduloWholePart = exports.modulo = exports.subtractFrom = exports.subtract = exports.divideInto = exports.divideBy = exports.multiply = exports.add = exports.condS = exports.cond = exports.condPredicate = exports.whenBind = exports.ifBind = exports.bindTry = exports.bindTryTo = exports.bindTryProp = exports.bindTryPropTo = exports.isType = exports.bind = exports.bindTo = exports.bindProp = exports.bindPropTo = exports.bindLateProp = exports.bindLatePropTo = exports.whenHasIn = exports.ifHasIn = exports.whenHas = exports.ifHas = exports.hasIn = exports.has = exports.whenPredicateOk = exports.ifPredicateOk = exports.whenPredicate = exports.ifPredicate = exports.sideN = exports.side5 = exports.side4 = exports.side3 = exports.side2 = exports.side1 = exports.side = exports.dotN = exports.dot5 = exports.dot4 = exports.dot3 = exports.dot2 = exports.dot1 = exports.dot = exports.tap = exports.lte = exports.lt = exports.gte = exports.gt = exports.ne = exports.eq = exports.recurry = exports.roll = undefined;
+exports.againstEither = exports.againstBoth = exports.anyAgainst = exports.allAgainst = exports.againstAny = exports.againstAll = exports.mixinNM = exports.mixinPreNM = exports.mixinM = exports.mixinPreM = exports.factoryInit = exports.factoryProps = exports.ifXReplaceStrFlags = exports.ifXReplaceStr = exports.ifXReplace = exports.xReplaceStrFlags = exports.xReplaceStr = exports.xReplace = exports.xMatchStrFlags = exports.xMatchStr = exports.xMatch = exports.xMatchGlobal = exports.match = exports.neuN = exports.neu5 = exports.neu4 = exports.neu3 = exports.neu2 = exports.neu1 = exports.rangeToBy = exports.rangeFromByDesc = exports.rangeFromByAsc = exports.rangeFromBy = exports.ifReplace = exports.timesSide = exports.timesF = exports.timesV = exports.repeatSide = exports.repeatF = exports.repeatV = exports.sprintfN = exports.sprintf1 = exports.flip5 = exports.flip4 = exports.flip3 = exports.flip = exports.split = exports.join = exports.passToN = exports.passTo = exports.applyToN = exports.applyTo5 = exports.applyTo4 = exports.applyTo3 = exports.applyTo2 = exports.applyTo1 = exports.provideToN = exports.provideTo5 = exports.provideTo4 = exports.provideTo3 = exports.provideTo2 = exports.provideTo1 = exports.provideTo = exports.callOnN = exports.callOn5 = exports.callOn4 = exports.callOn3 = exports.callOn2 = exports.callOn1 = exports.callOn = exports.letS = exports.letNV = exports.asterisk5 = exports.asterisk4 = exports.asterisk3 = exports.asterisk2 = exports.asterisk1 = exports.asteriskN = exports.ampersandN = exports.reduceObjIn = exports.reduceObj = exports.addCollection = exports.addIndex = exports.eachObjIn = exports.eachObj = exports.take = exports.drop = exports.reduceAbort = exports.contains = exports.find = exports.reject = undefined;
+exports.filter = exports.reduce = exports.each = exports.map = exports.mergeWhen = exports.mergeWith = exports.mergeIn = exports.mergeInTo = exports.mergeInM = exports.mergeInToM = exports.merge = exports.mergeTo = exports.mergeM = exports.mergeToM = exports.concatM = exports.concatToM = exports.concat = exports.concatTo = exports.prependToM = exports.prependM = exports.prepend = exports.prependTo = exports.appendM = exports.appendToM = exports.appendTo = exports.append = exports.updatePath = exports.updatePathM = exports.update = exports.updateM = exports.assocPathM = exports.assocPath = exports.assocM = exports.assoc = exports.path = exports.propOf = exports.prop = exports.defaultTo = exports.decorateException = exports.tryCatch = exports.toThe = exports.moduloWholePart = exports.modulo = exports.subtractFrom = exports.subtract = exports.divideInto = exports.divideBy = exports.multiply = exports.add = exports.condS = exports.cond = exports.condPredicate = exports.whenBind = exports.ifBind = exports.bindTry = exports.bindTryTo = exports.bindTryProp = exports.bindTryPropTo = exports.isType = exports.bind = exports.bindTo = exports.bindProp = exports.bindPropTo = exports.bindLateProp = exports.bindLatePropTo = exports.whenHasIn = exports.ifHasIn = exports.whenHas = exports.ifHas = exports.hasIn = exports.has = exports.whenPredicateOk = exports.ifPredicateOk = exports.whenPredicateV = exports.ifPredicateV = exports.whenPredicate = exports.ifPredicate = exports.sideN = exports.side5 = exports.side4 = exports.side3 = exports.side2 = exports.side1 = exports.side = exports.dotN = exports.dot5 = exports.dot4 = exports.dot3 = exports.dot2 = exports.dot1 = exports.dot = exports.tap = exports.lte = exports.lt = exports.gte = exports.gt = exports.ne = exports.eq = exports.recurry = exports.roll = undefined;
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -256,6 +256,22 @@ var ifPredicate = exports.ifPredicate = function ifPredicate(f) {
 var whenPredicate = exports.whenPredicate = function whenPredicate(f) {
     return function (yes) {
         return ifPredicate(f)(yes)(noop);
+    };
+};
+
+// @test
+var ifPredicateV = exports.ifPredicateV = function ifPredicateV(f) {
+    return function (yes) {
+        return function (no) {
+            return function (x) {
+                return f(x) ? yes : no;
+            };
+        };
+    };
+};
+var whenPredicateV = exports.whenPredicateV = function whenPredicateV(f) {
+    return function (yes) {
+        return ifPredicateV(f)(yes)(noop);
     };
 };
 
@@ -580,6 +596,8 @@ var decorateException = exports.decorateException = function decorateException(p
     };
 };
 
+// --- alias whenNotOk? xxx
+// --- alias orElse? xxx
 var defaultTo = exports.defaultTo = function defaultTo(f) {
     return function (x) {
         return (0, _index.ok)(x) ? x : f();
@@ -1121,6 +1139,21 @@ var reduceAbort = exports.reduceAbort = function reduceAbort(f) {
                 return acco;
             };
         };
+    };
+};
+
+// @test
+var drop = exports.drop = function drop(x) {
+    return function (xs) {
+        return xs.slice(x);
+    };
+};
+
+// @test
+// --- taking too many returns the entire list, as expected.
+var take = exports.take = function take(x) {
+    return function (xs) {
+        return xs.slice(0, x);
     };
 };
 
@@ -2089,6 +2122,7 @@ exports.default = {
     side: side, side1: side1, side2: side2, side3: side3, side4: side4, side5: side5, sideN: sideN,
     path: path, tap: tap,
     ifPredicate: ifPredicate, whenPredicate: whenPredicate,
+    ifPredicateV: ifPredicateV, whenPredicateV: whenPredicateV,
     ifPredicateOk: ifPredicateOk, whenPredicateOk: whenPredicateOk,
     has: has, hasIn: hasIn,
     ifHas: ifHas, ifHasIn: ifHasIn,
@@ -2117,6 +2151,7 @@ exports.default = {
     addIndex: addIndex, addCollection: addCollection,
     map: map, reduce: reduce, filter: filter, reject: reject, find: find, contains: contains,
     reduceAbort: reduceAbort,
+    drop: drop, take: take,
     each: each, eachObj: eachObj, eachObjIn: eachObjIn,
     reduceObj: reduceObj, reduceObjIn: reduceObjIn,
     ampersandN: ampersandN,

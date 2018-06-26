@@ -114,9 +114,16 @@ export const isTruthy = isYes
 export const isFalsy  = isNo
 
 export const ifPredicate   = _recurry (4) (manual.ifPredicate)
+
+// xxx
+// export const whenPredicate = _recurry (2) (manual.whenPredicate)
 export const whenPredicate = _recurry (3) (manual.whenPredicate)
+
 export const ifPredicateOk = _recurry (4) (manual.ifPredicateOk)
 export const whenPredicateOk = _recurry (2) (manual.whenPredicateOk)
+
+export const ifPredicateV = _recurry (4) (manual.ifPredicateV)
+export const whenPredicateV = _recurry (2) (manual.whenPredicateV)
 
 export const ifOk          = ifPredicate   (ok)
 export const whenOk        = whenPredicate (ok)
@@ -346,6 +353,9 @@ export const last = xs => xs [xs.length - 1]
 export const head = xs => xs [0]
 // @test
 export const tail = xs => xs.slice (1)
+
+export const drop = _recurry (2) (manual.drop)
+export const take = _recurry (2) (manual.take)
 
 export const addIndex      = _recurry (3) (manual.addIndex)
 export const addCollection = _recurry (3) (manual.addCollection)

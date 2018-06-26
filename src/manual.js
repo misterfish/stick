@@ -85,6 +85,11 @@ export const sideN = prop => vs =>
 export const ifPredicate = f => yes => no => x => f (x) ? yes (x) : no (x)
 export const whenPredicate = f => yes => ifPredicate (f) (yes) (noop)
 
+// @test
+export const ifPredicateV = f => yes => no => x => f (x) ? yes : no
+export const whenPredicateV = f => yes => ifPredicateV (f) (yes) (noop)
+
+
 // --- passes the *result* of the predicate test to the yes/no functions instead of passing `x`.
 export const ifPredicateOk = f => yes => no => x => {
     const p = f (x)
@@ -214,6 +219,8 @@ export const decorateException = (prefix) => (e) => {
     return e
 }
 
+// --- alias whenNotOk? xxx
+// --- alias orElse? xxx
 export const defaultTo = f => x => ok (x) ? x : f ()
 
 // --- object stuff.
@@ -474,6 +481,15 @@ export const reduceAbort = (f) => (acc) => (abortVal) => (xs) => {
   }
   return acco
 }
+
+// @test
+export const drop = x => xs => xs.slice (x)
+
+// @test
+// --- taking too many returns the entire list, as expected.
+export const take = x => xs => xs.slice (0, x)
+
+
 
 // --- returns obj
 export const eachObj = (f) => (o) => {
@@ -843,6 +859,7 @@ export default {
     side, side1, side2, side3, side4, side5, sideN,
     path, tap,
     ifPredicate, whenPredicate,
+    ifPredicateV, whenPredicateV,
     ifPredicateOk, whenPredicateOk,
     has, hasIn,
     ifHas, ifHasIn,
@@ -871,6 +888,7 @@ export default {
     addIndex, addCollection,
     map, reduce, filter, reject, find, contains,
     reduceAbort,
+    drop, take,
     each, eachObj, eachObjIn,
     reduceObj, reduceObjIn,
     ampersandN,

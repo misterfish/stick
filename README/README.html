@@ -449,7 +449,7 @@ const tgt = { thing: <span class="hljs-string">'sandwich'</span>, want: <span cl
 const src = {                    want: <span class="hljs-string">'yes please'</span>, }</code></pre><p>When a function name ends in a preposition, for example, ‘To’, the identifier to
 the right is the object of the preposition.</p>
 <p>Read this as ‘merge src <strong>to tgt</strong>’</p>
-<pre class="hljs"><code>src | mergeTo (tgt)                  // { thin<span class="hljs-variable">g:</span> <span class="hljs-string">'sandwich'</span>, wan<span class="hljs-variable">t:</span> <span class="hljs-string">'yes please'</span>, }</code></pre><p>The same function without the preposition means that the identifier to the right is the object of the verb ‘merge’.</p>
+<pre class="hljs"><code>src | mergeTo (tgt)                  // { thin<span class="hljs-variable">g:</span> <span class="hljs-string">'sandwich'</span>, wan<span class="hljs-variable">t:</span> <span class="hljs-string">'yes please'</span>, }</code></pre><p>The same function name without the preposition means that the identifier to the right is the object of the verb ‘merge’.</p>
 <p>Read this as: ‘<strong>merge src</strong> to tgt’</p>
 <pre class="hljs"><code>tgt | merge (src)                    // { thing: 'sandwich', want: 'yes please', }
 
